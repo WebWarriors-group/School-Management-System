@@ -5,6 +5,32 @@ import { useState } from 'react';
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+    const menuItems = [
+        "Gallery",
+        "Academics",
+        "More",
+        "Features",
+        "Administration",
+        "About",
+        "Reports",
+        "Contact",
+        "Administration",
+    ];
+
+    const details = {
+        Gallery: "This section contains images and videos of school events.",
+        Academics: "Information about courses, syllabus, and academic programs.",
+        More: "Additional features and information.",
+        Features: "Details about school facilities and special programs.",
+        Administration: "Meet the school administration and management.",
+        About: "Learn about our school's history and mission.",
+        Reports: "View student progress reports and analytics.",
+        Contact: "Get in touch with school administration.",
+    };
+
+
     return (
         <>
             <Head title="Homepage - Mahadiwulwewa National School" />
@@ -37,7 +63,7 @@ export default function Navbar() {
                                 </a>
 
                                 <a
-                                    href="https://maps.google.com?q=YourLocation"
+                                    href="https://maps.google.com?q=Mahadivulwewa School"
                                     aria-label="Location"
                                     className="flex items-center space-x-1 hover:underline"
                                 >
@@ -71,13 +97,20 @@ export default function Navbar() {
                         {/* Sub Navbar (unchanged as per your request) */}
                         <div className="mt-4 bg-gray-100 py-4 shadow-sm">
                             <div className="flex justify-center space-x-10 overflow-x-auto px-4 text-[18px] whitespace-nowrap text-[#800000]">
-                                {['Gallery', 'Acadamics', 'More', 'Features', 'Administration', 'About', 'Reports', 'Contact', 'Administration'].map(
-                                    (item, index) => (
-                                        <a key={index} href="#" className="hover:text-blue-600">
-                                            {item}
-                                        </a>
-                                    ),
-                                )}
+                            {menuItems.map((item, index) => (
+                        <button
+                            key={index}
+                            onClick={() =>
+                                setSelectedItem(selectedItem === item ? null : item)
+                            }
+                            className="hover:text-blue-600 focus:outline-none"
+                        >
+                            {item}
+                        </button>
+                    ))}
+
+
+                    
                             </div>
                         </div>
                     </div>
@@ -89,12 +122,12 @@ export default function Navbar() {
                                 <Facebook size={20} />
                                 <span>Facebook</span>
                             </a>
-                            <a href="#" className="block flex items-center space-x-1 text-white hover:underline">
+                            <a  href="https://mail.google.com/mail/?view=cm&fs=1&to=ttnmahadivulwewamv@gmail.com" className="block flex items-center space-x-1 text-white hover:underline">
                                 <Mail size={20} />
                                 <span>Contact</span>
                             </a>
 
-                            <a href="#" className="block flex items-center space-x-1 text-white hover:underline">
+                            <a  href="https://maps.google.com?q=Mahadivulwewa School" className="block flex items-center space-x-1 text-white hover:underline">
                                 <MapPin size={20} />
                                 <span>Location</span>
                             </a>
