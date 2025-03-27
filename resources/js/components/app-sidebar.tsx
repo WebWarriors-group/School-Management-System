@@ -149,7 +149,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
 
             <SidebarFooter className="bg-white text-white">
                 <NavFooter items={footerNavItems} className="mt-auto" />
-                <NavUser />
+               
             </SidebarFooter>
         </Sidebar>
     );

@@ -12,7 +12,7 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Get Full Screen',
+        title: 'toggle screen',
         
         href: '/student',
     },
