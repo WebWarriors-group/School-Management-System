@@ -91,6 +91,8 @@ export function AppSidebar({ role }: AppSidebarProps) {
                { title: 'Study materials', url: '/admin/studymaterials', icon: BookOpen },
                { title: 'Students ', url: '/admin/studentdashboard', icon: BookOpen },
                { title: 'Teacher ', url: '/admin/teacher', icon: BookOpen },
+              
+               
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/Teacher/dashboard', icon: LayoutGrid },
