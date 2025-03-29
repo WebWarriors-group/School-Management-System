@@ -24,9 +24,10 @@ class StudyMaterialFactory extends Factory
     public function definition(): array
     {
         return [
-            'subject_id' => Subject::factory(), // Generates a subject dynamically
+            'subject_id' => Subject::factory(),
+            'category' => $this->faker->randomElement(['pastPapers', 'teachersHandbooks', 'notes']),
             'title' => $this->faker->sentence,
-            'file_path' => $this->faker->filePath(), // Generates a fake file path
+            'file_path' => $this->faker->filePath(),
         ];
     }
 }
