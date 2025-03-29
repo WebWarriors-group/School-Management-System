@@ -1,4 +1,5 @@
 import { Link } from "@inertiajs/react";
+import { route } from "ziggy-js";
 import "../../../css/studyMaterials.css";
 
 const studyMaterials = () => {
@@ -7,19 +8,19 @@ const studyMaterials = () => {
             title: "Past Papers",
             description: "Access previous years' exam papers to help with your studies.",
             image: "/images/past_papers.jpg",
-            link: "/study_material/pastPapers",
+            link: route('studMatCat', { category: 'pastpapers' }),
         },
         {
             title: "Teachers' Handbooks",
             description: "Guides and reference materials for teachers.",
             image: "/images/teachers_handbooks.jpg",
-            link: "/study_material/teachersHandbooks",
+            link: route('studMatCat', { category: 'teachersHandbooks' }),
         },
         {
             title: "Notes",
             description: "Summarized notes and study guides for various subjects.",
             image: "/images/notes.jpg",
-            link: "/study_material/notes",
+            link: route('studMatCat', { category: 'notes' }),
         },
     ];
 

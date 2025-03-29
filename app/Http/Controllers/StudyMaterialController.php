@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers;
 
-
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\StudyMaterial;
 
 class StudyMaterialController extends Controller
 {
+    public function menu()
+    {
+        return Inertia::render('studyMaterial/studyMaterials');
+    }
     /**
      * Display a listing of the materials.
      */
-    public function index()
+    public function index($category)
     {
-        $materials = StudyMaterial::all(); // Fetch all materials
-        return response()->json($materials,200);
+        $materials = StudyMaterial::where('category', $category)->get();
+
+        return Inertia::render('studyMaterial/studyMaterialIndex', [
+            'category' => $category,
+            'materials' => $materials,
+        ]);
+        
     }
 
     /**

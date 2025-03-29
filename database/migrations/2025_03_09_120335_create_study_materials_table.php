@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); // material_id (Primary Key)
             $table->integer('subject_id');
             $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
+            $table->string('category',25)->nullable();
             $table->string('title',255);
             $table->string('file_path');
             $table->timestamps();
