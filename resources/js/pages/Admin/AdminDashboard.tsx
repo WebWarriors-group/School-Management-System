@@ -2,8 +2,17 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, usePage } from '@inertiajs/react';
 
 export default function Posts() {
-    const { users } = usePage<{
+    const { users, activeSessions } = usePage<{
         users: { id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string }[];
+        activeSessions: {
+            id: number;
+            user_id: number;
+            ip_address: string;
+            user_agent: string;
+            payload: string;
+            last_activity: number;
+            user: {  name: String;email: string; };
+        }[];
     }>().props;
 
     return (
@@ -23,13 +32,12 @@ export default function Posts() {
                     </div>
                     <div className="rounded-2xl border-t-4 border-[#004953] bg-white p-6 shadow">
                         <h3 className="text-lg font-bold text-[#004953]">Active Sessions</h3>
-                        <p className="mt-2 text-3xl font-bold text-[#004953]">324</p>
+                        {/* <p className="mt-2 text-3xl font-bold text-[#004953]">{activeSessions?.length}</p> */}
                     </div>
                 </div>
 
-                 
-
-                <div className="flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg mt-10">
+                <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                <h3 className="text-lg font-bold text-[#004953]">All Users Records</h3>
                     <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
                         <thead>
                             <tr className="border-b bg-gray-100 text-gray-800">
@@ -56,11 +64,63 @@ export default function Posts() {
                                         <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td>
 
                                         <td className="border px-4 py-2 text-center">
-                                          <button
+                                            <button
                                             // onClick={() => handleDelete(post.id)}
                                             >
-                                               🗑 
-                                            </button>  
+                                                🗑
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="py-4 text-center text-gray-500">
+                                        No posts available.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                <h3 className="text-lg font-bold text-[#800000]">Active users Records</h3>
+                    <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
+                        <thead>
+                            <tr className="border-b bg-gray-100 text-gray-800">
+                                {['Username' ,'Email','IPAddress', 'UserAgent',  'Last Activity','Action'].map((header) => (
+                                    <th key={header} className="border p-3 text-left">
+                                        {header}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {activeSessions?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                activeSessions.map((session) => (
+                                    <tr key={session.id} className="hover:bg-gray-50">
+                                        {/* <td className="border px-4 py-2">
+                                       {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
+                                   </td> */}
+                                        {/* <td className="border px-4 py-2">{session.id}</td> */}
+                                        <td className="border px-4 py-2">{session.user.name}</td>
+                                        <td className="border px-4 py-2">{session.user.email}</td>
+                                        <td className="border px-4 py-2">{session.ip_address}</td>
+                                        <td className="border px-4 py-2">{session.user_agent}</td>
+                                        <td className="border px-4 py-2">{new Date(session.last_activity * 1000).toLocaleString()}</td>
+                                         {/* <td className="border px-4 py-2">{session.user.name}</td>  */}
+                                       
+                                        {/* <td className="border px-4 py-2">{user.role}</td> */}
+
+                                        {/* <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
+                                        <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td> */}
+
+                                        <td className="border px-4 py-2 text-center">
+                                            <button
+                                            // onClick={() => handleDelete(post.id)}
+                                            >
+                                                🗑
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
