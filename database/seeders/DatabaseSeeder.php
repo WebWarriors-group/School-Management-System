@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         StudentAcademic::factory(10)->create();
 
         //User::factory(10)->create();
-        //StudyMaterial::factory(10)->create();
+        StudyMaterial::factory(10)->create();
         //StudentFamilyInfo::factory(10)->create();
         //StudentSibling::factory(20)->create();
 
