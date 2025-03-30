@@ -99,9 +99,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         login
                     </Button>
 
-                    <GoogleLogin>
+                    < GoogleLogin />
 
-                    </GoogleLogin>
                 </div>
 
                 <div className="text-[maroon] text-center text-sm">
