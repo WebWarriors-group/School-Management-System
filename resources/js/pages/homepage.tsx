@@ -7,13 +7,6 @@ export default function Navbar() {
     const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
     const menuItems = [
-        "Gallery", "Academics", "More", "Features", "Administration",
-        "About", "Reports", "Contact"
-    ];
-
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
-
-    const menuItems = [
         "Gallery",
         "Academics",
         "More",
@@ -35,7 +28,6 @@ export default function Navbar() {
         Reports: "View student progress reports and analytics.",
         Contact: "Get in touch with school administration.",
     };
-
 
     return (
         <>
