@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\TrackActiveUser;
 use App\Http\Middleware\TeacherMiddleware;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
             TeacherMiddleware::class,
         ]);
 
-        App::setLocale(Session::get('locale', config('app.locale')));
+        app('router')->aliasMiddleware('track.active', TrackActiveUser::class);
+
+        // App::setLocale(Session::get('locale', config('app.locale')));
     }
 }
