@@ -7,13 +7,6 @@ export default function Navbar() {
     const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
     const menuItems = [
-        "Gallery", "Academics", "More", "Features", "Administration",
-        "About", "Reports", "Contact"
-    ];
-
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
-
-    const menuItems = [
         "Gallery",
         "Academics",
         "More",
