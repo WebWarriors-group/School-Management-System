@@ -20,7 +20,7 @@ class AdminController extends Controller
 
         // Fetch only currently active sessions (active within the last 5 minutes)
         $activeSessions = ActiveSession::with('user')
-            ->where('last_activity', '>=', Carbon::now()->subMinutes(5)) // Filter active sessions only
+            ->where('last_activity', '>=', Carbon::now('Asia/Colombo')->subMinutes(5)->timestamp) // Filter active sessions only
             ->whereNotNull('user_id')
             ->get();
     

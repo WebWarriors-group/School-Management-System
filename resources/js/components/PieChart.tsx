@@ -41,7 +41,7 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => 
     return (
         <div style={{ width: '300px', height: '300px' }}>
             <h3 className="text-lg font-bold text-[blue] ml-10">User Roles Distribution</h3>
-            <Pie data={data} options={options} />
+            <Pie data={data}  />
         </div>
     );
 };
