@@ -11,6 +11,32 @@ export default function Navbar() {
         "About", "Reports", "Contact"
     ];
 
+    const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+    const menuItems = [
+        "Gallery",
+        "Academics",
+        "More",
+        "Features",
+        "Administration",
+        "About",
+        "Reports",
+        "Contact",
+        "Administration",
+    ];
+
+    const details = {
+        Gallery: "This section contains images and videos of school events.",
+        Academics: "Information about courses, syllabus, and academic programs.",
+        More: "Additional features and information.",
+        Features: "Details about school facilities and special programs.",
+        Administration: "Meet the school administration and management.",
+        About: "Learn about our school's history and mission.",
+        Reports: "View student progress reports and analytics.",
+        Contact: "Get in touch with school administration.",
+    };
+
+
     return (
         <>
             <Head title="Mahadivulwewa National School" />
