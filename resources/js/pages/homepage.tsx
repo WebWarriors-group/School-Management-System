@@ -13,7 +13,7 @@ export default function Navbar() {
 
     return (
         <>
-            <Head title="Homepage - Mahadivulwewa National School" />
+            <Head title="Mahadivulwewa National School" />
             <div className="w-full">
                 {/* Main Navbar */}
                 <nav className="bg-[#800000] py-2 text-white shadow-md w-full">

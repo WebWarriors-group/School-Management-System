@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
+import GoogleLogin from '@/components/GoogleLogin/GoogleLogin';
+
 type LoginForm = {
     email: string;
     password: string;
@@ -36,8 +38,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in ">
-            <Head title="Log in" />
+        <AuthLayout title="Login to your account" description="Enter your email and password below to log in ">
+            <Head title="Login" />
 
             <form className="flex flex-col gap-6    " onSubmit={submit}>
                 <div className="grid gap-6 text-[#800000]">
@@ -94,8 +96,11 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     
    tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        log in
+                        login
                     </Button>
+
+                    < GoogleLogin />
+
                 </div>
 
                 <div className="text-[maroon] text-center text-sm">

@@ -5,8 +5,16 @@ import { type User } from '@/types';
 import { Link } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 
+import { app } from "../hooks/firebase";
+import { getAuth, signOut } from "firebase/auth";
+
 interface UserMenuContentProps {
     user: User;
+}
+
+const logOut = async () => {
+    const auth = getAuth(app);
+    await signOut(auth);
 }
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
@@ -30,7 +38,8 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <Link className="block w-full" method="post" href={route('logout')} as="button" onClick={cleanup}>
+
+                <Link className="block w-full" method="post" href={route('logout')} as="button" onClick={() => { logOut; cleanup; }}>
                     <LogOut className="mr-2" />
                     Log out
                 </Link>
