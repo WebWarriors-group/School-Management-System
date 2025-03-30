@@ -13,19 +13,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     
 ];
 
-import AppLayout from "@/layouts/app-layout";
-import { Head } from '@inertiajs/react';
-import { type BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'toggle screen',
-        
-        href: '/student',
-    },
-
-    
-];
 
 interface StudyMaterial {
     id: number;
