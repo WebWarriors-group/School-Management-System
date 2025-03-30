@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
+import GoogleLogin from '@/components/GoogleLogin/GoogleLogin';
+
 type LoginForm = {
     email: string;
     password: string;
@@ -96,6 +98,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         login
                     </Button>
+
+                    < GoogleLogin />
+
                 </div>
 
                 <div className="text-[maroon] text-center text-sm">
