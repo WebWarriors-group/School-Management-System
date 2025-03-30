@@ -101,13 +101,18 @@ export default function Register() {
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full bg-red-100 text-red-900 hover:bg-red-100 hover:scale-105 hover:z-50 relative transition-transform duration-300" tabIndex={5} disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="relative mt-4 w-full bg-red-100 text-red-900 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100"
+                        tabIndex={5}
+                        disabled={processing}
+                    >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Sign up
                     </Button>
                 </div>
 
-                <div className="text-[maroon] text-center text-sm">
+                <div className="text-center text-sm text-[maroon]">
                     Already have an account?{' '}
                     <TextLink href={route('login')} tabIndex={6}>
                         Log in

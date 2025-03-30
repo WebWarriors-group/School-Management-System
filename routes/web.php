@@ -2,12 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\User;
+use App\Http\Controllers\UserController;
 
 
 
 Route::get('/', function () {
     return Inertia::render('homepage');
 })->name('homepage');
+
 
 Route::get('/test-session', function (Request $request) {
     
@@ -28,6 +31,7 @@ Route::get('/Admin/AddTeacherForm', function () {
 // Route::get('/Admin/demo', function () {
 //     return Inertia::render('Admin/teacher');
 // });
+
 Route::get('/teacher_details', function () {
     return inertia::render('Admin/techerInfo'); // This should return the Inertia page
 })->name('teacher_details');
