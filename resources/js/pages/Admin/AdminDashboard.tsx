@@ -1,86 +1,152 @@
-import { type NavItem } from '@/types';
-import { BookOpen, Folder } from 'lucide-react';
-import React from 'react';
-
-import { Head, router, usePage } from '@inertiajs/react';
-
-
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
+import UserRolesPieChart from '@/components/PieChart';
 
-// import { Toaster, toast } from 'sonner';
+export default function Posts() {
+    const { users, activeSessions ,roleCounts } = usePage<{
+        users: { id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string }[];
+        activeSessions: {
+            id: number;
+            user_id: number;
+            ip_address: string;
+            user_agent: string;
+            payload: string;
+            last_activity: number;
+            user: {  name: String;email: string; };
+        }[];
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'toggle screen',
-        
-        href: '/student',
-    },
+        roleCounts: {
+            admin: number;
+            teacher: number;
+            student: number;
+        };
+    }>().props;
 
-    
-];
-
-const AdminDashboard: React.FC = () => {
     return (
-      <AppLayout breadcrumbs={breadcrumbs}>
-         <Head title="AdminDashboard" />
-        <div className="flex h-screen bg-white font-sans">
-            {/* Sidebar */}
+        <AppLayout>
+            <Head title="Admin" />
 
-            {/* Main Content */}
-            <div className="flex flex-1 flex-col">
-                {/* Navbar */}
-                <header className="flex items-center justify-between border-b bg-white p-4 shadow-sm">
-                    <div className="text-maroon-700 text-xl font-semibold">Dashboard</div>
-                    <div className="flex items-center gap-4">
-                        <input type="text" placeholder="Search..." className="rounded-lg border px-3 py-1 text-sm" />
-                        <div className="bg-maroon-700 cursor-pointer rounded-full px-3 py-1 text-white">Admin</div>
+            {/* <Toaster position="top-right" richColors closeButton /> */}
+
+            <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+            
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <div className="rounded-2xl border-t-4 border-[#800000] bg-white p-6 shadow">
+                        <h3 className="text-lg font-bold text-[#800000]">Total Users</h3>
+                        <p className="mt-2 text-3xl font-bold text-[#800000]">{users?.length}</p>
                     </div>
-                </header>
-
-                {/* Dashboard Content */}
-                <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        <div className="border-maroon-700 rounded-2xl border-t-4 bg-white p-6 shadow">
-                            <h3 className="text-maroon-700 text-lg font-bold">Total Users</h3>
-                            <p className="mt-2 text-3xl font-bold">1,250</p>
-                        </div>
-                        <div className="border-maroon-700 rounded-2xl border-t-4 bg-white p-6 shadow">
-                            <h3 className="text-maroon-700 text-lg font-bold">Reports</h3>
-                            <p className="mt-2 text-3xl font-bold">95</p>
-                        </div>
-                        <div className="border-maroon-700 rounded-2xl border-t-4 bg-white p-6 shadow">
-                            <h3 className="text-maroon-700 text-lg font-bold">Active Sessions</h3>
-                            <p className="mt-2 text-3xl font-bold">324</p>
-                        </div>
+                    <div className="rounded-2xl border-t-4 border-[#4B371C] bg-white p-6 shadow">
+                        <h3 className="text-lg font-bold text-[#4B371C]">Reports</h3>
+                        <p className="mt-2 text-3xl font-bold text-[#4B371C]">95</p>
                     </div>
-
-                    <div className="mt-8">
-                        <h2 className="text-maroon-700 mb-4 text-2xl font-semibold">Recent Activities</h2>
-                        <div className="bg-white p-4">
-                            <ul className="divide-y text-sm">
-                                <li className="py-2">✅ User John added a new report</li>
-                                <li className="py-2">📤 Backup completed successfully</li>
-                                <li className="py-2">🛠 System settings updated</li>
-                                <li className="py-2">🔐 Password changed by Admin</li>
-                            </ul>
-                        </div>
+                    <div className="rounded-2xl border-t-4 border-[#004953] bg-white p-6 shadow">
+                        <h3 className="text-lg font-bold text-[#004953]">Active Sessions</h3>
+                        <p className="mt-2 text-3xl font-bold text-[#004953]">{activeSessions?.length || 0}</p> 
                     </div>
-                </main>
-            </div>
+                </div>
+                
+                <div className="mt-10 flex flex-col gap-6 rounded-xl  p-6 text-black ">
+                <UserRolesPieChart roleCounts={roleCounts} />
+                </div>
+                <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                <h3 className="text-lg font-bold text-[#004953]">All Users Records</h3>
+                    <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
+                        <thead>
+                            <tr className="border-b bg-gray-100 text-gray-800">
+                                {['Id', 'Email', 'Name', 'Role', 'Create_at', 'Updated_at', 'Action'].map((header) => (
+                                    <th key={header} className="border p-3 text-left">
+                                        {header}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                users.map((user) => (
+                                    <tr key={user.id} className="hover:bg-gray-50">
+                                        {/* <td className="border px-4 py-2">
+                                       {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
+                                   </td> */}
+                                        <td className="border px-4 py-2">{user.id}</td>
+                                        <td className="border px-4 py-2">{user.email}</td>
+                                        <td className="border px-4 py-2">{user.name}</td>
+                                        <td className="border px-4 py-2">{user.role}</td>
 
-            {/* Custom Maroon Styling */}
-            <style>{`
-          .bg-maroon-700 { background-color: #800000; }
-          .border-maroon-700 { border-color: #800000; }
-          .text-maroon-700 { color: #800000; }
-          .hover\:bg-maroon-600:hover { background-color: #990000; }
-          .border-maroon-600 { border-color: #990000; }
-        `}</style>
-        </div>
+                                        <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
+                                        <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td>
 
+                                        <td className="border px-4 py-2 text-center">
+                                            <button
+                                            
+                                            >
+                                                 🗑
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="py-4 text-center text-gray-500">
+                                        No posts available.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                <h3 className="text-lg font-bold text-[#800000]">Active users Records</h3>
+                    <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
+                        <thead>
+                            <tr className="border-b bg-gray-100 text-gray-800">
+                                {['Username' ,'Email','IPAddress', 'UserAgent',  'Last Activity','Status'].map((header) => (
+                                    <th key={header} className="border p-3 text-left">
+                                        {header}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {activeSessions?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                activeSessions.map((session) => (
+                                    <tr key={session.id} className="hover:bg-gray-50">
+                                        {/* <td className="border px-4 py-2">
+                                       {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
+                                   </td> */}
+                                        {/* <td className="border px-4 py-2">{session.id}</td> */}
+                                        <td className="border px-4 py-2">{session.user.name}</td>
+                                        <td className="border px-4 py-2">{session.user.email}</td>
+                                        <td className="border px-4 py-2">{session.ip_address}</td>
+                                        <td className="border px-4 py-2">{session.user_agent}</td>
+                                        <td className="border px-4 py-2">{new Date(session.last_activity * 1000).toLocaleString()}</td>
+                                         {/* <td className="border px-4 py-2">{session.user.name}</td>  */}
+                                       
+                                        {/* <td className="border px-4 py-2">{user.role}</td> */}
+
+                                        {/* <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
+                                        <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td> */}
+
+                                        <td className="border px-4 py-2 text-center">
+                                            <button className='bg-green-100 rounded-2xl w-[100px] h-[30px] text-[green]'
+                                            // onClick={() => handleDelete(post.id)}
+                                            >
+                                                active
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="py-4 text-center text-gray-500">
+                                        No posts available.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
         </AppLayout>
     );
-};
-
-export default AdminDashboard;
+}
