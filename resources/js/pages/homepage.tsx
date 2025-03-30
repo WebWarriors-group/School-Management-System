@@ -11,6 +11,13 @@ export default function Navbar() {
         "About", "Reports", "Contact"
     ];
 
+    const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+    const menuItems = [
+        "Gallery", "Academics", "More", "Features", "Administration",
+        "About", "Reports", "Contact"
+    ];
+
     return (
         <>
             <Head title="Mahadivulwewa National School" />

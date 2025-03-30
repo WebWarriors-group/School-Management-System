@@ -1,6 +1,5 @@
 import { Link } from "@inertiajs/react";
 import { route } from "ziggy-js";
-
 import AppLayout from "@/layouts/app-layout";
 import { Head } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
