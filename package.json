@@ -47,11 +47,8 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
-<<<<<<< HEAD
-        "font-awesome": "^4.7.0",
-=======
         "firebase": "^11.5.0",
->>>>>>> b37e55b2a864944940c3239725fd40f6f8f2fab5
+        "font-awesome": "^4.7.0",
         "globals": "^15.14.0",
         "i18next": "^24.2.3",
         "laravel-vite-plugin": "^1.0",

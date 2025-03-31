@@ -56,7 +56,7 @@ export default function Posts() {
       > + <i className="fa fa-user "></i> </button>
       
             </header>
-           
+        
 
             <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
