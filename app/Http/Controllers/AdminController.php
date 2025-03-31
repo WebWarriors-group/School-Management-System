@@ -35,13 +35,11 @@ class AdminController extends Controller
         ]);
     }
 
-    public function show()
+   public function delete(int $id)
     {
-    //     $activeSessions = ActiveSession::with('user')->whereNotNull('user_id')->get();
-
-    // return Inertia::render('Admin/AdminDashboard', [
-    //     'activeSessions' => $activeSessions
-   
+        $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
+        $user->delete();
+    
     }
 }
 

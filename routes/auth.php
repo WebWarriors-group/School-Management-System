@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::delete('/posts/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+
      Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
 
     Route::get('/admin/teacherHandbooks', function () {
