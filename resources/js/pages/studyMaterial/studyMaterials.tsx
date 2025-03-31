@@ -39,12 +39,14 @@ const studyMaterials = () => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Study Materials" />
-            <div className="flex flex-col gap-6 p-6 bg-gray-50">
-                {/* Page Title */}
-                <h1 className="text-3xl font-semibold text-gray-800">Study Materials</h1>
+            <div className="flex flex-col w-full gap-6 bg-gray-50">
+                
+                <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
+                    <h2 className="text-xl font-semibold">Study Materials</h2>
+                </header>
 
                 {/* Grid for Study Materials */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 px-15 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                     {categories.map((category, index) => (
                         <Link
                             key={index}

@@ -103,13 +103,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     </Button>
 
                     <GoogleLogin />
-                </div>
-
-                <div className="text-center text-sm text-[maroon]">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
+                  
                 </div>
             </form>
 
