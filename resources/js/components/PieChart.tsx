@@ -12,6 +12,8 @@ interface UserRolesPieChartProps {
         teacher: number;
         student: number;
     };
+};
+
 
 
 const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => {
