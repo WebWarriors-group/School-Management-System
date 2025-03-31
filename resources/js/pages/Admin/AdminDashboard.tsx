@@ -51,6 +51,7 @@ export default function Posts() {
             <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
  
                 <h1 className=" text-maroon text-xl font-semibold">Admin Dashboard</h1>
+
                 <Link href="/admin/userManagement" className="absolute right-[20px] text-[30px] text-[#000080] hover:cursor-pointer">
                     <button className="cursor-pointer">
                         + <i className="fa fa-user"></i>
