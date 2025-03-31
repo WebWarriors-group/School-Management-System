@@ -1,6 +1,6 @@
 import UserRolesPieChart from '@/components/PieChart';
 import AppLayout from '@/layouts/app-layout';
-import { Head, usePage,router } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
  import { Toaster, toast } from 'sonner';
  import 'font-awesome/css/font-awesome.min.css';
  import { useState } from "react";
@@ -51,8 +51,11 @@ export default function Posts() {
             <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
  
                 <h1 className=" text-maroon text-xl font-semibold">Admin Dashboard</h1>
-                <button className="absolute ml-280  text-[30px] text-[#000080] hover:cursor-[pointer]" 
-      > + <i className="fa fa-user "></i> </button>
+                <Link href="/admin/userManagement" className="absolute right-[20px] text-[30px] text-[#000080] hover:cursor-pointer">
+                    <button className="cursor-pointer">
+                        + <i className="fa fa-user"></i>
+                    </button>
+                </Link>
       
             </header>
         

@@ -17,8 +17,7 @@ use App\Http\Controllers\StudyMaterialController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
     Route::post('/google-login', [AuthenticatedSessionController::class, 'googleLoginStore']);
@@ -48,6 +47,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
     Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
     Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
+    Route::get('/admin/userManagement', function () { return Inertia::render('Admin/userManagement'); })->name('userManagement');
 });
 
 Route::middleware('auth', 'teacher')->group(function () {
