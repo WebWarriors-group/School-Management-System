@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudyMaterialController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,7 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [RegisteredUserController::class, 'store']);
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('/google-login', [AuthenticatedSessionController::class, 'googleLoginStore']);
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
@@ -35,35 +37,19 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
+    Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
 });
 
 
 Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::delete('/posts/{id}', [AdminController::class, 'delete'])->name('admin.delete');
-
-     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
-
-    Route::get('/admin/teacherHandbooks', function () {
-        return Inertia::render('Admin/teachersHandbooks');
-    });
-
-    Route::get('/admin/studymaterials', function () {
-        return Inertia::render('Admin/studyMaterials');
-    });
-
-    Route::get('/admin/studentdashboard', function () {
-        return Inertia::render('Admin/StudentDashboard');
-    });
-
-    Route::get('/admin/teacher', function () {
-        return Inertia::render('Admin/teacher');
-    });
-
-    
-
-
+    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
+    Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
+    Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
 });
+
 Route::middleware('auth', 'teacher')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
 });

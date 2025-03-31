@@ -12,32 +12,31 @@ Route::get('/', function () {
 })->name('homepage');
 
 
+Route::get('/test-session', function (Request $request) {
+    
+    session(['current_url' => $request->fullUrl()]);
+    session()->save();
+    return 'Session data: ' . session('current_url');
+});
+
+Route::get('/add-teacher', function () {
+    return inertia::render('Admin/AddTeacherForm'); // This should return the Inertia page
+})->name('add-teacher');
+Route::get('/Admin/AddTeacherForm', function () {
+    return Inertia::render('Admin/teacher');
+});
+// Route::get('/add-teacher', function () {
+//     return inertia::render('Admin/demo'); // This should return the Inertia page
+// })->name('add-teacher');
+// Route::get('/Admin/demo', function () {
+//     return Inertia::render('Admin/teacher');
+// });
 
 Route::get('/teacher_details', function () {
     return inertia::render('Admin/techerInfo'); // This should return the Inertia page
 })->name('teacher_details');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    Route::get('admin/dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-
-    Route::get('/study_material', function () {
-        return Inertia::render('studyMaterial/studyMaterials');
-    });
-    Route::get('/study_material/notes', function () {
-        return Inertia::render('studyMaterial/notes');
-    });
-    Route::get('/study_material/teachersHandbooks', function () {
-        return Inertia::render('studyMaterial/teachersHandbooks');
-    });
-    Route::get('/study_material/pastPapers', function () {
-        return Inertia::render('studyMaterial/pastPapers');
-    });
 });
 
 require __DIR__ . '/settings.php';

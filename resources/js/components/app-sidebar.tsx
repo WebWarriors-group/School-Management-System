@@ -86,22 +86,21 @@ interface AppSidebarProps {
 export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
-             { title: 'Admin Dashboard', url: '/admin/dashboard', icon: LayoutGrid },
-            { title: 'Handbook', url: '/admin/teacherHandbooks', icon: Folder },
-               { title: 'Study materials', url: '/admin/studymaterials', icon: BookOpen },
-               { title: 'Students ', url: '/admin/studentdashboard', icon: BookOpen },
-               { title: 'Teacher ', url: '/admin/teacher', icon: BookOpen },
-              
-               
+            { title: 'Admin Dashboard', url: '/admin/dashboard', icon: LayoutGrid },
+            { title: 'Study materials', url: '/study_material', icon: BookOpen },
+            { title: 'Students ', url: '/admin/studentdashboard', icon: BookOpen },
+            { title: 'Teacher ', url: '/admin/teacher', icon: BookOpen },
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/Teacher/dashboard', icon: LayoutGrid },
+            { title: 'Study materials', url: '/study_material', icon: BookOpen },
             //   { title: 'Students', url: '/teacher/students', icon: Folder },
             //   { title: 'Reports', url: '/teacher/reports', icon: BookOpen },
         ],
 
         student: [
             { title: 'Student Dashboard', url: '/Student/dashboard', icon: LayoutGrid },
+            { title: 'Study materials', url: '/study_material', icon: BookOpen },
             //   { title: 'Students', url: '/teacher/students', icon: Folder },
             //   { title: 'Reports', url: '/teacher/reports', icon: BookOpen },
         ],
