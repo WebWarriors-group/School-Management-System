@@ -42,11 +42,10 @@ export default function Posts() {
                },
         });
      };
-    
+
     return (
         <AppLayout>
             <Head title="Admin" />
-
              <Toaster position="top-right" richColors closeButton /> 
            
             <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
@@ -81,7 +80,6 @@ export default function Posts() {
                 <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                     <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>
                     
-                  
                     <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
                         <thead>
                             <tr className="border-b bg-gray-100 text-gray-800">
@@ -156,7 +154,6 @@ export default function Posts() {
                                         {/* <td className="border px-4 py-2">{session.user.name}</td>  */}
 
                                         {/* <td className="border px-4 py-2">{user.role}</td> */}
-
                                         {/* <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
                                         <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td> */}
 
