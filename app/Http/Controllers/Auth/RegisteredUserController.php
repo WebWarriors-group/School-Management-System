@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Http\Controllers\Auth\Validator;
 
 class RegisteredUserController extends Controller
 {
@@ -23,6 +24,7 @@ class RegisteredUserController extends Controller
     
     public function store(Request $request)
     {
+
         /*$validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

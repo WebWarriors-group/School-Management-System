@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    
+    Route::delete('/posts/{id}', [AdminController::class, 'delete']);
+//!!!!!!!it is used for delete the user dont delete this route**************
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
     Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
