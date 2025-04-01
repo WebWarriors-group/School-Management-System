@@ -63,13 +63,13 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts,second
         {/* First Pie Chart */}
         <div style={{ width: '300px', height: '400px' }} className="ml-30">
             <h3 className="text-[22px] font-bold text-[maroon] ">User Roles Distribution</h3>
-            <Pie data={data} options={options} />
+            <Pie data={data}  />
         </div>
 
         {/* Second Pie Chart */}
         <div style={{ width: '300px', height: '400px' }} className='ml-[200px]'>
             <h3 className="text-[22px] font-bold text-[green] px-10">Total Distribution </h3>
-            <Pie data={data2} options={options} />
+            <Pie data={data2} />
         </div>
     </div>
     );

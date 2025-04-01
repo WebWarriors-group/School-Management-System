@@ -20,8 +20,8 @@ class AdminController extends Controller
         $studentCount = User::where('role', 'student')->count();
         $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(5);
         $totalUserCount = User::count();
-        $teacherCount = Teacher::count();
-        $studentCount = StudentAcademic::count();
+        $teacherCount1 = Teacher::count();
+        $studentCount1 = StudentAcademic::count();
         // Fetch only currently active sessions (active within the last 5 minutes)
         $activeSessions = ActiveSession::with('user')
             ->where('last_activity', '>=', Carbon::now('Asia/Colombo')->subMinutes(5)->timestamp) // Filter active sessions only
@@ -31,8 +31,8 @@ class AdminController extends Controller
         return Inertia::render('Admin/AdminDashboard', [
              'users' => $users,
             'totalUserCount' => $totalUserCount,
-            'teacherCount' => $teacherCount,
-            'studentCount' =>$studentCount ,
+            'teacherCount' => $teacherCount1,
+            'studentCount' =>$studentCount1 ,
             'activeSessions' => $activeSessions,
             'roleCounts' => [
                 'admin' => $adminCount,
