@@ -63,7 +63,7 @@ class Teacher extends Model
     }
     public function teacherotherservice()
     {
-        return $this->hasMany(TeacherOtherService::class, 'teacher_nic', 'nic');
+        return $this->hasOne(TeacherOtherServices::class, 'teacher_NIC', 'teacher_NIC');
     }
     public function qualifications()
     {
