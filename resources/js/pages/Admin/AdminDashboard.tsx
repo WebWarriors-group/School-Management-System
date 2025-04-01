@@ -83,7 +83,7 @@ export default function Posts() {
                 </div>
                 <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                     <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>
-                    
+                
                     <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
                         <thead>
                             <tr className="border-b bg-gray-100 text-gray-800">

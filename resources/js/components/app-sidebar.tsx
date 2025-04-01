@@ -87,12 +87,14 @@ export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
             { title: 'Admin Dashboard', url: '/admin/dashboard', icon: LayoutGrid },
-            { title: 'Teacher ', url: '/admin/teacher', icon: Users },
-            { title: 'Students ', url: '/admin/studentdashboard', icon: UsersRound },
+            { title: 'Teacher', url: '/admin/teacher', icon: Users },
+            { title: 'Students', url: '/admin/studentdashboard', icon: UsersRound },
+            { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/Teacher/dashboard', icon: LayoutGrid },
+            { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
             //   { title: 'Students', url: '/teacher/students', icon: Folder },
             //   { title: 'Reports', url: '/teacher/reports', icon: BookOpen },
