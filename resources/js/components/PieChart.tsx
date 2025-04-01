@@ -12,8 +12,8 @@ interface UserRolesPieChartProps {
         teacher: number;
         student: number;
     };
-};
 
+};
 
 
 const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => {
@@ -42,6 +42,7 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => 
     };
 
     return (
+
         <div style={{ width: '300px', height: '400px' }}  >
             <h3 className="text-[22px] font-bold text-[maroon] ml-10">User Roles Distribution</h3>
             <Pie data={data}  />
