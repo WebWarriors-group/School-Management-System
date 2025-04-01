@@ -46,7 +46,7 @@ export default function Navbar() {
                         </div>
 
                         {/* Desktop Links */}
-                        <div className="hidden md:flex items-center space-x-6 ml-[800px] ">
+                        <div className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
                         <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-1 hover:underline">
                                 <Facebook size={20} /> <span>Facebook </span>
                             </a>
