@@ -94,7 +94,7 @@ export default function Posts() {
                     </div>
                     <div className="rounded-2xl border-t-4 border-[green] bg-white p-6 shadow">
                         <h3 className="text-lg font-bold text-[green]">Total Members in School</h3>
-                        <p className="mt-2 text-xl font-bold text-[green]">{teacherCount+studentCount}</p>
+                        <p className="mt-2 text-3xl font-bold text-[green]">{teacherCount+studentCount}</p>
                     </div>
                     <div className="rounded-2xl border-t-4 border-[purple] bg-white p-6 shadow">
                         <h3 className="text-lg font-bold text-[purple]">Active Sessions</h3>

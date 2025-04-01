@@ -121,10 +121,10 @@ export default function Navbar() {
                             </div>
 
                             <nav className="flex flex-wrap justify-center gap-6 text-center text-[17px] md:text-left ml-[-200px]">
-                                <a href="#" className="hover:underline">Home</a>
-                                <a href="#" className="hover:underline">About</a>
+                                <a href="/" className="hover:underline">Home</a>
+                                {/* <a href="#" className="hover:underline">About</a>
                                 <a href="#" className="hover:underline">Contact</a>
-                                <a href="#" className="hover:underline">Reports</a>
+                                <a href="#" className="hover:underline">Reports</a> */}
                             </nav>
 
                             <div className="flex justify-center space-x-6 md:justify-end">

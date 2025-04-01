@@ -53,7 +53,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
     Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/admin/userManagement', function () { return Inertia::render('Admin/userManagement'); })->name('userManagement');
-    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 
 Route::middleware('auth', 'teacher')->group(function () {
