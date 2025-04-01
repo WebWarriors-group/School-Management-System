@@ -75,7 +75,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Users, UsersRound, Folder, LayoutGrid } from 'lucide-react';
 
 // ✅ Interface to receive the user role from AppSidebarLayout
 interface AppSidebarProps {
@@ -87,9 +87,9 @@ export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
             { title: 'Admin Dashboard', url: '/admin/dashboard', icon: LayoutGrid },
+            { title: 'Teacher ', url: '/admin/teacher', icon: Users },
+            { title: 'Students ', url: '/admin/studentdashboard', icon: UsersRound },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
-            { title: 'Students ', url: '/admin/studentdashboard', icon: BookOpen },
-            { title: 'Teacher ', url: '/admin/teacher', icon: BookOpen },
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/Teacher/dashboard', icon: LayoutGrid },

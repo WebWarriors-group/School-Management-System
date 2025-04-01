@@ -16,25 +16,22 @@ use Inertia\Response;
 class RegisteredUserController extends Controller
 {
     /**
-     * Show the registration page.
-     */
-    public function create(): Response
-    {
-        return Inertia::render('auth/register');
-    }
-
-    /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    
+    public function store(Request $request)
     {
-        $request->validate([
+        /*$validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // Send validation errors as JSON
+        }*/
 
         $user = User::create([
             'name' => $request->name,
@@ -44,6 +41,10 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return to_route('/');
+        return response()->json([
+            'message' => 'User registered successfully!',
+            'user' => $user,
+        ], 201);
+
     }
 }
