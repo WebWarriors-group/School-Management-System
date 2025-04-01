@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -44,7 +45,29 @@ class AuthenticatedSessionController extends Controller
         return redirect()->route('homepage');
     }
 
-    
+    public function googleLoginStore(Request $request): RedirectResponse
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if($user){
+
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            // Redirect based on the user's role
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'teacher') {
+                return redirect()->route('teacher.dashboard');
+            } elseif ($user->role === 'student') {
+                return redirect()->route('student.dashboard');
+            }
+            return redirect()->route('homepage');
+        }
+        else {
+            return redirect()->route('homepage');
+        }
+    }
 
     /**
      * Destroy an authenticated session.
@@ -55,6 +78,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        cookie()->queue(cookie()->forget('laravel_session'));
 
         return redirect('/');
     }

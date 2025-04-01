@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\User;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TeacherController;
 
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return Inertia::render('homepage');
 })->name('homepage');
+
 
 Route::get('/test-session', function (Request $request) {
     
@@ -52,6 +55,7 @@ Route::post('/teacher/send-verification-code', [TeacherController::class, 'sendV
 // Route::get('/Admin/demo', function () {
 //     return Inertia::render('Admin/teacher');
 // });
+
 Route::get('/teacher_details', function () {
     return inertia::render('Admin/techerInfo'); // This should return the Inertia page
 })->name('teacher_details');

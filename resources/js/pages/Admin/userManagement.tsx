@@ -1,13 +1,24 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from "@inertiajs/react";
+import { route } from "ziggy-js";
+import AppLayout from "@/layouts/app-layout";
+import { type BreadcrumbItem } from '@/types';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
-
+import { FormEventHandler, useEffect } from 'react';
 import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+import { toast, Toaster } from 'sonner';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'toggle screen',
+        
+        href: '/student',
+    },
+
+    
+];
 
 type RegisterForm = {
     name: string;
@@ -16,31 +27,68 @@ type RegisterForm = {
     password_confirmation: string;
 };
 
-export default function Register() {
+
+const UserManagement = () => {
+    
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
     });
-
-    const submit: FormEventHandler = (e) => {
+    
+    const submit: FormEventHandler = async (e) => {
         e.preventDefault();
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
-        });
+    
+        toast.loading("Registering user...");
+    
+        try {
+            const response = await fetch(route("register"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "",
+                },
+                body: JSON.stringify(data),
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                toast.dismiss();
+                toast.success("User registered successfully! 🎉");
+                reset("password", "password_confirmation");
+            } else {
+                toast.dismiss();
+                Object.entries(result.errors || {}).forEach(([_, message]) => {
+                    toast.error(message as string);
+                });
+            }
+        } catch (error) {
+            toast.dismiss();
+            toast.error("Something went wrong. Please try again.");
+        }
     };
+    
 
     return (
-        <AuthLayout title="Create an account" description="Enter your details below to create your account">
-            <Head title="Register" />
-            <form className="flex flex-col gap-6" onSubmit={submit}>
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Add users" />
+
+            <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
+                <h2 className="text-xl font-semibold">User Management</h2>
+            </header>
+
+            <Toaster />
+
+            <form className="flex flex-col px-10 py-5 gap-6 ml-[400px]" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
                             type="text"
+                            className="w-[300px]"
                             required
                             autoFocus
                             tabIndex={1}
@@ -58,6 +106,7 @@ export default function Register() {
                         <Input
                             id="email"
                             type="email"
+                            className="w-[300px]"
                             required
                             tabIndex={2}
                             autoComplete="off"
@@ -74,6 +123,7 @@ export default function Register() {
                         <Input
                             id="password"
                             type="password"
+                            className="w-[300px]"
                             required
                             tabIndex={3}
                             autoComplete="off"
@@ -90,6 +140,7 @@ export default function Register() {
                         <Input
                             id="password_confirmation"
                             type="password"
+                            className="w-[300px]"
                             required
                             tabIndex={4}
                             autoComplete="off"
@@ -101,19 +152,19 @@ export default function Register() {
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full bg-red-100 text-red-900 hover:bg-red-100 hover:scale-105 hover:z-50 relative transition-transform duration-300" tabIndex={5} disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="relative mt-4 w-full bg-red-100 text-red-900 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100 w-[300px]"
+                        tabIndex={5}
+                        disabled={processing}
+                    >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Sign up
+                        Add user
                     </Button>
                 </div>
-
-                <div className="text-[maroon] text-center text-sm">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Log in
-                    </TextLink>
-                </div>
             </form>
-        </AuthLayout>
+        </AppLayout>
     );
-}
+};
+
+export default UserManagement;
