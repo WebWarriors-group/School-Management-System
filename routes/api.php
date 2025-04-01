@@ -57,7 +57,7 @@ Route::delete('/subjects/{subject_id}', [SubjectController::class, 'destroy']);
 
 
 Route::post('/marks', [MarkController::class, 'store']);
-Route::get('/marks', [MarkController::class, 'index']);
+Route::get('/marks', [MarkController::class, 'create']);
 Route::get('/marks/{id}', [MarkController::class, 'show']);
 Route::put('/marks/{id}', [MarkController::class, 'update']);
 Route::delete('/marks/{id}', [MarkController::class, 'destroy']);

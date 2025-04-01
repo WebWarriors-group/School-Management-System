@@ -26,11 +26,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        Teacher::factory(10)->create();
+        // Teacher::factory(10)->create();
 
-        ClassModel::factory(10)->create();
-        StudentAcademic::factory(10)->create();
+        // ClassModel::factory(10)->create();
+        // StudentAcademic::factory(10)->create();
 
+        Subject::factory(10)->create();
+        Marks::factory(50)->create();
+        
         User::factory(10)->create();
         StudyMaterial::factory(10)->create();
         //StudentFamilyInfo::factory(10)->create();
@@ -61,6 +64,17 @@ class DatabaseSeeder extends Seeder
                 'email' => 'student@sms.lk',
                 'role' => 'student',
                 'password' => Hash::make('Student@sms'),
+            ]
+        );
+
+
+        User::updateOrCreate(
+            ['email' => 'student@sms1.lk'], // Unique constraint
+            [
+                'name' => 'Student User',
+                'email' => 'student@sms1.lk',
+                'role' => 'student',
+                'password' => Hash::make('Student@sms1'),
             ]
         );
     }
