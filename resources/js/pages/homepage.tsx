@@ -7,9 +7,28 @@ export default function Navbar() {
     const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
     const menuItems = [
-        "Gallery", "Academics", "More", "Features", "Administration",
-        "About", "Reports", "Contact"
+
+        "Gallery",
+        "Academics",
+        "More",
+        "Features",
+        "Administration",
+        "About",
+        "Reports",
+        "Contact",
+        "Administration",
     ];
+
+    const details = {
+        Gallery: "This section contains images and videos of school events.",
+        Academics: "Information about courses, syllabus, and academic programs.",
+        More: "Additional features and information.",
+        Features: "Details about school facilities and special programs.",
+        Administration: "Meet the school administration and management.",
+        About: "Learn about our school's history and mission.",
+        Reports: "View student progress reports and analytics.",
+        Contact: "Get in touch with school administration.",
+    };
 
     return (
         <>
@@ -20,27 +39,28 @@ export default function Navbar() {
                     <div className="w-full flex items-center justify-between px-5">
                         {/* Logo */}
                         <div className="flex items-center">
-                            <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
-                            <span className="font-[Orbitron] text-xl font-semibold text-[#FDDEBD] ml-2">
-                                 MDWMV
+                            <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full " />
+                            <span className="font-[Orbitron] text-xl font-semibold text-[#FDDEBD] ml-1 ">
+                                 Mahadivulwewa <br/>National School
                             </span>
                         </div>
 
                         {/* Desktop Links */}
-                        <div className="hidden md:flex items-center space-x-6">
-                            <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-1 hover:underline">
-                                <Facebook size={20} /> <span>Facebook</span>
+
+                        <div className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+                        <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-1 hover:underline">
+                                <Facebook size={20} /> <span>Facebook </span>
                             </a>
                             <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center space-x-1 hover:underline">
                                 <Mail size={20} /> <span>Contact</span>
                             </a>
                             <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center space-x-1 hover:underline">
                                 <MapPin size={24} /> <span>Location</span>
-                            </a>
+                            </a> 
                         </div>
 
                         {/* Login Button */}
-                        <Link href={route('login')} className="hidden md:inline-block rounded-2xl bg-white px-9 py-2 text-sm font-medium text-black transition duration-300 hover:bg-blue-700 hover:text-white">
+                        <Link href={route('login')} className="hidden md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-blue-700 hover:text-white">
                             Login
                         </Link>
 
