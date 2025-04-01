@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\StudentAcademic;
 use App\Models\ClassModel;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentAdmissionMail;
 class StudentController extends Controller
 {
     public function dashboard()
@@ -17,6 +18,20 @@ class StudentController extends Controller
     /**
      * Display a listing of student academics.
      */
+    public function sendAdmissionForm(Request $request)
+{
+    $request->validate([
+        'reg_no' => 'required|string'
+    ]);
+
+    $formLink = url('/admission-form?reg_no=' . $request->reg_no);
+    $email = 'test@example.com'; // Replace with the actual recipient email
+
+    // Send email
+    Mail::to($email)->send(new StudentAdmissionMail($formLink));
+
+    return response()->json(['message' => 'Admission form sent successfully!']);
+}
     public function index(): JsonResponse
     {
         $students = StudentAcademic::all();
