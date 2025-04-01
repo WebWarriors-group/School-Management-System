@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
 
             $table->integer('marks_obtained');
-            $table->enum('grade', ['A', 'B', 'C', 'D', 'E']);
+            $table->enum('grade', ['A', 'B', 'C', 'S', 'F']);
 
 
             $table->timestamps();
