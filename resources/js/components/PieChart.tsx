@@ -48,6 +48,7 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts,second
     } : null;
 
 
+
     // Explicitly type the options as ChartOptions
     const options: ChartOptions = {
         responsive: true,
@@ -59,6 +60,7 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts,second
     };
 
     return (
+      
         <div className='flex px-10'>
         {/* First Pie Chart */}
         <div style={{ width: '300px', height: '400px' }} className="ml-30">
