@@ -12,11 +12,17 @@ interface UserRolesPieChartProps {
         teacher: number;
         student: number;
     };
+
+    secondRoleCounts?: {  // Optional second chart
+       
+        teacher: number;
+        student: number;
+    };
 };
 
 
 
-const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => {
+const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts,secondRoleCounts }) => {
     // Prepare the data for the pie chart
     const data = {
         labels: ['Admin', 'Teacher', 'Student'],
@@ -29,6 +35,16 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => 
             },
         ],
     };
+    const data2 = secondRoleCounts ? {
+        labels: ['Teacher', 'Student'],
+        datasets: [
+            {
+                data: [ secondRoleCounts.teacher, secondRoleCounts.student],
+                backgroundColor: ['#4C9F70', '#FFD700' ],
+                hoverBackgroundColor: ['#4C9F70', '#FFD700'],
+            },
+        ],
+    } : null;
 
 
     // Explicitly type the options as ChartOptions
@@ -42,10 +58,19 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({ roleCounts }) => 
     };
 
     return (
-        <div style={{ width: '300px', height: '400px' }}  >
-            <h3 className="text-[22px] font-bold text-[maroon] ml-10">User Roles Distribution</h3>
-            <Pie data={data}  />
+        <div className='flex px-10'>
+        {/* First Pie Chart */}
+        <div style={{ width: '300px', height: '400px' }} className="ml-30">
+            <h3 className="text-[22px] font-bold text-[maroon] ">User Roles Distribution</h3>
+            <Pie data={data} options={options} />
         </div>
+
+        {/* Second Pie Chart */}
+        <div style={{ width: '300px', height: '400px' }} className='ml-[200px]'>
+            <h3 className="text-[22px] font-bold text-[green] px-10">Total Distribution </h3>
+            <Pie data={data2} options={options} />
+        </div>
+    </div>
     );
 };
 

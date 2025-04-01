@@ -39,14 +39,14 @@ export default function Navbar() {
                     <div className="w-full flex items-center justify-between px-5">
                         {/* Logo */}
                         <div className="flex items-center">
-                            <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full " />
-                            <span className="font-[Orbitron] text-xl font-semibold text-[#FDDEBD] ml-1 ">
-                                 Mahadivulwewa <br/>National School
+                            <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full ml-[-10px]" />
+                            <span className="font-[Orbitron] text-xl font-semibold text-[#FDDEBD] ml-3  ">
+                                 Mahadivulwewa <br/> National School
                             </span>
                         </div>
 
                         {/* Desktop Links */}
-                        <div className="hidden md:flex items-center space-x-6 ml-[800px] ">
+                        <div className="hidden md:flex items-center space-x-4 ml-[800px] ">
                         <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-1 hover:underline">
                                 <Facebook size={20} /> <span>Facebook </span>
                             </a>
@@ -106,7 +106,7 @@ export default function Navbar() {
                     <div className="container px-4">
                         <img src="images/School.jpg" alt="Logo" className="mx-auto mt-9 h-100 w-109" />
                         <h1 className="text-4xl font-bold text-[#800000]">මහදිවුල්වැව මහ විද්‍යාලය</h1>
-                        <h1 className="text-4xl font-bold text-[#800000]">Mahadivulwewa Maha Vidyalaya</h1>
+                        <h1 className="text-4xl font-bold text-[#800000]">Mahadivulwewa National School</h1>
                     </div>
                 </section>
 

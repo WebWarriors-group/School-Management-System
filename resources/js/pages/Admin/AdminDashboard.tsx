@@ -2,13 +2,18 @@ import UserRolesPieChart from '@/components/PieChart';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage, router } from '@inertiajs/react';
  import { Toaster, toast } from 'sonner';
+  import { Inertia } from '@inertiajs/inertia';
  import 'font-awesome/css/font-awesome.min.css';
  import { useState } from "react";
+ 
+ 
 
 
 export default function Posts() {
-    const { users, activeSessions, roleCounts} = usePage<{
-        users: { id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string }[];
+    const { users, activeSessions, roleCounts, totalUserCount,teacherCount,studentCount} = usePage<{
+        users: { data:{id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string ;}[];
+    current_page:number;last_page:number;
+    };
         activeSessions: {
             id: number;
             user_id: number;
@@ -24,7 +29,15 @@ export default function Posts() {
             teacher: number;
             student: number;
         };
+        totalUserCount: number;
+        teacherCount: number;
+        studentCount: number;
     }>().props;
+
+    const secondRoleCountsData = {
+        teacher: teacherCount,
+        student: studentCount,
+    };
 
     const handleDelete = (id: number) => {
             router.delete(`/posts/${id}`, {
@@ -42,6 +55,18 @@ export default function Posts() {
                },
         });
      };
+     const goToPage=(page:number)=>{
+
+        const currentScrollPosition = window.scrollY;
+        
+            router.get(`/admin/dashboard`, { page }, {
+                preserveState: true,
+                preserveScroll: true, // This ensures the scroll position is maintained
+                onSuccess: () => {
+                    window.scrollTo(0, currentScrollPosition); // Restore the scroll position after loading
+                }
+            });
+     }
 
     return (
         <AppLayout>
@@ -65,11 +90,11 @@ export default function Posts() {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                     <div className="rounded-2xl border-t-4 border-[#800000] bg-white p-6 shadow">
                         <h3 className="text-lg font-bold text-[#800000]">Registerd Users</h3>
-                        <p className="mt-2 text-3xl font-bold text-[#800000]">{users?.length}</p>
+                        <p className="mt-2 text-3xl font-bold text-[#800000]">{totalUserCount}</p>
                     </div>
                     <div className="rounded-2xl border-t-4 border-[green] bg-white p-6 shadow">
                         <h3 className="text-lg font-bold text-[green]">Total Members in School</h3>
-                        <p className="mt-2 text-xl font-bold text-[green]">not defined</p>
+                        <p className="mt-2 text-xl font-bold text-[green]">{teacherCount+studentCount}</p>
                     </div>
                     <div className="rounded-2xl border-t-4 border-[purple] bg-white p-6 shadow">
                         <h3 className="text-lg font-bold text-[purple]">Active Sessions</h3>
@@ -77,8 +102,8 @@ export default function Posts() {
                     </div>
                 </div>
 
-                <div className="mt-10 grid h-[400px] grid-cols-1 gap-6 rounded-2xl bg-white p-6 shadow md:grid-cols-1">
-                 <UserRolesPieChart roleCounts={roleCounts} /> 
+                <div className=" flex mt-10 grid h-[400px] grid-cols-1 gap-6 rounded-2xl bg-white p-6 shadow md:grid-cols-1">
+                 <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/> 
                  
                 </div>
                 <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
@@ -95,8 +120,8 @@ export default function Posts() {
                             </tr>
                         </thead>
                         <tbody>
-                            {users?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
-                                users.map((user) => (
+                            {users?.data?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                users.data.map((user) => (
                                     <tr key={user.id} className="hover:bg-gray-50">
                                         {/* <td className="border px-4 py-2">
                                        {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
@@ -128,7 +153,24 @@ export default function Posts() {
                             )}
                         </tbody>
                     </table>
-                </div>
+
+
+                    {/* Pagination Controls */}
+                  <div className='flex justify-between'>
+
+                    <button disabled={users.current_page===1} onClick={()=>goToPage(users.current_page-1)} className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer ">
+                        Previous
+                    </button>
+                    <span>{users.current_page} of {users.last_page}</span>
+                    <button disabled={users.current_page===users.last_page} onClick={()=>goToPage(users.current_page+1)} className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer ">
+                        Next
+                    </button>
+
+                  </div>
+                    
+           
+        </div>
+                
 
                 <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                     <h3 className="text-lg font-bold text-[#800000]">Active users Records</h3>
