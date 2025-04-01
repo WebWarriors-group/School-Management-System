@@ -17,7 +17,7 @@ class MarksFactory extends Factory
             'reg_no' => StudentAcademic::all()->random()->reg_no,
             'subject_id' => Subject::all()->random()->subject_id,
             'marks_obtained' => $this->faker->numberBetween(0, 100),
-            'grade' => $this->faker->randomElement(['A', 'B', 'C', 'D', 'E', 'F']),
+            'grade' => $this->faker->randomElement(['A', 'B', 'C', 'S', 'F']),
            
             'created_at' => now(),
             'updated_at' => now(),

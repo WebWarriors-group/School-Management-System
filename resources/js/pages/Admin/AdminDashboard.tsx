@@ -12,7 +12,7 @@ export default function Posts() {
             user_agent: string;
             payload: string;
             last_activity: number;
-            user: {  name: String;email: string; };
+            user: {  name: string;email: string; };
         }[];
 
         roleCounts: {

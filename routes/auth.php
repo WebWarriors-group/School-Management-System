@@ -13,6 +13,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudyMaterialController;
+use App\Http\Controllers\MarkController;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -48,8 +50,15 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
     Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
     Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    
 });
 
 Route::middleware('auth', 'teacher')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
