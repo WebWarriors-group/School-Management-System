@@ -162,6 +162,7 @@ export default function Posts() {
                                         <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td> */}
 
                                         <td className="border px-4 py-2 text-center">
+                                          
                                             <button
                                                 className="h-[30px] w-[100px] rounded-2xl bg-green-100 text-[green]"
                                                 // onClick={() => handleDelete(post.id)}

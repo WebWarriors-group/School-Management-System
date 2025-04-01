@@ -49,4 +49,3 @@ class AdminController extends Controller
     //     'activeSessions' => $activeSessions
     }
 }
-
