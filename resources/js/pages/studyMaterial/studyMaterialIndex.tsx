@@ -13,6 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     
 ];
 
+
 interface StudyMaterial {
     id: number;
     title: string;
@@ -28,7 +29,12 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Study Materials" />
-            <div className="flex flex-col gap-6 p-6 bg-gray-50 min-h-screen">
+            <div className="flex flex-col w-full gap-6 bg-gray-50 min-h-screen">
+
+                <header className=" bg-white sticky top-1 w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
+                    <h1 className=" text-maroon text-xl font-semibold">Study Materials</h1>
+                </header>
+
                 {/* Title Section */}
                 <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-lg p-6">
                     <h1 className="text-3xl font-semibold text-gray-800 border-b-2 pb-3 mb-6">

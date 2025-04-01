@@ -41,7 +41,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         <AuthLayout title="Login to your account" description="Enter your email and password below to log in ">
             <Head title="Login" />
 
-            <form className="flex flex-col gap-6    " onSubmit={submit}>
+            <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6 text-[#800000]">
                     <div className="grid gap-2 text-[20px]">
                         <Label htmlFor="email">Email address</Label>
@@ -92,22 +92,18 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <Label htmlFor="remember">Remember me</Label>
                     </div>
 
-                    <Button type="submit" className="mt-4 w-full bg-red-100 text-maroon hover:bg-red-100 hover:scale-105 hover:z-50 relative transition-transform duration-300"
-                    
-   tabIndex={4} disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="text-maroon relative mt-4 w-full bg-red-100 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100"
+                        tabIndex={4}
+                        disabled={processing}
+                    >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         login
                     </Button>
 
-                    < GoogleLogin />
-
-                </div>
-
-                <div className="text-[maroon] text-center text-sm">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
+                    <GoogleLogin />
+                  
                 </div>
             </form>
 
