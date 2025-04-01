@@ -7,8 +7,6 @@ import { Head, Link, usePage, router } from '@inertiajs/react';
  import { useState } from "react";
  
  
-
-
 export default function Posts() {
     const { users, activeSessions, roleCounts, totalUserCount,teacherCount,studentCount} = usePage<{
         users: { data:{id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string ;}[];
@@ -55,6 +53,7 @@ export default function Posts() {
                },
         });
      };
+
      const goToPage=(page:number)=>{
 
         const currentScrollPosition = window.scrollY;
@@ -101,6 +100,7 @@ export default function Posts() {
                         <p className="mt-2 text-3xl font-bold text-[purple]">{activeSessions?.length || 0}</p>
                     </div>
                 </div>
+
 
                 <div className=" flex mt-10 grid h-[400px] grid-cols-1 gap-6 rounded-2xl bg-white p-6 shadow md:grid-cols-1">
                  <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/> 

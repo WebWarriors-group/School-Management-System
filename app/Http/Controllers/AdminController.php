@@ -58,5 +58,4 @@ class AdminController extends Controller
         $user->delete();
     }
 
-  
 }

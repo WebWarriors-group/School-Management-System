@@ -24,15 +24,16 @@ class RegisteredUserController extends Controller
     
     public function store(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|email|unique:users,email',
-        //     'password' => 'required|min:8|confirmed',
-        // ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json(['errors' => $validator->errors()], 422); // Send validation errors as JSON
-        // }
+        /*$validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // Send validation errors as JSON
+        }*/
 
         $user = User::create([
             'name' => $request->name,
