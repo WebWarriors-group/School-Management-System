@@ -21,6 +21,14 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+
+     
+
+        public function create(): Response
+    {
+        return Inertia::render('auth/register');
+    }
+     
     
     public function store(Request $request)
     {
@@ -35,6 +43,27 @@ class RegisteredUserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422); // Send validation errors as JSON
         }*/
 
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
+
+        // event(new Registered($user));
+
+        // return response()->json([
+        //     'message' => 'User registered successfully!',
+        //     'user' => $user,
+        // ], 201);
+
+
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -43,10 +72,13 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+         Auth::login($user);
         return response()->json([
-            'message' => 'User registered successfully!',
-            'user' => $user,
-        ], 201);
+               'message' => 'User registered successfully!',
+                'user' => $user,
+            ], 201);
+    
+        
 
     }
 }

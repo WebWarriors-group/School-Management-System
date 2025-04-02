@@ -42,15 +42,15 @@ class AdminController extends Controller
         ]);
     }
 
-    // public function show(){
-    //     $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(5);
+    public function show(){
+        $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(8);
 
-    //     return Inertia::render('Admin/AdminDashboard', [
-    //         'users' => $users,
+       return Inertia::render('Admin/userManagement', [
+            'users' => $users,
             
-    //     ],
-    //     );
-    // }
+        ],
+       );
+}
 
     public function delete(int $id)
     {

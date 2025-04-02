@@ -71,11 +71,10 @@
 // AppSidebar.tsx
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Users, UsersRound, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UsersRound } from 'lucide-react';
 
 // ✅ Interface to receive the user role from AppSidebarLayout
 interface AppSidebarProps {
@@ -119,9 +118,9 @@ export function AppSidebar({ role }: AppSidebarProps) {
         admin: 'maroon', // maroon gradient
         teacher: '#51087E', // green gradient
         student: 'green', // b#80008lue gradient
-      };
+    };
 
-      const sidebarBackground = roleBackgrounds[role] || '#800000'; 
+    const sidebarBackground = roleBackgrounds[role] || '#800000';
 
     return (
         <Sidebar collapsible="icon" variant="inset" className="text-white" style={{ background: sidebarBackground }}>
@@ -131,7 +130,8 @@ export function AppSidebar({ role }: AppSidebarProps) {
                         <SidebarMenuButton
                             size="lg"
                             asChild
-                            className="hover:from-maroon-800 bg-red-900 text-white transition-all hover:bg-gradient-to-r hover:to-red-300"style={{ background: sidebarBackground }}
+                            className="hover:from-maroon-800 bg-red-900 text-white transition-all hover:bg-gradient-to-r hover:to-red-300"
+                            style={{ background: sidebarBackground }}
                         >
                             <Link href="/dashboard" prefetch>
                                 {/* <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
@@ -146,13 +146,12 @@ export function AppSidebar({ role }: AppSidebarProps) {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent className=" text-white" style={{ background: sidebarBackground }}>
+            <SidebarContent className="text-white" style={{ background: sidebarBackground }}>
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
             <SidebarFooter className="bg-white text-white">
                 <NavFooter items={footerNavItems} className="mt-auto" />
-               
             </SidebarFooter>
         </Sidebar>
     );

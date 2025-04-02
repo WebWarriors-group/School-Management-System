@@ -1,170 +1,178 @@
-import { Head, useForm, usePage } from "@inertiajs/react";
-import { route } from "ziggy-js";
 import AppLayout from "@/layouts/app-layout";
-import { type BreadcrumbItem } from '@/types';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler, useEffect } from 'react';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast, Toaster } from 'sonner';
+import { Head, usePage, router,Link } from '@inertiajs/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import Register from '@/pages/auth/register';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'toggle screen',
-        
-        href: '/student',
-    },
-
-    
-];
-
-type RegisterForm = {
+interface User {
+    id: number;
     name: string;
     email: string;
-    password: string;
-    password_confirmation: string;
+    role: string;
+}
+
+export default function Mangement() {
+    const { users} = usePage<{
+        users: { data:{id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string ;}[];
+    current_page:number;last_page:number;
+    };
+        
+        
+       
+    }>().props;
+
+const[showRegister,setShowRegister]=useState(false);
+const[editingUser,setEditingUser]=useState<User | null>(null);
+
+const handleAddUser = () => {
+    setEditingUser(null); // Reset the editing user to null for creating a new user
+    setShowRegister(true);
 };
 
 
-const UserManagement = () => {
-    
-    const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
-    
-    const submit: FormEventHandler = async (e) => {
-        e.preventDefault();
-    
-        toast.loading("Registering user...");
-    
-        try {
-            const response = await fetch(route("register"), {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "",
-                },
-                body: JSON.stringify(data),
+const handleEditUser = (user: User) => {
+    setEditingUser(user); // Set the user data to be edited
+    setShowRegister(true);
+};
+    const handleDelete = (id: number) => {
+            router.delete(`/posts/${id}`, {
+
+                preserveScroll: true, // Prevents page from scrolling to the top
+                preserveState: true,
+                onSuccess: () => {
+                      toast.success('User has been deleted successfully!'); 
+                   
+               },
+               onError: () => {
+                  toast.error('User record failed to delete!');
+                   console.error('Failed to delete post.');
+               },
+        });
+     };
+
+     const goToPage=(page:number)=>{
+
+        const currentScrollPosition = window.scrollY;
+        
+            router.get(`/admin/userManagement`, { page }, {
+                preserveState: true,
+                preserveScroll: true, // This ensures the scroll position is maintained
+                onSuccess: () => {
+                    window.scrollTo(0, currentScrollPosition); // Restore the scroll position after loading
+                }
             });
-    
-            const result = await response.json();
-    
-            if (response.ok) {
-                toast.dismiss();
-                toast.success("User registered successfully! 🎉");
-                reset("password", "password_confirmation");
-            } else {
-                toast.dismiss();
-                Object.entries(result.errors || {}).forEach(([_, message]) => {
-                    toast.error(message as string);
-                });
-            }
-        } catch (error) {
-            toast.dismiss();
-            toast.error("Something went wrong. Please try again.");
-        }
-    };
+     }
+
+
     
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Add users" />
+        <AppLayout >
+            <Head title="Admin" />
+             <Toaster position="top-right" richColors closeButton /> 
+           
+        <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
+ 
+                <h1 className=" text-maroon text-xl font-semibold">User Management</h1>
 
-            <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
-                <h2 className="text-xl font-semibold">User Management</h2>
-            </header>
+                
+      
+            </header> 
+        
 
-            <Toaster />
+            <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+                
 
-            <form className="flex flex-col px-10 py-5 gap-6 ml-[400px]" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                            id="name"
-                            type="text"
-                            className="w-[300px]"
-                            required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="off"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            disabled={processing}
-                            placeholder="Full name"
-                        />
-                        <InputError message={errors.name} className="mt-2" />
-                    </div>
 
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            className="w-[300px]"
-                            required
-                            tabIndex={2}
-                            autoComplete="off"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            disabled={processing}
-                            placeholder="email@example.com"
-                        />
-                        <InputError message={errors.email} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            className="w-[300px]"
-                            required
-                            tabIndex={3}
-                            autoComplete="off"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            disabled={processing}
-                            placeholder="Password"
-                        />
-                        <InputError message={errors.password} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
-                        <Input
-                            id="password_confirmation"
-                            type="password"
-                            className="w-[300px]"
-                            required
-                            tabIndex={4}
-                            autoComplete="off"
-                            value={data.password_confirmation}
-                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                            disabled={processing}
-                            placeholder="Confirm password"
-                        />
-                        <InputError message={errors.password_confirmation} />
-                    </div>
-
-                    <Button
-                        type="submit"
-                        className="relative mt-4 w-full bg-red-100 text-red-900 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100 w-[300px]"
-                        tabIndex={5}
-                        disabled={processing}
-                    >
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Add user
-                    </Button>
+               
+                <div className="mt-3 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                    <h3 className="text-lg font-bold text-[#004953]">Users</h3>
+                    <Link 
+                href="#" 
+                className="absolute ml-240 bg-[blue] text-[white] py-2 px-7 rounded-lg"
+                onClick={(e) => {
+                    e.preventDefault();
+                    handleAddUser();
+                }}
+            >
+                + Add New User
+            </Link>
+            {showRegister && (
+                <div className="absolute mt-[-200px] ml-[300px] ">
+                    <Register user={editingUser} setShowRegister={setShowRegister} />
                 </div>
-            </form>
+            )}
+                    <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
+                        <thead>
+                            <tr className="border-b bg-gray-100 text-gray-800">
+                                {[ 'Email', 'Name', 'Role', 'Create_at', 'Updated_at','Delete','Edit'].map((header) => (
+                                    <th key={header} className="border p-3 text-left">
+                                        {header}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users?.data?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                users.data.map((user) => (
+                                    <tr key={user.id} className="hover:bg-gray-50">
+                                        {/* <td className="border px-4 py-2">
+                                       {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
+                                   </td> */}
+                                        
+                                        <td className="border px-4 py-2">{user.email}</td>
+                                        <td className="border px-4 py-2">{user.name}</td>
+                                        <td className="border px-4 py-2">{user.role}</td>
+
+                                        <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
+                                        <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td>
+
+                                         <td className="border px-4 py-2 text-center">
+                                           
+                                         
+                                         <button className="hover:cursor-pointer" onClick={() => handleDelete(user.id)}>🗑</button> 
+                                        </td> 
+
+                                        <td className="border px-4 py-2 text-center">
+                                        
+                                         <button className="hover:cursor-pointer" onClick={() => handleEditUser(user)}><FontAwesomeIcon icon={faPenToSquare} /></button> 
+                                         </td>
+
+                                        
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="py-4 text-center text-gray-500">
+                                        No posts available.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+
+
+                    {/* Pagination Controls */}
+                  <div className='flex justify-between'>
+
+                    <button disabled={users.current_page===1} onClick={()=>goToPage(users.current_page-1)} className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer ">
+                        Previous
+                    </button>
+                    <span>{users.current_page} of {users.last_page}</span>
+                    <button disabled={users.current_page===users.last_page} onClick={()=>goToPage(users.current_page+1)} className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer ">
+                        Next
+                    </button>
+
+                  </div>
+                    
+           
+        </div>
+                
+
+              
+            </main>
         </AppLayout>
     );
-};
-
-export default UserManagement;
+}

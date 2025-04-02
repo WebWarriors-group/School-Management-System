@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import { Facebook, Mail, MapPin, Menu, X } from 'lucide-react';
+import { Facebook, Mail, MapPin, Menu, X,Twitter,Linkedin,Instagram } from 'lucide-react';
 import { useState } from 'react';
+import 'font-awesome/css/font-awesome.min.css';
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -47,17 +48,7 @@ export default function Navbar() {
 
                         {/* Desktop Links */}
 
-                        <div className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
-                        <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-1 hover:underline">
-                                <Facebook size={20} /> <span>Facebook </span>
-                            </a>
-                            <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center space-x-1 hover:underline">
-                                <Mail size={20} /> <span>Contact</span>
-                            </a>
-                            <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center space-x-1 hover:underline">
-                                <MapPin size={24} /> <span>Location</span>
-                            </a> 
-                        </div>
+                       
 
                         {/* Login Button */}
                         <Link href={route('login')} className="hidden md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-blue-700 hover:text-white">
@@ -112,39 +103,63 @@ export default function Navbar() {
                 </section>
 
                 {/* Footer Section */}
-                <section className="mt-20 bg-[#800000] py-10 text-white">
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-                            <div className="text-center md:text-left">
-                                <h2 className="text-[23px] font-bold">Mahadivulwewa Mahavidyalaya</h2>
-                                <p className="mt-1 text-[17px] text-gray-200">&copy; {new Date().getFullYear()} All rights reserved.</p>
-                            </div>
+                <section className="bg-[#800000]   text-white">
+    <div className="container mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Column 1 */}
+        <div>
+            <h3 className="text-lg font-semibold mb-4">About Us</h3>
+            <ul className="space-y-2 text-sm text-gray-300">
+                <li><a href="#" className="hover:text-white transition">About School</a></li>
+                <li><a href="#" className="hover:text-white transition">Academic Programs</a></li>
+                <li><a href="#" className="hover:text-white transition">Admissions</a></li>
+                <li><a href="#" className="hover:text-white transition">Research</a></li>
+            </ul>
+        </div>
 
-                            <nav className="flex flex-wrap justify-center gap-6 text-center text-[17px] md:text-left ml-[-200px]">
-                                <a href="/" className="hover:underline">Home</a>
-                                {/* <a href="#" className="hover:underline">About</a>
-                                <a href="#" className="hover:underline">Contact</a>
-                                <a href="#" className="hover:underline">Reports</a> */}
-                            </nav>
+        {/* Column 2 */}
+        <div>
+            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+            <ul className="space-y-2 text-sm text-gray-300">
+                <li><a href="#" className="hover:text-white transition">Library</a></li>
+                <li><a href="#" className="hover:text-white transition">Recreation</a></li>
+                <li><a href="#" className="hover:text-white transition">Student Portal</a></li>
+                <li><a href="#" className="hover:text-white transition">Campus Map</a></li>
+            </ul>
+        </div>
 
-                            <div className="flex justify-center space-x-6 md:justify-end">
-                                <a href="https://www.facebook.com/ttnmmv" className="hover:text-gray-300">
-                                    <Facebook size={24} />
-                                </a>
-                                <a href="https://maps.google.com?q=Mahadivulwewa School" className="hover:text-gray-300">
-                                    <MapPin size={24} />
-                                </a>
-                                <a href="mailto:ttnmahadivulwewamv@gmail.com" className="hover:text-gray-300">
-                                    <Mail size={24} />
-                                </a>
-                            </div>
-                        </div>
-                        <hr className="my-6 border-red-100" />
-                        <p className="text-center text-[16px] text-red-200">
-                            Crafted with dedication❤️ by the Web Warriors Team | Powered by React & Laravel 12
-                        </p>
-                    </div>
-                </section>
+        {/* Column 3 */}
+        <div>
+            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <ul className="space-y-2 text-sm text-gray-300">
+                <li><a href="#" className="hover:text-white transition">Staff Resources</a></li>
+                <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
+                <li><a href="#" className="hover:text-white transition">Give Now</a></li>
+                <li><a href="#" className="hover:text-white transition">Disclaimer</a></li>
+            </ul>
+        </div>
+
+        {/* Column 4 */}
+        <div className="flex flex-col items-center md:items-start">
+            
+            <div className="flex space-x-4 mb-4 mt-4">
+                <a href="#" className="hover:text-gray-300"><Facebook size={30} /></a>
+                <a href="#" className="hover:text-gray-300"><Twitter size={30} /></a>
+                <a href="#" className="hover:text-gray-300"> <MapPin size={30} /></a>
+                <a href="#" className="hover:text-gray-300"><Mail size={30} /></a>
+                {/* <a href="#" className="hover:text-gray-300"><YouTube size={24} /></a> */}
+            </div>
+           <h3>077 879 2078</h3>
+        </div>
+    </div>
+
+    <div className="border-t border-gray-500 mt-8 bg-white"></div>
+
+    {/* Footer Bottom */}
+    <div className="container mx-auto px-6 py-6 text-center text-[17px] text-gray-800 bg-gray-200">
+        <p>&copy; {new Date().getFullYear()} Mahadivulwewa Mahavidyalaya. All rights reserved.</p>
+    </div>
+</section>
+
             </div>
         </>
     );
