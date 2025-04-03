@@ -137,6 +137,7 @@ interface User {
     name: string;
     email: string;
     role: string;
+    // password: string;
 }
 
 interface RegisterProps {
@@ -147,6 +148,7 @@ interface RegisterProps {
 type RegisterForm = {
     name: string;
     email: string;
+    role: string;
     password: string;
     password_confirmation: string;
 };
@@ -155,6 +157,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         name: user?.name || '', // Pre-fill form if editing
         email: user?.email || '',
+        role: user?.role || '',
         password: '',
         password_confirmation: '',
     });
@@ -182,18 +185,18 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
     };
 
     return (
-        <AuthLayout title={user ? 'Edit User' : 'Create an account'} description="Enter the details below">
+        <AuthLayout title={""} description="" >
 
 <Button 
                             type="button" 
                             className=" absolute bg-red-800 text-white ml-[330px] mt-[-10px] text-lg px-6 hover:cursor-pointer hover:bg-blue-800"
                             onClick={() => setShowRegister(false)}
                         >
-                          X
+                        X
                         </Button>
             <Head title={user ? 'Edit User' : 'Register'} />
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
+            <form className="flex flex-col gap-6 bg-white" onSubmit={submit}>
+                <div className="grid gap-6 bg-white">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
@@ -221,6 +224,21 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
                             placeholder="email@example.com"
                         />
                         <InputError message={errors.email} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="role">Role</Label>
+                        <Input
+                            id="role"
+                            type="text"
+                            required
+                            autoFocus
+                            value={data.role}
+                            onChange={(e) => setData('role', e.target.value)}
+                            disabled={processing}
+                            placeholder="enter role"
+                        />
+                        <InputError message={errors.name} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">

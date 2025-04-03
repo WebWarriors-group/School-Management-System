@@ -9,8 +9,11 @@ import Register from '@/pages/auth/register';
 interface User {
     id: number;
     name: string;
+    
     email: string;
     role: string;
+    // password:string
+    
 }
 
 export default function Mangement() {
