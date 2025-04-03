@@ -26,7 +26,7 @@ class RegisteredUserController extends Controller
 
         public function create(): Response
     {
-        return Inertia::render('auth/register');
+         return Inertia::render('Admin/userManagement');
     }
      
     
@@ -72,15 +72,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-         Auth::login($user);
-        return response()->json([
-               'message' => 'User registered successfully!',
-                'user' => $user,
-            ], 201);
-    
         
+         return Inertia::render('Admin/userManagement');
+                
 
     }
 }

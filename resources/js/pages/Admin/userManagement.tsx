@@ -158,18 +158,27 @@ const handleEditUser = (user: User) => {
 
 
                     {/* Pagination Controls */}
-                  <div className='flex justify-between'>
-
-                    <button disabled={users.current_page===1} onClick={()=>goToPage(users.current_page-1)} className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer ">
-                        Previous
-                    </button>
-                    <span>{users.current_page} of {users.last_page}</span>
-                    <button disabled={users.current_page===users.last_page} onClick={()=>goToPage(users.current_page+1)} className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer ">
-                        Next
-                    </button>
-
-                  </div>
-                    
+                    {users && users.current_page && users.last_page ? (
+  <div className='flex justify-between'>
+    <button
+      disabled={users.current_page === 1}
+      onClick={() => goToPage(users.current_page - 1)}
+      className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer "
+    >
+      Previous
+    </button>
+    <span>{users.current_page} of {users.last_page}</span>
+    <button
+      disabled={users.current_page === users.last_page}
+      onClick={() => goToPage(users.current_page + 1)}
+      className="bg-[maroon] px-3 py-2 rounded-xl text-[white] hover:cursor-pointer "
+    >
+      Next
+    </button>
+  </div>
+) : (
+  <p>Loading users...</p>
+)}
            
         </div>
                 

@@ -8,12 +8,26 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\StudentAcademic;
 
+use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+
+
+
+
 use App\Models\ActiveSession;
 use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+public function dashboard(){
+
+    return Inertia::render('Admin/dashboard');
+}
+
+
+    public function dashboard1()
     {
         $adminCount = User::where('role', 'admin')->count();
         $teacherCount = User::where('role', 'teacher')->count();
@@ -50,6 +64,28 @@ class AdminController extends Controller
             
         ],
        );
+}
+
+public function register(Request $request){
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+        'role' => 'required|string|max:255',
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'role' => $request->role,
+        'password' => Hash::make($request->password),
+    ]);
+
+    // event(new Registered($user));
+
+    
+     
+
 }
 
     public function delete(int $id)

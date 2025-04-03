@@ -125,7 +125,7 @@
 
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-
+import { toast, Toaster } from 'sonner';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -175,11 +175,16 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
             });
         } else {
             // Create new user
-            post(route('register'), {
+            post(route('admin.register'), {
+                preserveState: true,
                 onFinish: () => {
                     reset('password', 'password_confirmation');
                     setShowRegister(false); // Close the form after submission
                 },
+                onSuccess: () => {
+                                      toast.success('User has been added successfully!'); 
+                                   
+                               },
             });
         }
     };
@@ -238,7 +243,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
                             disabled={processing}
                             placeholder="enter role"
                         />
-                        <InputError message={errors.name} className="mt-2" />
+                        <InputError message={errors.role} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">

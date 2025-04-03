@@ -19,7 +19,7 @@ use App\Http\Controllers\MarkController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+    // Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -33,11 +33,11 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('register', [RegisteredUserController::class, 'create'])
-    ->name('register');
-    Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
-    Route::put('register/{id}', [RegisteredUserController::class, 'update'])->name('register');
-    
+    // Route::get('register', [RegisteredUserController::class, 'create'])
+    // ->name('register');
+    // Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+    // Route::put('register/{id}', [RegisteredUserController::class, 'update'])->name('register');
+    //!!!!!!!! dont uncomment above things !!!!!!!!!!!
 
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
@@ -53,13 +53,16 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware('auth', 'admin')->group(function () {
-     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+      Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+     Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
+     Route::get('/admin/dashboard1', [AdminController::class, 'dashboard1'])->name('admin.dashboard1');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
      Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
      Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
-     Route::get('/admin/userManagement', [AdminController::class, 'show']);
+     Route::get('/admin/userManagement', [AdminController::class, 'show'])->name('admin.show');
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 

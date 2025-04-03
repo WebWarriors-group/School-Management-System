@@ -86,7 +86,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
             { title: 'Dashboard Overview', url: '/admin/dashboard', icon: LayoutGrid },
-            { title: 'User Management', url: '/admin/dashboard', icon: LayoutGrid },
+            { title: 'Admin dashboard', url: '/admin/dashboard1', icon: LayoutGrid },
             { title: 'Teacher', url: '/admin/teacher', icon: Users },
             { title: 'Students', url: '/admin/studentdashboard', icon: UsersRound },
             { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
