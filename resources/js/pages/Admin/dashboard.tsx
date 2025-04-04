@@ -8,9 +8,11 @@ import ReactECharts from 'echarts-for-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
+        title: 'Dashboard Overview',
+        href: '/',
     },
+
+    
 ];
 
 const stats = [
