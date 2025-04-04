@@ -10,7 +10,7 @@ class TeacherOtherServices extends Model
     use HasFactory;
 
     protected $table = 'other_services'; // Specify the correct table name
-     
+    public $timestamps = false;
 
     protected $fillable = [
         'teacher_NIC',
