@@ -13,7 +13,7 @@ class Qualification extends Model
 
     //protected $primaryKey = 'teacher_NIC'; // Primary key if different from auto-incrementing ID
     public $incrementing = false; // Because teacher_NIC is a string
-
+    public $timestamps = false;
     protected $keyType = 'string'; // Define the key type as string
     protected $fillable = [
         

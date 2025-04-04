@@ -81,13 +81,14 @@ const UserManagement = () => {
 
             <Toaster />
 
-            <form className="flex flex-col px-20 py-5 gap-6" onSubmit={submit}>
+            <form className="flex flex-col px-10 py-5 gap-6 ml-[400px]" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
                             type="text"
+                            className="w-[300px]"
                             required
                             autoFocus
                             tabIndex={1}
@@ -105,6 +106,7 @@ const UserManagement = () => {
                         <Input
                             id="email"
                             type="email"
+                            className="w-[300px]"
                             required
                             tabIndex={2}
                             autoComplete="off"
@@ -121,6 +123,7 @@ const UserManagement = () => {
                         <Input
                             id="password"
                             type="password"
+                            className="w-[300px]"
                             required
                             tabIndex={3}
                             autoComplete="off"
@@ -137,6 +140,7 @@ const UserManagement = () => {
                         <Input
                             id="password_confirmation"
                             type="password"
+                            className="w-[300px]"
                             required
                             tabIndex={4}
                             autoComplete="off"
@@ -150,7 +154,7 @@ const UserManagement = () => {
 
                     <Button
                         type="submit"
-                        className="relative mt-4 w-full bg-red-100 text-red-900 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100"
+                        className="relative mt-4 w-full bg-red-100 text-red-900 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100 w-[300px]"
                         tabIndex={5}
                         disabled={processing}
                     >
