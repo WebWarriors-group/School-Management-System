@@ -72,17 +72,11 @@ const handleEditUser = (user: User) => {
     
 
     return (
-        <AppLayout >
+        <div >
             <Head title="Admin" />
              <Toaster position="top-right" richColors closeButton /> 
            
-        <header className=" bg-white sticky top-1   w-full flex items-center justify-between border-b bg-white p-4 shadow-sm ">
- 
-                <h1 className=" text-maroon text-xl font-semibold">User Management</h1>
-
-                
-      
-            </header> 
+       
         
 
             <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
@@ -185,6 +179,6 @@ const handleEditUser = (user: User) => {
 
               
             </main>
-        </AppLayout>
+        </div>
     );
 }

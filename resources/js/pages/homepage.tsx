@@ -155,7 +155,7 @@ export default function Navbar() {
     <div className="border-t border-gray-500 mt-8 bg-white"></div>
 
     {/* Footer Bottom */}
-    <div className="container mx-auto px-6 py-6 text-center text-[17px] text-gray-800 bg-gray-200">
+    <div className="container mx-auto px-6 py-6 text-center text-[17px] text-gray-600 bg-gray-200">
         <p>&copy; {new Date().getFullYear()} Mahadivulwewa Mahavidyalaya. All rights reserved.</p>
     </div>
 </section>

@@ -3,6 +3,8 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import 'font-awesome/css/font-awesome.min.css';
 import { Users } from 'lucide-react';
+import Mangement from '@/pages/Admin/userManagement';
+import React, { useState } from "react";
 
 const stats = [
     { icon: <Users className="h-6 w-6 text-blue-500" /> },
@@ -65,21 +67,28 @@ export default function Posts() {
             },
         );
     };
+const[isVisible,setIsVisible]=useState(false);
+const handleClick =()=>{
+   setIsVisible(true);
+}
+
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
             <header className="sticky top-1 flex w-full items-center justify-between border-b bg-white p-4 shadow-sm">
-                <h1 className="text-maroon text-xl font-semibold">Admin dashboard</h1>
+                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
+                
 
-                <Link href="/admin/userManagement" className="absolute right-[100px] text-[30px] text-[#000080] hover:cursor-pointer">
-                    <button className="cursor-pointer">
+               
+                    <button className="cursor-pointer text-[30px]"  onClick={handleClick}>
                         + <i className="fa fa-user"></i>
                     </button>
-                </Link>
+                
             </header>
-
+            {!isVisible ? (
+            <>
             <main className="flex h-full flex-1 flex-col gap-6 p-6">
                 <div className="mt-9 mr-5 mb-9 ml-5 grid grid-cols-1 gap-6 md:grid-cols-4">
                     <div className="rounded-2xl border-t-4 border-green-500 bg-white p-6 shadow">
@@ -106,10 +115,10 @@ export default function Posts() {
                     <div className="rounded-2xl border-t-4 border-yellow-500 bg-white p-6 shadow">
                         <h3 className="text-muted-foreground text-lg">UnRegistered Users</h3>
 
-                        <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
+                        <p className="mt-2 text-2xl text-black">{teacherCount + studentCount-totalUserCount}</p>
                     </div>
-                    <div className="rounded-2xl border-t-4 border-yellow-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg"></h3>
+                    <div className="rounded-2xl border-t-4 border-purple-500 bg-white p-6 shadow">
+                        <h3 className="text-muted-foreground text-lg">Today Logged In Users</h3>
 
                         <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
                     </div>
@@ -118,11 +127,7 @@ export default function Posts() {
 
                         <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
                     </div>
-                    <div className="rounded-2xl border-t-4 border-yellow-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Dissabled Accounts</h3>
-
-                        <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
-                    </div>
+                    
                 </div>
 
                 {/* <div className="grid grid-cols-1 gap-7 md:grid-cols- mt-[-15px] shadow-lg border border-[red] ">
@@ -232,6 +237,12 @@ export default function Posts() {
                     </table>
                 </div>
             </main>
+            </>
+      ) : (
+        <Mangement />
+      )}
+
+
         </AppLayout>
     );
 }
