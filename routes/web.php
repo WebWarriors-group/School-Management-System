@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TeacherController;
 
@@ -13,6 +15,7 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return Inertia::render('homepage');
 })->name('homepage');
+
 
 
 Route::get('/test-session', function (Request $request) {
