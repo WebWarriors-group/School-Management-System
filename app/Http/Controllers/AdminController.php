@@ -7,15 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\StudentAcademic;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-
-
-
-
 use App\Models\ActiveSession;
 use Carbon\Carbon;
 
@@ -24,16 +18,16 @@ class AdminController extends Controller
     public function dashboard()
     {
 
-        return Inertia::render('Admin/dashboard');
+        return Inertia::render('Admin/Dashboardoverview');
     }
 
 
-    public function dashboard1()
+    public function user()
     {
         $adminCount = User::where('role', 'admin')->count();
         $teacherCount = User::where('role', 'teacher')->count();
         $studentCount = User::where('role', 'student')->count();
-        $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(5);
+        $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(8);
         $totalUserCount = User::count();
         $teacherCount1 = Teacher::count();
         $studentCount1 = StudentAcademic::count();
@@ -43,7 +37,7 @@ class AdminController extends Controller
             ->whereNotNull('user_id')
             ->get();
 
-        return Inertia::render('Admin/AdminDashboard', [
+        return Inertia::render('Admin/userManagement1', [
             'users' => $users,
             'totalUserCount' => $totalUserCount,
             'teacherCount' => $teacherCount1,
@@ -57,20 +51,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function show()
-    {
-        $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(8);
-
-        return Inertia::render(
-            'Admin/userManagement',
-            [
-                'users' => $users,
-
-            ],
-        );
-    }
-
-    public function register(Request $request)
+     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -87,11 +68,7 @@ class AdminController extends Controller
         ]);
 
         // event(new Registered($user));
-
-
-
-
-    }
+         }
 
     public function delete(int $id)
     {

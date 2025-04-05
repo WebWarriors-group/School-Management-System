@@ -54,15 +54,16 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth', 'admin')->group(function () {
 
-      Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+      Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
      Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
-     Route::get('/admin/usermanage', [AdminController::class, 'dashboard1'])->name('admin.dashboard1');
+     Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
+    //  Route::get('/admin/usermanage', [AdminController::class, 'show'])->name('admin.show');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
      Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
      Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
-     Route::get('/admin/userManagement', [AdminController::class, 'show'])->name('admin.show');
+    
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 

@@ -190,7 +190,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
     };
 
     return (
-       <AuthLayout title="Login to your account" description="Enter your email and password below to log in ">
+       <AuthLayout title="" description="">
 <Button 
                             type="button" 
                             className=" absolute bg-red-800 text-white ml-[330px] mt-[-10px] text-lg px-6 hover:cursor-pointer hover:bg-blue-800"
