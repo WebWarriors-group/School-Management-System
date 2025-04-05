@@ -59,7 +59,7 @@ const handleEditUser = (user: User) => {
 
         const currentScrollPosition = window.scrollY;
         
-            router.get(`/admin/userManagement`, { page }, {
+            router.get(`/admin/usermanage`, { page }, {
                 preserveState: true,
                 preserveScroll: true, // This ensures the scroll position is maintained
                 onSuccess: () => {

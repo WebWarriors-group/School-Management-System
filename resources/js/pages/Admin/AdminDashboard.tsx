@@ -56,7 +56,7 @@ export default function Posts() {
         const currentScrollPosition = window.scrollY;
 
         router.get(
-            `/admin/dashboard1`,
+            `/admin/usermanage`,
             { page },
             {
                 preserveState: true,
@@ -77,13 +77,19 @@ const handleClick =()=>{
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-            <header className="sticky top-1 flex w-full items-center justify-between border-b bg-white p-4 shadow-sm">
+            <header className="sticky top-1 flex w-full items-center  border-b bg-white p-4 shadow-sm">
                 {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
                 
 
                
-                    <button className="cursor-pointer text-[30px]"  onClick={handleClick}>
-                        + <i className="fa fa-user"></i>
+                    <button className="cursor-pointer text-[18px] "  onClick={handleClick}>
+                     <p>    <i className="fa fa-user"></i> User</p>
+                    </button>
+                    <button className="cursor-pointer text-[18px] ml-7"  onClick={handleClick}>
+                   <p><i className="fa fa-user text-[green]"></i> Staff </p>
+                    </button>
+                    <button className="cursor-pointer text-[18px] ml-10"  onClick={handleClick}>
+                    <p><i className="fa fa-user text-[purple]"></i> Student </p>
                     </button>
                 
             </header>

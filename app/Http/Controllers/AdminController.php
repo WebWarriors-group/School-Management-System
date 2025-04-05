@@ -21,10 +21,11 @@ use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-public function dashboard(){
+    public function dashboard()
+    {
 
-    return Inertia::render('Admin/dashboard');
-}
+        return Inertia::render('Admin/dashboard');
+    }
 
 
     public function dashboard1()
@@ -43,10 +44,10 @@ public function dashboard(){
             ->get();
 
         return Inertia::render('Admin/AdminDashboard', [
-             'users' => $users,
+            'users' => $users,
             'totalUserCount' => $totalUserCount,
             'teacherCount' => $teacherCount1,
-            'studentCount' =>$studentCount1 ,
+            'studentCount' => $studentCount1,
             'activeSessions' => $activeSessions,
             'roleCounts' => [
                 'admin' => $adminCount,
@@ -56,42 +57,45 @@ public function dashboard(){
         ]);
     }
 
-    public function show(){
+    public function show()
+    {
         $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(8);
 
-       return Inertia::render('Admin/userManagement', [
-            'users' => $users,
-            
-        ],
-       );
-}
+        return Inertia::render(
+            'Admin/userManagement',
+            [
+                'users' => $users,
 
-public function register(Request $request){
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-        'role' => 'required|string|max:255',
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-    ]);
+            ],
+        );
+    }
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'role' => $request->role,
-        'password' => Hash::make($request->password),
-    ]);
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'role' => 'required|string|max:255',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-    // event(new Registered($user));
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+        ]);
 
-    
-     
+        // event(new Registered($user));
 
-}
+
+
+
+    }
 
     public function delete(int $id)
     {
         $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
         $user->delete();
     }
-
 }
