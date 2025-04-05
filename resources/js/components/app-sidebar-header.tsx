@@ -14,7 +14,7 @@ export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: Breadcrum
     
   </div>
 
-  <div className=" ml-130 right-4 flex items-center gap-2">
+  {/* <div className=" ml-130 right-4 flex items-center gap-2">
   <Bell className="w-5 h-5 text-red-500" />Notifications
   </div>
 
@@ -26,7 +26,7 @@ export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: Breadcrum
   <div className=" ml-[20px] right-4 flex items-center gap-2">
   <Printer className="w-5 h-5 text-green-500" /> Print
   </div>
-  
+   */}
 
   <div className="fixed ml-250 right-4 flex items-center gap-2">
     <NavUser />
