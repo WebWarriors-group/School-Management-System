@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\StudentAcademic;
-
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 use App\Models\ActiveSession;
 use Carbon\Carbon;
 
@@ -15,10 +17,17 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+
+        return Inertia::render('Admin/Dashboardoverview');
+    }
+
+
+    public function user()
+    {
         $adminCount = User::where('role', 'admin')->count();
         $teacherCount = User::where('role', 'teacher')->count();
         $studentCount = User::where('role', 'student')->count();
-        $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(5);
+        $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(8);
         $totalUserCount = User::count();
         $teacherCount1 = Teacher::count();
         $studentCount1 = StudentAcademic::count();
@@ -28,11 +37,11 @@ class AdminController extends Controller
             ->whereNotNull('user_id')
             ->get();
 
-        return Inertia::render('Admin/AdminDashboard', [
-             'users' => $users,
+        return Inertia::render('Admin/userManagement1', [
+            'users' => $users,
             'totalUserCount' => $totalUserCount,
             'teacherCount' => $teacherCount1,
-            'studentCount' =>$studentCount1 ,
+            'studentCount' => $studentCount1,
             'activeSessions' => $activeSessions,
             'roleCounts' => [
                 'admin' => $adminCount,
@@ -42,20 +51,28 @@ class AdminController extends Controller
         ]);
     }
 
-    // public function show(){
-    //     $users = User::select('id', 'name', 'email', 'role', 'created_at', 'updated_at')->paginate(5);
+     public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'role' => 'required|string|max:255',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-    //     return Inertia::render('Admin/AdminDashboard', [
-    //         'users' => $users,
-            
-    //     ],
-    //     );
-    // }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // event(new Registered($user));
+         }
 
     public function delete(int $id)
     {
         $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
         $user->delete();
     }
-
 }
