@@ -45,7 +45,33 @@ class AuthenticatedSessionController extends Controller
         return redirect()->route('homepage');
     }
 
+<<<<<<< HEAD
     
+=======
+    public function googleLoginStore(Request $request): RedirectResponse
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if($user){
+
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            // Redirect based on the user's role
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'teacher') {
+                return redirect()->route('teacher.dashboard');
+            } elseif ($user->role === 'student') {
+                return redirect()->route('student.dashboard');
+            }
+            return redirect()->route('homepage');
+        }
+        else {
+            return redirect()->route('homepage');
+        }
+    }
+>>>>>>> 8305a8ba47b9df3ac11c6ca510bfabcabc618195
 
     /**
      * Destroy an authenticated session.

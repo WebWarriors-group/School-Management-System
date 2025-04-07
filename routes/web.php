@@ -4,15 +4,19 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\Auth\RegisteredUserController;
+use Illuminate\Http\Request;
+>>>>>>> 8305a8ba47b9df3ac11c6ca510bfabcabc618195
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TeacherController;
-
-use Illuminate\Http\Request;
 
 
 Route::get('/', function () {
     return Inertia::render('homepage');
 })->name('homepage');
+
 
 
 Route::get('/test-session', function (Request $request) {
