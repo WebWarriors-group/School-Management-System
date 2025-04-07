@@ -128,21 +128,21 @@ export default function AddTeacherForm() {
     highest_education_qualification: '',
     basic_degree_stream: '',
     highest_professional_qualification: '',
-    present_class: '',
-    present_grade: '',
+    present_class: "class I",
+    present_grade: "Grade I",
     appointment_date_for_current_class: '',
     appointment_date_for_current_grade: '',
-    current_appointment_service_medium: '',
+    current_appointment_service_medium: "Tamil",
     appointed_subject_section: '',
     subject_appointed: '',
     currentservice_appointed_date: '',
     subjects_taught_most_and_second_most: '',
     position_in_the_school: '',
     assign_date_for_the_school: '',
-    other_responsibilities_in_school: '',
-    EDCS_membership: '',
+    other_responsibilities_in_school:'',
+    EDCS_membership: "Yes",
     WSOP_Number: null,
-    Agrahara_insuarence_membership: '',
+    Agrahara_insuarence_membership: "Yes",
   });
   
 
@@ -150,7 +150,10 @@ export default function AddTeacherForm() {
     e.preventDefault();
 
     setData('current_grade_of_teaching_service', data.current_grade_of_teaching_service || 'Grade I'); // Default value if empty
-  setData('is_150_hrs_tamil_course_completed', data.is_150_hrs_tamil_course_completed !== undefined ? data.is_150_hrs_tamil_course_completed : false); // Default to false if undefined
+    setData('present_class', data.present_class || 'class I');
+    setData('present_grade', data.present_grade || 'Grade I');
+    setData('current_appointment_service_medium', data.current_appointment_service_medium || 'Tamil');
+    setData('is_150_hrs_tamil_course_completed', data.is_150_hrs_tamil_course_completed !== undefined ? data.is_150_hrs_tamil_course_completed : false); // Default to false if undefined
   setData('commuting_from_school', data.commuting_from_school || 'Home'); // Default to 'Home' if empty
   setData('distance_from_school', Number(data.distance_from_school) || 0); // Default to 0 if empty
   setData('commuting_method_to_school', data.commuting_method_to_school || 'Bicycle'); // Default to 'Bicycle' if empty
@@ -327,6 +330,8 @@ export default function AddTeacherForm() {
         className="w-full p-2 border rounded"
         value={data.Birthdate}
         onChange={(e) => setData('Birthdate', e.target.value)}
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+
         required
       />
       <InputError message={errors.Birthdate} className="mt-2" />
@@ -397,12 +402,78 @@ export default function AddTeacherForm() {
         id="Emergency_telephone_number"
         name="Emergency_telephone_number"
         className="w-full p-2 border rounded"
-        placeholder="Enter Emergency Telephone Number"
+        placeholder="Enter Number"
         value={data.Emergency_telephone_number}
         onChange={(e) => setData('Emergency_telephone_number', e.target.value)}
         required
       />
       <InputError message={errors.Emergency_telephone_number} className="mt-2" />
+    </div>
+
+    <div className="mb-4">
+      <label htmlFor="Email_address" className="block text-sm font-medium text-gray-700">
+        E-mail Address
+      </label>
+      <input
+        type="email"
+        id="Email_address"
+        name="Email_address"
+        className="w-full p-2 border rounded"
+        placeholder="example@gmail.com"
+        value={data.Email_address}
+        onChange={(e) => setData('Email_address', e.target.value)}
+        required
+      />
+      <InputError message={errors.Email_address} className="mt-2" />
+    </div>
+
+    <div className="mb-4">
+      <label htmlFor="Fixed_telephone_number" className="block text-sm font-medium text-gray-700">
+        Fixed Telephone Number
+      </label>
+      <input
+        type="tel"
+        id="Fixed_telephone_number"
+        name="Fixed_telephone_number"
+        className="w-full p-2 border rounded"
+        placeholder="Enter Number"
+        value={data.Fixed_telephone_number}
+        onChange={(e) => setData('Fixed_telephone_number', e.target.value)}
+        required
+      />
+      <InputError message={errors.Fixed_telephone_number} className="mt-2" />
+    </div>
+    <div className="mb-4">
+      <label htmlFor="Mobile_number" className="block text-sm font-medium text-gray-700">
+        Mobile Number
+      </label>
+      <input
+        type="tel"
+        id="Mobile_number"
+        name="Mobile_number"
+        className="w-full p-2 border rounded"
+        placeholder="Enter Number"
+        value={data.Mobile_number}
+        onChange={(e) => setData('Mobile_number', e.target.value)}
+        required
+      />
+      <InputError message={errors.Mobile_number} className="mt-2" />
+    </div>
+    <div className="mb-4">
+      <label htmlFor="Whatsapp_number" className="block text-sm font-medium text-gray-700">
+        Whatsapp Number
+      </label>
+      <input
+        type="tel"
+        id="Whatsapp_number"
+        name="Whatsapp_number"
+        className="w-full p-2 border rounded"
+        placeholder="Enter Number"
+        value={data.Whatsapp_number}
+        onChange={(e) => setData('Whatsapp_number', e.target.value)}
+        required
+      />
+      <InputError message={errors.Whatsapp_number} className="mt-2" />
     </div>
 
     {/* Navigation Buttons */}
@@ -551,6 +622,7 @@ export default function AddTeacherForm() {
         id="appointed_date"
         value={data.appointed_date}
         onChange={(e)=>setData('appointed_date',e.target.value)}
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -567,6 +639,7 @@ export default function AddTeacherForm() {
         id="work_acceptance_date"
         value={data.work_acceptance_date}
         onChange={(e)=>setData('work_acceptance_date',e.target.value)}
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -601,7 +674,7 @@ export default function AddTeacherForm() {
         //id="salary_increment_date"
         value={data.salary_increment_date}
         onChange={(e)=>setData('salary_increment_date',e.target.value)}
-
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -639,7 +712,7 @@ export default function AddTeacherForm() {
         id="work_acceptance_date_school"
         value={data.work_acceptance_date_school}
         onChange={(e)=>setData('work_acceptance_date_school',e.target.value)}
- 
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -1012,13 +1085,18 @@ export default function AddTeacherForm() {
       <label htmlFor="present_class" className="block text-sm font-medium text-gray-700">
         Present Class
       </label>
-      <select id="present_class" name="present_class"
+      <select 
+      id="present_class" 
+      name="present_class"
+      className="w-full p-2 border rounded" 
       value={data.present_class}
       onChange={(e)=>setData('present_class',e.target.value as "class I" | "class II")}
-className="w-full p-2 border rounded" required>
+      required>
         <option value="class I">Class I</option>
         <option value="class II">Class II</option>
       </select>
+      <InputError message={errors.present_class} className="mt-2" />
+
     </div>
 
     {/* Present Grade */}
@@ -1026,14 +1104,19 @@ className="w-full p-2 border rounded" required>
       <label htmlFor="present_grade" className="block text-sm font-medium text-gray-700">
         Present Grade
       </label>
-      <select id="present_grade" name="present_grade" 
+      <select 
+      id="present_grade" 
+      name="present_grade" 
+      className="w-full p-2 border rounded"
       value={data.present_grade}
       onChange={(e)=>setData('present_grade',e.target.value as "Grade I" | "Grade II" | "Grade III")}
-className="w-full p-2 border rounded" required>
+      required>
         <option value="Grade I">Grade I</option>
         <option value="Grade II">Grade II</option>
         <option value="Grade III">Grade III</option>
       </select>
+      <InputError message={errors.present_grade} className="mt-2" />
+
     </div>
 
     {/* Appointment Date for Current Class */}
@@ -1047,7 +1130,7 @@ className="w-full p-2 border rounded" required>
         name="appointment_date_for_current_class"
         value={data.appointment_date_for_current_class}
         onChange={(e)=>setData('appointment_date_for_current_class',e.target.value)}
- 
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -1064,7 +1147,7 @@ className="w-full p-2 border rounded" required>
         name="appointment_date_for_current_grade"
         value={data.appointment_date_for_current_grade}
         onChange={(e)=>setData('appointment_date_for_current_grade',e.target.value)}
- 
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -1075,14 +1158,18 @@ className="w-full p-2 border rounded" required>
       <label htmlFor="current_appointment_service_medium" className="block text-sm font-medium text-gray-700">
         Current Appointment Service Medium
       </label>
-      <select id="current_appointment_service_medium" name="current_appointment_service_medium" 
+      <select 
+      id="current_appointment_service_medium" 
+      name="current_appointment_service_medium" 
+      className="w-full p-2 border rounded"
       value={data.current_appointment_service_medium}
       onChange={(e)=>setData('current_appointment_service_medium',e.target.value as "Tamil" | "English" | "Sinhala")}
-className="w-full p-2 border rounded" required>
+      required>
         <option value="Tamil">Tamil</option>
         <option value="English">English</option>
         <option value="Sinhala">Sinhala</option>
       </select>
+      <InputError message={errors.current_appointment_service_medium} className="mt-2" />
     </div>
 
     {/* Appointed Subject Section */}
@@ -1132,7 +1219,7 @@ className="w-full p-2 border rounded" required>
         name="currentservice_appointed_date"
         value={data.currentservice_appointed_date}
         onChange={(e)=>setData('currentservice_appointed_date',e.target.value)}
- 
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         className="w-full p-2 border rounded"
         required
       />
@@ -1186,7 +1273,7 @@ className="w-full p-2 border rounded" required>
         className="w-full p-2 border rounded"
         value={data.assign_date_for_the_school}
         onChange={(e)=>setData('assign_date_for_the_school',e.target.value)}
- 
+        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
         required
       />
     </div>

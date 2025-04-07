@@ -19,6 +19,23 @@ class TeacherController extends Controller
     {
         return Inertia::render('Teacher/dashboard');
     }
+
+    public function personalDashboard($teacher_NIC)
+{
+    $teacher = Teacher::with([
+        'teachersaddress', 'personal', 'qualifications', 'teacherotherService'
+    ])->where('teacher_NIC', $teacher_NIC)->first();  // Change to first() from find()
+
+    if (!$teacher) {
+        return redirect()->route('dashboard')->with('error', 'Teacher not found');
+    }
+
+    return Inertia::render('Teacher/personalDash', [
+        'teacher' => $teacher
+    ]);
+    
+}
+
     /**
      * Display a listing of teachers.
      */
@@ -30,18 +47,7 @@ class TeacherController extends Controller
 
         return response()->json($teachers);
     }
-    public function profile()
-{
-    $teacher = Teacher::where('teacher_nic', Auth::user()->teacher_NIC)->first();
-
-    if (!$teacher) {
-        return redirect()->route('dashboard')->withErrors('Profile not found.');
-    }
-
-    return Inertia::render('Teacher/Profile', [
-        'teacher' => $teacher
-    ]);
-}
+    
 
 
     /**
@@ -137,6 +143,8 @@ class TeacherController extends Controller
             'other_responsibilities_in_school', 'EDCS_membership', 'WSOP_Number', 'Agrahara_insuarence_membership'
         ]));
 
+        Teacher::query()->increment('count');
+
         return response()->json([
             'message' => 'Teacher data added successfully!',
             'teacher' => $teacherWorkInfo
@@ -156,7 +164,7 @@ class TeacherController extends Controller
             if (!$teacherWorkInfo) {
                 return response()->json(['error' => 'Teacher not found'], 404);
             }
-
+           // Log::info($teacherWorkInfo);
             return response()->json($teacherWorkInfo);
         }
         catch (\Exception $e) {
@@ -168,7 +176,8 @@ class TeacherController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $teacher_NIC): JsonResponse
-    {
+{
+    try {
         $teacherWorkInfo = Teacher::where('teacher_NIC', $teacher_NIC)->first();
 
         if (!$teacherWorkInfo) {
@@ -198,60 +207,75 @@ class TeacherController extends Controller
             'number_in_sign_sheet' => 'nullable|string|max:20',
             'number_in_salary_sheet' => 'nullable|string|max:20',
         ]);
-        
 
         // Update teacher work info
         $teacherWorkInfo->update($validatedData);
 
+        // Update teacher address if available in request
         if ($request->has('teachersaddress')) {
-            $teacherWorkInfo->teachersaddress()->update($request->only([
-                'permanent_address', 'permanent_residential_address', 'grama_niladari_division',
-                'grama_niladari_division_number', 'election_division', 'election_division_number'
-            ]));
+            \Log::info("Updating teacher address for NIC: " . $teacherWorkInfo->teacher_NIC);
+            try {
+                $teacherWorkInfo->teachersaddress()->update($request->only([
+                    'permanent_address', 'permanent_residential_address', 'grama_niladari_division',
+                    'grama_niladari_division_number', 'election_division', 'election_division_number'
+                ]));
+            } catch (\Exception $e) {
+                \Log::error("Error updating teacher address: " . $e->getMessage());
+            }
         }
 
+        // Update teacher personal info if available
         if ($request->has('personal')) {
-            $teacherWorkInfo->personal()->update($request->only([
-               'Full_name', 
-            'Full_name_with_initial', 
-            'Photo',
-            'Gender',
-            'Region',
-            'Ethnicity',
-            'Birthdate',
-            'Title',
-            'Marital_status',
-            'Details_about_family_members',
-            'Emergency_telephone_number',
-            'Email_address',
-            'Fixed_telephone_number',
-            'Mobile_number',
-            'Whatsapp_number',
-            ]));
+            try {
+                $teacherWorkInfo->personal()->update($request->only([
+                    'Full_name', 'Full_name_with_initial', 'Photo', 'Gender', 'Region', 'Ethnicity',
+                    'Birthdate', 'Title', 'Marital_status', 'Details_about_family_members',
+                    'Emergency_telephone_number', 'Email_address', 'Fixed_telephone_number', 
+                    'Mobile_number', 'Whatsapp_number',
+                ]));
+            } catch (\Exception $e) {
+                \Log::error("Error updating teacher personal info: " . $e->getMessage());
+            }
         }
 
+        // Update qualifications if available
         if ($request->has('qualifications')) {
-            $teacherWorkInfo->qualifications()->update($request->only([
-                'type_of_service_in_school', 'gce_al_subject_stream', 'highest_education_qualification',
-                'basic_degree_stream', 'highest_professional_qualification', 'present_class',
-                'present_grade', 'appointment_date_for_current_class', 'appointment_date_for_current_grade',
-                'current_appointment_service_medium', 'appointed_subject_section', 'subject_appointed',
-                'currentservice_appointed_date', 'subjects_taught_most_and_second_most', 'position_in_the_school',
-                'assign_date_for_the_school'
-            ]));
+            try {
+                $teacherWorkInfo->qualifications()->update($request->only([
+                    'type_of_service_in_school', 'gce_al_subject_stream', 'highest_education_qualification',
+                    'basic_degree_stream', 'highest_professional_qualification', 'present_class',
+                    'present_grade', 'appointment_date_for_current_class', 'appointment_date_for_current_grade',
+                    'current_appointment_service_medium', 'appointed_subject_section', 'subject_appointed',
+                    'currentservice_appointed_date', 'subjects_taught_most_and_second_most', 'position_in_the_school',
+                    'assign_date_for_the_school'
+                ]));
+            } catch (\Exception $e) {
+                \Log::error("Error updating teacher qualifications: " . $e->getMessage());
+            }
         }
 
+        // Update other services if available
         if ($request->has('teacherotherservice')) {
-            $teacherWorkInfo->teacherotherservice()->update($request->only([
-                'other_responsibilities_in_school', 'EDCS_membership', 'WSOP_Number', 'Agrahara_insuarence_membership'
-            ]));
+            try {
+                $teacherWorkInfo->teacherotherservice()->update($request->only([
+                    'other_responsibilities_in_school', 'EDCS_membership', 'WSOP_Number', 'Agrahara_insuarence_membership'
+                ]));
+            } catch (\Exception $e) {
+                \Log::error("Error updating teacher other services: " . $e->getMessage());
+            }
         }
 
         return response()->json([
             'message' => 'Teacher data updated successfully!',
             'teacher' => $teacherWorkInfo
         ]);
+    } catch (\Exception $e) {
+        \Log::error('Error updating teacher: ' . $e->getMessage());
+        \Log::error('Stack trace: ' . $e->getTraceAsString());
+        return response()->json(['error' => 'An error occurred while updating the teacher.'], 500);
     }
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -273,64 +297,23 @@ class TeacherController extends Controller
         // Finally, delete the teacher work info record
         $teacherWorkInfo->delete();
 
+        Teacher::query()->decrement('count');
+
         return response()->json([
             'message' => 'Teacher and related data deleted successfully!',
             'teacher_NIC' => $teacher_NIC
         ]);
     }
     
-
-public function sendVerificationCode(Request $request)
-{
-    $request->validate([
-        'phone' => 'required|regex:/^[0-9]{10}$/',
-    ]);
-
-    // Find the teacher's personal details
-    $teacherPersonal = TeacherPersonal::where('teacher_NIC', Auth::user()->teacher_NIC)->first();
-
-    if (!$teacherPersonal) {
-        return response()->json(['error' => 'Teacher personal details not found.'], 404);
-    }
-
-    // Generate a 6-digit verification code
-    $verificationCode = rand(100000, 999999);
+    public function getTeacherCount():JsonResponse
+    {
+        // Get the latest count from the first row
+        $teacherCount = Teacher::count(); // This runs SELECT COUNT(*) FROM teacher_work_infos
+        return response()->json([
+            'teacherCount' => $teacherCount,
+        ]);
     
-    // Update the verification code in the database
-    $teacherPersonal->update([
-        'verification_code' => $verificationCode,
-        'is_verified' => false,
-    ]);
-
-    // Send SMS (replace this function with actual SMS sending logic)
-    $this->sendSms($teacherPersonal->Emergency_telephone_number, "Your verification code is: " . $verificationCode);
-
-    return response()->json(['message' => 'Verification code sent successfully!']);
-}
-
-// Dummy SMS sending function (replace with actual implementation)
-private function sendSms($phoneNumber, $message)
-{
-    // Implement SMS sending via an API (Twilio, Nexmo, etc.)
-    \Log::info("Sending SMS to $phoneNumber: $message");
-}
-
-public function verifyCode(Request $request)
-{
-    $request->validate([
-        'verification_code' => 'required|digits:6',
-    ]);
-
-    $teacherPersonal = TeacherPersonal::where('teacher_NIC', Auth::user()->teacher_NIC)->first();
-
-    if (!$teacherPersonal || $teacherPersonal->verification_code != $request->verification_code) {
-        return response()->json(['error' => 'Invalid verification code.'], 400);
     }
 
-    // Mark as verified
-    $teacherPersonal->update(['is_verified' => true]);
-
-    return response()->json(['message' => 'Phone number verified successfully!']);
-}
 
 }
