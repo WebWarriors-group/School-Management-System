@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
 import {Toaster,toast} from "sonner";
-// ✅ Define the prop type for setShowForm
+
 interface StudentAdmissionProps {
   setShowForm: (value: boolean) => void;
 }
@@ -9,7 +9,7 @@ interface StudentAdmissionProps {
 export default function StudentAdmission({ setShowForm }: StudentAdmissionProps) {
   const [regNo, setRegNo] = useState("");
   const [message, setMessage] = useState("");
-   const [email, setEmail] = useState("");  // New state for email
+   const [email, setEmail] = useState("");  
   const [loading, setLoading] = useState(false);
 
   const handleSendForm = async () => {
@@ -62,7 +62,7 @@ export default function StudentAdmission({ setShowForm }: StudentAdmissionProps)
           {loading ? "Sending..." : "Send"}
         </button>
 
-        {/* 🔹 Cancel Button to Close the Form */}
+       
         <button
           onClick={() => setShowForm(false)}
           className="bg-red-500 text-white px-4 py-2 rounded"
