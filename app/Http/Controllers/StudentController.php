@@ -37,13 +37,16 @@ class StudentController extends Controller
         $students = StudentAcademic::all();
         return response()->json($students, 200);
     }
+    public function getClassIds()
+{
+    $classIds = ClassModel::pluck('class_id');  // Assuming 'id' is the column for class IDs in the ClassModel
 
-    /**
-     * Store a newly created student academic record.
-     */
-    public function store(Request $request): JsonResponse
+        return response()->json($classIds);
+}
+    public function store(Request $request)
     {
-        $request->validate([
+        // Assuming you validate the data first
+        $validated = $request->validate([
             'reg_no' => 'required|string|unique:student_academic_info,reg_no|max:50',
             'class_id' => 'required|exists:classes,class_id',
             'distance_to_school' => 'nullable|numeric|min:0',
@@ -56,14 +59,19 @@ class StudentController extends Controller
             'receiving_any_samurdhi_aswesuma' => 'boolean',
             'receiving_any_scholarship' => 'boolean',
         ]);
-
-        $student = StudentAcademic::create($request->all());
-
+    
+        // Create the student
+        $student = StudentAcademic::create($validated);
+    
+        // Return a JSON response on success
         return response()->json([
-            'message' => 'Student academic record created successfully!',
-            'student' => $student
-        ], 201);
+            'message' => 'Student added successfully!',
+            'student' => $student,
+        ], 201); // HTTP 201 indicates created successfully
     }
+    
+   
+   
 
     /**
      * Display the specified student academic record.
