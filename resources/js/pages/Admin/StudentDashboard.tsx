@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Head, router } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+
+
 import { Input } from "@/components/ui/input";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";

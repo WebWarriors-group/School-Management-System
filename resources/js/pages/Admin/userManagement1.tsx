@@ -5,6 +5,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import { Users } from 'lucide-react';
 import Mangement from '@/pages/Admin/userManagement';
 import React, { useState } from "react";
+import UserRolesPieChart from '@/components/PieChart';
+
 
 const stats = [
     { icon: <Users className="h-6 w-6 text-blue-500" /> },
@@ -85,12 +87,7 @@ const handleClick =()=>{
                     <button className="cursor-pointer text-[18px] "  onClick={handleClick}>
                      <p>    <i className="fa fa-user"></i> User</p>
                     </button>
-                    <button className="cursor-pointer text-[18px] ml-7"  onClick={handleClick}>
-                   <p><i className="fa fa-user text-[green]"></i> Staff </p>
-                    </button>
-                    <button className="cursor-pointer text-[18px] ml-10"  onClick={handleClick}>
-                    <p><i className="fa fa-user text-[purple]"></i> Student </p>
-                    </button>
+                   
                 
             </header>
             {!isVisible ? (
@@ -136,13 +133,13 @@ const handleClick =()=>{
                     
                 </div>
 
-                {/* <div className="grid grid-cols-1 gap-7 md:grid-cols- mt-[-15px] shadow-lg border border-[red] ">
+                <div className="grid grid-cols-1 gap-7 md:grid-cols- mt-[-15px] shadow-lg w-0 ">
                     
                         <UserRolesPieChart roleCounts={roleCounts} secondRoleCounts={secondRoleCountsData} />
                    
-                </div> */}
+                </div>
 
-                {/* <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/>  */}
+                 {/* <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/>   */}
 
                 <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                     <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>

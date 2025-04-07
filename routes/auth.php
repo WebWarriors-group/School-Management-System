@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\StudyMaterialController;
 use App\Http\Controllers\MarkController;
 
@@ -57,9 +58,9 @@ Route::middleware('auth', 'admin')->group(function () {
       Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
      Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
-    //  Route::get('/admin/usermanage', [AdminController::class, 'show'])->name('admin.show');
+     Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
-     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    
      Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });

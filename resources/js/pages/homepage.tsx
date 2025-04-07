@@ -97,7 +97,7 @@ export default function Navbar() {
                     <div className="container px-4">
                         <img src="images/School.jpg" alt="Logo" className="mx-auto mt-9 h-100 w-109" />
                         <h1 className="text-4xl font-bold text-[#800000]">මහදිවුල්වැව මහ විද්‍යාලය</h1>
-                        <h1 className="text-4xl font-bold text-[#800000]">Mahadivulwewa National School</h1>
+                        <h1 className="text-4xl font-bold text-[#800000]"> T / Tn / Mahadivulwewa  National School</h1>
                     </div>
                 </section>
 
@@ -147,14 +147,14 @@ export default function Navbar() {
                 <a href="#" className="hover:text-gray-300"><Mail size={30} /></a>
                 {/* <a href="#" className="hover:text-gray-300"><YouTube size={24} /></a> */}
             </div>
-           <h3>077 879 2078</h3>
+           <h2>Tel :+9477 879 2078</h2>
         </div>
     </div>
 
     <div className="border-t border-gray-500 mt-8 bg-white"></div>
 
     {/* Footer Bottom */}
-    <div className="container mx-auto px-6 py-6 text-center text-[17px] text-gray-600 bg-gray-200">
+    <div className="container mx-auto px-6 py-5 text-center text-[17px] text-gray-600 bg-gray-200">
         <p>&copy; {new Date().getFullYear()} Mahadivulwewa Mahavidyalaya. All rights reserved.</p>
     </div>
 </section>
