@@ -14,6 +14,10 @@ Route::get('/', function () {
     return Inertia::render('homepage');
 })->name('homepage');
 
+Route::get('/sample', function () {
+    return Inertia::render('sample');
+})->name('sample');
+
 
 
 Route::get('/test-session', function (Request $request) {

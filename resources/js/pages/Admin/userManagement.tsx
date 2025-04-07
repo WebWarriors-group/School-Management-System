@@ -9,11 +9,9 @@ import { toast, Toaster } from 'sonner';
 
 import { FormEventHandler } from 'react';
 
-import InputError from '@/components/input-error';
 
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+
 import { useEffect, useRef, useState } from 'react';
 
 // import { Button } from '@/components/ui/button';
@@ -28,18 +26,26 @@ interface User {
     // password:string
 }
 
-type RegisterForm = {
-    profile_picture?: File | null;
+interface Post {
+    // Optional post ID (only exists when editing).
+    
+    file?: File; // Optional picture URL.
+}
+interface Props {
+    // isOpen: boolean; // Controls if the modal is open or closed.
+    // closeModal: () => void; // Function to close the modal.
+    post?: Post | null; // Optional post data (used for editing).
 }
 
-export default function Mangement() {
 
-     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-            
-        profile_picture: null,
-            
-        });
+// type RegisterForm = {
+//     profile_picture?: File | null;
+// }
+
+export default function Mangement({  post }: Props) {
+
     
+      
     const { users } = usePage<{
         users: {
             data: { id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string }[];
@@ -51,6 +57,9 @@ export default function Mangement() {
     const [showRegister, setShowRegister] = useState(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const[isOpen,setIsOpen]= useState(false);
+    const[isImport,setIsImport]= useState(false);
+   
+
 
     const handleAddUser = () => {
         setEditingUser(null); // Reset the editing user to null for creating a new user
@@ -99,24 +108,62 @@ setIsOpen(true)
         setIsOpen(false);
     }
    
+    const closed=()=>{
+        setIsImport(false);
+    }
+   
 
     
-    const submit: FormEventHandler = (e) => {
-       
-
-        post(route('users.import'), {
-        onSuccess: () => {
-            toast.success('User data imported successfully!');
-            close();
-        },
-        onError: (errors) => {
-            toast.error('There was an error importing the users!');
-            console.error(errors);
-        },
-    });
-    };
+   
+    
+    const Import=()=>{
+          setIsImport(true);
+    }
         
-  
+    const [formData, setFormData] = useState<Post>({});
+      
+      
+       const [selectedFile, setSelectedFile] = useState<File | null>(null);
+   
+      
+       const [preview, setPreview] = useState<string>('');
+   
+       
+    
+   
+       
+       const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setSelectedFile(file); // Set the selected file
+            setPreview(URL.createObjectURL(file)); // Generate preview URL
+        }
+       };
+   
+      
+       const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const data = new FormData();
+        if (selectedFile) {
+            data.append('file', selectedFile); // <-- match this with Laravel field name
+        }
+    
+        router.post('/admin/import', data, {
+            onSuccess: () => {
+                toast.success('Post created successfully!');
+                router.reload();
+            },
+            onError: (errors: any) => {
+                console.error(errors);
+                toast.error('Failed to submit post.');
+            },
+        });
+
+        setSelectedFile(null);  // Clear selected file state
+    (document.querySelector('input[type="file"]') as HTMLInputElement).value = '';
+       };
+   
 
     return (
         <div>
@@ -126,21 +173,19 @@ setIsOpen(true)
             <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
                 <div className="flex items-center gap-2 mt-10"  >
                     <Button  onClick={openbox} className="bg-green-800 text-white hover:bg-blue-800">Filter</Button>
-                    <Button  onClick={openbox} className="bg-purple-800 text-white ">Import Users</Button>
+                    <Button  onClick={Import} className="bg-purple-800 text-white ">Import Users</Button>
 
-                   {(
-                     <form className="flex flex-col gap-6 bg-white" onSubmit={submit}>
-                     <Card className=" absolute  w-fit px-5 py-6 ml-20 shadow-md rounded-xl bg-white">
-                        
-                     <Input
-                            id="profile_picture"
-                            type="file"
-                            onChange={(e) => setData('profile_picture', e.target.files ? e.target.files[0] : null)}
-                            disabled={processing}
-                        />
+                   {isImport &&(
+                    
+                     <form  onSubmit={handleSubmit}  encType="multipart/form-data">
+                     <Card className=" absolute  w-fit px-5 py-6 ml-20 shadow-md rounded-xl bg-white top-[120px] left-[80px]">
+                     <Button  className=" absolute bg-red-200 text-[red-600] w-14 left-35 top-21 px-10 hover:text-[white]" onClick={closed} >cancel</Button>
+                     
+                     <input type="file" name="file" onChange={handleFileChange} className="w-full text-gray-700" accept=".xlsx,.xls" />
+
                              
                          
-                         <Button  className="bg-green-100 text-[green] w-14 ">Import</Button>
+                         <Button  className="bg-green-100 text-[green] w-14 px-13" type='submit'>Import</Button>
                          </Card>
                          
                     

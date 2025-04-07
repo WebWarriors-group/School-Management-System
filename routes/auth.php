@@ -58,7 +58,7 @@ Route::middleware('auth', 'admin')->group(function () {
       Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
      Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
-     Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import');
+     Route::post('/admin/import', [UserImportController::class, 'import'])->name('users.import');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
     
      Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
