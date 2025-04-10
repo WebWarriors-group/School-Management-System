@@ -36,7 +36,7 @@ export default function Navbar() {
             <Head title="Mahadivulwewa National School" />
             <div className="w-full">
                 {/* Main Navbar */}
-                <nav className="bg-[#800000] py-2 text-white shadow-md w-full">
+                <nav className="bg-[#4B0000] py-2 text-white shadow-md w-full">
                     <div className="w-full flex items-center  px-5">
                         {/* Logo */}
                         <div className="flex items-center">
@@ -50,7 +50,7 @@ export default function Navbar() {
                        
 
                         {/* Login Button */}
-                        <Link href={route('login')} className="hidden ml-230 md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-blue-700 hover:text-white">
+                        <Link href={route('login')} className="hidden ml-230 md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-gradient-to-r from-orange-600 to-yellow-500 hover:text-white">
                             Login
                         </Link>
 
@@ -96,13 +96,13 @@ export default function Navbar() {
                 <section className="flex h-[80vh] w-full items-center justify-center bg-white text-center text-black">
                     <div className="container px-4">
                         <img src="images/School.jpg" alt="Logo" className="mx-auto mt-9 h-100 w-109" />
-                        <h1 className="text-4xl font-bold text-[#800000]">මහදිවුල්වැව මහ විද්‍යාලය</h1>
-                        <h1 className="text-4xl font-bold text-[#800000]"> T / Tn / Mahadivulwewa  National School</h1>
+                        <h1 className="text-4xl font-bold text-[#4B0000]">මහදිවුල්වැව මහ විද්‍යාලය</h1>
+                        <h1 className="text-4xl font-bold text-[#4B0000]"> T / Tn / Mahadivulwewa  National School</h1>
                     </div>
                 </section>
 
                 {/* Footer Section */}
-                <section className="bg-[#800000]   text-white">
+                <section className="bg-[#4B0000]   text-white">
     <div className="container mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Column 1 */}
         <div>

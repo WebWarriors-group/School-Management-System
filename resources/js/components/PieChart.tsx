@@ -28,7 +28,7 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({
     datasets: [
       {
         data: [roleCounts.admin, roleCounts.teacher, roleCounts.student],
-        backgroundColor: ['#800000', '#004953', '#FFD166'],
+        backgroundColor: ['rgb(76, 234, 181)', 'rgb(214, 17, 168)', '#8B5CF6'],
         hoverBackgroundColor: ['#800000', '#004953', '#FFD166'],
       },
     ],

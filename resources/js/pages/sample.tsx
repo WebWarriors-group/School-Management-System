@@ -3,15 +3,14 @@ import { useEffect, useState } from 'react'; // Import React hooks for managing 
 import {Toaster ,toast } from 'sonner';
 
 interface Post {
-    id?: number; // Optional post ID (only exists when editing).
+    id?: number; 
     
     file?: File; // Optional picture URL.
 }
 
 interface Props {
-    // isOpen: boolean; // Controls if the modal is open or closed.
-    // closeModal: () => void; // Function to close the modal.
-    post?: Post | null; // Optional post data (used for editing).
+   
+    post?: Post | null; 
 }
 
 export default function PostFormModel({  post }: Props) {
@@ -43,7 +42,7 @@ export default function PostFormModel({  post }: Props) {
     
         router.post('/admin/import', data, {
             onSuccess: () => {
-                toast.success('Post created successfully!');
+                toast.success('Users created successfully!');
                 router.reload();
             },
             onError: (errors: any) => {

@@ -1,12 +1,13 @@
+import UserRolesPieChart from '@/components/PieChart';
 import AppLayout from '@/layouts/app-layout';
+import Mangement from '@/pages/Admin/userManagement';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { faPeopleArrows, faRightToBracket, faUsers, faUsersSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Head, router, usePage } from '@inertiajs/react';
 import 'font-awesome/css/font-awesome.min.css';
 import { Users } from 'lucide-react';
-import Mangement from '@/pages/Admin/userManagement';
-import React, { useState } from "react";
-import UserRolesPieChart from '@/components/PieChart';
-
+import { useState } from 'react';
 
 const stats = [
     { icon: <Users className="h-6 w-6 text-blue-500" /> },
@@ -69,183 +70,215 @@ export default function Posts() {
             },
         );
     };
-const[isVisible,setIsVisible]=useState(false);
-const handleClick =()=>{
-   setIsVisible(true);
-}
-
+    const [isVisible, setIsVisible] = useState(false);
+    const handleClick = () => {
+        setIsVisible(true);
+    };
+    const cards = [
+        {
+            color: 'bg-orange-500',
+            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            title: 'Registered Users',
+            value: totalUserCount,
+            footer: 'Get More Space...',
+            footerColor: 'text-red-500',
+        },
+        {
+            color: 'bg-green-500',
+            icon: <FontAwesomeIcon icon={faPeopleArrows} className="text-4xl text-white" />,
+            title: 'Total Members',
+            value: teacherCount + studentCount,
+            footer: 'Last 24 Hours',
+            footerColor: 'text-gray-400',
+        },
+        {
+            color: 'bg-green-700',
+            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            title: 'Active Sessions',
+            value: activeSessions?.length || 0,
+            footer: 'Tracked from Github',
+            footerColor: 'text-gray-400',
+        },
+        {
+            color: 'bg-sky-500',
+            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            title: 'Dissable Accounts',
+            value: activeSessions?.length || 0,
+            footer: 'Just Updated',
+            footerColor: 'text-gray-400',
+        },
+        {
+            color: 'bg-purple-500',
+            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            title: 'Unregistered Users',
+            value: activeSessions?.length || 0,
+            footer: 'Just Updated',
+            footerColor: 'text-gray-400',
+        },
+        {
+            color: 'bg-red-700',
+            icon: <FontAwesomeIcon icon={faUsersSlash} className="text-4xl text-white" />,
+            title: 'Dissable Accounts',
+            value: activeSessions?.length || 0,
+            footer: 'Just Updated',
+            footerColor: 'text-gray-400',
+        },
+        {
+            color: 'bg-sky-500',
+            icon: <FontAwesomeIcon icon={faRightToBracket} className="text-4xl text-white" />,
+            title: ' Today Login Users',
+            value: activeSessions?.length || 0,
+            footer: 'Just Updated',
+            footerColor: 'text-gray-400',
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-            <header className="sticky top-1 flex w-full items-center  border-b bg-white p-4 shadow-sm">
+            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
                 {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
-                
 
-               
-                    <button className="cursor-pointer text-[18px] "  onClick={handleClick}>
-                     <p>    <i className="fa fa-user"></i> User</p>
-                    </button>
-                   
-                
+                <button className="cursor-pointer text-[18px]" onClick={handleClick}>
+                    <p>
+                        {' '}
+                        <i className="fa fa-user"></i> User
+                    </p>
+                </button>
             </header>
             {!isVisible ? (
-            <>
-            <main className="flex h-full flex-1 flex-col gap-6 p-6">
-                <div className="mt-9 mr-5 mb-9 ml-5 grid grid-cols-1 gap-6 md:grid-cols-4">
-                    <div className="rounded-2xl border-t-4 border-green-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Registerd Users</h3>
+                <>
+                    <main className="flex h-full flex-1 flex-col gap-6 p-6">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+                            {cards.map((card, index) => (
+                                <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-sm transition hover:shadow-md">
+                                    {/* Colored square icon */}
+                                    <div
+                                        className={`absolute -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}
+                                    >
+                                        <span className="text-lg">{card.icon}</span>
+                                    </div>
 
-                        <p className="mt-2 text-2xl font-bold text-black">{totalUserCount}</p>
-                    </div>
-                    <div className="rounded-2xl border-t-4 border-red-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Total Members</h3>
+                                    {/* Push content down to make space for the icon box */}
+                                    <div className="mt-[-40px] ml-30 pt-8">
+                                        <p className="text-sm text-gray-500">{card.title}</p>
+                                        <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
+                                        <p className={`mt-2 text-xs ${card.footerColor}`}>{card.footer}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
 
-                        <p className="mt-2 text-2xl font-bold text-black">{teacherCount + studentCount}</p>
-                    </div>
-                    <div className="rounded-2xl border-t-4 border-blue-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Active Sessions</h3>
+                        <div className="md:grid-cols- mt-[16px] grid w-0 grid-cols-1 gap-7 shadow-lg">
+                            <UserRolesPieChart roleCounts={roleCounts} secondRoleCounts={secondRoleCountsData} />
+                        </div>
 
-                        <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
-                    </div>
-                    <div className="rounded-2xl border-t-4 border-yellow-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Dissabled Accounts</h3>
+                        {/* <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/>   */}
 
-                        <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
-                    </div>
+                        <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                            <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>
 
-                    <div className="rounded-2xl border-t-4 border-yellow-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">UnRegistered Users</h3>
-
-                        <p className="mt-2 text-2xl text-black">{teacherCount + studentCount-totalUserCount}</p>
-                    </div>
-                    <div className="rounded-2xl border-t-4 border-purple-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Today Logged In Users</h3>
-
-                        <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
-                    </div>
-                    <div className="rounded-2xl border-t-4 border-yellow-500 bg-white p-6 shadow">
-                        <h3 className="text-muted-foreground text-lg">Deleted Accounts</h3>
-
-                        <p className="mt-2 text-2xl text-black">{activeSessions?.length || 0}</p>
-                    </div>
-                    
-                </div>
-
-                <div className="grid grid-cols-1 gap-7 md:grid-cols- mt-[-15px] shadow-lg w-0 ">
-                    
-                        <UserRolesPieChart roleCounts={roleCounts} secondRoleCounts={secondRoleCountsData} />
-                   
-                </div>
-
-                 {/* <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/>   */}
-
-                <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
-                    <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>
-
-                    <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
-                        <thead>
-                            <tr className="border-b bg-gray-100 text-gray-800">
-                                {['Email', 'Name', 'Role', 'Create_at', 'Updated_at'].map((header) => (
-                                    <th key={header} className="border p-3 text-left">
-                                        {header}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users?.data?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
-                                users.data.map((user) => (
-                                    <tr key={user.id} className="hover:bg-gray-50">
-                                        <td className="border px-4 py-2">{user.email}</td>
-                                        <td className="border px-4 py-2">{user.name}</td>
-                                        <td className="border px-4 py-2">{user.role}</td>
-
-                                        <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
-                                        <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td>
+                            <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
+                                <thead>
+                                    <tr className="text-[rgb(7, 72, 79)] border-b bg-gray-100">
+                                        {['Email', 'Name', 'Role', 'Create_at', 'Updated_at'].map((header) => (
+                                            <th key={header} className="border p-3 text-left">
+                                                {header}
+                                            </th>
+                                        ))}
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="py-4 text-center text-gray-500">
-                                        No posts available.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                    {users?.data?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                        users.data.map((user) => (
+                                            <tr key={user.id} className="text-[16px] hover:bg-gray-50">
+                                                <td className="border px-4 py-2">{user.email}</td>
+                                                <td className="border px-4 py-2">{user.name}</td>
+                                                <td className="border px-4 py-2">{user.role}</td>
 
-                    {/* Pagination Controls */}
-                    <div className="flex justify-between">
-                        <button
-                            disabled={users.current_page === 1}
-                            onClick={() => goToPage(users.current_page - 1)}
-                            className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer"
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            {users.current_page} of {users.last_page}
-                        </span>
-                        <button
-                            disabled={users.current_page === users.last_page}
-                            onClick={() => goToPage(users.current_page + 1)}
-                            className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer"
-                        >
-                            Next
-                        </button>
-                    </div>
-                </div>
+                                                <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
+                                                <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={5} className="py-4 text-center text-gray-500">
+                                                No posts available.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
 
-                <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
-                    <h3 className="text-lg font-bold text-[#800000]">Active users Records</h3>
-                    <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
-                        <thead>
-                            <tr className="border-b bg-gray-100 text-gray-800">
-                                {['Username', 'Email', 'IPAddress', 'UserAgent', 'Last Activity', 'Status'].map((header) => (
-                                    <th key={header} className="border p-3 text-left">
-                                        {header}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {activeSessions?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
-                                activeSessions.map((session) => (
-                                    <tr key={session.id} className="hover:bg-gray-50">
-                                        {/* <td className="border px-4 py-2">
+                            {/* Pagination Controls */}
+                            <div className="flex justify-between">
+                                <button
+                                    disabled={users.current_page === 1}
+                                    onClick={() => goToPage(users.current_page - 1)}
+                                    className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer"
+                                >
+                                    Previous
+                                </button>
+                                <span>
+                                    {users.current_page} of {users.last_page}
+                                </span>
+                                <button
+                                    disabled={users.current_page === users.last_page}
+                                    onClick={() => goToPage(users.current_page + 1)}
+                                    className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                            <h3 className="text-lg font-bold text-[#800000]">Active users Records</h3>
+                            <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
+                                <thead>
+                                    <tr className="border-b bg-gray-100 text-gray-800">
+                                        {['Username', 'Email', 'IPAddress', 'UserAgent', 'Last Activity', 'Status'].map((header) => (
+                                            <th key={header} className="border p-3 text-left">
+                                                {header}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {activeSessions?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                        activeSessions.map((session) => (
+                                            <tr key={session.id} className="hover:bg-gray-50">
+                                                {/* <td className="border px-4 py-2">
                                        {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
                                    </td> */}
-                                        {/* <td className="border px-4 py-2">{session.id}</td> */}
-                                        <td className="border px-4 py-2">{session.user.name}</td>
-                                        <td className="border px-4 py-2">{session.user.email}</td>
-                                        <td className="border px-4 py-2">{session.ip_address}</td>
-                                        <td className="border px-4 py-2">{session.user_agent}</td>
-                                        <td className="border px-4 py-2">{new Date(session.last_activity * 1000).toLocaleString()}</td>
+                                                {/* <td className="border px-4 py-2">{session.id}</td> */}
+                                                <td className="border px-4 py-2">{session.user.name}</td>
+                                                <td className="border px-4 py-2">{session.user.email}</td>
+                                                <td className="border px-4 py-2">{session.ip_address}</td>
+                                                <td className="border px-4 py-2">{session.user_agent}</td>
+                                                <td className="border px-4 py-2">{new Date(session.last_activity * 1000).toLocaleString()}</td>
 
-                                        <td className="border px-4 py-2 text-center">
-                                            <button className="h-[30px] w-[100px] rounded-2xl bg-green-100 text-[green]">active</button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="py-4 text-center text-gray-500">
-                                        No posts available.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </main>
-            </>
-      ) : (
-        <Mangement />
-      )}
-
-
+                                                <td className="border px-4 py-2 text-center">
+                                                    <button className="h-[30px] w-[100px] rounded-2xl bg-green-100 text-[green]">active</button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={5} className="py-4 text-center text-gray-500">
+                                                No posts available.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </main>
+                </>
+            ) : (
+                <Mangement />
+            )}
         </AppLayout>
     );
 }
