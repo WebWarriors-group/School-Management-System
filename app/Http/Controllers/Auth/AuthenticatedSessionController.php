@@ -65,7 +65,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('homepage');
         }
         else {
-            return redirect()->route('homepage');
+            return redirect()->route('/');
         }
     }
 
