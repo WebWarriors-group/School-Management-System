@@ -3,11 +3,7 @@ import { Head, router } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
 
-<<<<<<< HEAD
-
-=======
 import { Card, CardContent } from "@/components/ui/card";
->>>>>>> 2dd48d9d40108a78cbbb518cf4d0845caf462217
 import { Input } from "@/components/ui/input";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
