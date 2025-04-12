@@ -41,13 +41,10 @@ export default function Navbar() {
                         {/* Logo */}
                         <div className="flex items-center">
                             <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full ml-[-10px]" />
-                            <span className="font-[Orbitron] text-xl font-semibold text-[#FDDEBD] ml-3  ">
-                                 T / Tn / Mahadivulwewa  National School
+                            <span className="font-[Orbitron] text-lg font-semibold text-[#FDDEBD] ml-3 whitespace-nowrap">
+                                T / Tn / Mahadivulwewa National School
                             </span>
                         </div>
-
-                       
-                       
 
                         {/* Login Button */}
                         <Link href={route('login')} className="hidden ml-230 md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-gradient-to-r from-orange-600 to-yellow-500 hover:text-white">
