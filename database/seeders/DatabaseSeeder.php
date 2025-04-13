@@ -34,8 +34,8 @@ class DatabaseSeeder extends Seeder
         // Subject::factory(10)->create();
         // Marks::factory(50)->create();
         
-         User::factory(10)->create();
-        // StudyMaterial::factory(10)->create();
+        User::factory(10)->create();
+        StudyMaterial::factory(50)->create();
         //StudentFamilyInfo::factory(10)->create();
         //StudentSibling::factory(20)->create();
 

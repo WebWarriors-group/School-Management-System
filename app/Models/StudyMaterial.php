@@ -15,6 +15,9 @@ class StudyMaterial extends Model
         'subject_id', 
         'uploaded_by', 
         'title', 
+        'grade', 
+        'subject', 
+        'year',
         'file_path', 
         'uploaded_at'
     ];
