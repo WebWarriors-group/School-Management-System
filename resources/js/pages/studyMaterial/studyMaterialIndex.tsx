@@ -3,6 +3,8 @@ import AppLayout from "@/layouts/app-layout";
 import { Head, usePage } from "@inertiajs/react";
 import { type BreadcrumbItem } from "@/types";
 
+import UploadForm from "./uploadForm";
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "toggle screen", href: "/student" },
 ];
@@ -12,6 +14,8 @@ interface StudyMaterial {
     title: string;
     description: string;
     grade: number;
+    subject: string;
+    year: number;
 }
 
 interface Props {
@@ -27,13 +31,15 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
     };
 
     const [selectedGrade, setSelectedGrade] = useState("");
+    const [selectedSubject, setSelectedSubject] = useState("");
 
     const grades = Array.from(new Set(materials.map((m) => m.grade))).sort();
+    const subjects = Array.from(new Set(materials.map((m) => m.subject)));
 
-    const filteredMaterials = selectedGrade
-        ? materials.filter((m) => m.grade == Number(selectedGrade))
-        : materials;
+    const filteredMaterials0 = selectedGrade ? materials.filter((m) => m.grade == Number(selectedGrade)) : materials;
+    const filteredMaterials = (selectedSubject ? filteredMaterials0.filter((m) => m.subject == String(selectedSubject)) : filteredMaterials0).sort((a, b) => b.year - a.year);
 
+    const [showForm, setShowForm] = useState(false);
     
 
     return (
@@ -51,19 +57,23 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                     <div className="flex items-center justify-between mb-6">
                         {/* Page Title */}
                         <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                            Study Materials for: <span className="text-red-700 font-bold">{
-                                    category == "pastpapers" && "Past Papers" || 
-                                    category == "notes" && "Notes" ||
-                                    category == "teachersHandbooks" && "Teachers' Handbooks" ||
-                                    category
-                                }</span>
+                            <span className="text-red-700 font-bold">{
+                                category == "pastpapers" && "Past Papers" || 
+                                category == "notes" && "Notes" ||
+                                category == "teachersHandbooks" && "Teachers' Handbooks" ||
+                                category
+                            }</span>
                         </h2>
                         {auth.user?.role === "admin" && (
-                            <button className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
+                            <button onClick={() => setShowForm(!showForm)} className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
                                 Upload materials
                             </button>
                         )}
                     </div>
+
+                    {showForm && (
+                        <UploadForm category={category} subjects={"sdf"} />
+                    )}
 
                     {/* Grade Selector */}
                     <div className="mb-8">
@@ -83,6 +93,24 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                             ))}
                         </select>
                     </div>
+                    {/* Subject Selector */}
+                    <div className="mb-8">
+                        <label className="block text-gray-700 text-sm font-medium mb-2">
+                            🎓 Select Subject:
+                        </label>
+                        <select
+                            className="w-full border border-gray-300 rounded-md py-2 px-4 focus:ring-2 focus:ring-red-700 focus:outline-none text-sm"
+                            value={selectedSubject}
+                            onChange={(e) => setSelectedSubject(e.target.value)}
+                        >
+                            <option value="">All Subjects</option>
+                            {subjects.map((subject) => (
+                                <option key={subject} value={subject}>
+                                    {subject}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
                     {/* Materials List */}
                     {filteredMaterials.length ? (
@@ -92,8 +120,18 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                                     key={material.id}
                                     className="p-6 border-l-4 border-red-700 bg-gray-50 rounded-xl shadow-sm hover:scale-102 duration-300 cursor-pointer"
                                 >
-                                    <h3 className="text-lg font-semibold text-gray-800">{material.title}</h3>
-                                    <p className="mt-2 text-sm text-gray-600 leading-relaxed">{material.description}</p>
+                                     {/* Year Badge */}
+                                    <div className="flex-shrink-0">
+                                        <span className="inline-block text-white bg-red-800 rounded-full px-4 py-1 text-sm font-semibold shadow-md">
+                                            {material.year}
+                                        </span>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-800">{material.title}</h3>
+                                        <p className="mt-2 text-sm text-gray-600 leading-relaxed">{material.description}</p>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
