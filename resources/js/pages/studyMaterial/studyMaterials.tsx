@@ -6,7 +6,7 @@ import { type BreadcrumbItem } from "@/types";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "toggle screen",
+        title: "📚 Study Materials",
         href: "/student",
     },
 ];
@@ -40,7 +40,7 @@ const studyMaterials = () => {
 
                 {/* Header */}
                 <header className="bg-white sticky top-0 z-10 w-full flex items-center justify-between border-b px-6 py-4 shadow-md">
-                    <h2 className="text-xl md:text-2xl font-bold text-red-800 tracking-tight">📚 Study Materials</h2>
+                    {/* <h2 className="text-xl md:text-2xl font-bold text-red-800 tracking-tight">📚 Study Materials</h2> */}
                 </header>
 
                 {/* Categories Grid */}
