@@ -32,6 +32,7 @@ return new class extends Migration
             $table->enum('commuting_method_to_school', ['Bicycle', 'MotorBike', 'Car', 'Bus', 'Threewheeler', 'Walk', 'Other']);
             $table->string('number_in_sign_sheet', 20);
             $table->string('number_in_salary_sheet', 20);
+            $table->integer('count')->default(0);
 
             $table->timestamps();
         });
