@@ -5,8 +5,16 @@ import Timetable from '@/pages/Admin/timeTable';
 import { faBullhorn, faFileLines, faUsers ,faCalendar} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
+import { type BreadcrumbItem } from '@/types';
 
 export default function StatsOverview () {
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: '📊Dashboard Overview',
+            href: '/',
+        },
+    ];
     
     const cards = [
         {
@@ -47,7 +55,7 @@ export default function StatsOverview () {
 setIsOpen(true);
     }
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <header className="sticky top-1 flex w-full items-center border-b bg-white px-4 py-2 shadow-sm z-50">
                 {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
 
@@ -65,7 +73,7 @@ setIsOpen(true);
                 {/* Filter Select */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button className="ml-5 h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Quick Adding</Button>
+                        <Button className="ml-5 h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555] border-1 border-[#005555]">Quick Adding</Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="ml-70 h-35 w-60 justify-center text-[250px]">
                         <DropdownMenuItem onClick={() => alert('Profile clicked')} className="py-2 text-[16px] hover:cursor-pointer">
@@ -110,7 +118,7 @@ setIsOpen(true);
             </div>
             <div className="mt-16 ml-10 grid h-70 w-150 grid-cols-1 gap-6 border-2 sm:grid-cols-2 md:grid-cols-10">
 
-            <div className=" absolute mt-[-32px]  h-10 w-90 bg-purple-900 px-4  ml-30 text-[white] justify-center items-center flex text-[18px]">
+            <div className=" absolute mt-[-32px]  h-10 w-90 bg-[#005555] px-4  ml-30 text-[white] justify-center items-center flex text-[18px]">
                         Forms Generation
                     </div>
                 <div className="relative mt-8 ml-5 h-55 w-60 border bg-purple-100 bg-white p-4 shadow-sm transition hover:shadow-md justify-center flex">
@@ -169,22 +177,7 @@ setIsOpen(true);
             </div>
         
 
-            <div className="mt-8 ml-70 h-100 w-100 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                {/* Colored square icon */}
-
-                {/* Push content down to make space for the icon box */}
-                <div className="mt-[-40px] ml-20 pt-8">
-                    <p className="text-[17px] text-gray-900">Announcement</p>
-                    <DropdownMenuSeparator className="mt-15 ml-[0px] w-30" />
-                    <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                    <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                    <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-
-                    <Button className="mt-1 ml-[-3px] h-10 w-34 bg-[#005555] px-4 text-[16px] text-white shadow-md hover:cursor-pointer focus:ring-2 focus:ring-green-400">
-                        +Generate
-                    </Button>
-                </div>
-            </div>
+           
             </>
             ) : (
            

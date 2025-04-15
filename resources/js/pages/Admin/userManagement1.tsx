@@ -18,7 +18,7 @@ const stats = [
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'User Management',
+        title: '👨‍💻User Management',
         href: '/',
     },
 ];
