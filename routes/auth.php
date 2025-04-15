@@ -60,8 +60,6 @@ Route::middleware('auth', 'admin')->group(function () {
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
      Route::post('/admin/import', [UserImportController::class, 'import'])->name('users.import');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
-    
-     Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     
@@ -73,6 +71,4 @@ Route::middleware('auth', 'teacher')->group(function () {
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-});
+
