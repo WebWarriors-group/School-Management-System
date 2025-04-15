@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherRequestController;
 
 
 Route::get('/', function () {
@@ -34,24 +35,33 @@ Route::get('/test-session', function (Request $request) {
 //     return Inertia::render('Teacher/dashboard');
 // });
 
-Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
-// Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
-
-Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile')->middleware('auth');
-Route::get('/teacher_profile', function () {
-    return inertia::render('Teacher/profile'); // This should return the Inertia page
-})->name('teacher.profile');
-Route::get('/Teacher/profile', function () {
-    return Inertia::render('Teacher/dashboard');
+Route::get('/leave', function () {
+    return inertia::render('Teacher/LeaveRequest'); // This should return the Inertia page
+})->name('leave');
+Route::get('/Teacher/LeaveRequest', function () {
+    return Inertia::render('Teacher/personalDash');
 });
 
-Route::post('/teacher/send-verification-code', [TeacherController::class, 'sendVerificationCode'])
-    ->middleware('auth')
-    ->name('teacher.sendVerificationCode');
-    Route::post('/teacher/verify-code', [TeacherController::class, 'verifyCode'])
-    ->middleware('auth')
-    ->name('teacher.verifyCode');
+Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
+//Route::get('/teacher/show', [TeacherController::class, 'show'])->name('teacher.show');
+Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
 
+
+
+Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'personalDashboard'])->name('personaldashboard');
+Route::get('/dashboard/teacher-count', [TeacherController::class, 'getTeacherCount']);
+
+
+// Teacher submitting a request
+Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->name('teacher.requests');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/teacher-requests', [TeacherRequestController::class, 'index'])->name('admin.teacherRequests');
+    Route::get('/admin/reset', [TeacherRequestController::class, 'resetCount'])->name('reset');
+    Route::post('/admin/teacher-requests/{id}/approve', [TeacherRequestController::class, 'approveRequest']);
+    Route::post('/admin/teacher-requests/{id}/reject', [TeacherRequestController::class, 'rejectRequest']);
+});
 
 
 // Route::get('/add-teacher', function () {
@@ -67,6 +77,16 @@ Route::get('/teacher_details', function () {
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
+
+//D:\School-Management-System-1\resources\js\pages\Admin\techerReq.tsx
+Route::get('/teacher_requests', function () {
+    return inertia::render('Admin/TeacherRequests'); // This should return the Inertia page
+})->name('teacher_requests');
+Route::get('/Admin/TeacherRequests', function () {
+    return Inertia::render('Admin/teacher');
+});
+
+Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 
 
 
