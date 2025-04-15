@@ -22,7 +22,7 @@ interface Student {
 
 const breadcrumbs = [
   {
-    title: "Student Dashboard",
+    title: "🎓 Student Dashboard",
     href: "/student/dashboard",
   },
 ];
