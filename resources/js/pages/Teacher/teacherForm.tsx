@@ -160,7 +160,7 @@ export default function AddTeacherForm() {
   setData('WSOP_Number', data.WSOP_Number || null); // Default to null if empty
 
     
-    post(route('teacher.store'), {
+    post(route('teacher.requests'), {
       
     headers: { "Content-Type": "multipart/form-data" }, 
       onSuccess: () => alert('Teacher data added successfully!'),

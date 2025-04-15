@@ -59,23 +59,12 @@ Route::middleware('auth', 'admin')->group(function () {
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
     //  Route::get('/admin/usermanage', [AdminController::class, 'show'])->name('admin.show');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
-     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    
      Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     
-<<<<<<< HEAD
-    Route::delete('/posts/{id}', [AdminController::class, 'delete']);
-//!!!!!!!it is used for delete the user dont delete this route**************
-    //Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
-    Route::get('/admin/studymaterials', function () { return Inertia::render('Admin/studyMaterials'); });
-    Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
-    Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
-    Route::get('/admin/userManagement', function () { return Inertia::render('Admin/userManagement'); })->name('userManagement');
-    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-=======
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
->>>>>>> 8305a8ba47b9df3ac11c6ca510bfabcabc618195
 });
 
 Route::middleware('auth', 'teacher')->group(function () {

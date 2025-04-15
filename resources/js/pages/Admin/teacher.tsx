@@ -71,12 +71,23 @@ export default function AdminTeacherDashboard() {
                     </div>+
                     
                 </div>
-            </div>                  
-                        <Link href="/add-teacher">
-                                        <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all ml-auto block">
-                                            Add Teacher by the Admin
-                                        </button>
-                                    </Link>
+            </div>
+            <div className="flex justify-end mt-4">
+  <div className="flex flex-col md:flex-row gap-4">
+    <Link href="/teacher_requests">
+      <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all w-full md:w-auto">
+        Check Teacher Requests
+      </button>
+    </Link>
+
+    <Link href="/add-teacher">
+      <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all w-full md:w-auto">
+        Add Teacher by Admin
+      </button>
+    </Link>
+  </div>
+</div>
+
                             
                             </div>
                             

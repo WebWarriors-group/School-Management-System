@@ -9,6 +9,7 @@ use App\Models\TeacherAddress;
 use App\Models\TeacherPersonal;
 use App\Models\Qualification;
 use App\Models\TeacherOtherServices;
+use App\Models\TeacherRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -171,6 +172,51 @@ class TeacherController extends Controller
             return response()->json(['error' => 'An error occurred while fetching teacher data'], 500);
         }
     }
+    public function storeRequest(Request $request): JsonResponse
+{
+    $validatedData = $request->validate([
+            'teacher_NIC' => 'required|string|max:12|unique:teacher_work_infos,teacher_NIC',
+
+            'appointed_date' => 'required|date',
+            'work_acceptance_date' => 'required|date',
+            'appointment_type' => 'required|string',
+            'salary_increment_date' => 'required|date',
+            'current_grade_of_teaching_service' => 'required|in:Grade I,Grade II,Grade III',
+            'work_acceptance_date_school' => 'required|date',
+            'temporary_attachedschool_or_institute_name' => 'required|string|max:100',
+            'appointed_subject' => 'required|string|max:20',
+            'which_grades_teaching_done' => 'required|string',
+            'current_teaching_subject' => 'required|string|max:20',
+            'other_subjects_taught' => 'required|string',
+            'assigned_class' => 'required|string',
+            'other_responsibilities_assigned' => 'required|string',
+            '150_hrs_tamil_course_completed' => 'boolean',
+            'commuting_from_school' => 'nullable|in:Home,Boarding,Hostel,Other',
+            'distance_from_school' => 'required|numeric',
+            'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
+            'number_in_sign_sheet' => 'required|string|max:20',
+            'number_in_salary_sheet' => 'required|string|max:20',
+    ]);
+
+    // Save all submitted form data as JSON
+    $requestData = $request->all();
+
+    $teacherRequest = TeacherRequest::create([
+        'teacher_NIC' => $validatedData['teacher_NIC'],
+        'form_data' => $requestData,
+        'status' => 'pending',
+    ]);
+
+    return response()->json([
+        'message' => 'Form submitted. Awaiting admin approval.',
+        'request' => $teacherRequest
+    ]);
+}
+
+
+
+
+
 
     /**
      * Update the specified resource in storage.

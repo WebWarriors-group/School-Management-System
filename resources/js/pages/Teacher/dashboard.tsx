@@ -1,14 +1,10 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
-<<<<<<< HEAD
-import { useEffect, useState } from "react";
-import { router } from '@inertiajs/react';
+import { Link ,router} from '@inertiajs/react';
+import { useState } from 'react';
 
-=======
->>>>>>> 8305a8ba47b9df3ac11c6ca510bfabcabc618195
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

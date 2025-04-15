@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AppLayout from "@/layouts/app-layout";
 
 type Teacher = {
   teacher_NIC: string;
@@ -161,6 +162,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   };
 
   return (
+    <AppLayout>
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
       <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">Search Teacher by NIC</h1>
@@ -486,5 +488,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 
     </div>
     </div>
+    </AppLayout>
   );
+  
 }

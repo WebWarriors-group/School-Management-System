@@ -53,13 +53,9 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
-<<<<<<< HEAD
-        "firebase": "^11.6.0",
-=======
         "echarts": "^5.6.0",
         "echarts-for-react": "^3.0.2",
         "firebase": "^11.5.0",
->>>>>>> 8305a8ba47b9df3ac11c6ca510bfabcabc618195
         "font-awesome": "^4.7.0",
         "globals": "^15.14.0",
         "i18next": "^24.2.3",

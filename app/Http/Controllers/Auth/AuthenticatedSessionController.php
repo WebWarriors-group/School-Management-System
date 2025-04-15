@@ -45,9 +45,6 @@ class AuthenticatedSessionController extends Controller
         return redirect()->route('homepage');
     }
 
-<<<<<<< HEAD
-    
-=======
     public function googleLoginStore(Request $request): RedirectResponse
     {
         $user = User::where('email', $request->email)->first();
@@ -71,7 +68,6 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('homepage');
         }
     }
->>>>>>> 8305a8ba47b9df3ac11c6ca510bfabcabc618195
 
     /**
      * Destroy an authenticated session.
