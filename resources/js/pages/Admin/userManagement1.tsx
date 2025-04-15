@@ -18,7 +18,7 @@ const stats = [
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'User Management',
+        title: '👨‍💻User Management',
         href: '/',
     },
 ];
@@ -137,7 +137,7 @@ export default function Posts() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
+            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm z-50">
                 {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
 
                 <button className="cursor-pointer text-[18px]" onClick={handleClick}>
@@ -155,7 +155,7 @@ export default function Posts() {
                                 <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-sm transition hover:shadow-md">
                                     {/* Colored square icon */}
                                     <div
-                                        className={`absolute -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}
+                                        className={`absolute z-0 -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}
                                     >
                                         <span className="text-lg">{card.icon}</span>
                                     </div>

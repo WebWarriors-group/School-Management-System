@@ -36,7 +36,7 @@ export default function Navbar() {
             <Head title="Mahadivulwewa National School" />
             <div className="w-full">
                 {/* Main Navbar */}
-                <nav className="bg-[#4B0000] py-2 text-white shadow-md w-full">
+                <nav className="bg-[#550000] py-2 text-white shadow-md w-full">
                     <div className="w-full flex items-center  px-5">
                         {/* Logo */}
                         <div className="flex items-center">
@@ -93,8 +93,8 @@ export default function Navbar() {
                 <section className="flex h-[80vh] w-full items-center justify-center bg-white text-center text-black">
                     <div className="container px-4">
                         <img src="images/School.jpg" alt="Logo" className="mx-auto mt-9 h-100 w-109" />
-                        <h1 className="text-4xl font-bold text-[#4B0000]">මහදිවුල්වැව මහ විද්‍යාලය</h1>
-                        <h1 className="text-4xl font-bold text-[#4B0000]"> T / Tn / Mahadivulwewa  National School</h1>
+                       
+                        <h1 className="text-4xl font-bold text-[#800000]"> T / Tn / Mahadivulwewa  National School</h1>
                     </div>
                 </section>
 

@@ -45,7 +45,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
     ];
 
     const roleBackgrounds: Record<string, string> = {
-        admin: '#4B0000', // maroon gradient
+        admin: '#550000', // maroon gradient
         teacher: '#51087E', // green gradient
         student: 'green', // b#80008lue gradient
     };
@@ -68,7 +68,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
                   
                 </div> */}
                                 <div className="ml-2 grid flex-1 text-left text-sm">
-                                    <span className="mb-0.5 truncate text-[16px] leading-none font-semibold">Admin Panel Board</span>
+                                    <span className="mb-0.5 truncate text-[16px] leading-none font-semibold text-[white]">Admin Panel Board</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -76,11 +76,11 @@ export function AppSidebar({ role }: AppSidebarProps) {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent className="text-white" style={{ background: sidebarBackground }}>
+            <SidebarContent className="text-[white]" style={{ background: sidebarBackground }}>
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
-            <SidebarFooter className="bg-white text-white">
+            <SidebarFooter className="bg-[white] text-white">
                 <NavFooter items={footerNavItems} className="mt-auto" />
             </SidebarFooter>
         </Sidebar>

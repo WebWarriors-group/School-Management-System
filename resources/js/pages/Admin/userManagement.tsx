@@ -230,11 +230,11 @@ setIsOpen(true)
 )}
                 </div>
 
-                <div className="mt-3 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
+                <div className="mt-3 flex  flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                     <h3 className="text-lg font-bold text-[#004953]">Users</h3>
                     <Button
                         
-                        className=" absolute ml-60 shadow-md text-white text-[16px] bg-gradient-to-r from-blue-700 to-purple-700 hover:bg-green-200 rounded-md px-3 py-1 focus:ring-2 focus:ring-green-400 w-40 h-11 border-4 border-white rounded-4xl"
+                        className=" absolute ml-240 shadow-md text-white text-[16px] bg-gradient-to-r from-blue-700 to-purple-700 hover:bg-green-200 rounded-md px-3 py-1 focus:ring-2 focus:ring-green-400 w-40 h-11 border-4 border-white rounded-4xl"
                                   
                         onClick={(e) => {
                             e.preventDefault();
