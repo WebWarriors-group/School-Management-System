@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: '👩‍🏫 Teacher Management',
         href: '/dashboard',
     },
 
@@ -38,7 +38,7 @@ export default function AdminTeacherDashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="flex flex-col gap-4 p-4">
-                <h2 className="text-xl font-semibold">Teacher Management</h2>
+                {/* <h2 className="text-xl font-semibold">Teacher Management</h2> */}
                 {/* <Link href="/add-teacher"> */}
                 
                 {/* Teacher List Overview */}
