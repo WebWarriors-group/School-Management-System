@@ -35,7 +35,7 @@ Route::get('/test-session', function (Request $request) {
 // });
 
 Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
-// Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
+Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile')->middleware('auth');
 Route::get('/teacher_profile', function () {
