@@ -7,12 +7,17 @@ import {  Bell ,FileText,Printer} from 'lucide-react';
 
 export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: BreadcrumbItemType[] }) {
     return (
-        <header className=" bg-white sticky top-0 border-sidebar-border/50 flex h-16 shrink-0 items-center gap-2 border-b px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
+        <header className=" bg-white sticky z-50 top-0 border-sidebar-border/50 flex h-16 shrink-0 items-center gap-2 border-b px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
   <div className="flex items-center gap-2 text-[blue] ">
-    <SidebarTrigger className="-ml-1" />
+   
    <Breadcrumbs breadcrumbs={breadcrumbs} />  
     
   </div>
+
+  {/* <div className="flex items-center gap-2 text-[blue] ">
+    <SidebarTrigger className="-ml-1" />
+ 
+   </div> */}
 
   {/* <div className=" ml-130 right-4 flex items-center gap-2">
   <Bell className="w-5 h-5 text-red-500" />Notifications
@@ -29,6 +34,7 @@ export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: Breadcrum
    */}
 
   <div className="fixed ml-250 right-4 flex items-center gap-2">
+  <SidebarTrigger className="-ml-1" />
     <NavUser />
   </div>
 </header>
