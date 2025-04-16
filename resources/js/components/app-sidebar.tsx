@@ -22,7 +22,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
         ],
         teacher: [
-            { title: 'Teacher Dashboard', url: '/Teacher/dashboard', icon: LayoutGrid },
+            { title: 'Teacher Dashboard', url: '/teacher/dashboard/{teacher_NIC}', icon: LayoutGrid },
             { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
             //   { title: 'Students', url: '/teacher/students', icon: Folder },

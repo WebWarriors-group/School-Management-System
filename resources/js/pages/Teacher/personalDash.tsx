@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { type BreadcrumbItem } from '@/types';
 
 
 type Teacher = {
@@ -86,6 +87,15 @@ interface Task {
     completed: boolean;
   };
 
+  const breadcrumbs: BreadcrumbItem[] = [
+      {
+          title: '👩‍🏫 Teacher Dashboard',
+          href: '/dashboard',
+      },
+  
+      
+  ];
+
 export default function PersonalDash({ teacher }: { teacher: Teacher }) {
     const [showProfile, setShowProfile] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -122,7 +132,7 @@ export default function PersonalDash({ teacher }: { teacher: Teacher }) {
         : null;
 
     return (
-        <AppLayout>
+        <AppLayout  breadcrumbs={breadcrumbs}>
             <Head title="Teacher Dashboard" />
 
             <div className="container mx-auto px-4 py-6 relative">

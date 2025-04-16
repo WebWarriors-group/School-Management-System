@@ -6,7 +6,10 @@ import { type BreadcrumbItem } from "@/types";
 import UploadForm from "./uploadForm";
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: "toggle screen", href: "/student" },
+    {
+        title: "📚 Study Materials",
+        href: "/student",
+    },
 ];
 
 interface StudyMaterial {
@@ -49,7 +52,7 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
 
                 {/* Header */}
                 <header className="bg-white sticky top-0 z-10 w-full flex items-center justify-between border-b px-6 py-4 shadow-md">
-                    <h1 className="text-xl md:text-2xl font-bold text-red-800 tracking-tight">📚 Study Materials</h1>
+                    {/*<h1 className="text-xl md:text-2xl font-bold text-red-800 tracking-tight">📚 Study Materials</h1>*/}
                 </header>
 
                 {/* Main Container */}
