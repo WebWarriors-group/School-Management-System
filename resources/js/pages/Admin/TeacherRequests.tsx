@@ -1,5 +1,5 @@
 
-
+import { type BreadcrumbItem } from '@/types';
 import { usePage, router } from '@inertiajs/react';
 import { useEffect ,} from 'react';
 import AppLayout from "@/layouts/app-layout";
@@ -18,6 +18,13 @@ type PageProps = {
   requests: TeacherRequest[];
   count:number;
 };
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: '👩‍🏫 Teacher Management',
+      href: '/dashboard',
+    },
+];
 
 export default function TeacherRequests()  {
   
@@ -58,7 +65,7 @@ export default function TeacherRequests()  {
 
 
   return (
-    <AppLayout>
+    <AppLayout breadcrumbs={breadcrumbs}>
     <div className="p-8">
         
       <h1 className="text-2xl font-bold mb-6">Teacher Form Requests</h1>

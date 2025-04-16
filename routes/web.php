@@ -28,12 +28,12 @@ Route::get('/test-session', function (Request $request) {
     return 'Session data: ' . session('current_url');
 });
 
-// Route::get('/add-teacher', function () {
-//     return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
-// })->name('add-teacher');
-// Route::get('/Teacher/teacherForm', function () {
-//     return Inertia::render('Teacher/dashboard');
-// });
+Route::get('/add-teacher', function () {
+    return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
+})->name('add-teacher');
+Route::get('/Teacher/teacherForm', function () {
+    return Inertia::render('Teacher/dashboard');
+});
 
 Route::get('/leave', function () {
     return inertia::render('Teacher/LeaveRequest'); // This should return the Inertia page

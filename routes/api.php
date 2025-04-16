@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController; // FIX: Correct namespace
 use App\Http\Controllers\TeacherController; // FIX: Correct namespace
 use App\Http\Controllers\ClassController;
-
+use App\Http\Controllers\StudentImportController;
 use App\Http\Controllers\SubjectController; 
 use App\Http\Controllers\MarkController; 
 use App\Http\Controllers\StudyMaterialController;
@@ -72,3 +72,4 @@ Route::get('study-materials/{id}', [StudyMaterialController::class, 'show']);
 Route::put('study-materials/{id}', [StudyMaterialController::class, 'update']);
 Route::delete('study-materials/{id}', [StudyMaterialController::class, 'destroy']);
 
+Route::post('/students/import', [StudentImportController::class, 'import']);
