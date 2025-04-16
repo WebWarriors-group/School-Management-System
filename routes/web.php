@@ -35,23 +35,11 @@ Route::get('/Teacher/teacherForm', function () {
     return Inertia::render('Teacher/dashboard');
 });
 
-<<<<<<< HEAD
-Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
-Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
-
-Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile')->middleware('auth');
-Route::get('/teacher_profile', function () {
-    return inertia::render('Teacher/profile'); // This should return the Inertia page
-})->name('teacher.profile');
-Route::get('/Teacher/profile', function () {
-    return Inertia::render('Teacher/dashboard');
-=======
 Route::get('/leave', function () {
     return inertia::render('Teacher/LeaveRequest'); // This should return the Inertia page
 })->name('leave');
 Route::get('/Teacher/LeaveRequest', function () {
     return Inertia::render('Teacher/personalDash');
->>>>>>> 37c4135781a497353a2f4b86592c67f458b7f7cf
 });
 
 Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
