@@ -12,6 +12,8 @@ use App\Models\TeacherOtherServices;
 use App\Models\TeacherRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 
 class TeacherController extends Controller
@@ -259,14 +261,14 @@ class TeacherController extends Controller
 
         // Update teacher address if available in request
         if ($request->has('teachersaddress')) {
-            \Log::info("Updating teacher address for NIC: " . $teacherWorkInfo->teacher_NIC);
+            // \Log::info("Updating teacher address for NIC: " . $teacherWorkInfo->teacher_NIC);
             try {
                 $teacherWorkInfo->teachersaddress()->update($request->only([
                     'permanent_address', 'permanent_residential_address', 'grama_niladari_division',
                     'grama_niladari_division_number', 'election_division', 'election_division_number'
                 ]));
             } catch (\Exception $e) {
-                \Log::error("Error updating teacher address: " . $e->getMessage());
+                // \Log::error("Error updating teacher address: " . $e->getMessage());
             }
         }
 
@@ -280,7 +282,7 @@ class TeacherController extends Controller
                     'Mobile_number', 'Whatsapp_number',
                 ]));
             } catch (\Exception $e) {
-                \Log::error("Error updating teacher personal info: " . $e->getMessage());
+                // \Log::error("Error updating teacher personal info: " . $e->getMessage());
             }
         }
 
@@ -296,7 +298,7 @@ class TeacherController extends Controller
                     'assign_date_for_the_school'
                 ]));
             } catch (\Exception $e) {
-                \Log::error("Error updating teacher qualifications: " . $e->getMessage());
+                // \Log::error("Error updating teacher qualifications: " . $e->getMessage());
             }
         }
 
@@ -307,7 +309,7 @@ class TeacherController extends Controller
                     'other_responsibilities_in_school', 'EDCS_membership', 'WSOP_Number', 'Agrahara_insuarence_membership'
                 ]));
             } catch (\Exception $e) {
-                \Log::error("Error updating teacher other services: " . $e->getMessage());
+                // \Log::error("Error updating teacher other services: " . $e->getMessage());
             }
         }
 
@@ -316,8 +318,8 @@ class TeacherController extends Controller
             'teacher' => $teacherWorkInfo
         ]);
     } catch (\Exception $e) {
-        \Log::error('Error updating teacher: ' . $e->getMessage());
-        \Log::error('Stack trace: ' . $e->getTraceAsString());
+        // \Log::error('Error updating teacher: ' . $e->getMessage());
+        // \Log::error('Stack trace: ' . $e->getTraceAsString());
         return response()->json(['error' => 'An error occurred while updating the teacher.'], 500);
     }
 }

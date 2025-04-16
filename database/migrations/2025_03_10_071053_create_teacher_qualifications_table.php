@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('basic_degree_stream', 50);
             $table->string('highest_professional_qualification', 50);
             $table->enum('present_class', ['class I', 'class II']);
-            $table->enum('present_grade', ['Grade I', 'Grade II', 'Grade III']);
+            $table->enum('present_grade', ['Grade 1', 'Grade 2', 'Grade 3']);
             $table->date('appointment_date_for_current_class');
             $table->date('appointment_date_for_current_grade');
             $table->enum('current_appointment_service_medium', ['Tamil', 'English', 'Sinhala']);
