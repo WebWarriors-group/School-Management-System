@@ -17,7 +17,6 @@ use App\Models\StudyMaterial;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherAddress;
-use App\Models\TeacherOtherService;
 use App\Models\TeacherOtherServices;
 use App\Models\TeacherPersonal;
 use App\Models\User;
@@ -26,18 +25,19 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Teacher::factory(10)->create();
-
-        // ClassModel::factory(10)->create();
-        // StudentAcademic::factory(10)->create();
-
-        // Subject::factory(10)->create();
-        // Marks::factory(50)->create();
-        
-        User::factory(10)->create();
+        User::factory(80)->create();
+        Teacher::factory(30)->create();
+        TeacherPersonal::factory(30)->create();
+        TeacherOtherServices::factory(20)->create();
+        Qualification::factory(50)->create();
         StudyMaterial::factory(50)->create();
-        //StudentFamilyInfo::factory(10)->create();
-        //StudentSibling::factory(20)->create();
+        ClassModel::factory(10)->create();
+        StudentAcademic::factory(40)->create();
+        StudentPersonal::factory(40)->create();
+        StudentFamilyInfo::factory(40)->create();
+        StudentSibling::factory(30)->create();
+        Subject::factory(20)->create();
+        Marks::factory(50)->create();
 
         User::updateOrCreate(
             ['email' => 'admin@sms.lk'], // Unique constraint
