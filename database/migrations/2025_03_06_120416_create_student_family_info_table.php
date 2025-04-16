@@ -17,7 +17,7 @@ return new class extends Migration
            $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
             // Mother's Details
             $table->string('mother_name', 50);
-            $table->string('mother_occupation', 50)->nullable();
+            $table->string('mother_occupation', 100)->nullable();
             $table->decimal('mother_income', 10, 2)->nullable();
             $table->string('mother_working_place', 50)->nullable();
             $table->string('mother_contact', 20)->unique();
@@ -26,7 +26,7 @@ return new class extends Migration
 
             // Father's Details
             $table->string('father_name', 50);
-            $table->string('father_occupation', 50)->nullable();
+            $table->string('father_occupation', 100)->nullable();
             $table->decimal('father_income', 10, 2)->nullable();
             $table->string('father_working_place', 50)->nullable();
             $table->string('father_contact', 20)->unique();

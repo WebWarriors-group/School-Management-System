@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('sibling_name', 100);
             $table->string('relationship', 20); // Brother, Sister, etc.
             $table->integer('age')->nullable(); // Optional
-            $table->string('occupation', 50)->nullable(); // Optional
+            $table->string('occupation', 150)->nullable(); // Optional
             $table->string('contact', 20)->nullable(); // Optional, sibling's contact
             $table->timestamps();
 
