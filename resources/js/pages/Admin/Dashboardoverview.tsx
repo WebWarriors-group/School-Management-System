@@ -1,191 +1,171 @@
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import Timetable from '@/pages/Admin/timeTable';
-import { faBullhorn, faFileLines, faUsers ,faCalendar} from '@fortawesome/free-solid-svg-icons';
+import { faBullhorn, faFileLines, faUsers, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { type BreadcrumbItem } from '@/types';
 
-export default function StatsOverview () {
+export default function StatsOverview() {
+  const [isOpen, setIsOpen] = useState(false);
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: '📊 Dashboard Overview',
+      href: '/',
+    },
+  ];
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: '📊Dashboard Overview',
-            href: '/',
-        },
-    ];
-    
-    const cards = [
-        {
-            color: 'bg-orange-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
-            title: 'Total People',
-            value: '49',
-            footer: 'Get More Space...',
-            footerColor: 'text-red-500',
-        },
-        {
-            color: 'bg-green-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
-            title: 'Classes',
-            value: '245',
-            footer: 'Last 24 Hours',
-            footerColor: 'text-gray-400',
-        },
-        {
-            color: 'bg-red-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
-            title: 'Staffs',
-            value: '75',
-            footer: 'Tracked from Github',
-            footerColor: 'text-gray-400',
-        },
-        {
-            color: 'bg-sky-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
-            title: 'Students',
-            value: '245',
-            footer: 'Just Updated',
-            footerColor: 'text-gray-400',
-        },
-    ];
-    const [isOpen, setIsOpen] = useState(false);
-    const handleTime=()=>{
-setIsOpen(true);
-    }
-    return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <header className="sticky top-1 flex w-full items-center border-b bg-white px-4 py-2 shadow-sm z-50">
-                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
+  const cards = [
+    {
+      color: 'bg-orange-500',
+      icon: faUsers,
+      title: 'Total People',
+      value: '49',
+      footer: 'Staffs and student total counts',
+      footerColor: 'text-gray-400',
+    },
+    {
+      color: 'bg-green-500',
+      icon: faUsers,
+      title: 'Classes',
+      value: '245',
+      footer: 'Last 24 Hours',
+      footerColor: 'text-gray-400',
+    },
+    {
+      color: 'bg-red-500',
+      icon: faUsers,
+      title: 'Staffs',
+      value: '75',
+      footer: 'Staffs counts are until now',
+      footerColor: 'text-gray-400',
+    },
+    {
+      color: 'bg-sky-500',
+      icon: faUsers,
+      title: 'Students',
+      value: '245',
+      footer: 'Just Updated',
+      footerColor: 'text-gray-400',
+    },
 
-                {/* <Button className=" shadow-md text-white text-[16px] bg-gradient-to-r from-orange-600 to-yellow-500 hover:bg-green-200 rounded-md px-3 py-1 focus:ring-2 focus:ring-green-400 w-40 h-11 border-4 border-white rounded-4xl ml-5">
-                                  Quick Import
-                </Button>
-                <Button className=" shadow-md text-white text-[16px] bg-gradient-to-r from-green-600 to-lime-500 hover:bg-green-200 rounded-md px-3 py-1 focus:ring-2 focus:ring-green-400 w-40 h-11 border-4 border-white rounded-4xl ml-5">
-                                  Generate Report
-                </Button>
+    {
+        color: 'bg-sky-500',
+        icon: faUsers,
+        title: 'Labs',
+        value: '245',
+        footer: 'Just Updated',
+        footerColor: 'text-gray-400',
+      },
+  ];
 
-                <Button className=" shadow-md text-white text-[16px]  hover:bg-green-200 rounded-md px-4 py-1 focus:ring-2 focus:ring-green-400 w-49 h-12 border-4 border-white rounded-4xl ml-5">
-                                  Send Announcement
-                </Button> */}
+  const handleTime = () => setIsOpen(true);
 
-                {/* Filter Select */}
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button className="ml-5 h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555] border-1 border-[#005555]">Quick Adding</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="ml-70 h-35 w-60 justify-center text-[250px]">
-                        <DropdownMenuItem onClick={() => alert('Profile clicked')} className="py-2 text-[16px] hover:cursor-pointer">
-                            Adding New Staffs
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => alert('Settings clicked')} className="py-2 text-[16px] hover:cursor-pointer">
-                            Adding New Class
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => alert('Logout clicked')} className="py-2 text-[16px] hover:cursor-pointer">
-                            Adding New Student
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]  hover:cursor-pointer" onClick={handleTime}>Time Table</Button>
-                {/* <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[blue]">Bulk Action</Button>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Upload</Button>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Overall performance</Button>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Attendance</Button>  */}
-            </header>
+  return (
+    <AppLayout breadcrumbs={breadcrumbs}>
+      <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b bg-white px-4 py-3 shadow-sm">
+        <div className="flex gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="border border-[#005555] bg-white px-4 text-[#005555] hover:bg-gray-50">
+                Quick Adding
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => alert('Add Staff')}>Add New Staff</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => alert('Add Class')}>Add New Class</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => alert('Add Student')}>Add New Student</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button onClick={handleTime} className="border border-[#005555] bg-white px-4 text-[#005555] hover:bg-gray-50">
+            Time Table
+          </Button>
+        </div>
+      </header>
 
-            {!isOpen ? (
-<>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-                {cards.map((card, index) => (
-                    <div key={index} className="relative mt-20 ml-5 h-40 w-70 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                        {/* Colored square icon */}
-                        <div className={`absolute -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}>
-                            <span className="text-lg">{card.icon}</span>
-                        </div>
+      {!isOpen ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 py-8 bg-gray-100">
+          {/* Left: Dashboard Stats */}
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-100 w-190">
+  {cards.map((card, index) => (
+    <div
+      key={index}
+      className="flex  shadow hover:shadow-lg overflow-hidden bg-white"
+    >
+      {/* Colored Icon Section */}
+      <div className={`flex items-center justify-center w-1/3 ${card.color}`}>
+        <FontAwesomeIcon icon={card.icon} className="text-white text-3xl" />
+      </div>
 
-                        {/* Push content down to make space for the icon box */}
-                        <div className="mt-[-40px] ml-30 pt-8">
-                            <p className="text-sm text-gray-500">{card.title}</p>
-                            <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
-                            <p className={`mt-2 text-xs ${card.footerColor}`}>{card.footer}</p>
-                        </div>
-                    </div>
-                ))}
+      {/* Info Section */}
+      <div className="flex flex-col justify-center p-4 w-2/3">
+        <p className="text-sm text-gray-500">{card.title}</p>
+        <h2 className="text-2xl font-semibold">{card.value}</h2>
+        <p className={`text-xs mt-1 ${card.footerColor}`}>{card.footer}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+          {/* Right: Feature Cards */}
+          <div className="flex flex-col gap-6">
+            {/* Timetable Card */}
+            <div className="rounded-lg border bg-white p-6 shadow-sm hover:shadow-md">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#005555]">
+                  <FontAwesomeIcon icon={faCalendar} className="text-white text-xl" />
+                </div>
+                <p className="text-lg font-medium text-gray-800">Timetable</p>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">Manage weekly class schedules.</p>
+              <Button className="w-full bg-[#005555] text-white hover:bg-[#004444]" onClick={handleTime}>
+                View Timetable
+              </Button>
             </div>
-            <div className="mt-16 ml-10 grid h-70 w-150 grid-cols-1 gap-6 border-2 sm:grid-cols-2 md:grid-cols-10">
 
-            <div className=" absolute mt-[-32px]  h-10 w-90 bg-[#005555] px-4  ml-30 text-[white] justify-center items-center flex text-[18px]">
-                        Forms Generation
-                    </div>
-                <div className="relative mt-8 ml-5 h-55 w-60 border bg-purple-100 bg-white p-4 shadow-sm transition hover:shadow-md justify-center flex">
-                    {/* Colored square icon */}
-                    <div className={`absolute top-[-2px] left-[0px] flex h-15 w-20 items-center justify-center bg-[#005555] text-white shadow-lg`}>
-                        <span className="text-lg">
-                            <FontAwesomeIcon icon={faFileLines} className="text-4xl text-white" />
-                        </span>
-                    </div>
-
-                    {/* Push content down to make space for the icon box */}
-                    <div className="mt-[-40px] ml-20 pt-8">
-                        <p className="text-[16px] text-gray-900">Generate Report</p>
-                        <DropdownMenuSeparator className="mt-15 ml-[0px] w-30" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-
-                        <Button className="mt-1 ml-[-3px] h-10 w-34 bg-[#005555] px-4 text-[16px] text-white shadow-md hover:cursor-pointer focus:ring-2 focus:ring-green-400">
-                            +Generate
-                        </Button>
-                    </div>
+            {/* Report Generation */}
+            <div className="rounded-lg border bg-white p-6 shadow-sm hover:shadow-md">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#005555]">
+                  <FontAwesomeIcon icon={faFileLines} className="text-white text-xl" />
                 </div>
-
-                <div className="relative mt-8 ml-60 h-55 w-60 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                    {/* Colored square icon */}
-                    <div className={`absolute top-[-2px] left-[0px] flex h-15 w-20 items-center justify-center bg-[#005555] text-white shadow-lg`}>
-                        <span className="text-lg">
-                            <FontAwesomeIcon icon={faBullhorn} className="text-4xl text-white" />
-                        </span>
-                    </div>
-
-                    {/* Push content down to make space for the icon box */}
-                    <div className="mt-[-40px] ml-20 pt-8">
-                        <p className="text-[17px] text-gray-900">Announcement</p>
-                        <DropdownMenuSeparator className="mt-15 ml-[0px] w-30" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-
-                        <Button className="mt-1 ml-[-3px] h-10 w-34 bg-[#005555] px-4 text-[16px] text-white shadow-md hover:cursor-pointer focus:ring-2 focus:ring-green-400">
-                            +Generate
-                        </Button>
-                    </div>
-                </div>
-
-                <div className="mt-[-5px] ml-130 h-100 w-100 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                    {/* Colored square icon */}
-                    <div className="mt-[-32px]  h-13 w-90 bg-purple-900 px-4  text-[white] justify-center items-center flex text-[18px]">
-                        Notifications
-                    </div>
-
-                    {/* Push content down to make space for the icon box */}
-                    <div className="mt-[-40px] ml-20 pt-8"></div>
-                </div>
+                <p className="text-lg font-medium text-gray-800">Report Generation</p>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">Create reports for classes, students, and staff.</p>
+              <Button className="w-full bg-[#005555] text-white hover:bg-[#004444]">
+                + Generate Report
+              </Button>
             </div>
-        
 
-           
-            </>
-            ) : (
-           
-                <Timetable />
-            )}
-            
-        </AppLayout>
-    );
-};
-
-
+            {/* Announcements */}
+            <div className="rounded-lg border bg-white p-6 shadow-sm hover:shadow-md">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#005555]">
+                  <FontAwesomeIcon icon={faBullhorn} className="text-white text-xl" />
+                </div>
+                <p className="text-lg font-medium text-gray-800">Announcements</p>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">Send school-wide messages and alerts.</p>
+              <Button className="w-full bg-[#005555] text-white hover:bg-[#004444]">
+                + Post Announcement
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Timetable />
+      )}
+    </AppLayout>
+  );
+}
