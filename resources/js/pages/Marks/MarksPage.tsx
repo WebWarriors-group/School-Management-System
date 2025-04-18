@@ -227,84 +227,85 @@ const MarksPage: React.FC = () => {
 
               {/* Display Existing Marks */}
               {marks.map((mark) => (
-                <tr key={mark.id} className="hover:bg-gray-200">
-                  <td className="px-5 py-3 text-center">{mark.reg_no}</td>
-                  <td className="px-5 py-3 text-center">{mark.subject_id}</td>
-                  <td className="px-5 py-3 text-center">{mark.marks_obtained}</td>
-                  <td className="px-5 py-3 text-center">{mark.grade}</td>
-                  <td className="px-5 py-3 text-center">
-                    <button
-                      onClick={() => handleDeleteMark(mark.id!)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition duration-300"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => handleEditMark(mark)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ml-2"
-                    >
-                      Edit
-                    </button>
-                  </td>
-                </tr>
+                <React.Fragment key={mark.id}>
+                  <tr className="hover:bg-gray-200">
+                    <td className="px-5 py-3 text-center">{mark.reg_no}</td>
+                    <td className="px-5 py-3 text-center">{mark.subject_id}</td>
+                    <td className="px-5 py-3 text-center">{mark.marks_obtained}</td>
+                    <td className="px-5 py-3 text-center">{mark.grade}</td>
+                    <td className="px-5 py-3 text-center">
+                      <button
+                        onClick={() => handleDeleteMark(mark.id!)}
+                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition duration-300"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => handleEditMark(mark)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ml-2"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                  {/* Edit Form */}
+                {editingMark && editingMark.id === mark.id && (
+                  <tr>
+                    <td className="px-5 py-3 text-center">
+                      <input
+                        type="text"
+                        value={editingMark.reg_no}
+                        onChange={(e) => setEditingMark({ ...editingMark, reg_no: e.target.value })}
+                        className="px-2 py-1 border rounded"
+                      />
+                    </td>
+                    <td className="px-5 py-3 text-center">
+                      <input
+                        type="text"
+                        value={editingMark.subject_id}
+                        onChange={(e) => setEditingMark({ ...editingMark, subject_id: e.target.value })}
+                        className="px-2 py-1 border rounded"
+                      />
+                    </td>
+                    <td className="px-5 py-3 text-center">
+                      <input
+                        type="number"
+                        value={editingMark.marks_obtained}
+                        onChange={(e) => setEditingMark({ ...editingMark, marks_obtained: Number(e.target.value) })}
+                        className="px-2 py-1 border rounded"
+                      />
+                    </td>
+                    <td className="px-5 py-3 text-center">
+                      <select
+                        value={editingMark.grade}
+                        onChange={(e) => setEditingMark({ ...editingMark, grade: e.target.value as 'A' | 'B' | 'C' | 'S' | 'F' })}
+                        className="px-2 py-1 border rounded"
+                      >
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="S">S</option>
+                        <option value="F">F</option>
+                      </select>
+                    </td>
+                    <td className="px-5 py-3 text-center">
+                      <button
+                        onClick={handleSaveEdit}
+                        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-400 transition duration-300"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300 ml-2"
+                      >
+                        Cancel
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
               ))}
-
-              {/* Edit Form */}
-              {editingMark && (
-                <tr key={editingMark.id}>
-                  <td className="px-5 py-3 text-center">
-                    <input
-                      type="text"
-                      value={editingMark.reg_no}
-                      onChange={(e) => setEditingMark({ ...editingMark, reg_no: e.target.value })}
-                      className="px-2 py-1 border rounded"
-                    />
-                  </td>
-                  <td className="px-5 py-3 text-center">
-                    <input
-                      type="text"
-                      value={editingMark.subject_id}
-                      onChange={(e) => setEditingMark({ ...editingMark, subject_id: e.target.value })}
-                      className="px-2 py-1 border rounded"
-                    />
-                  </td>
-                  <td className="px-5 py-3 text-center">
-                    <input
-                      type="number"
-                      value={editingMark.marks_obtained}
-                      onChange={(e) => setEditingMark({ ...editingMark, marks_obtained: Number(e.target.value) })}
-                      className="px-2 py-1 border rounded"
-                    />
-                  </td>
-                  <td className="px-5 py-3 text-center">
-                    <select
-                      value={editingMark.grade}
-                      onChange={(e) => setEditingMark({ ...editingMark, grade: e.target.value as 'A' | 'B' | 'C' | 'S' | 'F' })}
-                      className="px-2 py-1 border rounded"
-                    >
-                      <option value="A">A</option>
-                      <option value="B">B</option>
-                      <option value="C">C</option>
-                      <option value="S">S</option>
-                      <option value="F">F</option>
-                    </select>
-                  </td>
-                  <td className="px-5 py-3 text-center">
-                    <button
-                      onClick={handleSaveEdit}
-                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-400 transition duration-300"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={handleCancelEdit}
-                      className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300 ml-2"
-                    >
-                      Cancel
-                    </button>
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         )}
