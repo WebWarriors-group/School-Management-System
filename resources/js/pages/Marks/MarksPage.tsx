@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {Toaster,toast} from "sonner";
+//import 'react-toastify/dist/ReactToastify.css';
 import AppLayout from "@/layouts/app-layout";
 import { Head } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
@@ -31,7 +31,7 @@ const MarksPage: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [marksPerPage] = useState<number>(10);
-  const [totalMarks, setTotalMarks] = useState<number>(0);
+  const [totalMarks, setTotalMarks] = useState<number>(10);
 
   const [searchRegNo, setSearchRegNo] = useState<string>('');
   const [searchSubjectId, setSearchSubjectId] = useState<string>('');
@@ -70,7 +70,8 @@ const MarksPage: React.FC = () => {
     try {
       await fetch(`/api/marks/${id}`, { method: 'DELETE' });
       setMarks((prevMarks) => prevMarks.filter((mark) => mark.id !== id));
-      toast.success('Mark deleted successfully!');
+      toast.success('Mark deleted successfully!',{ className: "bg-red-50 text-red-800 border border-red-300 rounded-lg px-4 py-3 shadow",
+      });
     } catch (error) {
       console.error('Error deleting mark:', error);
       toast.error('Failed to delete mark.');
@@ -84,12 +85,19 @@ const MarksPage: React.FC = () => {
   const handleSaveEdit = async () => {
     if (!editingMark) return;
     try {
+      console.log("Sending to backend:", editingMark);
+
       await fetch(`/api/marks/${editingMark.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingMark),
       });
-      toast.success('Mark updated successfully!');
+      
+
+      toast("Successfully saved!", {
+        className: "bg-green-50 text-green-800 border border-green-300 rounded-lg px-4 py-3 shadow",
+      });
+      
       fetchMarks({});
       setEditingMark(null);
     } catch (error) {
@@ -110,13 +118,16 @@ const MarksPage: React.FC = () => {
         const createdMark = await response.json();
         setMarks([createdMark.mark, ...marks]); // Adds the new mark at the start of the list
         setNewMark({ reg_no: '', subject_id: '', marks_obtained: 0, grade: 'A' }); // Reset form
-        toast.success('Mark added successfully!');
+        toast.success('Mark added successfully!' ,{
+          className: 'bg-green-500 text-black'
+        });
       } else {
         const errorData = await response.json();
         toast.error(`Failed to add mark: ${errorData.message}`);
       }
     } catch (error) {
-      console.error('Error adding mark:', error);
+      console.error('Error adding mark:',error, {className: "bg-red-50 text-red-800 border border-red-300 rounded-lg px-4 py-3 shadow",
+      });
       toast.error('Failed to add mark.');
     }
   };
@@ -125,10 +136,10 @@ const MarksPage: React.FC = () => {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-        <Head title="Study Materials" />
+        <Head title="Study Marks" />
       <div className="max-w-screen mx-auto my-5 p-10 bg-gray-100 rounded-lg shadow-md">
         <h1 className="text-center text-2xl font-bold text-red-700 mb-5">Student Marks</h1>
-        <ToastContainer />
+        <Toaster position="top-right"/>
 
         <div className="flex justify-center items-center gap-3 mb-5 p-3 bg-white rounded-lg shadow-sm max-w-screen mx-auto">
           <input
@@ -299,28 +310,25 @@ const MarksPage: React.FC = () => {
         )}
 
         {/* Pagination */}
-        <div className="flex justify-center mt-5">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="bg-red-700 text-white px-4 py-2 rounded-md mr-2"
-          >
-            Previous
-          </button>
-          <span className="text-lg">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="bg-red-700 text-white px-4 py-2 rounded-md ml-2"
-          >
-            Next
-          </button>
+        <div className="flex justify-center items-center mt-5 space-x-2">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-4 py-2 rounded-md font-semibold ${
+                currentPage === index + 1
+                  ? 'bg-red-700 text-white'
+                  : 'bg-gray-200 text-black hover:bg-gray-300'
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
       </div>
     </AppLayout>
   );
 };
+
 
 export default MarksPage;
