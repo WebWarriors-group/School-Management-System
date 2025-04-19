@@ -35,6 +35,7 @@ const MarksPage: React.FC = () => {
 
   const [searchRegNo, setSearchRegNo] = useState<string>('');
   const [searchSubjectId, setSearchSubjectId] = useState<string>('');
+  
 
   const fetchMarks = useCallback(async (searchParams: { reg_no?: string; subject_id?: string }) => {
     setLoading(true);
@@ -136,7 +137,7 @@ const MarksPage: React.FC = () => {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-        <Head title="Study Marks" />
+        <Head title="Student Marks" />
       <div className="max-w-screen mx-auto my-5 p-10 bg-gray-100 rounded-lg shadow-md">
         <h1 className="text-center text-2xl font-bold text-red-700 mb-5">Student Marks</h1>
         <Toaster position="top-right"/>
@@ -163,6 +164,8 @@ const MarksPage: React.FC = () => {
             Search
           </button>
         </div>
+
+        
 
         {loading ? <p>Loading...</p> : (
           <table className="w-full table-auto bg-white rounded-lg overflow-hidden shadow-md">
@@ -218,7 +221,7 @@ const MarksPage: React.FC = () => {
                 <td className="px-5 py-3 text-center">
                   <button
                     onClick={handleCreateMark}
-                    className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-red-800 transition duration-300"
+                    className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-red-800 transition duration-300"
                   >
                     Add
                   </button>
@@ -311,22 +314,58 @@ const MarksPage: React.FC = () => {
         )}
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-5 space-x-2">
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-4 py-2 rounded-md font-semibold ${
-                currentPage === index + 1
-                  ? 'bg-red-700 text-white'
-                  : 'bg-gray-200 text-black hover:bg-gray-300'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      </div>
+        <div className="mt-5">
+  {/* Buttons Row */}
+  <div className="flex justify-between items-center px-4">
+    {/* Previous Button - Left Corner */}
+    <button
+      onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+      disabled={currentPage === 1}
+      className={`px-4 py-2 rounded-md font-semibold ${
+        currentPage === 1
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-gray-200 text-black hover:bg-gray-300'
+      }`}
+    >
+      Previous
+    </button>
+
+    {/* Next Button - Right Corner */}
+    <button
+      onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+      disabled={currentPage === totalPages}
+      className={`px-4 py-2 rounded-md font-semibold ${
+        currentPage === totalPages
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-gray-200 text-black hover:bg-gray-300'
+      }`}
+    >
+      Next
+    </button>
+  </div>
+
+  {/* Page Numbers - Centered Below */}
+  <div className="flex justify-center items-center mt-3 space-x-2">
+    {[...Array(totalPages)].map((_, index) => (
+      <button
+        key={index}
+        onClick={() => handlePageChange(index + 1)}
+        className={`px-4 py-2 rounded-md font-semibold ${
+          currentPage === index + 1
+            ? 'bg-red-700 text-white'
+            : 'bg-gray-200 text-black hover:bg-gray-300'
+        }`}
+      >
+        {index + 1}
+      </button>
+    ))}
+  </div>
+</div>
+
+
+</div>
+
+ 
     </AppLayout>
   );
 };

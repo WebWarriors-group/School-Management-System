@@ -15,11 +15,11 @@ class MarkController extends Controller
 {
     $query = Marks::query();
 
-    if ($request->has('reg_no')) {
+    if ($request->filled('reg_no')) {
         $query->where('reg_no', 'LIKE', '%' . $request->reg_no . '%');
     }
 
-    if ($request->has('subject_id')) {
+    if ($request->filled('subject_id')) {
         $query->where('subject_id', $request->subject_id);
     }
 
