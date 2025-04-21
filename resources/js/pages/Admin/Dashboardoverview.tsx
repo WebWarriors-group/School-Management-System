@@ -91,10 +91,10 @@ export default function StatsOverview() {
                     {/* Notification Bell Icon */}
                     <Button
                         variant="ghost"
-                        className="ml-2 text-[#005555] hover:bg-gray-100"
+                        className=" sticky right-30 text-[#005555] hover:bg-gray-100"
                         onClick={() => setShowNotifications(!showNotifications)}
                     >
-                        <FontAwesomeIcon icon={faBell} className="text-2xl" />
+                        <p className="text-[30px]">🔔</p>
                         <span className="text-lg">notification</span>
                     </Button>
                 </div>
@@ -122,7 +122,7 @@ export default function StatsOverview() {
                             initial="A"
                             title="Assign Class to Teacher"
                             desc="Link teachers to classes and subjects easily."
-                            color="blue"
+                            color="purple"
                         />
                       
                         <QuickActionCard
@@ -133,7 +133,7 @@ export default function StatsOverview() {
                         />
                         <QuickActionCard initial="C" title="Leave Details" desc="You can effectively manage teachers' leaves" color="red" />
 
-                        <QuickActionCard initial="D" title="Class/Grade setup" desc="You can effectively manage class andgrades" color="blue" />
+                        <QuickActionCard initial="D" title="Class/Grade setup" desc="You can effectively manage class andgrades" color="green" />
                     </div>
 
                     {/* Right: Feature Cards */}
@@ -161,7 +161,7 @@ export default function StatsOverview() {
 
                     {/* Notification Panel */}
                     {showNotifications && (
-                        <div className="fixed top-20 right-5 z-50 w-80 rounded-lg bg-white px-4 py-6 shadow-xl">
+                        <div className="fixed top-20 left z-50 w-80 rounded-lg bg-gray-100 px-4 py-6 shadow-xl">
                             <div className="mb-4 flex items-center justify-between">
                                 <h3 className="text-lg font-semibold text-gray-800">Notifications</h3>
                                 <button onClick={() => setShowNotifications(false)} className="text-sm text-gray-400 hover:text-gray-600">

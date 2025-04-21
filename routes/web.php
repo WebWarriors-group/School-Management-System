@@ -64,12 +64,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/add-teacher', function () {
-    return inertia::render('Admin/demo'); // This should return the Inertia page
-})->name('add-teacher');
-Route::get('/Admin/demo', function () {
-    return Inertia::render('Admin/teacher');
-});
 
 Route::get('/teacher_details', function () {
     return inertia::render('Admin/techerInfo'); // This should return the Inertia page
