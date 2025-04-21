@@ -1030,7 +1030,12 @@ const StudentDashboard: React.FC = () => {
 
                 <div className="mt-4 text-right">
                   <button
-                    onClick={() => setIsSearchModalOpen(false)}
+                    onClick={() => {
+                      setIsSearchModalOpen(false);
+                      setSearchValue("");
+                        setFilteredSuggestions([]);
+                        setIsDropdownOpen(false);}
+                    }
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                   >
                     Close

@@ -137,7 +137,7 @@ export default function Posts() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm z-50">
+            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
                 {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
 
                 <button className="cursor-pointer text-[18px]" onClick={handleClick}>
