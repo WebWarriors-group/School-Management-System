@@ -199,7 +199,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
                         X
                         </Button>
             <Head title={user ? 'Edit User' : 'Register'} />
-            <form className="flex flex-col gap-6 bg-white" onSubmit={submit}>
+            <form className="flex flex-col gap-6 bg-white z-51" onSubmit={submit}>
                 <div className="grid gap-6 bg-white">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
