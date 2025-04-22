@@ -284,15 +284,15 @@ export default function AddTeacherForm() {
 
     {/* Region */}
     <div className="mb-4">
-      <label htmlFor="Region" className="block text-sm font-medium text-gray-700">
-        Region
+      <label htmlFor="Religion" className="block text-sm font-medium text-gray-700">
+        Religion
       </label>
       <input
         type="text"
         id="Region"
         name="Region"
         className="w-full p-2 border rounded"
-        placeholder="Enter Region"
+        placeholder="Enter Religion"
         value={data.Region}
         onChange={(e) => setData('Region', e.target.value)}
         required

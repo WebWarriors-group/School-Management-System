@@ -15,11 +15,11 @@ class MarkController extends Controller
 {
     $query = Marks::query();
 
-    if ($request->has('reg_no')) {
+    if ($request->filled('reg_no')) {
         $query->where('reg_no', 'LIKE', '%' . $request->reg_no . '%');
     }
 
-    if ($request->has('subject_id')) {
+    if ($request->filled('subject_id')) {
         $query->where('subject_id', $request->subject_id);
     }
 
@@ -89,7 +89,7 @@ class MarkController extends Controller
 
         // Validate incoming request
         $validated = $request->validate([
-            'reg_no' => 'required|integer',
+            'reg_no' => 'required|string|max:20',
             'subject_id' => 'required|integer',
             'marks_obtained' => 'required|integer',
             'grade' => 'required|string|max:1|in:A,B,C,D,E,F'

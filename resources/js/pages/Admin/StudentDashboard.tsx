@@ -3,12 +3,13 @@ import { Head, router } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
 
+
 import { Input } from "@/components/ui/input";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import StudentAdmissionForm from "./StudentAdmissionForm";
-import { Filter } from "lucide-react";
+import { Filter,Edit, Trash2, Eye, Search } from "lucide-react";
 import * as XLSX from 'xlsx';
 interface Student {
   reg_no: string;
@@ -84,7 +85,19 @@ const StudentDashboard: React.FC = () => {
   //   setSearchClassId(class_id.toString()); // Update the input field with the selected class ID (as a string)
   //   setFilteredClassIds([]); // Clear the suggestions list
   // };
+  const [classCount, setClassCount] = useState(0);
 
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/classes/count")
+      .then(res => res.json())
+      .then(data => {
+        setClassCount(data.count);
+      })
+      .catch(err => {
+        console.error("Error fetching class count:", err);
+      });
+  }, []);
+  
   const validateFields = (newStudent: Student) => {
     const errors = [];
     const regNoPattern = /^REG-\d{5}$/;  // "REG-" followed by exactly 5 digits
@@ -329,50 +342,66 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-
   const handleImport = async () => {
     if (!file) return toast.error("Please select a file first!");
-
+  
     const formData = new FormData();
     formData.append("file", file);
-
+  
     try {
       const response = await fetch("http://127.0.0.1:8000/api/students/import", {
         method: "POST",
         body: formData,
       });
-
-      const text = await response.text(); // Get raw response text
-      console.log("Raw response:", text);  // Log raw response for debugging
-
+  
+      const text = await response.text();
+      console.log("Raw response:", text); // Debug line
+  
       let data;
       try {
-        data = JSON.parse(text); // Try parsing JSON
+        data = JSON.parse(text);
       } catch (err) {
         throw new Error("Server did not return valid JSON.");
       }
-
+  
       if (response.ok) {
         toast.success("🎉 Import Successful! All students have been imported successfully.");
-        fetchStudents();  // Refresh the students list
+        fetchStudents();
+  
         setFile(null);
         if (fileInputRef.current) {
-          fileInputRef.current.value = ""; // ✅ Clear file input element
+          fileInputRef.current.value = "";
         }
-
-        setImportForm(false);    // Clear the file input
+        setImportForm(false);
       } else {
-        toast.error("❌ Import Failed! Something went wrong. Please try again.");
+        const message = data?.message || "Import Failed!";
+        const dbError = data?.error;
+  
+        // ✅ Show exact error message from Laravel
+        if (dbError) {
+          toast.error(`❌ ${message}: ${dbError}`);
+        } else {
+          toast.error(`❌ ${message}`);
+        }
+  
         setFile(null);
       }
-
-    } catch (err) {
+    }catch (err) {
       console.error("Upload failed:", err);
-      toast.error("❌ Oops! There was an error uploading the file. Please check your file and try again.");
+    
+      // Safely get error message
+      const errorMessage =
+        (err && typeof err === "object" && "message" in err)
+          ? err.message
+          : String(err);
+    
+      toast.error(`❌ Upload error: ${errorMessage}`);
       setFile(null);
     }
-
+    
+    
   };
+  
   useEffect(() => {
     fetchStudents();
     setFiltered(keys);
@@ -505,9 +534,9 @@ const StudentDashboard: React.FC = () => {
 
               <Button
                 onClick={handleSearch}
-                className="bg-red-600 text-white px-4 py-2 ml-2 rounded hover:bg-blue-700 transition"
-              >
-                Search
+                className="bg-red-600 text-white px-4 py-2 ml-2 mr-2 rounded hover:bg-blue-700 transition"
+              ><Search size={16} />
+              
               </Button>
               {isDropdownOpen && (
                 <div className="absolute top-14 left-0 w-[300px] mt-2 bg-white border border-gray-300 rounded shadow-md z-50">
@@ -546,7 +575,7 @@ const StudentDashboard: React.FC = () => {
             </div>
             <div className="border-red-900 rounded-2xl border-t-4 bg-white p-6 shadow">
               <h3 className="text-maroon-700 text-lg font-bold">Class Entrolled</h3>
-              <p className="mt-2 text-3xl font-bold text-red-600">95</p>
+              <p className="mt-2 text-3xl font-bold text-red-600">{classCount}</p>
 
             </div>
             <div className="border-blue-900 rounded-2xl border-t-4 bg-white p-6 shadow">
@@ -746,9 +775,9 @@ const StudentDashboard: React.FC = () => {
                   "Method": student.method_of_coming_to_school,
                   Actions: (
                     <div className="flex gap-2">
-                      <Button onClick={() => handleEditClick(student)} className="bg-blue-500 text-white">Edit</Button>
-                      <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white">Delete</Button>
-                      <Button onClick={() => handleViewClick(student)} className="bg-purple-500 text-white">View</Button>
+                      <Button onClick={() => handleEditClick(student)} className="bg-blue-500 text-white"><Edit size={16} /></Button>
+                      <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white"><Trash2 size={16} /></Button>
+                      <Button onClick={() => handleViewClick(student)} className="bg-purple-500 text-white"><Eye size={16} /></Button>
                     </div>
                   ),
                 }))}
@@ -865,13 +894,13 @@ const StudentDashboard: React.FC = () => {
           </main>
           {isViewModalOpen && viewingStudent && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
+              <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] p-8 relative overflow-y-auto">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 border-b pb-3">
                   👩‍🎓 Student Information
                 </h2>
 
                 <div className="overflow-hidden rounded-lg border border-gray-200">
-                  <table className="w-full text-sm text-left text-gray-800">
+                  <table className="w-full text-sm text-center text-gray-800">
                     <tbody>
                       <tr className="even:bg-gray-50">
                         <th className="px-4 py-3 bg-gray-100 font-semibold w-1/2">🎓 Reg No</th>
@@ -936,7 +965,7 @@ const StudentDashboard: React.FC = () => {
           )}
           {isSearchModalOpen && searchedStudents.length > 0 && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
+             <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] p-8 relative overflow-y-auto">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6 border-b pb-3">
                   🔍 Searched Student Details
                 </h2>
@@ -1030,7 +1059,12 @@ const StudentDashboard: React.FC = () => {
 
                 <div className="mt-4 text-right">
                   <button
-                    onClick={() => setIsSearchModalOpen(false)}
+                    onClick={() => {
+                      setIsSearchModalOpen(false);
+                      setSearchValue("");
+                      setSearchAttribute(""); 
+                      setFilteredSuggestions([]);
+                    }}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                   >
                     Close
