@@ -2,32 +2,34 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import Timetable from '@/pages/Admin/timeTable';
-import { faBullhorn, faFileLines, faUsers ,faCalendar} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
 import { type BreadcrumbItem } from '@/types';
+import { faBell, faBullhorn, faCalendar, faFileLines, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
-export default function StatsOverview () {
+export default function StatsOverview() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: '📊Dashboard Overview',
+            title: '📊 Dashboard Overview',
             href: '/',
         },
     ];
-    
+
     const cards = [
         {
             color: 'bg-orange-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            icon: faUsers,
             title: 'Total People',
             value: '49',
-            footer: 'Get More Space...',
-            footerColor: 'text-red-500',
+            footer: 'Staffs and student total counts',
+            footerColor: 'text-gray-400',
         },
         {
             color: 'bg-green-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            icon: faUsers,
             title: 'Classes',
             value: '245',
             footer: 'Last 24 Hours',
@@ -35,157 +37,191 @@ export default function StatsOverview () {
         },
         {
             color: 'bg-red-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            icon: faUsers,
             title: 'Staffs',
             value: '75',
-            footer: 'Tracked from Github',
+            footer: 'Staffs counts are until now',
             footerColor: 'text-gray-400',
         },
         {
-            color: 'bg-sky-500',
-            icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
+            color: 'bg-yellow-500',
+            icon: faUsers,
             title: 'Students',
             value: '245',
             footer: 'Just Updated',
             footerColor: 'text-gray-400',
         },
+        {
+            color: 'bg-sky-500',
+            icon: faUsers,
+            title: 'Labs',
+            value: '245',
+            footer: 'Just Updated',
+            footerColor: 'text-gray-400',
+        },
+        {
+            color: 'bg-purple-500',
+            icon: faUsers,
+            title: 'Users',
+            value: '245',
+            footer: 'total registered',
+            footerColor: 'text-gray-400',
+        },
     ];
-    const [isOpen, setIsOpen] = useState(false);
-    const handleTime=()=>{
-setIsOpen(true);
-    }
+
+    const handleTime = () => setIsOpen(true);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <header className="sticky top-1 flex w-full items-center border-b bg-white px-4 py-2 shadow-sm z-50">
-                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
+            <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b bg-white px-4 py-3 shadow-sm">
+                <div className="flex items-center gap-4">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button className="border border-[#005555] bg-white px-4 text-[#005555] hover:bg-gray-50">Quick Adding</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem onClick={() => alert('Add Staff')}>Add New Staff</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => alert('Add Class')}>Add New Class</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => alert('Add Student')}>Add New Student</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
-                {/* <Button className=" shadow-md text-white text-[16px] bg-gradient-to-r from-orange-600 to-yellow-500 hover:bg-green-200 rounded-md px-3 py-1 focus:ring-2 focus:ring-green-400 w-40 h-11 border-4 border-white rounded-4xl ml-5">
-                                  Quick Import
-                </Button>
-                <Button className=" shadow-md text-white text-[16px] bg-gradient-to-r from-green-600 to-lime-500 hover:bg-green-200 rounded-md px-3 py-1 focus:ring-2 focus:ring-green-400 w-40 h-11 border-4 border-white rounded-4xl ml-5">
-                                  Generate Report
-                </Button>
-
-                <Button className=" shadow-md text-white text-[16px]  hover:bg-green-200 rounded-md px-4 py-1 focus:ring-2 focus:ring-green-400 w-49 h-12 border-4 border-white rounded-4xl ml-5">
-                                  Send Announcement
-                </Button> */}
-
-                {/* Filter Select */}
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button className="ml-5 h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555] border-1 border-[#005555]">Quick Adding</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="ml-70 h-35 w-60 justify-center text-[250px]">
-                        <DropdownMenuItem onClick={() => alert('Profile clicked')} className="py-2 text-[16px] hover:cursor-pointer">
-                            Adding New Staffs
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => alert('Settings clicked')} className="py-2 text-[16px] hover:cursor-pointer">
-                            Adding New Class
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => alert('Logout clicked')} className="py-2 text-[16px] hover:cursor-pointer">
-                            Adding New Student
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]  hover:cursor-pointer" onClick={handleTime}>Time Table</Button>
-                {/* <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[blue]">Bulk Action</Button>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Upload</Button>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Overall performance</Button>
-                <Button className="ml- h-12 w-37 bg-white px-4 py-1 text-[16px] text-[#005555]">Attendance</Button>  */}
+                    {/* Notification Bell Icon */}
+                    <Button
+                        variant="ghost"
+                        className=" sticky right-30 text-[#005555] hover:bg-gray-100"
+                        onClick={() => setShowNotifications(!showNotifications)}
+                    >
+                        <p className="text-[30px]">🔔</p>
+                        <span className="text-lg">notification</span>
+                    </Button>
+                </div>
             </header>
 
             {!isOpen ? (
-<>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-                {cards.map((card, index) => (
-                    <div key={index} className="relative mt-20 ml-5 h-40 w-70 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                        {/* Colored square icon */}
-                        <div className={`absolute -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}>
-                            <span className="text-lg">{card.icon}</span>
+                <div className="grid grid-cols-1 gap-6 bg-gray-50 px-6 py-8 md:grid-cols-3">
+                    {/* Left: Dashboard Stats */}
+                    <div className="grid h-180 w-190 grid-cols-1 gap-6 sm:grid-cols-3 md:col-span-2 lg:grid-cols-2">
+                        {cards.map((card, index) => (
+                            <div key={index} className="flex overflow-hidden bg-white shadow hover:shadow-lg">
+                                <div className={`flex w-1/3 items-center justify-center ${card.color}`}>
+                                    <FontAwesomeIcon icon={card.icon} className="text-3xl text-white" />
+                                </div>
+                                <div className="flex w-2/3 flex-col justify-center p-4">
+                                    <p className="text-sm text-gray-500">{card.title}</p>
+                                    <h2 className="text-2xl font-semibold">{card.value}</h2>
+                                    <p className={`mt-1 text-xs ${card.footerColor}`}>{card.footer}</p>
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Extra Quick Action Cards */}
+                        <QuickActionCard
+                            initial="A"
+                            title="Assign Class to Teacher"
+                            desc="Link teachers to classes and subjects easily."
+                            color="purple"
+                        />
+                      
+                        <QuickActionCard
+                            initial="B"
+                            title="Subjects & Curriculum"
+                            desc="You can easily find the subject details in the school."
+                            color="red"
+                        />
+                        <QuickActionCard initial="C" title="Leave Details" desc="You can effectively manage teachers' leaves" color="red" />
+
+                        <QuickActionCard initial="D" title="Class/Grade setup" desc="You can effectively manage class andgrades" color="green" />
+                    </div>
+
+                    {/* Right: Feature Cards */}
+                    <div className="flex flex-col gap-6">
+                        <FeatureCard
+                            icon={faCalendar}
+                            title="Timetable"
+                            desc="Manage weekly class schedules."
+                            buttonLabel="View Timetable"
+                            onClick={handleTime}
+                        />
+                        <FeatureCard
+                            icon={faFileLines}
+                            title="Report Generation"
+                            desc="Create reports for classes, students, and staff."
+                            buttonLabel="+ Generate Report"
+                        />
+                        <FeatureCard
+                            icon={faBullhorn}
+                            title="Announcements"
+                            desc="Send school-wide messages and alerts."
+                            buttonLabel="+ Post Announcement"
+                        />
+                    </div>
+
+                    {/* Notification Panel */}
+                    {showNotifications && (
+                        <div className="fixed top-20 left z-50 w-80 rounded-lg bg-gray-100 px-4 py-6 shadow-xl">
+                            <div className="mb-4 flex items-center justify-between">
+                                <h3 className="text-lg font-semibold text-gray-800">Notifications</h3>
+                                <button onClick={() => setShowNotifications(false)} className="text-sm text-gray-400 hover:text-gray-600">
+                                    ✕
+                                </button>
+                            </div>
+                            <div className="flex flex-col space-y-3">
+                                <div className="transform rounded-lg border-l-4 border-indigo-500 bg-blue-100 p-3 shadow-md transition duration-300 hover:scale-105 hover:shadow-md">
+                                    <p className="text-xs text-gray-500">New Email from Admin</p>
+                                    <h4 className="text-sm font-semibold text-gray-800">Subject: Meeting Reminder</h4>
+                                    <button className="mt-1 text-xs text-indigo-600 hover:underline">Read Now</button>
+                                </div>
+                                <div className="transform rounded-lg border-l-4 border-red-500 bg-red-100 p-3 shadow-sm transition duration-300 hover:scale-105 hover:shadow-md">
+                                    <p className="text-xs text-gray-500">Alert: Class Timetable Updated</p>
+                                    <h4 className="text-sm font-semibold text-gray-800">Subject: Math - 9:00 AM Slot Changed</h4>
+                                    <button className="mt-1 text-xs text-red-600 hover:underline">View Changes</button>
+                                </div>
+                            </div>
                         </div>
-
-                        {/* Push content down to make space for the icon box */}
-                        <div className="mt-[-40px] ml-30 pt-8">
-                            <p className="text-sm text-gray-500">{card.title}</p>
-                            <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
-                            <p className={`mt-2 text-xs ${card.footerColor}`}>{card.footer}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <div className="mt-16 ml-10 grid h-70 w-150 grid-cols-1 gap-6 border-2 sm:grid-cols-2 md:grid-cols-10">
-
-            <div className=" absolute mt-[-32px]  h-10 w-90 bg-[#005555] px-4  ml-30 text-[white] justify-center items-center flex text-[18px]">
-                        Forms Generation
-                    </div>
-                <div className="relative mt-8 ml-5 h-55 w-60 border bg-purple-100 bg-white p-4 shadow-sm transition hover:shadow-md justify-center flex">
-                    {/* Colored square icon */}
-                    <div className={`absolute top-[-2px] left-[0px] flex h-15 w-20 items-center justify-center bg-[#005555] text-white shadow-lg`}>
-                        <span className="text-lg">
-                            <FontAwesomeIcon icon={faFileLines} className="text-4xl text-white" />
-                        </span>
-                    </div>
-
-                    {/* Push content down to make space for the icon box */}
-                    <div className="mt-[-40px] ml-20 pt-8">
-                        <p className="text-[16px] text-gray-900">Generate Report</p>
-                        <DropdownMenuSeparator className="mt-15 ml-[0px] w-30" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-
-                        <Button className="mt-1 ml-[-3px] h-10 w-34 bg-[#005555] px-4 text-[16px] text-white shadow-md hover:cursor-pointer focus:ring-2 focus:ring-green-400">
-                            +Generate
-                        </Button>
-                    </div>
+                    )}
                 </div>
-
-                <div className="relative mt-8 ml-60 h-55 w-60 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                    {/* Colored square icon */}
-                    <div className={`absolute top-[-2px] left-[0px] flex h-15 w-20 items-center justify-center bg-[#005555] text-white shadow-lg`}>
-                        <span className="text-lg">
-                            <FontAwesomeIcon icon={faBullhorn} className="text-4xl text-white" />
-                        </span>
-                    </div>
-
-                    {/* Push content down to make space for the icon box */}
-                    <div className="mt-[-40px] ml-20 pt-8">
-                        <p className="text-[17px] text-gray-900">Announcement</p>
-                        <DropdownMenuSeparator className="mt-15 ml-[0px] w-30" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-                        <DropdownMenuSeparator className="mt-5 ml-[-50px]" />
-
-                        <Button className="mt-1 ml-[-3px] h-10 w-34 bg-[#005555] px-4 text-[16px] text-white shadow-md hover:cursor-pointer focus:ring-2 focus:ring-green-400">
-                            +Generate
-                        </Button>
-                    </div>
-                </div>
-
-                <div className="mt-[-5px] ml-130 h-100 w-100 border bg-white p-4 shadow-sm transition hover:shadow-md">
-                    {/* Colored square icon */}
-                    <div className="mt-[-32px]  h-13 w-90 bg-purple-900 px-4  text-[white] justify-center items-center flex text-[18px]">
-                        Notifications
-                    </div>
-
-                    {/* Push content down to make space for the icon box */}
-                    <div className="mt-[-40px] ml-20 pt-8"></div>
-                </div>
-            </div>
-        
-
-           
-            </>
             ) : (
-           
                 <Timetable />
             )}
-            
         </AppLayout>
     );
-};
+}
 
+function FeatureCard({ icon, title, desc, buttonLabel, onClick }: any) {
+    return (
+        <div className="rounded-lg border bg-white p-6 shadow-sm hover:shadow-md">
+            <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#005555]">
+                    <FontAwesomeIcon icon={icon} className="text-xl text-white" />
+                </div>
+                <p className="text-lg font-medium text-gray-800">{title}</p>
+            </div>
+            <p className="mb-3 text-sm text-gray-600">{desc}</p>
+            <Button className="w-full bg-[#005555] text-white hover:bg-[#004444]" onClick={onClick}>
+                {buttonLabel}
+            </Button>
+        </div>
+    );
+}
 
+function QuickActionCard({ initial, title, desc, color }: any) {
+    return (
+        <div
+            className={`flex items-center bg-${color}-100 border-l-4 border-${color}-500 h-31 rounded-xl shadow transition duration-300 hover:shadow-md`}
+        >
+            <div className={`w-1/3 bg-${color}-200 flex items-center justify-center py-8`}>
+                <div className={`text-4xl font-bold text-${color}-600 flex h-14 w-16 items-center justify-center rounded-full bg-white shadow-inner`}>
+                    {initial}
+                </div>
+            </div>
+            <div className="w-2/3 p-5">
+                <p className="mb-1 text-sm tracking-wide text-gray-500 uppercase">Quick Action</p>
+                <h2 className={`text-lg font-semibold text-${color}-700`}>{title}</h2>
+                <p className="mt-1 text-sm text-gray-600">{desc}</p>
+            </div>
+        </div>
+    );
+}
