@@ -57,6 +57,7 @@ Route::middleware('auth', 'admin')->group(function () {
 
       Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
      Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
+     Route::post('/admin/update', [AdminController::class, 'register'])->name('admin.register');
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
      Route::post('/admin/import', [UserImportController::class, 'import'])->name('users.import');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);

@@ -14,7 +14,7 @@ export default function Navbar() {
         "More",
         "Features",
         "Administration",
-        "About",
+       "Forms",
         "Reports",
         "Contact",
         "Administration",
@@ -92,7 +92,7 @@ export default function Navbar() {
                 {/* Hero Section */}
                 <section className="flex h-[80vh] w-full items-center justify-center bg-white text-center text-black">
                     <div className="container px-4">
-                        <img src="images/School.jpg" alt="Logo" className="mx-auto mt-9 h-100 w-109" />
+                        <img src="images/School.jpg" alt="Logo" className=" ml-117 h-110 w-115" />
                        
                         <h1 className="text-4xl font-bold text-[#800000]"> T / Tn / Mahadivulwewa  National School</h1>
                     </div>

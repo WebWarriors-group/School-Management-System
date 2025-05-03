@@ -27,16 +27,16 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(80)->create();
         Teacher::factory(30)->create();
-        TeacherPersonal::factory(30)->create();
+         TeacherPersonal::factory(30)->create();
         // TeacherOtherServices::factory(20)->create();
         // Qualification::factory(50)->create();
-        // StudyMaterial::factory(50)->create();
+        StudyMaterial::factory(50)->create();
         ClassModel::factory(10)->create();
         StudentAcademic::factory(40)->create();
-        //  StudentPersonal::factory(40)->create();
+        // StudentPersonal::factory(40)->create();
         // StudentFamilyInfo::factory(40)->create();
         // StudentSibling::factory(30)->create();
-        Subject::factory(20)->create();
+         Subject::factory(20)->create();
         Marks::factory(50)->create();
 
         User::updateOrCreate(
