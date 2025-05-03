@@ -72,6 +72,7 @@ Route::middleware('auth', 'teacher')->group(function () {
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');

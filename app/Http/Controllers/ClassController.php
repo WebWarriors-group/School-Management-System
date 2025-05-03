@@ -31,7 +31,12 @@ class ClassController extends Controller
         $class = ClassModel::create($validatedData);
         return response()->json($class, 201);
     }
-
+    public function count()
+    {
+        $count = ClassModel::count(); // Adjust model name if it's not SchoolClass
+        return response()->json(['count' => $count]);
+    }
+    
     /**
      * Display a specific class.
      */

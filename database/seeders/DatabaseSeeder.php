@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(80)->create();
         Teacher::factory(30)->create();
+<<<<<<< HEAD
          TeacherPersonal::factory(30)->create();
         // TeacherOtherServices::factory(20)->create();
         // Qualification::factory(50)->create();
@@ -37,6 +38,18 @@ class DatabaseSeeder extends Seeder
         // StudentFamilyInfo::factory(40)->create();
         // StudentSibling::factory(30)->create();
          Subject::factory(20)->create();
+=======
+        TeacherPersonal::factory(30)->create();
+        TeacherOtherServices::factory(20)->create();
+        Qualification::factory(50)->create();
+        StudyMaterial::factory(50)->create();
+        ClassModel::factory(10)->create();
+        StudentAcademic::factory(40)->create();
+        StudentPersonal::factory(40)->create();
+        StudentFamilyInfo::factory(40)->create();
+        StudentSibling::factory(30)->create();
+        Subject::factory(20)->create();
+>>>>>>> 6d75e1a3cbe629e1b8fe366a6fe244f1798627bc
         Marks::factory(50)->create();
 
         User::updateOrCreate(
