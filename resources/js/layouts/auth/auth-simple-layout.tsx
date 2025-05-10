@@ -10,9 +10,14 @@ interface AuthLayoutProps {
 
 export default function AuthSimpleLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-white p-7 md:p-10" 
+        <div className=" flex  min-h-svh flex-col items-center justify-center gap-6 bg-blue p-7 md:p-10" 
        
            >
+           <img
+          src="/images/background.jpg"
+          alt="School Background"
+          className="absolute  w-full h-full object-cover "
+        />
             <div className="justify-content-center relative flex w-full max-w-[500px] rounded-md border-red-700 bg-white p-5 text-[white] shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
                 <div className="flex w-[10000px] flex-col gap-9 border-4 border-red-700 p-8">
                     <img src="/images/School.jpg" className="pointer-events-none absolute top-12 left-20  w-[350px] opacity-12" alt="School" />

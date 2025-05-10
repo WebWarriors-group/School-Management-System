@@ -1,162 +1,126 @@
-import { Head, Link } from '@inertiajs/react';
-import { Facebook, Mail, MapPin, Menu, X,Twitter,Linkedin,Instagram } from 'lucide-react';
+import { Head, Link} from '@inertiajs/react';
+import { Facebook, Mail, MapPin, Menu, X, Twitter} from 'lucide-react';
+import { Card} from '@/components/ui/card';
+
 import { useState } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 
 export default function Navbar() {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    const menuItems = [
+  return (
+    <>
+      <Head title="Mahadivulwewa National School" />
+      <div className="relative w-full min-h-screen overflow-hidden">
+        {/* Background Image */}
+        <img
+          src="/images/background.jpg"
+          alt="School Background"
+          className="absolute  w-full h-full object-cover "
+        />
+        <div className="absolute inset-0 bg-black/30 z-0" />
 
-        "Gallery",
-        "Academics",
-        "More",
-        "Features",
-        "Administration",
-       "Forms",
-        "Reports",
-        "Contact",
-        "Administration",
-    ];
+        {/* Navbar */}
+        <nav className="absolute top-0 left-0 w-full z-10 text-white py-4">
+          <div className="flex justify-between items-center px-6">
+            <div className="flex items-center">
+              <img src="/images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
+              <span className="ml-3 font-orbitron text-xl font-semibold ">
+                T / TN/ MAHADIVULWEWA NATIONAL SCHOOL
+              </span>
+            </div>
+            <div className=" absolute flex items-center left-320">
+              <Link
+                href={route('login')}
+                className="hidden md:inline-block rounded-2xl  bg-white px-6 py-2 text-sm font-medium text-black hover:bg-gradient-to-r from-orange-600 to-yellow-500 hover:text-white transition"
+              >
+                Login
+              </Link>
 
-    const details = {
-        Gallery: "This section contains images and videos of school events.",
-        Academics: "Information about courses, syllabus, and academic programs.",
-        More: "Additional features and information.",
-        Features: "Details about school facilities and special programs.",
-        Administration: "Meet the school administration and management.",
-        About: "Learn about our school's history and mission.",
-        Reports: "View student progress reports and analytics.",
-        Contact: "Get in touch with school administration.",
-    };
+              <Link
+                href={route('login')}
+                className="hidden md:inline-block rounded-2xl ml-5  bg-white px-6 py-2 text-sm font-medium text-black hover:bg-gradient-to-r from-orange-600 to-yellow-500 hover:text-white transition"
+              >
+                Forms
+              </Link>
+              <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4">
+                {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
 
-    return (
-        <>
-            <Head title="Mahadivulwewa National School" />
-            <div className="w-full">
-                {/* Main Navbar */}
-                <nav className="bg-[#550000] py-2 text-white shadow-md w-full">
-                    <div className="w-full flex items-center  px-5">
-                        {/* Logo */}
-                        <div className="flex items-center">
-                            <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full ml-[-10px]" />
-                            <span className="font-[Orbitron] text-lg font-semibold text-[#FDDEBD] ml-3 whitespace-nowrap">
-                                T / Tn / Mahadivulwewa National School
-                            </span>
-                        </div>
+          {menuOpen && (
+            <div className="bg-white text-black px-4 py-3 md:hidden">
+              <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+                <Facebook size={20} /> <span>Facebook</span>
+              </a>
+              <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+                <Mail size={20} /> <span>Email</span>
+              </a>
+              <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+                <MapPin size={20} /> <span>Location</span>
+              </a>
+              <Link href={route('login')} className="block mt-3 rounded bg-black text-white px-4 py-2 text-center">
+                Login
+              </Link>
+            </div>
+          )}
+        </nav>
 
-                        {/* Login Button */}
-                        <Link href={route('login')} className="hidden ml-230 md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-gradient-to-r from-orange-600 to-yellow-500 hover:text-white">
-                            Login
-                        </Link>
+        {/* Hero Section */}
+        <section className=" flex h-screen items-center justify-center text-center px-4 mt-[-70px]">
+          <div className=" relative z-10 text-white max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4 ">
+              Empowering Future Generations Through Education
+            </h1>
+            <p className="text-lg md:text-xl text-orange-200 ">
+              Welcome to Mahadivulwewa National School – A place of knowledge, discipline, and excellence.
+            </p>
+          </div>
 
-                        {/* Mobile Menu Button */}
-                        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
-                            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-                        </button>
-                    </div>
+        </section>
 
-                    {/* Sub Navbar */}
-                    <div className="w-full bg-gray-100 py-4 shadow-sm mt-3">
-                        <div className="flex justify-center space-x-9 overflow-x-auto px-4 text-[18px] whitespace-nowrap text-[#800000]">
-                            {menuItems.map((item, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setSelectedItem(selectedItem === item ? null : item)}
-                                    className="hover:text-blue-600 focus:outline-none"
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </nav>
+        <section className=" flex mt-[70px] items-center justify-center text-center px-4">
+          <div className="flex relative z-10 text-white max-w-3xl mt-[-300px] justify-between w-180">
+          <Card className="relative w-52 h-52 rounded-full overflow-hidden bg-[#478AC9] text-[white]">
 
-                {/* Mobile Menu */}
-                {menuOpen && (
-                    <div className="w-full space-y-2 bg-red-100 p-3 md:hidden text-[#800000]">
-                        <a href="https://www.facebook.com/ttnmmv" className="block flex items-center space-x-1 hover:underline">
-                            <Facebook size={20} /> <span>Facebook</span>
-                        </a>
-                        <a href="mailto:ttnmahadivulwewamv@gmail.com" className="block flex items-center space-x-1 hover:underline">
-                            <Mail size={20} /> <span>Contact</span>
-                        </a>
-                        <a href="https://maps.google.com?q=Mahadivulwewa School" className="block flex items-center space-x-1 hover:underline">
-                            <MapPin size={20} /> <span>Location</span>
-                        </a>
-                        <button className="mt-2 w-full rounded-lg bg-white px-4 py-2 text-blue-600 hover:bg-gray-200">Login</button>
-                    </div>
-                )}
+             <img
+    src="/images/man3.jpg"
+    alt="School Background"
+    className="absolute inset-0 w-full h-full object-cover z-0"
 
-                {/* Hero Section */}
-                <section className="flex h-[80vh] w-full items-center justify-center bg-white text-center text-black">
-                    <div className="container px-4">
-                        <img src="images/School.jpg" alt="Logo" className=" ml-117 h-110 w-115" />
-                       
-                        <h1 className="text-4xl font-bold text-[#800000]"> T / Tn / Mahadivulwewa  National School</h1>
-                    </div>
-                </section>
+  />
 
-                {/* Footer Section */}
-                <section className="bg-[#4B0000]   text-white">
-    <div className="container mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Column 1 */}
-        <div>
-            <h3 className="text-lg font-semibold mb-4">About Us</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition">About School</a></li>
-                <li><a href="#" className="hover:text-white transition">Academic Programs</a></li>
-                <li><a href="#" className="hover:text-white transition">Admissions</a></li>
-                <li><a href="#" className="hover:text-white transition">Research</a></li>
-            </ul>
-        </div>
 
-        {/* Column 2 */}
-        <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition">Library</a></li>
-                <li><a href="#" className="hover:text-white transition">Recreation</a></li>
-                <li><a href="#" className="hover:text-white transition">Student Portal</a></li>
-                <li><a href="#" className="hover:text-white transition">Campus Map</a></li>
-            </ul>
-        </div>
+  
+</Card>
 
-        {/* Column 3 */}
-        <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition">Staff Resources</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition">Give Now</a></li>
-                <li><a href="#" className="hover:text-white transition">Disclaimer</a></li>
-            </ul>
-        </div>
 
-        {/* Column 4 */}
-        <div className="flex flex-col items-center md:items-start">
+<Card className="relative w-52 h-52 rounded-full overflow-hidden">
+  <img
+    src="/images/man1.jpg"
+    alt="School Background"
+    className="absolute inset-0 w-full h-full object-cover z-0"
+  />
+</Card>
+
+
+<Card className="relative w-52 h-52 rounded-full overflow-hidden">
+   <img
+    src="/images/man2.jpg"
+    alt="School Background"
+    className="absolute inset-0 w-full h-full object-cover z-0"
+  />
+</Card>
+
             
-            <div className="flex space-x-4 mb-4 mt-4">
-                <a href="#" className="hover:text-gray-300"><Facebook size={30} /></a>
-                <a href="#" className="hover:text-gray-300"><Twitter size={30} /></a>
-                <a href="#" className="hover:text-gray-300"> <MapPin size={30} /></a>
-                <a href="#" className="hover:text-gray-300"><Mail size={30} /></a>
-                {/* <a href="#" className="hover:text-gray-300"><YouTube size={24} /></a> */}
-            </div>
-           <h2>Tel :+9477 879 2078</h2>
-        </div>
-    </div>
+          </div>
 
-    <div className="border-t border-gray-500 mt-8 bg-white"></div>
+        </section>
 
-    {/* Footer Bottom */}
-    <div className="container mx-auto px-6 py-5 text-center text-[17px] text-gray-600 bg-gray-200">
-        <p>&copy; {new Date().getFullYear()} Mahadivulwewa Mahavidyalaya. All rights reserved.</p>
-    </div>
-</section>
-
-            </div>
-        </>
-    );
+        {/* Footer */}
+      
+      </div>
+    </>
+  );
 }
