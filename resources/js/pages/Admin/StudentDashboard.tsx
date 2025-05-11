@@ -214,20 +214,35 @@ const StudentDashboard: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setSearchValue(input);
-
-    if (!input || !searchAttribute) {
+  
+    if (!input) {
       setFilteredSuggestions([]);
       return;
     }
-
-    const suggestions = students
-      .map((student) => String(student[searchAttribute as keyof Student] ?? ""))
-      .filter((val) =>
+  
+    let suggestions: string[] = [];
+  
+    if (searchAttribute) {
+      // Search only by selected attribute
+      suggestions = students
+        .map((student) => String(student[searchAttribute as keyof Student] ?? ""))
+        .filter((val) =>
+          val.toLowerCase().includes(input.toLowerCase())
+        );
+    } else {
+      // Search across all attributes in searchLabels
+      suggestions = students.flatMap((student) =>
+        keys.map((key) =>
+          String(student[key as keyof Student] ?? "")
+        )
+      ).filter((val) =>
         val.toLowerCase().includes(input.toLowerCase())
       );
-
+    }
+  
     setFilteredSuggestions([...new Set(suggestions)].slice(0, 5));
   };
+  
 
   const handleSelectSuggestion = (val: string) => {
     setSearchValue(val);
@@ -235,28 +250,43 @@ const StudentDashboard: React.FC = () => {
   };
 
   const handleSearch = () => {
-    if (!searchAttribute || !searchValue.trim()) {
-      toast.error("Please select a type and enter a value.");
+    if (!searchValue.trim()) {
+      toast.error("Please enter a search value.");
       return;
     }
-
-    const matches = students.filter((student) =>
-      String(student[searchAttribute as keyof Student])
-        .toLowerCase()
-        .includes(searchValue.toLowerCase())
-    );
-
+  
+    let matches: Student[] = [];
+  
+    if (searchAttribute) {
+      // Filter by selected field
+      matches = students.filter((student) =>
+        String(student[searchAttribute as keyof Student])
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
+      );
+    } else {
+      // Global search across all fields in `searchLabels`
+      matches = students.filter((student) =>
+        Object.keys(searchLabels).some((key) =>
+          String(student[key as keyof Student] ?? "")
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
+        )
+      );
+    }
+  
     if (matches.length === 0) {
       toast.error("No matching students found.");
       setSearchedStudents([]);
       setIsSearchModalOpen(false);
       return;
     }
-
+  
     setSearchedStudents(matches);
     setCurrentPage(1);
     setIsSearchModalOpen(true);
   };
+  
 
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -543,7 +573,7 @@ const StudentDashboard: React.FC = () => {
                   <div className="p-2">
                     <select
                       className="w-full px-3 py-2 border rounded outline-none mb-2"
-                      value={searchAttribute}
+                      value={searchValue} 
                       onChange={(e) => {
                         setSearchAttribute(e.target.value);
                         setSearchValue(""); // clear previous input
