@@ -290,7 +290,7 @@ const StudentDashboard: React.FC = () => {
 
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+const [showForm, setShowForm] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
@@ -615,12 +615,22 @@ const StudentDashboard: React.FC = () => {
             </div>
           </div>
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
-            {/* <div className="flex justify-left">
+            <div className="flex justify-left">
               <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white mb-4">
                 Admission Form
               </Button>
 
-              </div> */}
+              </div>
+
+
+              {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
+            
+      <StudentAdmissionForm setShowForm={setShowForm} />
+          </div>
+        </div>
+      )}
             <Button
               onClick={() => setShowAddForm(true)}
               className="bg-green-600 text-white px-4 py-2 ml-2 mb-4 rounded"
