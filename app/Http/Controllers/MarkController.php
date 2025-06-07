@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Inertia\Inertia;
 use App\Models\Marks;
 use Illuminate\Http\Request;
@@ -15,13 +16,25 @@ class MarkController extends Controller
 {
     $query = Marks::query();
 
-    if ($request->filled('reg_no')) {
-        $query->where('reg_no', 'LIKE', '%' . $request->reg_no . '%');
+    if ($request->has('reg_no')) {
+        $query->where('reg_no', 'LIKE', '%' . $request->input('reg_no') . '%');
     }
 
-    if ($request->filled('subject_id')) {
-        $query->where('subject_id', $request->subject_id);
+
+    if ($request->has('subject_id')) {
+        $query->where('subject_id', 'like', '%' . $request->input('subject_id') . '%');
     }
+
+    if ($request->has('marks_obtained')) {
+        $query->where('marks_obtained', $request->input('marks_obtained'));
+    }
+
+    if ($request->has('grade')) {
+        $query->where('grade', strtoupper($request->input('grade')));
+    }
+
+    $marks = $query->get();
+
 
     $marks = $query->paginate($request->get('limit', 10)); // You can customize the limit default (10)
 
