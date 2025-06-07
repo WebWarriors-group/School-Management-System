@@ -167,7 +167,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
 
         if (user) {
             // Edit existing user
-            post(route('users.update', user.id), {
+            post(route('admin.update', user.id), {
                 onFinish: () => {
                     reset('password', 'password_confirmation');
                     setShowRegister(false); // Close the form after submission

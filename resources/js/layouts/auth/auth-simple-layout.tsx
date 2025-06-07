@@ -10,26 +10,30 @@ interface AuthLayoutProps {
 
 export default function AuthSimpleLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-white p-7 md:p-10" 
-       
-           >
-            <div className="justify-content-center relative flex w-full max-w-[500px] rounded-md border-red-700 bg-white p-5 text-[white] shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
-                <div className="flex w-[10000px] flex-col gap-9 border-4 border-red-700 p-8">
-                    <img src="/images/School.jpg" className="pointer-events-none absolute top-12 left-20  w-[350px] opacity-12" alt="School" />
-                    <div className="relative flex flex-col items-center gap-4">
-                        <Link href={route('homepage')} className="flex flex-col items-center gap-2 font-medium text-[white]">
-                            <span className="sr-only bg-red-900">{title}</span>
-                        </Link>
+        <div className="flex justify-center  flex-wrap py-30 bg-[#fbe8d6]">
+  {/* Login Component 1 */}
+  <div className="justify-content-center relative  w-full max-w-[300px]  bg-[#5D4037] border-[white] p-5 text-[#5D4037] ">
+    <img src="images/school.jpg" className="w-60 h-60 rounded-full justify-center mt-20 ml-3"/><br/>
+    <h2 className="text-[white] text-lg text-center">Mahadivulwewa Maha Vidyalaya National School</h2>
+  </div>
 
-                        <div className="z-5 space-y-2 text-center text-[#800000]">
-                            <h1 className="text-[23px] font-medium">{title}</h1>
+  {/* Login Component 2 */}
+  <div className="justify-content-center relative flex w-full max-w-[500px]  bg-[white] border-[white] p-5 text-[#5D4037] ">
+    <div className="flex w-[10000px] flex-col gap-9 border-4  p-8">
+      <div className="relative flex flex-col items-center gap-4">
+        <Link href={route('homepage')} className="flex flex-col items-center gap-2 font-medium text-[white]">
+          <span className="sr-only text-[#5D4037]">{title}</span>
+        </Link>
 
-                            <p className="text-center text-[15px] text-red-900">{description}</p>
-                        </div>
-                    </div>
-                    {children}
-                </div>
-            </div>
+        <div className="z-5 space-y-2 text-center text-[#5D4037]">
+          <h1 className="text-[23px] font-medium">{title}</h1>
+          <p className="text-center text-[15px] text-[#5D4037]">{description}</p>
         </div>
+      </div>
+      {children}
+    </div>
+  </div>
+</div>
+
     );
 }
