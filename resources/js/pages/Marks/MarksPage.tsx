@@ -18,74 +18,126 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface Mark {
-  id?: number;
+  id: number; // Add this
   reg_no: string;
   subject_id: string;
   marks_obtained: number;
   grade: 'A' | 'B' | 'C' | 'S' | 'F';
 }
 
+
+
 const MarksPage: React.FC = () => {
   const [marks, setMarks] = useState<Mark[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [editingMark, setEditingMark] = useState<Mark | null>(null);
-  const [newMark, setNewMark] = useState<Mark>({ reg_no: '', subject_id: '', marks_obtained: 0, grade: 'A' });
-
-  const [searchParams,setSearchParams] = useState<{reg_no?: string; subject_id?: string}>({});
+  const [newMark, setNewMark] = useState({
+    reg_no: '',  // Student's registration number
+    subject_id: '',  // Subject ID
+    marks_obtained: 0,  // Marks the student obtained
+    grade: 'A',  // Grade the student got
+  });
+  
+  const [searchParams,setSearchParams] = useState<{reg_no?: string; subject_id?: string; marks_obtained?: number; grade?: 'A' | 'B' | 'C' | 'S' | 'F'}>({});
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [marksPerPage] = useState<number>(10);
   const [totalMarks, setTotalMarks] = useState<number>(10);
+  
+  const [results, setResults] = useState<Mark[]>([]);
+  
+  const [searchQuery, setSearchQuery] = useState('');
 
- const [searchRegNo, setSearchRegNo] = useState<string>('');
-  const [searchSubjectId, setSearchSubjectId] = useState<string>('');
+ 
+  
+  
+ //const [searchRegNo, setSearchRegNo] = useState<string>('');
+ //const [searchSubjectId, setSearchSubjectId] = useState<string>('');
+  //const [searchmarks_obtained, setmarks_obtained] = useState<number>();
+//const [searchgrade, setSearchgrade] = useState<'A' | 'B' | 'C' | 'S' | 'F'>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
 
 
-  const fetchMarks = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        ...searchParams,
-        page: currentPage.toString(),
-        limit: marksPerPage.toString(),
-      });
-  
-      const response = await fetch(`/api/marks/?${params}`);
-      const data = await response.json();
-  
-      setMarks(data.data);
-      setTotalMarks(Number(response.headers.get('x-total-count')) || 0);
-  
-      // 🔔 Show message if no data returned after a search
-      if ((searchParams.reg_no || searchParams.subject_id) && data.data.length === 0) {
-        toast.warning("No matching records found.", {
-          className: "bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg px-4 py-3 shadow",
-        });
-      }
-  
-    } catch (error) {
-      console.error('Error fetching marks:', error);
-      toast.error('Error fetching marks');
-    } finally {
-      setLoading(false);
-    }
-  }, [currentPage, searchParams, marksPerPage]);
-  
+const fetchMarks = useCallback(async () => {
+  setLoading(true);
+  try {
+    const params = new URLSearchParams({
+      ...Object.entries(searchParams).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null) {
+          acc[key] = String(value); // convert all values to string
+        }
+        return acc;
+      }, {} as Record<string, string>),
+      page: String(currentPage),
+      limit: String(marksPerPage),
+    });
 
+    console.log("Fetching marks with params:", params.toString()); // Debugging log
+    
+    const response = await fetch(`/api/marks/?${params}`);
+    const data = await response.json();
+
+    console.log("Fetched data:", data); // Check the fetched data
+    
+    setMarks(data.data);
+    setResults(data.data); // This updates the source used by filteredResults
+
+    setTotalMarks(Number(response.headers.get('x-total-count')) || 0);
+
+    if ((searchParams.reg_no || searchParams.subject_id) && data.data.length === 0) {
+      toast.warning("No matching records found.", {
+        className: "bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg px-4 py-3 shadow",
+      });
+    }
+
+  } catch (error) {
+    console.error('Error fetching marks:', error);
+    toast.error('Error fetching marks');
+  } finally {
+    setLoading(false);
+  }
+}, [currentPage, searchParams, marksPerPage]);
+
+  
+  
   useEffect(() => {
     fetchMarks();
-  }, [fetchMarks]);
+  }, [fetchMarks, searchParams, currentPage]);
 
-  const handleSearch = () => {
-    setCurrentPage(1);
-    setSearchParams({
-      reg_no: searchRegNo,
-      subject_id: searchSubjectId,
+  type Grade = "A" | "B" | "C" | "S" | "F";
 
-    });
-   // fetchMarks({ reg_no: searchRegNo, subject_id: searchSubjectId });
+  type SearchParams = {
+    subject_id?: string;
+    marks_obtained?: number;
+    grade?: Grade;
+    reg_no?: string;
   };
+  
+  const allowedGrades: Grade[] = ["A", "B", "C", "S", "F"];
+  
+  const handleSearch = () => {
+    const trimmedQuery = searchQuery.trim();
+  
+    const newSearchParams: SearchParams = {};
+  
+    const upperQuery = trimmedQuery.toUpperCase();
+  
+    if (allowedGrades.includes(upperQuery as Grade)) {
+      newSearchParams.grade = upperQuery as Grade;
+    } else if (/^\d+$/.test(trimmedQuery)) {
+      newSearchParams.marks_obtained = Number(trimmedQuery);
+    } else if (trimmedQuery.length > 0 && trimmedQuery.length <= 10) {
+      newSearchParams.subject_id = trimmedQuery;
+    } else {
+      newSearchParams.reg_no = trimmedQuery;
+    }
+  
+    setSearchParams(newSearchParams);
+  };
+  
+  
+
+  
 
   const handlePageChange = (page: number) => setCurrentPage(page);
 
@@ -153,6 +205,7 @@ const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
   
 
   const handleCreateMark = async () => {
+    
     try {
       const response = await fetch('/api/marks', {
         method: 'POST',
@@ -186,29 +239,36 @@ const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
       <div className="max-w-screen mx-auto my-5 p-10 bg-gray-100 rounded-lg shadow-md">
         <h1 className="text-center text-2xl font-bold text-red-700 mb-5">Student Marks</h1>
         <Toaster position="top-right"/>
-
         <div className="flex justify-center items-center gap-3 mb-5 p-3 bg-white rounded-lg shadow-sm max-w-screen mx-auto">
-          <input
-            type="text"
-            placeholder="Search by Reg No"
-            value={searchRegNo}
-            onChange={(e) => setSearchRegNo(e.target.value)}
-            className="flex-1 p-3 border border-red-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-          />
-          <input
-            type="text"
-            placeholder="Search by Subject ID"
-            value={searchSubjectId}
-            onChange={(e) => setSearchSubjectId(e.target.value)}
-            className="flex-1 p-3 border border-red-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-red-700 text-white px-6 py-3 text-lg font-bold rounded-md transition duration-300 ease-in-out hover:bg-red-600"
-          >
-            Search
-          </button>
-        </div>
+  <input
+    type="text"
+    placeholder="Search by Reg No, Subject ID, Marks or Grade"
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    className="flex-1 p-3 border border-red-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
+  />
+
+  <button
+    onClick={handleSearch}
+    className="bg-red-700 text-white px-6 py-3 text-lg font-bold rounded-md transition duration-300 ease-in-out hover:bg-red-600"
+  >
+    Search
+  </button>
+
+  <button
+  onClick={() => {
+    setSearchQuery('');
+    setSearchParams({});
+    setCurrentPage(1);
+  }}
+  className="bg-gray-300 text-black px-6 py-3 text-lg font-bold rounded-md hover:bg-gray-400"
+>
+  Reset
+</button>
+
+</div>
+
+
 
         
 
@@ -222,8 +282,11 @@ const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
                 <th className="px-5 py-3 text-center">Grade</th>
                 <th className="px-5 py-3 text-center">Actions</th>
               </tr>
+
             </thead>
             <tbody>
+
+          
               {/* Add Form as the first row */}
               <tr>
                 <td className="px-1 py-2 text-center">
@@ -244,43 +307,39 @@ const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
 
                 </td>
                 <td className="px-1 py-2 text-center">
-                <input
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={Number.isNaN(newMark.marks_obtained) ? '' : newMark.marks_obtained}
+  <input
+    type="number"
+    value={newMark.marks_obtained}
+    onChange={(e) => setNewMark({ ...newMark, marks_obtained: parseInt(e.target.value) || 0 })}
+    className="px-2 py-1 border rounded"
+  />
+</td>
+<td className="px-1 py-2 text-center">
+  <select
+    value={newMark.grade}
+    onChange={(e) => setNewMark({ ...newMark, grade: e.target.value as Mark["grade"] })}
+    className="px-2 py-1 border rounded"
+  >
+    <option value="A">A</option>
+    <option value="B">B</option>
+    <option value="C">C</option>
+    <option value="S">S</option>
+    <option value="F">F</option>
+  </select>
+</td>
+<td className="px-1 py-2 text-center">
+  <button
+    onClick={handleCreateMark}
+    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-500"
+  >
+    Add
+  </button>
+</td>
 
-                  onChange={(e) =>
-                    setNewMark({ ...newMark, marks_obtained: Number(e.target.value) })
-                  }
-/>
-
-                </td>
-                <td className="px-1 py-2 text-center">
-                  <select
-                    value={newMark.grade}
-                    onChange={(e) => setNewMark({ ...newMark, grade: e.target.value as 'A' | 'B' | 'C' | 'S' | 'F' })}
-                    className="px-2 py-1 border rounded"
-                  >
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="S">S</option>
-                    <option value="F">F</option>
-                  </select>
-                </td>
-                <td className="px-5 py-3 text-center">
-                  <button
-                    onClick={handleCreateMark}
-                    className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-red-800 transition duration-300"
-                  >
-                    Add
-                  </button>
-                </td>
               </tr>
 
               {/* Display Existing Marks */}
-              {marks.map((mark) => (
+              {results.map((mark) => (
                 <React.Fragment key={mark.id}>
                   <tr className="hover:bg-gray-200">
                     <td className="px-5 py-3 text-center">{mark.reg_no}</td>
