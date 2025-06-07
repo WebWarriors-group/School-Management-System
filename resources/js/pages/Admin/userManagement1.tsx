@@ -149,7 +149,7 @@ export default function Posts() {
             </header>
             {!isVisible ? (
                 <>
-                    <main className="flex h-full flex-1 flex-col gap-6 p-6">
+                    <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-100">
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
                             {cards.map((card, index) => (
                                 <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-sm transition hover:shadow-md">

@@ -1,162 +1,155 @@
 import { Head, Link } from '@inertiajs/react';
-import { Facebook, Mail, MapPin, Menu, X,Twitter,Linkedin,Instagram } from 'lucide-react';
+import { Facebook, Mail, MapPin, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
+import { useEffect, useRef } from "react";
+
+
 
 export default function Navbar() {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
-    const menuItems = [
+  interface ModalProps {
+  image: { src: string; alt: string };
+  onClose: () => void;
+}
+  const [menuOpen, setMenuOpen] = useState(false);
 
-        "Gallery",
-        "Academics",
-        "More",
-        "Features",
-        "Administration",
-        "About",
-        "Reports",
-        "Contact",
-        "Administration",
-    ];
+  const Modal = ({ image, onClose }: ModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null);
 
-    const details = {
-        Gallery: "This section contains images and videos of school events.",
-        Academics: "Information about courses, syllabus, and academic programs.",
-        More: "Additional features and information.",
-        Features: "Details about school facilities and special programs.",
-        Administration: "Meet the school administration and management.",
-        About: "Learn about our school's history and mission.",
-        Reports: "View student progress reports and analytics.",
-        Contact: "Get in touch with school administration.",
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [onClose]);
+}
 
-    return (
-        <>
-            <Head title="Mahadivulwewa National School" />
-            <div className="w-full">
-                {/* Main Navbar */}
-                <nav className="bg-[#550000] py-2 text-white shadow-md w-full">
-                    <div className="w-full flex items-center  px-5">
-                        {/* Logo */}
-                        <div className="flex items-center">
-                            <img src="images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full ml-[-10px]" />
-                            <span className="font-[Orbitron] text-lg font-semibold text-[#FDDEBD] ml-3 whitespace-nowrap">
-                                T / Tn / Mahadivulwewa National School
-                            </span>
-                        </div>
-
-                        {/* Login Button */}
-                        <Link href={route('login')} className="hidden ml-230 md:inline-block rounded-2xl bg-white px-10 py-2 text-sm font-medium text-black transition duration-300 hover:bg-gradient-to-r from-orange-600 to-yellow-500 hover:text-white">
-                            Login
-                        </Link>
-
-                        {/* Mobile Menu Button */}
-                        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
-                            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-                        </button>
-                    </div>
-
-                    {/* Sub Navbar */}
-                    <div className="w-full bg-gray-100 py-4 shadow-sm mt-3">
-                        <div className="flex justify-center space-x-9 overflow-x-auto px-4 text-[18px] whitespace-nowrap text-[#800000]">
-                            {menuItems.map((item, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setSelectedItem(selectedItem === item ? null : item)}
-                                    className="hover:text-blue-600 focus:outline-none"
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </nav>
-
-                {/* Mobile Menu */}
-                {menuOpen && (
-                    <div className="w-full space-y-2 bg-red-100 p-3 md:hidden text-[#800000]">
-                        <a href="https://www.facebook.com/ttnmmv" className="block flex items-center space-x-1 hover:underline">
-                            <Facebook size={20} /> <span>Facebook</span>
-                        </a>
-                        <a href="mailto:ttnmahadivulwewamv@gmail.com" className="block flex items-center space-x-1 hover:underline">
-                            <Mail size={20} /> <span>Contact</span>
-                        </a>
-                        <a href="https://maps.google.com?q=Mahadivulwewa School" className="block flex items-center space-x-1 hover:underline">
-                            <MapPin size={20} /> <span>Location</span>
-                        </a>
-                        <button className="mt-2 w-full rounded-lg bg-white px-4 py-2 text-blue-600 hover:bg-gray-200">Login</button>
-                    </div>
-                )}
-
-                {/* Hero Section */}
-                <section className="flex h-[80vh] w-full items-center justify-center bg-white text-center text-black">
-                    <div className="container px-4">
-                        <img src="images/School.jpg" alt="Logo" className="mx-auto mt-9 h-100 w-109" />
-                       
-                        <h1 className="text-4xl font-bold text-[#800000]"> T / Tn / Mahadivulwewa  National School</h1>
-                    </div>
-                </section>
-
-                {/* Footer Section */}
-                <section className="bg-[#4B0000]   text-white">
-    <div className="container mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Column 1 */}
-        <div>
-            <h3 className="text-lg font-semibold mb-4">About Us</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition">About School</a></li>
-                <li><a href="#" className="hover:text-white transition">Academic Programs</a></li>
-                <li><a href="#" className="hover:text-white transition">Admissions</a></li>
-                <li><a href="#" className="hover:text-white transition">Research</a></li>
-            </ul>
+  return (
+    <>
+      <Head title="Mahadivulwewa National School" />
+      <div className="relative w-full min-h-screen overflow-hidden bg-white">
+     
+        <div className="bg-yellow-500 text-brown-900 text-md py-4 px-6 flex justify-between items-center ">
+          <div>Welcome to Mahadivulwewa National School</div>
+          <div className="space-x-4 hidden md:flex">
+            <a href="https://www.facebook.com/ttnmmv"><Facebook size={18} /></a>
+            <a href="mailto:ttnmahadivulwewamv@gmail.com"><Mail size={18} /></a>
+            <a href="https://maps.google.com?q=Mahadivulwewa School"><MapPin size={18} /></a>
+          </div>
         </div>
 
-        {/* Column 2 */}
-        <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition">Library</a></li>
-                <li><a href="#" className="hover:text-white transition">Recreation</a></li>
-                <li><a href="#" className="hover:text-white transition">Student Portal</a></li>
-                <li><a href="#" className="hover:text-white transition">Campus Map</a></li>
-            </ul>
-        </div>
-
-        {/* Column 3 */}
-        <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-white transition">Staff Resources</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition">Give Now</a></li>
-                <li><a href="#" className="hover:text-white transition">Disclaimer</a></li>
-            </ul>
-        </div>
-
-        {/* Column 4 */}
-        <div className="flex flex-col items-center md:items-start">
+        
+        <nav className="bg-[#5D4037] text-white py-3 px-6 shadow-md relative z-10">
+          <div className="flex justify-between items-center">
             
-            <div className="flex space-x-4 mb-4 mt-4">
-                <a href="#" className="hover:text-gray-300"><Facebook size={30} /></a>
-                <a href="#" className="hover:text-gray-300"><Twitter size={30} /></a>
-                <a href="#" className="hover:text-gray-300"> <MapPin size={30} /></a>
-                <a href="#" className="hover:text-gray-300"><Mail size={30} /></a>
-                {/* <a href="#" className="hover:text-gray-300"><YouTube size={24} /></a> */}
+            <div className="flex items-center">
+              <img src="/images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
+              <span className="ml-3 font-orbitron text-xl font-bold">
+                T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)
+              </span>
             </div>
-           <h2>Tel :+9477 879 2078</h2>
-        </div>
-    </div>
 
-    <div className="border-t border-gray-500 mt-8 bg-white"></div>
+           
+            <div className="flex items-center space-x-4">
+              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Login</Link>
+              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Forms</Link>
+              <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
+                {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
 
-    {/* Footer Bottom */}
-    <div className="container mx-auto px-6 py-5 text-center text-[17px] text-gray-600 bg-gray-200">
-        <p>&copy; {new Date().getFullYear()} Mahadivulwewa Mahavidyalaya. All rights reserved.</p>
-    </div>
+          
+          {menuOpen && (
+            <div className="bg-white text-black px-4 py-3 md:hidden">
+              <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+                <Facebook size={20} /> <span>Facebook</span>
+              </a>
+              <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+                <Mail size={20} /> <span>Email</span>
+              </a>
+              <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+                <MapPin size={20} /> <span>Location</span>
+              </a>
+              <Link href={route('login')} className="block mt-3 rounded bg-brown-800 text-white px-4 py-2 text-center">
+                Login
+              </Link>
+            </div>
+          )}
+        </nav>
+
+       
+        <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20  h-148 bg-[#fbe8d6]">
+          
+          <div className="md:w-1/2 text-center md:text-left space-y-5 mt-[-118px] ">
+          <img src="images/book4.png" className="ml-20 w-90 h-60 mt-30"></img>
+            <h1 className="text-4xl md:text-5xl font-bold text-[#5D4037] py-10 w-200 mt-[-60px]">
+              Let us develop wisdom and good qualities.<span className="text-brown-700 ml-10 text-[30px]"><sub>(motto)</sub></span>
+            </h1>
+
+            <p className="text-xl text-yellow-700 mt-[-20px]">
+             To develop a confident and capable generation of students who can sucessfully overcome all challanges.
+             <span className="text-brown-700 ml-15 text-[25px]"><sub>(vision)</sub></span>
+            </p>
+            <div className="mt-8 ">
+              <Link
+                href={route('login')}
+                className="bg-yellow-500 text-brown-900 px-6 py-2 rounded-full font-medium hover:bg-yellow-500"
+              >
+                About Us
+              </Link>
+
+              <Link
+                href={route('login')}
+                className="bg-yellow-500 text-brown-900 px-6 py-2 rounded-full font-medium hover:bg-yellow-500 ml-5"
+              >
+                Join Us
+              </Link>
+            </div>
+          </div>
+
+        
+          <div className="md:w-1/2  md:mt-0 relative mt-[-50px]">
+            <img
+              src="/images/image2.jpg"
+              alt="School"
+              className="w-[400px] h-[300px] ml-40 mt-[-100px] "
+            />
+           < img
+              src="/images/school1.jpg"
+              alt="School"
+              className="w-[350px] h-[250px] ml-90 absolute mt-[-100px]"
+            />
+          </div>
+        </section>
+      </div>
+      <div>
+  <section className="grid grid-cols-1 md:grid-cols-1 gap-10 px-4 md:px-20  h-148 items-center justify-center mt-[-50px]">
+  
+
+  
+  <div className="text-center md:mt-0  border-7 border-[#5D4037] h-80 p-4 bg-[#5D4037]">
+    <h2 className="font-bold text-xl w-100 justify-center item-center bg-yellow-500 py-1 ml-120">Mission /භාරකාරකම </h2>
+    <p className="text-lg py-6 text-[white]">
+      "Our mission is to contribute to the nation a wise, virtuous,and courages generation of students by building a noble life philosophy
+       drawn from all religious perspectives,fostering unity among all ethnic groups,and promoting mental and educational development" <br /><br/>
+      "අපගේ මෙහෙවර වනුයේ සියලු ආගමික දර්ශන වලින් ලබා ගත් උතුම් ජීවන දර්ශනයකින්, සියලු ජාතික කණ්ඩායම් අතර එකතාවය ප්‍රවර්ධනය කරමින්, මනෝබල සහ අධ්‍යාපනික සංවර්ධනය උස්සමින්, ශ්‍රී ලංකාවට බුද්ධිමත්, සුගතික සහ සාරධර්මී ශිෂ්‍ය පරපුරක් පිහිටුවීමයි."
+    </p>
+ <h2 className="text-yellow-500 text-lg">----Mahadivulwewa Maha Vidyalaya-----</h2>
+ <h2 className="text-[white]">****************************************</h2>
+  </div>
 </section>
 
-            </div>
-        </>
-    );
+
+  
+   
+   
+</div>
+
+
+
+    </>
+  );
 }
