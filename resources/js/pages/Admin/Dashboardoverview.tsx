@@ -122,7 +122,7 @@ export default function StatsOverview() {
       </header>
 
       {!isOpen ? (
-        <div className="grid grid-cols-1 gap-6 bg-gray-50 px-6 py-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 bg-gray-100 px-6 py-8 md:grid-cols-3">
           {/* Left: Dashboard Stats */}
           <div className="grid h-180 w-190 grid-cols-1 gap-6 sm:grid-cols-3 md:col-span-2 lg:grid-cols-2">
             {cards.map((card, index) => (
