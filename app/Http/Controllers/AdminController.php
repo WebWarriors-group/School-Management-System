@@ -6,6 +6,8 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Teacher;
+use App\Models\Subject;
+use App\Models\ClassModel;
 use App\Models\StudentAcademic;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -17,8 +19,37 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+   $teacher = Teacher::count();
+   $subject = Subject::count();
+   $student = StudentAcademic::count();
+   $class = ClassModel::count();
+   $teacherupdate=Teacher::latest('updated_at')->value('updated_at');
+   $studentupdate=StudentAcademic::latest('updated_at')->value('updated_at');
+   $classupdate=ClassModel::latest('updated_at')->value('updated_at');
 
-        return Inertia::render('Admin/Dashboardoverview');
+   $studentDeleted = StudentAcademic::onlyTrashed()
+        ->latest('deleted_at')
+        ->value('deleted_at');
+$teacherDeleted = Teacher::onlyTrashed()
+        ->latest('deleted_at')
+        ->value('deleted_at');
+$classDeleted = ClassModel::onlyTrashed()
+        ->latest('deleted_at')
+        ->value('deleted_at');
+
+
+   $classFooter = 'Last updated ' . Carbon::parse(max($classupdate,$classDeleted))->diffForHumans();
+   $teacherFooter = 'Last updated ' . Carbon::parse(max($teacherupdate,$teacherDeleted))->diffForHumans();
+  $studentActivity ='Last updated '. Carbon::parse(max($studentupdate, $studentDeleted))->diffForHumans();
+
+        return Inertia::render('Admin/Dashboardoverview',['teachers' => $teacher,
+    'students'=> $student,
+'class1'=>$class,
+'classfooter'=>$classFooter,
+'teacherfooter'=>$teacherFooter,
+'studentfooter'=>$studentActivity,
+'subject'=>$subject
+]);
     }
 
 

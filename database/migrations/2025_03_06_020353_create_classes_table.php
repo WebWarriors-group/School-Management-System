@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->integer('class_id')->primary();
+             $table->softDeletes();
             $table->string('teacher_NIC',20); // Define the column first
             $table->foreign('teacher_NIC')
                 ->references('teacher_NIC')
