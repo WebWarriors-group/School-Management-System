@@ -113,7 +113,7 @@ const StudentDashboard: React.FC = () => {
            <SearchStudent students={students} />
           </header>
 
-          {/* Summary Cards */}
+        
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mt-9 mr-5 ml-5 mb-9">
             <div className="border-green-900 rounded-2xl border-t-4 bg-white p-6 shadow">
               <h3 className="text-maroon-700 text-lg font-bold">Total Students</h3>
@@ -129,7 +129,7 @@ const StudentDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Main Content */}
+      
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
             <div className="flex justify-left mb-4">
               <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
