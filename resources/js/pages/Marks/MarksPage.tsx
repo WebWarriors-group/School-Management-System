@@ -56,7 +56,7 @@ const MarksPage: React.FC = () => {
 //const [searchgrade, setSearchgrade] = useState<'A' | 'B' | 'C' | 'S' | 'F'>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
-
+//const [showReport, setShowReport] = useState(false); // 👈 new state for report toggle
 
 const fetchMarks = useCallback(async () => {
   setLoading(true);
@@ -116,25 +116,24 @@ const fetchMarks = useCallback(async () => {
   const allowedGrades: Grade[] = ["A", "B", "C", "S", "F"];
   
   const handleSearch = () => {
-    const trimmedQuery = searchQuery.trim();
-  
-    const newSearchParams: SearchParams = {};
-  
-    const upperQuery = trimmedQuery.toUpperCase();
-  
-    if (allowedGrades.includes(upperQuery as Grade)) {
-      newSearchParams.grade = upperQuery as Grade;
-    } else if (/^\d+$/.test(trimmedQuery)) {
-      newSearchParams.marks_obtained = Number(trimmedQuery);
-    } else if (trimmedQuery.length > 0 && trimmedQuery.length <= 10) {
-      newSearchParams.subject_id = trimmedQuery;
-    } else {
-      newSearchParams.reg_no = trimmedQuery;
-    }
-  
-    setSearchParams(newSearchParams);
-  };
-  
+  const trimmedQuery = searchQuery.trim();
+  const newSearchParams: SearchParams = {};
+  const upperQuery = trimmedQuery.toUpperCase();
+
+  if (allowedGrades.includes(upperQuery as Grade)) {
+    newSearchParams.grade = upperQuery as Grade;
+  } else if (/^\d+$/.test(trimmedQuery)) {
+    newSearchParams.marks_obtained = Number(trimmedQuery);
+  } else if (trimmedQuery.length > 0 && trimmedQuery.length <= 10) {
+    newSearchParams.subject_id = trimmedQuery;
+  } else {
+    newSearchParams.reg_no = trimmedQuery;
+  }
+
+  console.log('Search Params:', newSearchParams); // ✅ Check what’s being passed
+  setSearchParams(newSearchParams);
+};
+
   
 
   
@@ -149,19 +148,38 @@ const fetchMarks = useCallback(async () => {
 
   
   const confirmDeleteMark = async () => {
-    if (!markToDelete) return;
-    try {
-      await fetch(`/api/marks/${markToDelete.id}`, { method: 'DELETE' });
-      setMarks((prevMarks) => prevMarks.filter((m) => m.id !== markToDelete.id));
-      toast.success("Mark deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting mark:", error);
-      toast.error("Failed to delete mark.");
-    } finally {
-      setShowDeleteModal(false);
-      setMarkToDelete(null);
+  if (!markToDelete) return;
+  try {
+    await fetch(`/api/marks/${markToDelete.id}`, { method: 'DELETE' });
+
+    toast.success("Mark deleted successfully!", {
+      style: {
+        background: '#e6ffed',
+        color: '#008000',
+        border: '1px solid #badbcc'
+      },
+    });
+
+    // Check if this was the last item on the page
+    const updatedMarks = marks.filter((m) => m.id !== markToDelete.id);
+    const isLastItemOnPage = updatedMarks.length === 0 && currentPage > 1;
+
+    // If the page becomes empty, go to the previous page
+    if (isLastItemOnPage) {
+      setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    } else {
+      fetchMarks(); // Always refresh data
     }
-  };
+
+  } catch (error) {
+    console.error("Error deleting mark:", error);
+    toast.error("Failed to delete mark.");
+  } finally {
+    setShowDeleteModal(false);
+    setMarkToDelete(null);
+  }
+};
+
   
   const handleEditMark = (mark: Mark) => setEditingMark({ ...mark });
 
@@ -203,35 +221,38 @@ const fetchMarks = useCallback(async () => {
     }
   };
   
+const handleCreateMark = async () => {
+  try {
+    const response = await fetch('/api/marks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newMark),
+    });
 
-  const handleCreateMark = async () => {
-    
-    try {
-      const response = await fetch('/api/marks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newMark),
+    if (response.ok) {
+      await response.json(); // You can use this if you want the response, e.g. to show some ID
+      setNewMark({ reg_no: '', subject_id: '', marks_obtained: 0, grade: 'A' }); // Reset form
+      toast.success('Mark added successfully!', {
+        className: 'bg-green-500 text-black'
       });
-  
-      if (response.ok) {
-        const createdMark = await response.json();
-        setMarks([createdMark.mark, ...marks]); // Adds the new mark at the start of the list
-        setNewMark({ reg_no: '', subject_id: '', marks_obtained: 0, grade: 'A' }); // Reset form
-        toast.success('Mark added successfully!' ,{
-          className: 'bg-green-500 text-black'
-        });
-      } else {
-        const errorData = await response.json();
-        toast.error(`Failed to add mark: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error('Error adding mark:',error, {className: "bg-red-50 text-red-800 border border-red-300 rounded-lg px-4 py-3 shadow",
-      });
-      toast.error('Failed to add mark.');
+
+      // ✅ Automatically refresh the table with latest data
+      fetchMarks();
+    } else {
+      const errorData = await response.json();
+      toast.error(`Failed to add mark: ${errorData.message}`);
     }
-  };
+  } catch (error) {
+    console.error('Error adding mark:', error);
+    toast.error('Failed to add mark.', {
+      className: "bg-red-50 text-red-800 border border-red-300 rounded-lg px-4 py-3 shadow",
+    });
+  }
+};
 
   const totalPages = Math.ceil(totalMarks / marksPerPage);
+
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -330,7 +351,7 @@ const fetchMarks = useCallback(async () => {
 <td className="px-1 py-2 text-center">
   <button
     onClick={handleCreateMark}
-    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-500"
+    className="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-500"
   >
     Add
   </button>
@@ -350,16 +371,24 @@ const fetchMarks = useCallback(async () => {
                       <button
                         onClick={() => requestDeleteMark(mark)}
                     
-                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition duration-300"
+                        className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-300 transition duration-300"
                       >
                         Delete
                       </button>
                       <button
                         onClick={() => handleEditMark(mark)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ml-2"
+                        className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-300 transition duration-300 ml-2"
                       >
                         Edit
                       </button>
+                      
+                      <button
+                        onClick={() => window.location.href = `/Marks/${mark.reg_no}`}
+                        className="bg-purple-500 text-white px-3 py-2 rounded-md hover:bg-purple-300 transition duration-300 ml-2"
+                      >
+                        View
+                      </button>
+                      
                     </td>
                   </tr>
                   {/* Edit Form */}
@@ -435,6 +464,9 @@ const fetchMarks = useCallback(async () => {
     </td>
   </tr>
 )}
+
+
+      
 <ConfirmDeleteModal
   isOpen={showDeleteModal}
   onClose={() => {
