@@ -22,10 +22,23 @@ class AdminController extends Controller
    $teacher = Teacher::count();
    $subject = Subject::count();
    $student = StudentAcademic::count();
+   $student1 = StudentAcademic::select('class_id','reg_no')->get();
    $class = ClassModel::count();
+    $classData = ClassModel::withCount('studentacademics')->with('studentacademics')->get();
+   
+
+
+
    $teacherupdate=Teacher::latest('updated_at')->value('updated_at');
    $studentupdate=StudentAcademic::latest('updated_at')->value('updated_at');
+    
    $classupdate=ClassModel::latest('updated_at')->value('updated_at');
+    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC','class_name')
+        ->get()
+        ->groupBy('class_name') 
+        ->map->groupBy('grade');  
+
+    $teachers = Teacher::select('teacher_NIC')->get();
 
    $studentDeleted = StudentAcademic::onlyTrashed()
         ->latest('deleted_at')
@@ -48,7 +61,15 @@ $classDeleted = ClassModel::onlyTrashed()
 'classfooter'=>$classFooter,
 'teacherfooter'=>$teacherFooter,
 'studentfooter'=>$studentActivity,
-'subject'=>$subject
+
+'subject'=>$subject,
+ 'classData' => [
+            'data' => $classData,
+        ],
+        'classes' => $classes,
+        'teacher12' => $teachers,
+        'student1'=>[
+            'data1'=>$student1],
 ]);
     }
 
