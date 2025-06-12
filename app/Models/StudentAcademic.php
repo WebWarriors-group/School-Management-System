@@ -8,6 +8,7 @@ use App\Models\StudentPersonal;
 class StudentAcademic extends Model
 {
     use HasFactory;
+     use SoftDeletes;
 
     protected $table = 'student_academic_info'; // Specify the correct table name
 

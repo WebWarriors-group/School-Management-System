@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('teacher_work_infos', function (Blueprint $table) {
             $table->string('teacher_NIC', 20)->primary(); // Primary key
             $table->date('appointed_date');
+            $table->softDeletes();
             $table->date('work_acceptance_date');
             $table->string('appointment_type');
             $table->date('salary_increment_date');

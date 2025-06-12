@@ -258,7 +258,7 @@ const handleCreateMark = async () => {
     <AppLayout breadcrumbs={breadcrumbs}>
         <Head title="Student Marks" />
       <div className="max-w-screen mx-auto my-5 p-10 bg-gray-100 rounded-lg shadow-md">
-        <h1 className="text-center text-2xl font-bold text-red-700 mb-5">Student Marks</h1>
+        <h1 className="text-center text-2xl font-bold text-sky-900 mb-5">Student Marks</h1>
         <Toaster position="top-right"/>
         <div className="flex justify-center items-center gap-3 mb-5 p-3 bg-white rounded-lg shadow-sm max-w-screen mx-auto">
   <input
@@ -266,12 +266,12 @@ const handleCreateMark = async () => {
     placeholder="Search by Reg No, Subject ID, Marks or Grade"
     value={searchQuery}
     onChange={(e) => setSearchQuery(e.target.value)}
-    className="flex-1 p-3 border border-red-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
+    className="flex-1 p-3 border border-yellow-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
   />
 
   <button
     onClick={handleSearch}
-    className="bg-red-700 text-white px-6 py-3 text-lg font-bold rounded-md transition duration-300 ease-in-out hover:bg-red-600"
+    className="bg-yellow-600 text-white px-6 py-3 text-lg font-bold rounded-md transition duration-300 ease-in-out hover:bg-red-600"
   >
     Search
   </button>
@@ -296,7 +296,7 @@ const handleCreateMark = async () => {
         {loading ? <p>Loading...</p> : (
           <table className="w-full table-auto bg-white rounded-lg overflow-hidden shadow-md">
             <thead>
-              <tr className="bg-red-700 text-white font-bold">
+              <tr className="bg-sky-900 text-white font-bold">
                 <th className="px-5 py-3 text-center">Reg No</th>
                 <th className="px-5 py-3 text-center">Subject ID</th>
                 <th className="px-5 py-3 text-center">Marks Obtained</th>
