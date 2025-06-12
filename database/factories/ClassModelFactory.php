@@ -19,9 +19,9 @@ class ClassModelFactory extends Factory
         return [
             'class_id' => $this->faker->unique()->numberBetween(1, 100), // Generates C001, C002, etc.
             'teacher_NIC' =>  Teacher::all()->random()->teacher_NIC,  // Example: 123456789V
-            'class_name' => $this->faker->randomElement(['Math', 'Science', 'English', 'History']),
-            'grade' => $this->faker->numberBetween(1, 12),
-            'section' => $this->faker->randomElement(['A', 'B', 'C', 'D']),
+            'class_name' => $this->faker->randomElement(['A', 'B']),
+            'grade' => $this->faker->numberBetween(6, 13),
+            'section' => $this->faker->randomElement([ '6-9', '10-11', '12-13']),
             'number_of_students' => $this->faker->numberBetween(10, 50),
         ];
     }

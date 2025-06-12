@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('student_academic_info', function (Blueprint $table) {
-            $table->string('reg_no', 50)->primary();
-
-            // Use the same data type as in 'classes' table
+            $table->integer('reg_no')->primary();
+            $table->string('student_id_no')->default(0);
+            
             $table->integer('class_id');
             $table->foreign('class_id')->references('class_id')->on('classes')->onDelete('cascade');
 

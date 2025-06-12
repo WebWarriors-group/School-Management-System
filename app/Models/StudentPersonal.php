@@ -38,7 +38,7 @@ class StudentPersonal extends Model
     ];
     public function studentacademic()
     {
-        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no'); // Relationship to Teacher model
+        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no'); 
     }
 
 }

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
-import EditStudent from "./EditStudent";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
 import StudentAdmissionForm from "./StudentAdmissionForm";
+
 import AddStudent from "./AddStudent";
-import { Edit, Trash2, Eye } from "lucide-react";
+import { Trash2, Eye } from "lucide-react";
 import { Student } from "@/types";
 import ImportStudent from "./ImportStudent";
 import SearchStudent from "./SearchStudent";
@@ -24,7 +24,6 @@ const StudentDashboard: React.FC = () => {
   const [showImportForm, setImportForm] = useState(false);
 
   const [students, setStudents] = useState<Student[]>([]);
-  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
   const [studentToDelete, setStudentToDelete] = useState<string | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -48,19 +47,16 @@ const StudentDashboard: React.FC = () => {
     fetchStudents();
   }, []);
 
-  const handleEditClick = (student: Student) => {
-    setEditingStudent(student);
-  };
 
   const handleSearchResults = (results: Student[]) => {
     setSearchedStudents(results);
     setIsSearchModalOpen(true);
   };
 
-  const handleDeleteClick = (reg_no: string) => {
-    setStudentToDelete(reg_no);
-    setIsDeleteModalOpen(true);
-  };
+  // const handleDeleteClick = (reg_no: string) => {
+  //   setStudentToDelete(reg_no);
+  //   setIsDeleteModalOpen(true);
+  // };
 
   const confirmDelete = async () => {
     if (!studentToDelete) return;
@@ -97,11 +93,11 @@ const StudentDashboard: React.FC = () => {
 
   const uniqueClassCount = new Set(students.map((s) => s.class_id)).size;
   const scholarshipCount = students.filter(
-  (s) =>
-    s.receiving_any_grade_5_scholarship ||
-    s.receiving_any_samurdhi_aswesuma ||
-    s.receiving_any_scholarship
-).length;
+    (s) =>
+      s.receiving_any_grade_5_scholarship ||
+      s.receiving_any_samurdhi_aswesuma ||
+      s.receiving_any_scholarship
+  ).length;
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -110,26 +106,26 @@ const StudentDashboard: React.FC = () => {
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
           <header className="flex justify-end border-b bg-white shadow-sm">
-           <SearchStudent students={students} />
+            <SearchStudent students={students} />
           </header>
 
-        
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mt-9 mr-5 ml-5 mb-9">
-            <div className="border-green-900 rounded-2xl border-t-4 bg-white p-6 shadow">
+
+          <div className="grid grid-cols-3 gap-2 md:grid-cols-3 mt-9 mr-5 ml-5 mb-5">
+            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-6 shadow">
               <h3 className="text-maroon-700 text-lg font-bold">Total Students</h3>
-              <p className="mt-2 text-3xl font-bold text-green-600">{students.length}</p>
+              <p className="mt-2 text-xl font-bold text-green-600">{students.length}</p>
             </div>
-            <div className="border-red-900 rounded-2xl border-t-4 bg-white p-6 shadow">
+            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-6 shadow">
               <h3 className="text-maroon-700 text-lg font-bold">Class Enrolled</h3>
               <p className="mt-2 text-3xl font-bold text-red-600">{uniqueClassCount}</p>
             </div>
-            <div className="border-blue-900 rounded-2xl border-t-4 bg-white p-6 shadow">
+            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-6 shadow">
               <h3 className="text-maroon-700 text-lg font-bold">Receiving Scholarship</h3>
               <p className="mt-2 text-3xl font-bold text-blue-600">{scholarshipCount}</p>
             </div>
           </div>
 
-      
+
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
             <div className="flex justify-left mb-4">
               <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
@@ -177,12 +173,10 @@ const StudentDashboard: React.FC = () => {
                 "Method": student.method_of_coming_to_school,
                 Actions: (
                   <div className="flex gap-2">
-                    <Button onClick={() => handleEditClick(student)} className="bg-blue-500 text-white">
-                      <Edit size={16} />
-                    </Button>
-                    <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white">
+
+                    {/* <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white">
                       <Trash2 size={16} />
-                    </Button>
+                    </Button> */}
                     <Button onClick={() => handleViewClick(student)} className="bg-purple-500 text-white">
                       <Eye size={16} />
                     </Button>
@@ -191,11 +185,7 @@ const StudentDashboard: React.FC = () => {
               }))}
             />
 
-            <EditStudent
-              editingStudent={editingStudent}
-              setEditingStudent={setEditingStudent}
-              setStudents={setStudents}
-            />
+
 
             <ViewStudent
               student={viewingStudent}

@@ -1,6 +1,9 @@
 
+import EditStudent from "./EditStudent";
+import { Edit } from "lucide-react";
+import React, { useState } from "react";
 
-import React from "react";
+
 import { Student } from "@/types";
 
 interface ViewStudentProps {
@@ -9,9 +12,17 @@ interface ViewStudentProps {
     onClose: () => void;
 }
 
+
+
 const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose }) => {
     if (!isOpen || !student) return null;
 
+    const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+    const [students, setStudents] = useState<Student[]>([]);
+
+    const handleEditClick = (student: Student) => {
+        setEditingStudent(student);
+    };
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] p-8 relative overflow-y-auto">
@@ -72,7 +83,14 @@ const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose }) =
                     </table>
                 </div>
 
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex justify-between items-center">
+                    <button
+                        onClick={() => handleEditClick(student)}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-5 py-2 rounded-lg transition flex items-center gap-2"
+                    >
+                        <Edit size={16} /> Edit
+                    </button>
+
                     <button
                         onClick={onClose}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg transition"
@@ -80,6 +98,12 @@ const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose }) =
                         Close
                     </button>
                 </div>
+
+                <EditStudent
+                    editingStudent={editingStudent}
+                    setEditingStudent={setEditingStudent}
+                    setStudents={setStudents}
+                />
             </div>
         </div>
     );

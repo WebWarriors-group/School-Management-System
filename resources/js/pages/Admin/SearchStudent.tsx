@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Filter, Search } from "lucide-react";
 import { toast } from "sonner";
-import { Student } from "@/types"; // adjust import path as needed
+import { Student } from "@/types"; 
 
 interface SearchStudentProps {
   students: Student[];
@@ -130,7 +130,7 @@ const SearchStudent: React.FC<SearchStudentProps> = ({ students }) => {
         <Search size={16} />
       </button>
 
-      {/* Dropdown to choose search attribute */}
+   
  {isDropdownOpen && (
                 <div className="absolute top-14 left-0 w-[300px] mt-2 bg-white border border-gray-300 rounded shadow-md z-50">
                   <div className="p-2">
@@ -155,7 +155,7 @@ const SearchStudent: React.FC<SearchStudentProps> = ({ students }) => {
                 </div>
               )}
 
-      {/* Search Modal */}
+  
       {isSearchModalOpen && searchedStudents.length > 0 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] p-8 relative overflow-y-auto">
@@ -163,7 +163,7 @@ const SearchStudent: React.FC<SearchStudentProps> = ({ students }) => {
               🔍 Searched Student Details
             </h2>
 
-            {/* Show current student */}
+       
             {(() => {
               const student = searchedStudents[currentPage - 1];
               return (
@@ -222,7 +222,7 @@ const SearchStudent: React.FC<SearchStudentProps> = ({ students }) => {
               );
             })()}
 
-            {/* Pagination */}
+
             {searchedStudents.length > 1 && (
               <div className="flex justify-between items-center mt-4">
                 <button
@@ -248,8 +248,7 @@ const SearchStudent: React.FC<SearchStudentProps> = ({ students }) => {
                 </button>
               </div>
             )}
-
-            {/* Close button */}
+   
             <div className="mt-4 text-right">
               <button
                 onClick={() => {
