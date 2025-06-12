@@ -1,266 +1,342 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import AppLayout from '@/layouts/app-layout';
-import Timetable from '@/pages/Admin/timeTable';
-import { type BreadcrumbItem } from '@/types';
-import {
-  faBell,
-  faBullhorn,
-  faCalendar,
-  faFileLines,
-  faUsers,
-} from '@fortawesome/free-solid-svg-icons';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import { faUsers,faPlus } from '@fortawesome/free-solid-svg-icons';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { usePage } from '@inertiajs/react';
+import React, { useState } from 'react';
+import AddTeacherForm from '@/pages/Teacher/teacherForm';
+import AssignClassTeachers from '@/pages/Admin/Classpage';
+import ClassIndex from '@/pages/Admin/ClassCrud';
+import { Button } from '@headlessui/react';
 
-export default function StatsOverview() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      title: '📊 Dashboard Overview',
-      href: '/',
-    },
-  ];
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: '📊 Dashboard Overview',
+    href: '/',
+  },
+];
+interface Student {
+  reg_no: string;
+}
 
-  const cards = [
-    {
-      color: 'bg-orange-500',
-      icon: faUsers,
-      title: 'Total People',
-      value: '49',
-      footer: 'Staffs and student total counts',
-      footerColor: 'text-gray-400',
-    },
-    {
-      color: 'bg-green-500',
-      icon: faUsers,
-      title: 'Classes',
-      value: '245',
-      footer: 'Last 24 Hours',
-      footerColor: 'text-gray-400',
-    },
-    {
-      color: 'bg-red-500',
-      icon: faUsers,
-      title: 'Staffs',
-      value: '75',
-      footer: 'Staffs counts are until now',
-      footerColor: 'text-gray-400',
-    },
-    {
-      color: 'bg-yellow-500',
-      icon: faUsers,
-      title: 'Students',
-      value: '245',
-      footer: 'Just Updated',
-      footerColor: 'text-gray-400',
-    },
-    {
-      color: 'bg-sky-500',
-      icon: faUsers,
-      title: 'Labs',
-      value: '245',
-      footer: 'Just Updated',
-      footerColor: 'text-gray-400',
-    },
-    {
-      color: 'bg-purple-500',
-      icon: faUsers,
-      title: 'Users',
-      value: '245',
-      footer: 'total registered',
-      footerColor: 'text-gray-400',
-    },
-  ];
+interface StudentAcademic {
+  student: Student;
+}
 
-  const handleTime = () => setIsOpen(true);
+interface Class {
+  class_id: number;
+  class_name: string;
+  grade: number;
+  section: string;
+  studentacademics_count: number;
+  teacher_NIC: string;
+  studentacademics?: Student[];
+}
 
+interface Card {
+  id: number;
+  title: string;
+  value: string | number;
+  footer: string;
+  footerColor: string;
+  icon: any;
+  color: string;
+}
+
+interface ClassItem {
+  class_id: number;
+  grade:number;
+  section: string;
+  class_name: string;
+  teacher_NIC: string;
+}
+
+interface Teacher {
+  teacher_NIC: string;
+}
+
+
+
+
+export default function StatsOverviewPage() {
+  const [showForm, setShowForm] = useState(false);
+  const [showclass, setClass] = useState(false);
+  const [addteacher, setteacher] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+
+
+const handleCardClick = (card:Card) => {
+  setSelectedCard(card); // This will trigger AddForm to be shown
+};
+
+  const handleAddTeacherClick = () => {
+    setShowForm(true);
+  };
+    const CloseClick = () => {
+    setShowForm(false);
+  };
+
+  const handle2=()=>{
+    setClass(true);
+  }
+  const CloseClick1=()=>{
+    setClass(false);
+  }
+
+  const CloseClick2=()=>{
+    setteacher(true);
+  }
+
+  const back1=()=>{
+    setteacher(false);
+  }
+  const back3=()=>{
+    setSelectedCard(null);
+  }
+
+
+   const {
+  teachers,
+  students,
+  class1,
+  classfooter,
+  teacherfooter,
+  studentfooter,
+  subject,
+  classData,
+  teacher12,
+  classes,
+  classstudent
+  
+} = usePage<{
+  teachers: number;
+  students: number;
+  class1: number;
+  classfooter: string;
+  teacherfooter: string;
+  studentfooter: string;
+  subject: number;
+  classData: {
+    data: {
+      class_id: number;
+      class_name: string;
+      grade: number;
+      section: string;
+      studentacademics_count:number;
+      teacher_NIC: string;
+      studentacademics?: Student[];
+    }[];
+  };
+  
+  teacher12: {
+    teacher_NIC: string;
+    
+  }[];
+  classes: {
+      [class_name: string]: {
+    [grade: number]: ClassItem[]; // sections only
+  }
+    };
+}>().props;
+
+
+
+      const cards = [
+  {
+    id: 1,
+    color: 'bg-yellow-500',
+    icon: faUsers,
+    title: 'Total Subjects',
+    value: subject,
+    footer: 'Total count of overall subjects',
+    footerColor: 'text-gray-400',
+  },
+  {
+    id: 2,
+    color: 'bg-stone-800',
+    icon: faUsers,
+    title: 'Classes',
+    value: class1,
+    footer: classfooter,
+    footerColor: 'text-gray-400',
+  },
+  {
+    id: 3,
+    color: 'bg-stone-500',
+    icon: faUsers,
+    title: 'Staffs',
+    value: teachers,
+    footer: teacherfooter,
+    footerColor: 'text-gray-400',
+  },
+  {
+    id: 4,
+    color: 'bg-sky-900',
+    icon: faUsers,
+    title: 'Students',
+    value: students,
+    footer: studentfooter,
+    footerColor: 'text-gray-400',
+  },
+  
+];
+  
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <header className="sticky top-0 z-50 flex w-full items-center justify-between border-b bg-white px-4 py-3 shadow-sm">
-        <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="border border-[#005555] bg-white px-4 text-[#005555] hover:bg-gray-50">
-                Quick Adding
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => alert('Add Staff')}>
-                Add New Staff
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => alert('Add Class')}>
-                Add New Class
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => alert('Add Student')}>
-                Add New Student
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
+                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
 
-          <Button
-            variant="ghost"
-            className="sticky right-30 text-[#005555] hover:bg-gray-100"
-            onClick={() => setShowNotifications(!showNotifications)}
-          >
-            <p className="text-[30px]">🔔</p>
-            <span className="text-lg">notification</span>
-          </Button>
+                
+                   
+                <p>1</p>
+            </header>
+ <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
+
+  {selectedCard && selectedCard.id === 2 ? (
+    <> <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>Back</Button>
+    
+      <ClassIndex
+  classes={classData.data.map(c => ({
+    ...c,
+    studentacademics: c.studentacademics ?? [],  // default empty array
+  }))}
+/>
+      </>
+    ) : 
+showclass ?  (
+
+  addteacher ? (
+    <>
+     <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>Back</Button>
+      <div className="mt-[-100px]">
+       
+       
+        <AssignClassTeachers teachers={teacher12} classes={classes} /></div> </>
+    ) : (
+
+  
+  <>
+  <div className="flex ">
+  <Button className="bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick1}>Back</Button>
+  
+  <Button className="text-[white] justify-right bg-sky-700 w-40 h-10 mt-10 ml-170 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick2}>Add teacher</Button>
+      <Button className="text-[white] justify-right bg-amber-700 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick2}>Filter</Button> 
+       </div>
+        <div className="p-6">
+
+             
+         
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-sky-900 text-left ">
+          <thead className="bg-sky-900 text-[white]">
+            <tr>
+              <th className="border px-4 py-2">Class ID</th>
+              <th className="border px-4 py-2">Class Name</th>
+              <th className="border px-4 py-2">Grade</th>
+              <th className="border px-4 py-2">TeacherNIC</th>
+              <th className="border px-4 py-2">Section</th>
+              <th className="border px-4 py-2">Students</th>
+            </tr>
+          </thead>
+          <tbody>
+            {classData?.data?.length > 0 ? (
+              classData.data.map((c1) => (
+                <tr key={c1.class_id} className=" bg-white hover:bg-yellow-100">
+                  <td className="border px-4 py-2">{c1.class_id}</td>
+                  <td className="border px-4 py-2">{c1.class_name}</td>
+                  <td className="border px-4 py-2">{c1.grade}</td>
+                  <td className="border px-4 py-2">{c1.teacher_NIC}</td>
+                  <td className="border px-4 py-2">{c1.section}</td>
+                  <td className="border px-4 py-2">{c1.studentacademics_count}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="py-4 text-center text-gray-500">
+                  No classes available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </>
+          )
+):
+  showForm ?  (
+        <div className="mt-4">
+         
+         <Button className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick}>Back</Button>
+         <span className="ml-212 ">Total Teachers</span>
+        <div className="mt- ml-250 absolute bg-yellow-500 rounded-full w-30 h-30 flex items-center justify-center text-[#152238] text-2xl font-bold border-14 border-[#152238]">
+  {teachers}
+</div>
+
+          <AddTeacherForm />
         </div>
-      </header>
 
-      {!isOpen ? (
-        <div className="grid grid-cols-1 gap-6 bg-gray-50 px-6 py-8 md:grid-cols-3">
-          {/* Left: Dashboard Stats */}
-          <div className="grid h-180 w-190 grid-cols-1 gap-6 sm:grid-cols-3 md:col-span-2 lg:grid-cols-2">
-            {cards.map((card, index) => (
-              <div key={index} className="flex overflow-hidden bg-white shadow hover:shadow-lg">
-                <div className={`flex w-1/3 items-center justify-center ${card.color}`}>
-                  <FontAwesomeIcon icon={card.icon} className="text-3xl text-white" />
-                </div>
-                <div className="flex w-2/3 flex-col justify-center p-4">
-                  <p className="text-sm text-gray-500">{card.title}</p>
-                  <h2 className="text-2xl font-semibold">{card.value}</h2>
-                  <p className={`mt-1 text-xs ${card.footerColor}`}>{card.footer}</p>
-                </div>
-              </div>
-            ))}
+  ) : (
+      <>
+   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
 
-            <QuickActionCard
-              initial="A"
-              title="Assign Class to Teacher"
-              desc="Link teachers to classes and subjects easily."
-              color="purple"
-            />
-            <QuickActionCard
-              initial="B"
-              title="Subjects & Curriculum"
-              desc="You can easily find the subject details in the school."
-              color="red"
-            />
-            <QuickActionCard
-              initial="C"
-              title="Leave Details"
-              desc="You can effectively manage teachers' leaves"
-              color="red"
-            />
-            <QuickActionCard
-              initial="D"
-              title="Class/Grade setup"
-              desc="You can effectively manage class and grades"
-              color="green"
-            />
-          </div>
+   <div className="relative mt-10  h-18 w-80 bg-white p-4 shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={ handleAddTeacherClick}>
+  
+  <span className="text-[20px] font-semibold text-yellow-700" >Add New Teachers</span>
+  <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700" />
+</div>
+           
+                                     <div className="relative mt-10  h-18 w-80 bg-white p-4 shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer">
+  <span className="text-[20px] font-semibold text-blue-900">Add New Students</span>
+  <FontAwesomeIcon icon={faPlus} className="text-3xl text-blue-900" />
+</div>
 
-          {/* Right: Calendar + Feature Cards */}
-          <div className="flex flex-col gap-6">
-            {/* Compact Calendar */}
-            <div className="rounded-lg border bg-white px-4 py-3 shadow-sm">
-              <p className="mb-2 text-sm font-semibold text-gray-700">📅 Calendar</p>
-              <Calendar className="w-full [&_.react-calendar__tile]:py-1 [&_.react-calendar__tile]:text-sm" />
-            </div>
+                                  <div className="relative mt-10  h-18 w-80 bg-white p-4 shadow-sm transition transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer">
+  <span className="text-[20px] font-semibold text-green-700" onClick={handle2}> Teachers  &  Classes</span>
+  <FontAwesomeIcon icon={faPlus} className="text-3xl text-[green]" />
+</div>
 
-            <FeatureCard
-              icon={faCalendar}
-              title="Timetable"
-              desc="Manage weekly class schedules."
-              buttonLabel="View Timetable"
-              onClick={handleTime}
-            />
-            <FeatureCard
-              icon={faFileLines}
-              title="Report Generation"
-              desc="Create reports for classes, students, and staff."
-              buttonLabel=" Generate Report"
-            />
-            <FeatureCard
-              icon={faBullhorn}
-              title="Announcements"
-              desc="Send school-wide messages and alerts."
-              buttonLabel="Post Announcement"
-            />
-          </div>
+ <div className="relative mt-10  h-16 w-80 bg-white p-4 shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer">
+  <span className="text-[20px] font-semibold text-[maroon]">Add Study Materials</span>
+  <FontAwesomeIcon icon={faPlus} className="text-3xl text-[maroon]" />
+</div>
 
-          {/* Notification Panel */}
-          {showNotifications && (
-            <div className="fixed top-20 left z-50 w-80 rounded-lg bg-gray-100 px-4 py-6 shadow-xl">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-800">Notifications</h3>
-                <button
-                  onClick={() => setShowNotifications(false)}
-                  className="text-sm text-gray-400 hover:text-gray-600"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="flex flex-col space-y-3">
-                <div className="rounded-lg border-l-4 border-indigo-500 bg-blue-100 p-3 shadow-md">
-                  <p className="text-xs text-gray-500">New Email from Admin</p>
-                  <h4 className="text-sm font-semibold text-gray-800">Subject: Meeting Reminder</h4>
-                  <button className="mt-1 text-xs text-indigo-600 hover:underline">Read Now</button>
-                </div>
-                <div className="rounded-lg border-l-4 border-red-500 bg-red-100 p-3 shadow-sm">
-                  <p className="text-xs text-gray-500">Alert: Class Timetable Updated</p>
-                  <h4 className="text-sm font-semibold text-gray-800">Subject: Math - 9:00 AM Slot Changed</h4>
-                  <button className="mt-1 text-xs text-red-600 hover:underline">View Changes</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <Timetable />
-      )}
+
+ </div>
+
+                                   
+                                  
+                                
+       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
+
+ 
+
+                            {cards.map((card, index) => (
+                                <div key={index} className="relative mt-10 ml-5 h-35 w-78 border bg-white p-6 ml-[-10px] shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md  flex items-center justify-between transform scale-90 z-40 cursor-pointer"
+                                onClick={() => handleCardClick(card)}>
+                                    {/* Colored square icon */}
+                                    <div
+                                        className={`absolute z-0 -top-10 left-4 flex h-28 w-28 items-center justify-center text-white shadow-lg ${card.color}`}
+                                    >
+                                        <FontAwesomeIcon icon={card.icon} className="text-3xl" />
+                                    </div>
+ 
+                                    {/* Push content down to make space for the icon box */}
+                                    <div className="mt-[-55px] ml-30 pt-8 text-">
+                                        <p className="text-[16px] text-gray-500">{card.title}</p>
+                                        <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
+                                        <p className={`mt-3 text-[14px] ${card.footerColor}`}>{card.footer}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        </>
+    )}
+                        </main>
+
     </AppLayout>
-  );
-}
-
-function FeatureCard({ icon, title, desc, buttonLabel, onClick }: any) {
-  return (
-    <div className="rounded-lg border bg-white p-6 shadow-sm hover:shadow-md">
-      <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#005555]">
-          <FontAwesomeIcon icon={icon} className="text-xl text-white" />
-        </div>
-        <p className="text-lg font-medium text-gray-800">{title}</p>
-      </div>
-      <p className="mb-3 text-sm text-gray-600">{desc}</p>
-      <Button className="w-full bg-[#005555] text-white hover:bg-[#004444]" onClick={onClick}>
-        {buttonLabel}
-      </Button>
-    </div>
-  );
-}
-
-function QuickActionCard({ initial, title, desc, color }: any) {
-  return (
-    <div
-      className={`flex items-center bg-${color}-100 border-l-4 border-${color}-500 h-31 rounded-xl shadow transition duration-300 hover:shadow-md`}
-    >
-      <div className={`w-1/3 bg-${color}-200 flex items-center justify-center py-8`}>
-        <div
-          className={`text-4xl font-bold text-${color}-600 flex h-14 w-16 items-center justify-center rounded-full bg-white shadow-inner`}
-        >
-          {initial}
-        </div>
-      </div>
-      <div className="w-2/3 p-5">
-        <p className="mb-1 text-sm tracking-wide text-gray-500 uppercase">Quick Action</p>
-        <h2 className={`text-lg font-semibold text-${color}-700`}>{title}</h2>
-        <p className="mt-1 text-sm text-gray-600">{desc}</p>
-      </div>
-    </div>
   );
 }
