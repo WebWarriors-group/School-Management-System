@@ -41,7 +41,7 @@ export default function Navbar() {
         </div>
 
         
-        <nav className="bg-[#5D4037] text-white py-3 px-6 shadow-md relative z-10">
+        <nav className="bg-[#783204] text-white py-3 px-6 shadow-md relative z-10" >
           <div className="flex justify-between items-center">
             
             <div className="flex items-center">
@@ -81,29 +81,37 @@ export default function Navbar() {
         </nav>
 
        
-        <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20  h-148 bg-[#fbe8d6]">
-          
-          <div className="md:w-1/2 text-center md:text-left space-y-5 mt-[-118px] ">
+        <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20  h-148 bg-yellow-100" >
+          <div
+  className="absolute bottom-4 right-0 w-[800px] h-[430px] bg-no-repeat bg-cover "
+  style={{
+    backgroundImage: `url('/images/texure.jpg')`, // <-- Replace with your actual image path
+    clipPath: 'polygon(100% 0, 100% 100%, 0% 100%)'
+  }}
+></div>
+
+          <div className="md:w-155 text-center md:text-left space-y-5 mt-[-118px] 
+">
           <img src="images/book4.png" className="ml-20 w-90 h-60 mt-30"></img>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#5D4037] py-10 w-200 mt-[-60px]">
+            <h1 className="text-4xl md:text-5xl font-bold text- py-10 w-200 mt-[-60px] text-[#783204]">
               Let us develop wisdom and good qualities.<span className="text-brown-700 ml-10 text-[30px]"><sub>(motto)</sub></span>
             </h1>
 
-            <p className="text-xl text-yellow-700 mt-[-20px]">
+            <p className="text-xl text-yellow-700 mt-[-20px]  ">
              To develop a confident and capable generation of students who can sucessfully overcome all challanges.
-             <span className="text-brown-700 ml-15 text-[25px]"><sub>(vision)</sub></span>
+             <span className="text-yellow-700 ml-15 text-[25px]"><sub>(vision)</sub></span>
             </p>
             <div className="mt-8 ">
               <Link
                 href={route('login')}
-                className="bg-yellow-500 text-brown-900 px-6 py-2 rounded-full font-medium hover:bg-yellow-500"
+                className="bg-yellow-500 text-[black] px-6 py-2 rounded-full font-medium hover:bg-yellow-500"
               >
                 About Us
               </Link>
 
               <Link
                 href={route('login')}
-                className="bg-yellow-500 text-brown-900 px-6 py-2 rounded-full font-medium hover:bg-yellow-500 ml-5"
+                className="bg-yellow-500 text-[black] px-6 py-2 rounded-full font-medium hover:bg-yellow-500 ml-5"
               >
                 Join Us
               </Link>
@@ -111,18 +119,15 @@ export default function Navbar() {
           </div>
 
         
-          <div className="md:w-1/2  md:mt-0 relative mt-[-50px]">
-            <img
-              src="/images/image2.jpg"
+            <div className="w-600  md:mt-0 relative mt-[-30px]  h-100 ml-20 rounded-full">
+             <img
+              src="/images/back4.png"
               alt="School"
-              className="w-[400px] h-[300px] ml-40 mt-[-100px] "
+              className="w-[980px] h-[450px] absolute  ml-23 mt-10 "
             />
-           < img
-              src="/images/school1.jpg"
-              alt="School"
-              className="w-[350px] h-[250px] ml-90 absolute mt-[-100px]"
-            />
-          </div>
+            
+          
+          </div> 
         </section>
       </div>
       <div>
@@ -130,7 +135,7 @@ export default function Navbar() {
   
 
   
-  <div className="text-center md:mt-0  border-7 border-[#5D4037] h-80 p-4 bg-[#5D4037]">
+  <div className="text-center md:mt-0  h-80 p-4 bg-sky-700 shadow-md">
     <h2 className="font-bold text-xl w-100 justify-center item-center bg-yellow-500 py-1 ml-120">Mission /භාරකාරකම </h2>
     <p className="text-lg py-6 text-[white]">
       "Our mission is to contribute to the nation a wise, virtuous,and courages generation of students by building a noble life philosophy

@@ -30,9 +30,9 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            'reg_no' => 'required',
+            'reg_no' => 'required|integer',
             'class_id' => 'required|integer',
-            // Add more validation rules as needed
+           
         ];
     }
 }
