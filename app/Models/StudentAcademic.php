@@ -11,13 +11,13 @@ class StudentAcademic extends Model
     use HasFactory;
      use SoftDeletes;
 
-    protected $table = 'student_academic_info'; // Specify the correct table name
+    protected $table = 'student_academic_info'; 
 
-    protected $primaryKey = 'reg_no'; // Define primary key
+    protected $primaryKey = 'reg_no'; 
 
     public $incrementing = false; 
 
-    protected $keyType = 'string';
+    protected $keyType = 'integer';
     
     protected $fillable = [
         'reg_no', 

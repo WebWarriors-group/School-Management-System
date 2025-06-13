@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student_siblings', function (Blueprint $table) {
             $table->id();
-            $table->string('reg_no',50); // Foreign key to students table
+            $table->integer('reg_no'); // Foreign key to students table
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
 
             $table->string('sibling_name', 100);
