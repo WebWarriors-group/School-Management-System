@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ClassModel;
+use App\Models\Teacher;
+use Illuminate\Support\Facades\DB;
+
+use Inertia\Inertia;
 
 class ClassController extends Controller
 {
@@ -14,6 +18,42 @@ class ClassController extends Controller
     {
         return response()->json(ClassModel::all(), 200);
     }
+
+    public function classpage()
+{
+    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC')
+        ->get()
+        ->groupBy('grade');
+
+    $teachers = Teacher::select('teacher_NIC')->get();
+
+    return inertia('Admin/Classpage', [
+        'classes' => $classes,
+        'teachers' => $teachers
+    ]);
+}
+
+public function assignTeachers(Request $request)
+{
+    $request->validate([
+        'grade' => 'required|integer',
+        'sections' => 'required|array',
+        'sections.*' => 'nullable|string' 
+    ]);
+
+    $grade = $request->input('grade');
+    $sections = $request->input('sections'); 
+
+    foreach ($sections as $section => $teacherNIC) {
+       
+        DB::table('classes')
+            ->where('grade', $grade)
+            ->where('section', $section)
+            ->update(['teacher_NIC' => $teacherNIC]);
+    }
+
+    return redirect()->back()->with('success', 'Class teachers updated successfully.');
+}
 
     /**
      * Store a new class.

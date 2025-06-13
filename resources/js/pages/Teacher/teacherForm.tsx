@@ -186,15 +186,15 @@ export default function AddTeacherForm() {
         }
     };
     return (
-        <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Add Teacher</h2>
+        <div className="max-w-xl mx-auto mt-2 p-7 bg-white shadow-lg rounded-lg  border-t-6 border-t-[#152238]">
+            <h2 className="text-2xl font-bold mb-4 text-yellow-700">Add Teacher</h2>
             <form className="flex flex-col gap-6" onSubmit={submit} encType="multipart/form-data">
             {step === 1 && (
   <div>
-    <h3 className="text-lg font-bold">Step 1: Teacher's Basic Information</h3>
+    <h3 className="text-xl font-bold"> Teacher's Basic Information</h3>
     
     {/* Teacher NIC */}
-    <div className="mb-4">
+    <div className="mb-4 py-5">
       <label htmlFor="teacher_NIC" className="block text-sm font-medium text-gray-700">
         Teacher NIC
       </label>
@@ -481,7 +481,7 @@ export default function AddTeacherForm() {
       <button
         type="button"
         onClick={handleNextStep}
-        className="bg-blue-600 text-white px-4 py-2 rounded-md"
+        className="bg-blue-600 text-white  text-right px-4 py-2 rounded-2xl cursor-[pointer]"
         disabled={processing}
       >
         Next
@@ -1383,3 +1383,4 @@ export default function AddTeacherForm() {
 </div>
     )
   }
+ 

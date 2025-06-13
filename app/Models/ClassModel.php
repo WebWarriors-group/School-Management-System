@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Teacher;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClassModel extends Model
 {
     use HasFactory;
-
+use SoftDeletes;
     protected $table = 'classes'; // Explicitly specify the table name
 
     protected $primaryKey = 'class_id'; // Set primary key
