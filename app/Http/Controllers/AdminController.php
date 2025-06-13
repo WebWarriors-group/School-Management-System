@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Img;
 use App\Models\Teacher;
 use App\Models\Subject;
 use App\Models\ClassModel;
@@ -26,7 +27,7 @@ class AdminController extends Controller
    $class = ClassModel::count();
     $classData = ClassModel::withCount('studentacademics')->with('studentacademics')->get();
    
-
+$images=Img::all();
 
 
    $teacherupdate=Teacher::latest('updated_at')->value('updated_at');
@@ -70,6 +71,9 @@ $classDeleted = ClassModel::onlyTrashed()
         'teacher12' => $teachers,
         'student1'=>[
             'data1'=>$student1],
+            'img'=>[
+                'data'=>$images,
+            ]
 ]);
     }
 
@@ -127,4 +131,26 @@ $classDeleted = ClassModel::onlyTrashed()
         $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
         $user->delete();
     }
+
+public function store3(Request $request){
+    $request->validate([
+    'title' => 'required|string|max:255',
+    'image' => 'required|image|max:2048',
+]);
+
+if ($request->hasFile('image')) {
+    $file = $request->file('image');
+    $fileName = time() . '.' . $file->getClientOriginalExtension();
+
+    // Move file to public/image
+    $file->move(public_path('image'), $fileName);
+
+    // Store data in Img model (assuming you have 'title' and 'filename' columns)
+    Img::create([
+        'title' => $request->input('title'),
+        'filename' => $fileName,
+    ]);
+}
+}
+
 }

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeacherRequestController;
 
 
@@ -22,6 +24,8 @@ Route::get('/sample', function () {
 Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
 
 Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
+Route::get('/images', [AdminController::class, 'dashboard']);
+Route::post('/images', [AdminController::class, 'store3'])->name('images.store');
 
 Route::get('/test-session', function (Request $request) {
     

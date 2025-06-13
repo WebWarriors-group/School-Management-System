@@ -9,6 +9,9 @@ import AddTeacherForm from '@/pages/Teacher/teacherForm';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
 import ClassIndex from '@/pages/Admin/ClassCrud';
 import { Button } from '@headlessui/react';
+import { useForm } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
+
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,6 +28,7 @@ interface StudentAcademic {
   student: Student;
 }
 
+
 interface Class {
   class_id: number;
   class_name: string;
@@ -33,6 +37,19 @@ interface Class {
   studentacademics_count: number;
   teacher_NIC: string;
   studentacademics?: Student[];
+}
+
+interface ImageForm {
+  id?: number; // optional
+  title: string;
+  image: File | null;
+  [key: string]: any; // make it flexible
+}
+
+interface Props {
+  images: {
+    data: ImageForm[];
+  };
 }
 
 interface Card {
@@ -66,6 +83,52 @@ export default function StatsOverviewPage() {
   const [addteacher, setteacher] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
+
+ const [title, setTitle] = useState('');
+  const [image, setImage] = useState(null);
+  const [message, setMessage] = useState('');
+  const [preview, setPreview] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!title || !image) {
+      setMessage('Please provide a title and select an image.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('image', image);
+
+    try {
+      const response = await fetch('/images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage('Image uploaded successfully!');
+        setTitle('');
+        setImage(null);
+        setPreview(null);
+      } else {
+        const errorData = await response.json();
+        setMessage('Upload failed: ' + (errorData.message || 'Unknown error'));
+      }
+    } 
+  };
 
 const handleCardClick = (card:Card) => {
   setSelectedCard(card); // This will trigger AddForm to be shown
@@ -108,7 +171,7 @@ const handleCardClick = (card:Card) => {
   classData,
   teacher12,
   classes,
-  classstudent
+  img,
   
 } = usePage<{
   teachers: number;
@@ -134,6 +197,14 @@ const handleCardClick = (card:Card) => {
     teacher_NIC: string;
     
   }[];
+
+  img:{
+data:{
+  title:string,
+  path:string,
+  id:number
+}[]
+  }
   classes: {
       [class_name: string]: {
     [grade: number]: ClassItem[]; // sections only
@@ -335,6 +406,59 @@ showclass ?  (
                         </div>
                         </>
     )}
+
+
+
+ <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
+      <h2 className="text-xl font-semibold mb-4">Upload Image</h2>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <label className="block mb-2 font-medium" htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          className="w-full border rounded px-3 py-2 mb-4"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          required
+        />
+
+        <label className="block mb-2 font-medium" htmlFor="image">Select Image</label>
+        <input
+          id="image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          required
+        />
+
+        {preview && (
+          <img src={preview} alt="Preview" className="mt-4 mb-4 max-h-48 object-contain" />
+        )}
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2"
+        >
+          Upload
+        </button>
+      </form>
+
+      {message && (
+        <p className="mt-4 text-center text-red-600">{message}</p>
+      )}
+    </div>
+
+
+
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 bg-white rounded-lg shadow-md">
+  {img.data.map((image) => (
+  <div key={image.id} className="...">
+    <img src={`/storage/${image.path}`} alt={image.title || 'Gallery image'} />
+    {image.title && <p>{image.title}</p>}
+  </div>
+))}
+</div>
+    
                         </main>
 
     </AppLayout>
