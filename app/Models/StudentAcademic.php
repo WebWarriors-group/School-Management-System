@@ -3,6 +3,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StudentPersonal;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudentAcademic extends Model
@@ -55,5 +56,13 @@ class StudentAcademic extends Model
     {
         return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
     }
+
+    public function marks()
+    {
+        return $this->hasMany(Marks::class, 'reg_no', 'reg_no'); // Assuming 'reg_no' is the foreign key in Marks and local key in StudentAcademic
+    }
+    
+
+
 
 }
