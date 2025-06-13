@@ -10,7 +10,8 @@ return new class extends Migration {
         Schema::create('student_academic_info', function (Blueprint $table) {
             $table->integer('reg_no')->primary();
             $table->string('student_id_no')->default(0);
-            
+            $table->softDeletes();
+            // Use the same data type as in 'classes' table
             $table->integer('class_id');
             $table->foreign('class_id')->references('class_id')->on('classes')->onDelete('cascade');
 
