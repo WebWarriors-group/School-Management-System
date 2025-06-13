@@ -14,6 +14,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\StudyMaterialController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
 
 
@@ -57,13 +58,13 @@ Route::middleware('auth', 'admin')->group(function () {
 
       Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
      Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
-     Route::post('/admin/update', [AdminController::class, 'register'])->name('admin.register');
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
      Route::post('/admin/import', [UserImportController::class, 'import'])->name('users.import');
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
-    
+    Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
+
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 
@@ -75,6 +76,12 @@ Route::middleware('auth', 'teacher')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    Route::get('/mark/ReportPage', [ReportController::class, 'show'])->name('report.show');
+});
+
+Route::middleware('auth')->group(function () {
+    // Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 

@@ -102,7 +102,7 @@ class MarkController extends Controller
 
         // Validate incoming request
         $validated = $request->validate([
-            'reg_no' => 'required|string|max:20',
+            'reg_no' => 'required|integer',
             'subject_id' => 'required|integer',
             'marks_obtained' => 'required|integer',
             'grade' => 'required|string|max:1|in:A,B,C,D,E,F'

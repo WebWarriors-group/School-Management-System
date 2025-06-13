@@ -16,7 +16,7 @@ return new class extends Migration {
 
             $table->string('report_id', 50)->primary();
 
-            $table->string('reg_no', 50); // Adding size for 'reg_no'
+            $table->integer('reg_no'); // Adding size for 'reg_no'
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
             $table->string('term', 50);
             $table->integer('total_days')->default(180)->unsigned(); // Set size for integer (10)

@@ -8,8 +8,9 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('student_academic_info', function (Blueprint $table) {
-            $table->string('reg_no', 50)->primary();
-
+            $table->integer('reg_no')->primary();
+            $table->string('student_id_no')->default(0);
+            $table->softDeletes();
             // Use the same data type as in 'classes' table
             $table->integer('class_id');
             $table->foreign('class_id')->references('class_id')->on('classes')->onDelete('cascade');
@@ -23,6 +24,8 @@ return new class extends Migration {
             $table->boolean('receiving_any_grade_5_scholarship')->default(false);
             $table->boolean('receiving_any_samurdhi_aswesuma')->default(false);
             $table->boolean('receiving_any_scholarship')->default(false);
+          
+
             $table->timestamps();
         });
     }

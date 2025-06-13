@@ -9,6 +9,7 @@ use App\Http\Controllers\StudentImportController;
 use App\Http\Controllers\SubjectController; 
 use App\Http\Controllers\MarkController; 
 use App\Http\Controllers\StudyMaterialController;
+use App\Http\Controllers\ReportController;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentAdmissionMail;
@@ -63,6 +64,9 @@ Route::get('/marks', [MarkController::class, 'create']);
 Route::get('/marks/{id}', [MarkController::class, 'show']);
 Route::put('/marks/{id}', [MarkController::class, 'update']);
 Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
+
+Route::get('/report/{reg_no}', [ReportController::class, 'show']);
+
 
 
 
