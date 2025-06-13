@@ -45,7 +45,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
     ];
 
     const roleBackgrounds: Record<string, string> = {
-        admin: '#2E1503', // maroon gradient
+        admin: '#152238', // maroon gradient
         teacher: '#51087E', // green gradient
         student: 'green', // b#80008lue gradient
     };

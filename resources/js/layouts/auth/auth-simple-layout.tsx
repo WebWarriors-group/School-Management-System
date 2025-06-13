@@ -10,9 +10,9 @@ interface AuthLayoutProps {
 
 export default function AuthSimpleLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
-        <div className="flex justify-center  flex-wrap py-30 bg-[#fbe8d6]">
+        <div className="flex justify-center  flex-wrap py-30 bg-sky-800">
   {/* Login Component 1 */}
-  <div className="justify-content-center relative  w-full max-w-[300px]  bg-[#5D4037] border-[white] p-5 text-[#5D4037] ">
+  <div className="justify-content-center relative  w-full max-w-[300px]  bg-yellow-600  border-[white] p-5 text-[#5D4037] ">
     <img src="images/school.jpg" className="w-60 h-60 rounded-full justify-center mt-20 ml-3"/><br/>
     <h2 className="text-[white] text-lg text-center">Mahadivulwewa Maha Vidyalaya National School</h2>
   </div>
