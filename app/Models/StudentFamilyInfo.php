@@ -12,7 +12,7 @@ class StudentFamilyInfo extends Model
     protected $table = 'student_family_info';
 
     protected $fillable = [
-        'student_id',
+        'reg_no',
         'mother_name',
         'mother_occupation',
         'mother_income',
@@ -31,11 +31,13 @@ class StudentFamilyInfo extends Model
     ];
 
     protected $casts = [
-        'siblings' => 'array', // JSON to array conversion
+        'siblings' => 'array',
     ];
 
-    public function student()
+    
+    public function studentacademic()
     {
-        return $this->belongsTo(StudentAcademic::class, 'student_id');
+        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no'); 
     }
+    
 }
