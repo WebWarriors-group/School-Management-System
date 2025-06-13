@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->id();
-            $table->string('reg_no', 50);
+            $table->integer('reg_no');
             $table->integer('subject_id');
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
             $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
