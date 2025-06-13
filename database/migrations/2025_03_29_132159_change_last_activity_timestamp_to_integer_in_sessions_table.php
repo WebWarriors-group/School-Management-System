@@ -10,19 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->unsignedBigInteger('last_activity')->change();
-        });
-    }
+{
+    // 1. Convert existing timestamp values to Unix integer values
+    DB::table('sessions')->update([
+        'last_activity' => DB::raw('UNIX_TIMESTAMP(last_activity)')
+    ]);
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->timestamp('last_activity')->nullable()->change();
-        });
-    }
+    // 2. Change column type to unsignedBigInteger
+    Schema::table('sessions', function (Blueprint $table) {
+        $table->unsignedBigInteger('last_activity')->change();
+    });
+}
+
 };

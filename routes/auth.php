@@ -14,6 +14,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\StudyMaterialController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
 
 
@@ -62,7 +63,8 @@ Route::middleware('auth', 'admin')->group(function () {
      Route::delete('/posts/{id}', [AdminController::class, 'delete']);
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
-    
+    Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
+
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 });
 
