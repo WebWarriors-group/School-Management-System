@@ -12,7 +12,7 @@ class StudentSibling extends Model
     protected $table = 'student_siblings';
 
     protected $fillable = [
-        'student_id',
+        'reg_no',
         'sibling_name',
         'relationship',
         'age',
@@ -20,8 +20,8 @@ class StudentSibling extends Model
         'contact'
     ];
 
-    public function student()
+    public function studentacademic()
     {
-        return $this->belongsTo(StudentAcademic::class, 'student_id');
+        return $this->belongsTo(StudentAcademic::class, 'reg_no','reg_no');
     }
 }

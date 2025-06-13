@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
 
-            $table->string('reg_no',50);
+            $table->integer('reg_no');
 
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
             $table->string('full_name', 50);
@@ -37,9 +37,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('students_personal_info');
