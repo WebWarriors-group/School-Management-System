@@ -40,3 +40,14 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Student {
+  reg_no: string;
+  class_id: number;
+  distance_to_school?: number;
+  method_of_coming_to_school?: string;
+  receiving_any_grade_5_scholarship: boolean;
+  receiving_any_samurdhi_aswesuma: boolean;
+  receiving_any_scholarship: boolean;
+}
+

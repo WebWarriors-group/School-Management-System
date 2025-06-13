@@ -12,7 +12,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeacherRequestController;
-
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return Inertia::render('homepage');
@@ -88,7 +88,7 @@ Route::get('/Admin/TeacherRequests', function () {
 
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 
-
+Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
