@@ -4,12 +4,9 @@ import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
-import StudentAdmissionForm from "./StudentAdmissionForm";
-
-import AddStudent from "./AddStudent";
+// import StudentAdmissionForm from "../Student/StudentAdmissionForm";
 import { Trash2, Eye } from "lucide-react";
 import { Student } from "@/types";
-import ImportStudent from "./ImportStudent";
 import SearchStudent from "./SearchStudent";
 import ViewStudent from "./ViewStudent";
 import DeleteStudent from "./DeleteStudent";
@@ -19,9 +16,6 @@ const breadcrumbs = [
 ];
 
 const StudentDashboard: React.FC = () => {
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [showImportForm, setImportForm] = useState(false);
 
   const [students, setStudents] = useState<Student[]>([]);
   const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
@@ -32,21 +26,7 @@ const StudentDashboard: React.FC = () => {
   const [searchedStudents, setSearchedStudents] = useState<Student[]>([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/students");
-      if (!response.ok) throw new Error("Error fetching students");
-      const data = await response.json();
-      setStudents(data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
+  
 
   const handleSearchResults = (results: Student[]) => {
     setSearchedStudents(results);
@@ -127,42 +107,22 @@ const StudentDashboard: React.FC = () => {
 
 
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
-            <div className="flex justify-left mb-4">
-              <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
+            
+              {/* <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
                 Admission Form
-              </Button>
-              <Button onClick={() => setShowAddForm(true)} className="bg-green-600 text-white ml-2">
-                Add New Student
-              </Button>
-              <Button onClick={() => setImportForm(true)} className="bg-green-600 text-white ml-2">
-                Import Students
-              </Button>
-            </div>
+              </Button> */}
+              
+           
 
-            {showForm && (
+            {/* {showForm && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
                   <StudentAdmissionForm setShowForm={setShowForm} />
                 </div>
               </div>
-            )}
+            )} */}
 
-            {showImportForm && (
-              <ImportStudent
-                fetchStudents={fetchStudents}
-                onClose={() => setImportForm(false)}
-              />
-            )}
-
-            {showAddForm && (
-              <AddStudent
-                onClose={() => setShowAddForm(false)}
-                onStudentAdded={(newStudent) => {
-                  setStudents((prev) => [...prev, newStudent]);
-                  setShowAddForm(false);
-                }}
-              />
-            )}
+           
 
             <Table
               columns={["Reg No", "Class ID", "Distance", "Method", "Actions"]}

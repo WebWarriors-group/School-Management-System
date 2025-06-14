@@ -5,7 +5,10 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
+import ImportStudent from "./ImportStudent";
+
 import AddTeacherForm from '@/pages/Teacher/teacherForm';
+import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
 import ClassIndex from '@/pages/Admin/ClassCrud';
 import { Button } from '@headlessui/react';
@@ -57,6 +60,20 @@ interface Teacher {
   teacher_NIC: string;
 }
 
+// const fetchStudents = async () => {
+//     try {
+//       const response = await fetch("http://127.0.0.1:8000/api/students");
+//       if (!response.ok) throw new Error("Error fetching students");
+//       const data = await response.json();
+//       setStudents(data);
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchStudents();
+//   }, []);
 
 
 
@@ -65,6 +82,8 @@ export default function StatsOverviewPage() {
   const [showclass, setClass] = useState(false);
   const [addteacher, setteacher] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+const [showStudentForm, setShowStudentForm] = useState(false);
+  const [showImportForm, setImportForm] = useState(false);
 
 
 const handleCardClick = (card:Card) => {
@@ -74,7 +93,11 @@ const handleCardClick = (card:Card) => {
   const handleAddTeacherClick = () => {
     setShowForm(true);
   };
-    const CloseClick = () => {
+  const handleAddStudentClick = () => {
+    setShowStudentForm(true);
+  };
+  const CloseClick = () => {
+    setShowStudentForm(false);
     setShowForm(false);
   };
 
@@ -267,6 +290,7 @@ showclass ?  (
     </>
           )
 ):
+
   showForm ?  (
         <div className="mt-4">
          
@@ -279,7 +303,28 @@ showclass ?  (
           <AddTeacherForm />
         </div>
 
-  ) : (
+  ) : showStudentForm ? (
+      <>
+      <div className="flex justify-left mb-4">
+        <Button
+          className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
+          onClick={CloseClick}
+        >
+          Back
+        </Button>
+        <Button onClick={() => setImportForm(true)} className="bg-green-700 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40">
+                Import Students
+              </Button> 
+               {/* {showImportForm && (
+                            <ImportStudent
+                              fetchStudents={fetchStudents}
+                              onClose={() => setImportForm(false)}
+                            />
+                          )} */}
+              </div>
+        <StudentAdmissionForm setShowForm={setShowStudentForm} />
+      </>
+    ) : (
       <>
    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
 
@@ -289,7 +334,7 @@ showclass ?  (
   <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700" />
 </div>
            
-                                     <div className="relative mt-10  h-18 w-80 bg-white p-4 shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer">
+                                     <div className="relative mt-10  h-18 w-80 bg-white p-4 shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddStudentClick}>
   <span className="text-[20px] font-semibold text-blue-900">Add New Students</span>
   <FontAwesomeIcon icon={faPlus} className="text-3xl text-blue-900" />
 </div>
