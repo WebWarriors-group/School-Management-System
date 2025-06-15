@@ -53,7 +53,7 @@ export default function Navbar() {
 
            
             <div className="flex items-center space-x-4">
-              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Login</Link>
+              <Link href={route('loginCheckout')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Login</Link>
               <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Forms</Link>
               <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}

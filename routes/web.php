@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\TeacherRequestController;
 use App\Http\Controllers\ReportController;
+
+Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
 Route::get('/', function () {
     return Inertia::render('homepage');
@@ -22,13 +25,6 @@ Route::get('/sample', function () {
 Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
 
 Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
-
-Route::get('/test-session', function (Request $request) {
-    
-    session(['current_url' => $request->fullUrl()]);
-    session()->save();
-    return 'Session data: ' . session('current_url');
-});
 
 Route::get('/add-teacher', function () {
     return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
