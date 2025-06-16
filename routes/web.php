@@ -11,6 +11,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\TeacherRequestController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubjectController;
 
 Route::get('/', function () {
     return Inertia::render('homepage');
@@ -86,5 +87,20 @@ Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']
 
 Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Your Dashboard route
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    // This is the route that loads your React Subject Management page via Inertia.
+    // It's under the 'web' middleware group (implicitly or explicitly if added).
+   // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
+
+
+    // ... any other web-based routes that render Inertia pages
+});
+
+Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
