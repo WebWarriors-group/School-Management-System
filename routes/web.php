@@ -13,6 +13,9 @@ use App\Http\Controllers\TeacherRequestController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentAdmissionMail;
+
 Route::get('/', function () {
     return Inertia::render('homepage');
 })->name('homepage');
@@ -85,9 +88,9 @@ Route::get('/Admin/TeacherRequests', function () {
 
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 
-Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
+//Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+
     // Your Dashboard route
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -99,8 +102,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // ... any other web-based routes that render Inertia pages
+
+
+ 
+
+Route::middleware('auth')->group(function () {
+     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+    Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
-Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

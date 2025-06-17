@@ -68,7 +68,7 @@ Route::get('/marks/{id}', [MarkController::class, 'show']);
 Route::put('/marks/{id}', [MarkController::class, 'update']);
 Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
 
-Route::get('/report/{reg_no}', [ReportController::class, 'show']);
+//Route::get('/report/{reg_no}', [ReportController::class, 'show']);
 
 
 

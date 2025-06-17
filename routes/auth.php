@@ -16,7 +16,7 @@ use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\StudyMaterialController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
-
+use App\Http\Controllers\ReportController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -66,7 +66,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
 
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
+    // Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 });
 
 Route::middleware('auth', 'teacher')->group(function () {
@@ -79,7 +79,7 @@ Route::middleware('auth', 'teacher')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    Route::get('/mark/ReportPage', [ReportController::class, 'show'])->name('report.show');
+    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
 });
 
 
