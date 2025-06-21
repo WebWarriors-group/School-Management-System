@@ -30,14 +30,45 @@ class ReportController extends Controller
 
     $totalMarks = $student->marks->sum('marks_obtained');
     $averageMarks = $student->marks->count() > 0 ? $student->marks->avg('marks_obtained') : 0;
-    $studentRank = 1; // Replace with your real ranking logic if any
+    $studentsTotals = StudentAcademic::with('marks')
+        ->get()
+        ->map(function ($s) {
+            return [
+                'reg_no' => $s->reg_no,
+                'total_marks' => $s->marks->sum('marks_obtained'),
+            ];
+        })
+        ->sortByDesc('total_marks')
+        ->values();
 
-    $marksData = $student->marks->map(function ($mark) {
+    $rank = 0;
+    $prevMark = null;
+    $skip = 0;
+
+    $studentsTotals = $studentsTotals->map(function ($item) use (&$rank, &$prevMark, &$skip) {
+        if ($prevMark !== $item['total_marks']) {
+            $rank = $rank + 1 + $skip;
+            $skip = 0;
+        } else {
+            $skip++;
+        }
+        $prevMark = $item['total_marks'];
+        $item['rank'] = $rank;
+        return $item;
+    });
+
+      $studentRank = $studentsTotals->firstWhere('reg_no', $reg_no)['rank'] ?? 'N/A';
+
+    $highestMarksBySubject = Marks::select('subject_id', DB::raw('MAX(marks_obtained) as highest'))
+    ->groupBy('subject_id')
+    ->pluck('highest', 'subject_id');
+
+    $marksData = $student->marks->map(function ($mark) use ($highestMarksBySubject) {
         return [
             'subject_id' => $mark->subject_id,
-            'subject_name' => $mark->subject->name ?? 'Unknown Subject',
+            'subject_name' => $mark->subject->subject_name ?? 'Unknown Subject',
             'marks_obtained' => $mark->marks_obtained,
-            'highest_mark_in_subject' => $mark->subject->highest_mark ?? 'N/A',
+            'highest_mark_in_subject' => $highestMarksBySubject[$mark->subject_id] ?? 'N/A',
         ];
     })->toArray();
 
@@ -45,10 +76,10 @@ class ReportController extends Controller
         'student' => [
             'full_name' => $student->studentPersonal->full_name ?? 'N/A',
             'reg_no' => $student->reg_no,
-            'class_name' => $student->class_name ?? ($student->academicClass->name ?? 'N/A'),
+            'class_name' => $student->class_name ?? ($student->academicClass->class_name  ?? 'N/A'),
             'grade' => $student->grade ?? ($student->academicClass->grade ?? 'N/A'),
             'section' => $student->section ?? ($student->academicClass->section ?? 'N/A'),
-            'class_teacher_name' => $student->class_teacher_name ?? 'N/A',
+            'class_teacher_name' => optional(optional(optional($student->academicClass)->teachers)->personal)->Full_name ?? 'N/A',
             'total_marks' => $totalMarks,
             'average_marks' => round($averageMarks, 2),
             'rank' => $studentRank,
