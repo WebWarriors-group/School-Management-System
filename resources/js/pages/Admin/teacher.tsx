@@ -1,151 +1,171 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
 
-
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: '👩‍🏫 Teacher Management',
-        href: '/dashboard',
-    },
-
-    
+  {
+    title: '👩‍🏫 Teacher Management',
+    href: '/dashboard',
+  },
 ];
-interface DashboardProps {
-    teacherCount: number;
-}
 
 export default function AdminTeacherDashboard() {
-    const [teacherCount, setTeacherCount] = useState<number | null>(null);
-    const [totalTeachers, setTotalTeachers] = useState<number>(0);
+  const [teacherCount, setTeacherCount] = useState<number | null>(null);
+   const [totalTeachers, setTotalTeachers] = useState<number>(() => {
+    const saved = localStorage.getItem('totalTeachers');
+    return saved ? parseInt(saved) : 0;
+  });
 
-    const increase = () => setTotalTeachers(totalTeachers + 1);
-    const decrease = () => setTotalTeachers(totalTeachers - 1);
-    useEffect(() => {
-        // Fetch the teacher count from the backend
-        fetch('/admin/teacher/count')  // Adjust the route accordingly
-            .then(response => response.json())
-            .then(data => setTeacherCount(data.teacherCount));
-    }, []);
+  const increase = () => {
+    const updated = totalTeachers + 1;
+    setTotalTeachers(updated);
+    localStorage.setItem('totalTeachers', updated.toString());
+  };
 
-    if (teacherCount === null) {
-        return <div>Loading...</div>;
-    }
-    
+  const decrease = () => {
+    const updated = totalTeachers > 0 ? totalTeachers - 1 : 0;
+    setTotalTeachers(updated);
+    localStorage.setItem('totalTeachers', updated.toString());
+  };
+
+  useEffect(() => {
+    fetch('/admin/teacher/count')
+      .then(response => response.json())
+      .then(data => setTeacherCount(data.teacherCount));
+  }, []);
+
+  if (teacherCount === null) {
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <div className="flex flex-col gap-4 p-4">
-                {/* <h2 className="text-xl font-semibold">Teacher Management</h2> */}
-                {/* <Link href="/add-teacher"> */}
-                
-                {/* Teacher List Overview */}
-                <div className="border p-4 rounded-lg">
-                    
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
-                        <div className="border-red-900 rounded-2xl border-t-4 bg-white p-6 shadow">
-                        <div>
-                <h3 className="text-maroon-700 text-lg font-bold">Total Teachers</h3>
-                <div className="mt-2 flex items-center space-x-2">
-                    {/* Square border for the number */}
-                    <div className="relative flex items-center justify-center border-2 border-red-900 w-20 h-20 text-3xl font-bold text-maroon-700">
-                        {totalTeachers}
-                    </div>
-
-                    {/* Arrows placed outside the box */}
-                    <div className="flex flex-col items-center space-y-2">
-                        <button 
-                            onClick={increase} 
-                            className="bg-red-900 text-white p-2 rounded-full shadow hover:bg-yellow-500 cursor-pointer"
-                        >
-                            ↑
-                        </button>
-                        <button 
-                            onClick={decrease} 
-                            className="bg-red-900 text-white p-2 rounded-full shadow hover:bg-yellow-500 cursor-pointer"
-                        >
-                            ↓
-                        </button>
-                    </div>+
-                    
-                </div>
-            </div>
-            <div className="flex justify-end mt-4">
-  <div className="flex flex-col md:flex-row gap-4">
-    <Link href="/teacher_requests">
-      <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all w-full md:w-auto">
-        Check Teacher Requests
-      </button>
-    </Link>
-
-    <Link href="/add-teacher">
-      <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all w-full md:w-auto">
-        Add Teacher by Admin
-      </button>
-    </Link>
-  </div>
-</div>
-
-                            
-                            </div>
-                            
-                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div className="border-red-900 rounded-2xl border-t-4 bg-white p-6 shadow">
-                                    <h3 className="text-maroon-700 text-lg font-bold">Leave</h3>
-                                    <div className="w-16 h-16 flex items-center justify-center border-4 border-red-900 rounded-full bg-white">
-
-                                    <p className="text-3xl font-bold">95</p>
-                                    </div>
-                                    <Link href="">
-                                        <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all ml-auto block">
-                                            Leave Details of Teachers '
-                                        </button>
-                                    </Link>
-                                    
-                                </div>
-                                
-                                <div className="border-red-900 rounded-2xl border-t-4 bg-white p-6 shadow">
-                                    <h3 className="text-maroon-700 text-lg font-bold">Registered Teachers</h3>
-                                    <div className="flex items-center space-x-4 mt-2">
-                                        <div className="w-16 h-16 flex items-center justify-center border-4 border-red-900 rounded-full bg-white">
-                                            <p className="text-3xl font-bold">{teacherCount}</p>
-                                        </div>
-                                    </div>
-
-                                    <Link href="/teacher_details">
-                                        <button className="bg-red-900 text-white px-4 py-2 rounded-md shadow-md hover:bg-black transition-all ml-auto block">
-                                            Search Teacher
-                                        </button>
-                                    </Link>
-                                </div>
-                            </div>
-                        
-                        
-                    </div>
-                    {/* Render list of active teachers here */}
-                </div>
-
-                {/* Attendance and Leave Management */}
-                <div className="border p-4 rounded-lg mt-4">
-                    <h2 className="text-lg font-semibold">Teacher Attendance</h2>
-                    {/* Render attendance table and leave requests */}
-                </div>
-
-                {/* Teacher Performance */}
-                <div className="border p-4 rounded-lg mt-4">
-                    <h2 className="text-lg font-semibold">Teacher Performance</h2>
-                    {/* Render performance evaluation and reviews */}
-                </div>
-
-                {/* Salary and Compensation */}
-                <div className="border p-4 rounded-lg mt-4">
-                    <h2 className="text-lg font-semibold">Salary and Compensation</h2>
-                    {/* Render salary information and bonuses */}
-                </div>
-            </div>
-        </AppLayout>
+      <div className="text-center py-10 text-lg font-medium text-gray-600">
+        Loading...
+      </div>
     );
-}
+  }
 
+  return (
+    <AppLayout breadcrumbs={breadcrumbs}>
+      <div className="flex flex-col gap-8 p-8 bg-gray-50 min-h-screen">
+
+        {/* Top Cards: Total Teachers & Registered Teachers */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Total Teachers Card */}
+          <div className="bg-white border-l-4 border-teal-600 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-4">
+              Total Teachers
+            </h3>
+            <div className="flex items-center space-x-6">
+              <div className="w-20 h-20 border-2 border-teal-600 text-teal-700 flex items-center justify-center text-3xl font-semibold rounded-lg">
+                {totalTeachers}
+              </div>
+              <div className="flex flex-col space-y-3">
+                <button
+                  onClick={increase}
+                  className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-700 transition-all"
+                  aria-label="Increase total teachers"
+                >
+                  ↑
+                </button>
+                <button
+                  onClick={decrease}
+                  className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-700 transition-all"
+                  aria-label="Decrease total teachers"
+                >
+                  ↓
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Registered Teachers Card */}
+          <div className="bg-white border-l-4 border-sky-500 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-4">
+              Registered Teachers
+            </h3>
+            <div className="flex items-center justify-start space-x-6">
+              <div className="w-20 h-20 border-2 border-sky-500 text-sky-700 flex items-center justify-center text-3xl font-semibold rounded-full">
+                {teacherCount}
+              </div>
+            </div>
+            <Link href="/teacher_details">
+              <button className="mt-6 w-full bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-sky-700 transition-all">
+                View Details
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Requests and Leave Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Leave Records */}
+          <div className="bg-white border-l-4 border-amber-500 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-4">
+              Leave Records
+            </h3>
+            <div className="w-20 h-20 border-2 border-amber-600 text-amber-700 flex items-center justify-center text-3xl font-semibold rounded-full">
+              95
+            </div>
+            <Link href="/leave_details">
+              <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
+                Leave Details
+              </button>
+            </Link>
+          </div>
+
+          {/* Teacher Requests */}
+          <div className="bg-white border-l-4 border-indigo-500 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-4">
+              Teacher Requests
+            </h3>
+            <div className="flex flex-col space-y-4">
+              <Link href="/teacher_requests">
+                <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-all">
+                  View Requests
+                </button>
+              </Link>
+              <Link href="/add-teacher">
+                <button className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-all">
+                  Add Teacher
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Attendance and Performance Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Attendance */}
+          <div className="bg-white border-l-4 border-gray-400 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-3">
+              Attendance
+            </h3>
+            <p className="text-gray-600">
+              Monitor and manage daily teacher attendance.
+            </p>
+          </div>
+
+          {/* Performance */}
+          <div className="bg-white border-l-4 border-rose-500 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-3">
+              Performance
+            </h3>
+            <p className="text-gray-600">
+              Review and assess teacher performance metrics.
+            </p>
+          </div>
+        </div>
+
+        {/* Salary Section */}
+        <div className="bg-white border-l-4 border-neutral-500 rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+          <h3 className="text-lg font-medium text-gray-700 tracking-wide mb-3">
+            Salary & Compensation
+          </h3>
+          <p className="text-gray-600">
+            View payroll details and manage compensations.
+          </p>
+        </div>
+      </div>
+    </AppLayout>
+  );
+}
+  

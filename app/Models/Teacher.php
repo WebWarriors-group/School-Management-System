@@ -33,7 +33,7 @@ class Teacher extends Model
         'other_subjects_taught',
         'assigned_class',
         'other_responsibilities_assigned',
-        '150_hrs_tamil_course_completed',
+        'is_150_hrs_tamil_course_completed',
         'commuting_from_school',
         'distance_from_school',
         'commuting_method_to_school',

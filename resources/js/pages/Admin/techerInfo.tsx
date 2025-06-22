@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import AppLayout from "@/layouts/app-layout";
 import { type BreadcrumbItem } from '@/types';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -27,15 +30,15 @@ type Teacher = {
   Fixed_telephone_number: string;
   Mobile_number: string;
   Whatsapp_number: string;
-  };
+  },
   teachersaddress : {
   permanent_address: string;
-  residential_address: string;
+  permanent_residential_address: string;
   grama_niladari_division: string;
   grama_niladari_division_number: string;
   election_division: string;
   election_division_number: string;
-  };
+  },
   appointed_date: string;
   work_acceptance_date: string;
   
@@ -74,13 +77,13 @@ type Teacher = {
   subjects_taught_most_and_second_most: string;
   position_in_the_school: string;
   assign_date_for_the_school: string;
-  };
+  },
   teacherotherservice:{
   other_responsibilities_in_school: string;
   EDCS_membership: string;
-  WSOP_Number: number | null;
+  WSOP_Number: string;
   Agrahara_insuarence_membership: string;
-  };
+  },
 
 };
 
@@ -90,6 +93,12 @@ export default function TeachersTable() {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
   const [error, setError] = useState("");
+
+
+  const [step, setStep] = useState(1);
+      
+        const handleNextStep = () => setStep(step + 1);
+        const handlePrevStep = () => setStep(step - 1);
 
   // Fetch teachers from API
   useEffect(() => {
@@ -101,22 +110,33 @@ export default function TeachersTable() {
 
   // Handle delete
   const handleDelete = async (teacher_NIC: string) => {
-    if (!confirm("Are you sure you want to delete this teacher?")) return;
+  if (!confirm("Are you sure you want to delete this teacher?")) return;
 
-    try {
-      const res = await fetch(`/api/teachers/${teacher_NIC}`, { method: "DELETE" ,headers: {
+  try {
+    const res = await fetch(`/api/teachers/${teacher_NIC}`, {
+      method: "DELETE",
+      headers: {
         "Content-Type": "application/json",
-      },});
+      },
+    });
 
-      if (!res.ok) {
-        throw new Error("Failed to delete");
-      }
-
-      setTeachers(teachers.filter((teacher) => teacher.teacher_NIC !== teacher_NIC));
-    } catch (error) {
-      console.error("Error deleting teacher:", error);
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to delete");
     }
-  };
+
+    const responseData = await res.json();
+
+    setTeachers(teachers.filter((teacher) => teacher.teacher_NIC !== teacher_NIC));
+
+    // ✅ Show success toast message
+    toast.success(responseData.message || "Teacher deleted successfully");
+  } catch (error: any) {
+    console.error("Error deleting teacher:", error);
+    toast.error("Failed to delete teacher");
+  }
+};
+
 
   // Handle edit (open modal)
 const handleEdit = (teacher: Teacher) => {
@@ -191,83 +211,142 @@ const handleUpdate = async (event: React.FormEvent) => {
       {error && <p className="text-red-500 mt-2">{error}</p>}
 
       {/* Display Teacher Details */}
-      {teacher && (
-  <div className="mt-6 p-6 border rounded bg-gray-100 max-w-3xl mx-auto">
-    <h2 className="text-2xl font-bold text-center mb-4">Teacher Details</h2>
+{teacher && (
+  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-4xl mx-auto shadow-lg">
+    <h2 className="text-4xl font-extrabold text-blue-900 text-center mb-10 tracking-wide drop-shadow-md">
+      Teacher Details
+    </h2>
 
     {/* Personal Information */}
-    <div className="mb-4 p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-semibold border-b pb-2 mb-2">Personal Information</h3>
-      <p><strong>NIC:</strong> {teacher.teacher_NIC}</p>
-      <p><strong>Full Name:</strong> {teacher.personal?.Full_name || 'No name provided'}</p>
-      <p><strong>Full Name with Initial:</strong> {teacher.personal?.Full_name_with_initial || 'Not provided'}</p>
-      <p><strong>Gender:</strong> {teacher.personal?.Gender || 'Not provided'}</p>
-      <p><strong>Birthdate:</strong> {teacher.personal?.Birthdate || 'Not provided'}</p>
-      <p><strong>Marital Status:</strong> {teacher.personal?.Marital_status || 'Not provided'}</p>
-      <p><strong>Mobile Number:</strong> {teacher.personal?.Mobile_number || 'Not provided'}</p>
-      <p><strong>Email:</strong> {teacher.personal?.Email_address || 'Not provided'}</p>
-
-      {teacher.personal?.Photo && teacher.personal?.Photo instanceof File ? (
-        <img
-          src={URL.createObjectURL(teacher.personal.Photo)}
-          alt="Teacher's Photo"
-          className="w-32 h-32 object-cover rounded-full mt-2"
-        />
-      ) : (
-        <p>No photo available</p>
-      )}
-    </div>
+    <section className="bg-white shadow-lg rounded-lg p-8 mb-10 border-l-8 border-blue-700">
+      <h3 className="text-2xl font-bold text-blue-800 mb-6 uppercase tracking-wide border-b-2 border-blue-300 pb-2">
+        Personal Information
+      </h3>
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+        {/* Photo */}
+        <div className="flex-shrink-0">
+          {teacher.personal?.Photo ? (
+            <img
+              src={`/storage/${teacher.personal.Photo}`}
+              alt="Teacher"
+              className="w-32 h-32 rounded-full object-cover shadow-xl border-4 border-blue-600 ring-4 ring-blue-200"
+            />
+          ) : (
+            <span className="text-gray-400 italic">No Photo</span>
+          )}
+        </div>
+        <div className="flex-1 space-y-2 text-gray-800 text-lg leading-relaxed">
+          <p><strong className="text-blue-700 font-semibold">NIC:</strong> {teacher.teacher_NIC}</p>
+          <p><strong className="text-blue-700 font-semibold">Full Name:</strong> {teacher.personal?.Full_name || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Full Name with Initial:</strong> {teacher.personal?.Full_name_with_initial || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Gender:</strong> {teacher.personal?.Gender || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Birthdate:</strong> {teacher.personal?.Birthdate || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Marital Status:</strong> {teacher.personal?.Marital_status || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Mobile Number:</strong> {teacher.personal?.Mobile_number || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Email:</strong> {teacher.personal?.Email_address || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Region:</strong> {teacher.personal?.Region || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Ethnicity:</strong> {teacher.personal?.Ethnicity || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Title:</strong> {teacher.personal?.Title || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Emergency Contact No:</strong> {teacher.personal?.Emergency_telephone_number || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Fixed Phone No:</strong> {teacher.personal?.Fixed_telephone_number || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">WhatsApp No:</strong> {teacher.personal?.Whatsapp_number || 'Not provided'}</p>
+          <p><strong className="text-blue-700 font-semibold">Family Details:</strong> {teacher.personal?.Details_about_family_members || 'Not provided'}</p>
+        </div>
+      </div>
+    </section>
 
     {/* Address Information */}
-    <div className="mb-4 p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-semibold border-b pb-2 mb-2">Address Information</h3>
-      <p><strong>Permanent Address:</strong> {teacher.teachersaddress?.permanent_address || 'Not provided'}</p>
-      <p><strong>Residential Address:</strong> {teacher.teachersaddress?.residential_address || 'Not provided'}</p>
-      <p><strong>Grama Niladari Division:</strong> {teacher.teachersaddress?.grama_niladari_division || 'Not provided'}</p>
-      <p><strong>Election Division:</strong> {teacher.teachersaddress?.election_division || 'Not provided'}</p>
-    </div>
+    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-green-700">
+      <h3 className="text-2xl font-bold text-green-800 mb-6 uppercase tracking-wide border-b-2 border-green-300 pb-2">
+        Address Information
+      </h3>
+      <div className="space-y-2 text-gray-800 text-lg leading-relaxed">
+        <p><strong className="text-green-700 font-semibold">Permanent Address:</strong> {teacher.teachersaddress?.permanent_address || 'Not provided'}</p>
+        <p><strong className="text-green-700 font-semibold">Residential Address:</strong> {teacher.teachersaddress?.permanent_residential_address || 'Not provided'}</p>
+        <p><strong className="text-green-700 font-semibold">Grama Niladari Division:</strong> {teacher.teachersaddress?.grama_niladari_division || 'Not provided'}</p>
+        <p><strong className="text-green-700 font-semibold">Grama Niladari Division No:</strong> {teacher.teachersaddress?.grama_niladari_division_number ?? 'Not provided'}</p>
+        <p><strong className="text-green-700 font-semibold">Election Division:</strong> {teacher.teachersaddress?.election_division || 'Not provided'}</p>
+        <p><strong className="text-green-700 font-semibold">Election Division No:</strong> {teacher.teachersaddress?.election_division_number ?? 'Not provided'}</p>
+      </div>
+    </section>
 
     {/* Work Information */}
-    <div className="mb-4 p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-semibold border-b pb-2 mb-2">Work Information</h3>
-      <p><strong>Appointed Date:</strong> {teacher.appointed_date || 'Not provided'}</p>
-      <p><strong>Appointment Type:</strong> {teacher.appointment_type || 'Not provided'}</p>
-      <p><strong>Current Teaching Grade:</strong> {teacher.current_grade_of_teaching_service || 'Not provided'}</p>
-      <p><strong>Current Teaching Subject:</strong> {teacher.current_teaching_subject || 'Not provided'}</p>
-      <p><strong>Other Subjects Taught:</strong> {teacher.other_subjects_taught || 'Not provided'}</p>
-      <p><strong>Assigned Class:</strong> {teacher.assigned_class || 'Not provided'}</p>
-      <p><strong>Other Responsibilities:</strong> {teacher.other_responsibilities_assigned || 'Not provided'}</p>
-    </div>
+    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-purple-700">
+      <h3 className="text-2xl font-bold text-purple-800 mb-6 uppercase tracking-wide border-b-2 border-purple-300 pb-2">
+        Work Information
+      </h3>
+      <div className="space-y-2 text-gray-800 text-lg leading-relaxed">
+        <p><strong className="text-purple-700 font-semibold">Appointed Date:</strong> {teacher.appointed_date || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Work Acceptance Date:</strong> {teacher.work_acceptance_date || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Appointment Type:</strong> {teacher.appointment_type || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Salary Increment Date:</strong> {teacher.salary_increment_date || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Current Grade of Teaching Service:</strong> {teacher.current_grade_of_teaching_service || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Work Acceptance Date at School:</strong> {teacher.work_acceptance_date_school || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Temporary Attached School/Institute:</strong> {teacher.temporary_attachedschool_or_institute_name || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Appointed Subject:</strong> {teacher.appointed_subject || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Which Grades Teaching Done:</strong> {teacher.which_grades_teaching_done || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Current Teaching Subject:</strong> {teacher.current_teaching_subject || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Other Subjects Taught:</strong> {teacher.other_subjects_taught || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Assigned Class:</strong> {teacher.assigned_class || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Other Responsibilities:</strong> {teacher.other_responsibilities_assigned || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">150 Hrs Tamil Course Completed:</strong> {teacher.is_150_hrs_tamil_course_completed ? 'Yes' : 'No'}</p>
+        <p><strong className="text-purple-700 font-semibold">Commuting From School:</strong> {teacher.commuting_from_school || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Distance From School (km):</strong> {teacher.distance_from_school || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Commuting Method to School:</strong> {teacher.commuting_method_to_school || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Number in Sign Sheet:</strong> {teacher.number_in_sign_sheet || 'Not provided'}</p>
+        <p><strong className="text-purple-700 font-semibold">Number in Salary Sheet:</strong> {teacher.number_in_salary_sheet || 'Not provided'}</p>
+      </div>
+    </section>
 
     {/* Qualifications */}
-    <div className="mb-4 p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-semibold border-b pb-2 mb-2">Qualifications</h3>
-      <p><strong>AL Subject Stream:</strong> {teacher.qualifications?.gce_al_subject_stream || 'Not provided'}</p>
-      <p><strong>Highest Education Qualification:</strong> {teacher.qualifications?.highest_education_qualification || 'Not provided'}</p>
-      <p><strong>Basic Degree Stream:</strong> {teacher.qualifications?.basic_degree_stream || 'Not provided'}</p>
-      <p><strong>Highest Professional Qualification:</strong> {teacher.qualifications?.highest_professional_qualification || 'Not provided'}</p>
-    </div>
+    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
+      <h3 className="text-2xl font-bold text-yellow-900 mb-6 uppercase tracking-wide border-b-2 border-yellow-300 pb-2">
+        Qualifications
+      </h3>
+      <div className="space-y-2 text-gray-800 text-lg leading-relaxed">
+        <p><strong className="text-yellow-800 font-semibold">AL Subject Stream:</strong> {teacher.qualifications?.gce_al_subject_stream || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Type of Service in School:</strong> {teacher.qualifications?.type_of_service_in_school || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Highest Education Qualification:</strong> {teacher.qualifications?.highest_education_qualification || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Basic Degree Stream:</strong> {teacher.qualifications?.basic_degree_stream || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Highest Professional Qualification:</strong> {teacher.qualifications?.highest_professional_qualification || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Present Class:</strong> {teacher.qualifications?.present_class || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Present Grade:</strong> {teacher.qualifications?.present_grade || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Appointment Date for Current Class:</strong> {teacher.qualifications?.appointment_date_for_current_class || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Appointment Date for Current Grade:</strong> {teacher.qualifications?.appointment_date_for_current_grade || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Current Appointment Service Medium:</strong> {teacher.qualifications?.current_appointment_service_medium || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Appointment Subject Section:</strong> {teacher.qualifications?.appointed_subject_section || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Appointed Subject:</strong> {teacher.qualifications?.subject_appointed || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Date of Current Appointed Service:</strong> {teacher.qualifications?.currentservice_appointed_date || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">First and Most Subjects That Taught:</strong> {teacher.qualifications?.subjects_taught_most_and_second_most || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Position in the School:</strong> {teacher.qualifications?.position_in_the_school || 'Not provided'}</p>
+        <p><strong className="text-yellow-800 font-semibold">Assign Date for the School:</strong> {teacher.qualifications?.assign_date_for_the_school || 'Not provided'}</p>
+      </div>
+    </section>
 
     {/* Other Service Information */}
-    <div className="mb-4 p-4 bg-white rounded shadow">
-      <h3 className="text-lg font-semibold border-b pb-2 mb-2">Other Services</h3>
-      <p><strong>Other Responsibilities in School:</strong> {teacher.teacherotherservice?.other_responsibilities_in_school || 'Not provided'}</p>
-      <p><strong>EDCS Membership:</strong> {teacher.teacherotherservice?.EDCS_membership || 'Not provided'}</p>
-      <p><strong>WSOP Number:</strong> {teacher.teacherotherservice?.WSOP_Number || 'Not provided'}</p>
-      <p><strong>Agrahara Insurance Membership:</strong> {teacher.teacherotherservice?.Agrahara_insuarence_membership || 'Not provided'}</p>
-    </div>
+    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-red-700">
+      <h3 className="text-2xl font-bold text-red-800 mb-6 uppercase tracking-wide border-b-2 border-red-300 pb-2">
+        Other Services
+      </h3>
+      <div className="space-y-2 text-gray-800 text-lg leading-relaxed">
+        <p><strong className="text-red-700 font-semibold">Other Responsibilities in School:</strong> {teacher.teacherotherservice?.other_responsibilities_in_school || 'Not provided'}</p>
+        <p><strong className="text-red-700 font-semibold">Have EDCS Membership?:</strong> {teacher.teacherotherservice?.EDCS_membership || 'Not provided'}</p>
+        <p><strong className="text-red-700 font-semibold">WSOP Number:</strong> {teacher.teacherotherservice?.WSOP_Number || 'Not provided'}</p>
+        <p><strong className="text-red-700 font-semibold">Have Agrahara Insurance Membership?:</strong> {teacher.teacherotherservice?.Agrahara_insuarence_membership || 'Not provided'}</p>
+      </div>
+    </section>
 
     {/* Action Buttons */}
-    <div className="flex justify-between mt-4">
+    <div className="flex justify-center gap-8 mt-8">
       <button
         onClick={() => handleEdit(teacher)}
-        className="bg-blue-500 text-white px-4 py-2 rounded shadow"
+        className="bg-blue-800 hover:bg-blue-900 text-white px-8 py-3 rounded-lg font-semibold shadow-lg transition duration-200"
       >
         Edit Records
       </button>
       <button
         onClick={() => handleDelete(teacher.teacher_NIC)}
-        className="bg-red-500 text-white px-4 py-2 rounded shadow"
+        className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-lg font-semibold shadow-lg transition duration-200"
       >
         Delete Entire Records
       </button>
@@ -277,9 +356,14 @@ const handleUpdate = async (event: React.FormEvent) => {
 
       {/* Edit Modal */}
       {editingTeacher && (
-  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+  <div
+    className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+    aria-modal="true"
+    role="dialog"
+    aria-labelledby="edit-teacher-title"
+  >
     <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-h-[80vh] overflow-y-auto">
-      <h3 className="text-xl font-bold mb-4">Edit Teacher</h3>
+          <h3 className="text-xl font-bold mb-4">Edit Teacher</h3>
       <form onSubmit={handleUpdate}>
 
         {/* Personal Information */}
@@ -312,17 +396,27 @@ const handleUpdate = async (event: React.FormEvent) => {
         </div>
 
         <div className="mb-2">
-          <label className="block text-sm font-bold">Gender:</label>
-          <input
-            type="text"
-            value={editingTeacher.personal?.Gender || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              personal: { ...editingTeacher.personal, Gender: e.target.value }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Gender:</label>
+  <select
+    value={editingTeacher.personal?.Gender || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        personal: {
+          ...editingTeacher.personal,
+          Gender: e.target.value as "Male" | "Female" | "Other",
+        },
+      })
+    }
+    className="border p-2 w-full"
+  >
+    <option value="">Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
 
         <div className="mb-2">
           <label className="block text-sm font-bold">Birthdate:</label>
@@ -365,54 +459,528 @@ const handleUpdate = async (event: React.FormEvent) => {
             className="border p-2 w-full"
           />
         </div>
+{/* Personal Information Continued */}
+<div className="mb-2">
+  <label className="block text-sm font-bold">Region:</label>
+  <input
+    type="text"
+    value={editingTeacher.personal?.Region || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      personal: { ...editingTeacher.personal, Region: e.target.value }
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Ethnicity:</label>
+  <input
+    type="text"
+    value={editingTeacher.personal?.Ethnicity || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      personal: { ...editingTeacher.personal, Ethnicity: e.target.value }
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Title:</label>
+  <input
+    type="text"
+    value={editingTeacher.personal?.Title || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      personal: { ...editingTeacher.personal, Title: e.target.value }
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Marital Status:</label>
+  <select
+    value={editingTeacher.personal?.Marital_status || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        personal: {
+          ...editingTeacher.personal,
+          Marital_status: e.target.value as "Single" | "Married" | "Divorced" | "Widowed",
+        },
+      })
+    }
+    className="border p-2 w-full"
+  >
+    <option value="">Select Marital Status</option>
+    <option value="Single">Single</option>
+    <option value="Married">Married</option>
+    <option value="Divorced">Divorced</option>
+    <option value="Widowed">Widowed</option>
+  </select>
+</div>
+
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Emergency Telephone Number:</label>
+  <input
+    type="text"
+    value={editingTeacher.personal?.Emergency_telephone_number || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      personal: { ...editingTeacher.personal, Emergency_telephone_number: e.target.value }
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Fixed Telephone Number:</label>
+  <input
+    type="text"
+    value={editingTeacher.personal?.Fixed_telephone_number || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      personal: { ...editingTeacher.personal, Fixed_telephone_number: e.target.value }
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">WhatsApp Number:</label>
+  <input
+    type="text"
+    value={editingTeacher.personal?.Whatsapp_number || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      personal: { ...editingTeacher.personal, Whatsapp_number: e.target.value }
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold mb-1">Details About Family Members:</label>
+  <textarea
+    value={editingTeacher.personal?.Details_about_family_members || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        personal: { ...editingTeacher.personal, Details_about_family_members: e.target.value },
+      })
+    }
+    className="border p-2 w-full rounded resize-y"
+    rows={5}
+    style={{ lineHeight: "1.5", fontSize: "1rem" }}
+  />
+</div>
 
         {/* Address */}
         <h4 className="font-bold text-lg mt-4 mb-2">Address Information</h4>
 
-        <div className="mb-2">
-          <label className="block text-sm font-bold">Permanent Address:</label>
-          <input
-            type="text"
-            value={editingTeacher.teachersaddress?.permanent_address || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              teachersaddress: { 
-                ...editingTeacher.teachersaddress, 
-                permanent_address: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+       
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Permanent Address:</label>
+  <input
+    type="text"
+    value={editingTeacher.teachersaddress?.permanent_address || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teachersaddress: {
+          ...editingTeacher.teachersaddress,
+          permanent_address: e.target.value,
+        },
+      })
+    }
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Residential Address:</label>
+  <input
+    type="text"
+    value={editingTeacher.teachersaddress?.permanent_residential_address || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teachersaddress: {
+          ...editingTeacher.teachersaddress,
+          permanent_residential_address: e.target.value,
+        },
+      })
+    }
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Grama Niladari Division:</label>
+  <input
+    type="text"
+    value={editingTeacher.teachersaddress?.grama_niladari_division || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teachersaddress: {
+          ...editingTeacher.teachersaddress,
+          grama_niladari_division: e.target.value,
+        },
+      })
+    }
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Grama Niladari Division Number:</label>
+  <input
+    type="text"
+    value={editingTeacher.teachersaddress?.grama_niladari_division_number ?? ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teachersaddress: {
+          ...editingTeacher.teachersaddress,
+          grama_niladari_division_number: (e.target.value) ,
+        },
+      })
+    }
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Election Division:</label>
+  <input
+    type="text"
+    value={editingTeacher.teachersaddress?.election_division || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teachersaddress: {
+          ...editingTeacher.teachersaddress,
+          election_division: e.target.value,
+        },
+      })
+    }
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Election Division Number:</label>
+  <input
+    type="text"
+    value={editingTeacher.teachersaddress?.election_division_number ?? ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teachersaddress: {
+          ...editingTeacher.teachersaddress,
+          election_division_number: (e.target.value) ,
+        },
+      })
+    }
+    className="border p-2 w-full"
+  />
+</div>
+
+        
 
         {/* Work Information */}
         <h4 className="font-bold text-lg mt-4 mb-2">Work Information</h4>
 
-        <div className="mb-2">
-          <label className="block text-sm font-bold">Appointed Date:</label>
-          <input
-            type="date"
-            value={editingTeacher.appointed_date || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              appointed_date: e.target.value 
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+      
 
-        <div className="mb-2">
-          <label className="block text-sm font-bold">Appointment Type:</label>
-          <input
-            type="text"
-            value={editingTeacher.appointment_type || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              appointment_type: e.target.value 
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+<div className="mb-2">
+  <label className="block text-sm font-bold">Appointed Date:</label>
+  <input
+    type="date"
+    value={editingTeacher.appointed_date || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      appointed_date: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Work Acceptance Date:</label>
+  <input
+    type="date"
+    value={editingTeacher.work_acceptance_date || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      work_acceptance_date: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Appointment Type:</label>
+  <input
+    type="text"
+    value={editingTeacher.appointment_type || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      appointment_type: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Salary Increment Date:</label>
+  <input
+    type="date"
+    value={editingTeacher.salary_increment_date || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      salary_increment_date: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Current Grade of Teaching Service:</label>
+  <select
+  
+    value={editingTeacher.current_grade_of_teaching_service || ""}
+    onChange={(e) =>
+  setEditingTeacher({
+    ...editingTeacher,
+    current_grade_of_teaching_service: e.target.value as "Grade I" | "Grade II" | "Grade III",
+  })
+}
+
+    className="border p-2 w-full"
+  >
+    <option value="">Select Grade</option>
+    <option value="Grade I">Grade I</option>
+    <option value="Grade II">Grade II</option>
+    <option value="Grade III">Grade III</option>
+  </select>
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Work Acceptance Date in School:</label>
+  <input
+    type="date"
+    value={editingTeacher.work_acceptance_date_school || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      work_acceptance_date_school: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Temporary Attached School / Institute:</label>
+  <input
+    type="text"
+    value={editingTeacher.temporary_attachedschool_or_institute_name || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      temporary_attachedschool_or_institute_name: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Appointed Subject:</label>
+  <input
+    type="text"
+    value={editingTeacher.appointed_subject || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      appointed_subject: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Which Grades Teaching Done:</label>
+  <input
+    type="text"
+    value={editingTeacher.which_grades_teaching_done || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      which_grades_teaching_done: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Current Teaching Subject:</label>
+  <input
+    type="text"
+    value={editingTeacher.current_teaching_subject || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      current_teaching_subject: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Other Subjects Taught:</label>
+  <input
+    type="text"
+    value={editingTeacher.other_subjects_taught || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      other_subjects_taught: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Assigned Class:</label>
+  <input
+    type="text"
+    value={editingTeacher.assigned_class || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      assigned_class: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Other Responsibilities Assigned:</label>
+  <input
+    type="text"
+    value={editingTeacher.other_responsibilities_assigned || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      other_responsibilities_assigned: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">150 Hours Tamil Course Completed:</label>
+  <input
+    type="checkbox"
+    checked={editingTeacher.is_150_hrs_tamil_course_completed || false}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      is_150_hrs_tamil_course_completed: e.target.checked
+    })}
+    className="mr-2"
+  />
+  <span>Yes</span>
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Commuting From School:</label>
+  <select
+    value={editingTeacher.commuting_from_school || ""}
+    onChange={(e) =>
+  setEditingTeacher({
+    ...editingTeacher,
+    commuting_from_school: e.target.value as "Home" | "Boarding" | "Hostel" | "Other",
+  })
+}
+
+    
+    className="border p-2 w-full"
+  >
+    <option value="">Select</option>
+    <option value="Home">Home</option>
+    <option value="Boarding">Boarding</option>
+    <option value="Hostel">Hostel</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Distance From School (km):</label>
+  <input
+    type="number"
+    value={editingTeacher.distance_from_school || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      distance_from_school: parseFloat(e.target.value)
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Commuting Method To School:</label>
+  <select
+    value={editingTeacher.commuting_method_to_school || ""}
+    onChange={(e) =>
+  setEditingTeacher({
+    ...editingTeacher,
+    commuting_method_to_school: e.target.value as
+      | "Other"
+      | "Bicycle"
+      | "MotorBike"
+      | "Car"
+      | "Bus"
+      | "Threewheeler"
+      | "Walk",
+  })
+}
+
+    className="border p-2 w-full"
+  >
+    <option value="">Select Method</option>
+    <option value="Bicycle">Bicycle</option>
+    <option value="MotorBike">MotorBike</option>
+    <option value="Car">Car</option>
+    <option value="Bus">Bus</option>
+    <option value="Threewheeler">Threewheeler</option>
+    <option value="Walk">Walk</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Number in Sign Sheet:</label>
+  <input
+    type="text"
+    value={editingTeacher.number_in_sign_sheet || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      number_in_sign_sheet: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
+<div className="mb-2">
+  <label className="block text-sm font-bold">Number in Salary Sheet:</label>
+  <input
+    type="text"
+    value={editingTeacher.number_in_salary_sheet || ""}
+    onChange={(e) => setEditingTeacher({
+      ...editingTeacher,
+      number_in_salary_sheet: e.target.value
+    })}
+    className="border p-2 w-full"
+  />
+</div>
+
 
         {/* Qualification Information */}
         <h4 className="font-bold text-lg mt-4 mb-2">Qualification Information</h4>
@@ -433,8 +1001,40 @@ const handleUpdate = async (event: React.FormEvent) => {
           />
         </div>
 
-        <div className="mb-2">
-          <label className="block text-sm font-bold">Basic Degree Stream:</label>
+         <div className="mb-2">
+          <label className="block text-sm font-bold">GCE AL subject stream:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.gce_al_subject_stream || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                gce_al_subject_stream: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+         <div className="mb-2">
+          <label className="block text-sm font-bold">Type of service in school:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.type_of_service_in_school || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                type_of_service_in_school: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+         <div className="mb-2">
+          <label className="block text-sm font-bold">Basic degree stream:</label>
           <input
             type="text"
             value={editingTeacher.qualifications?.basic_degree_stream || ""}
@@ -448,6 +1048,212 @@ const handleUpdate = async (event: React.FormEvent) => {
             className="border p-2 w-full"
           />
         </div>
+         <div className="mb-2">
+          <label className="block text-sm font-bold">Highest professinal Qualification:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.highest_professional_qualification || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                highest_professional_qualification: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+         <div className="mb-2">
+  <label className="block text-sm font-bold">Present class:</label>
+  <select
+    value={editingTeacher.qualifications?.present_class || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          present_class: e.target.value as "Class 1" | "Class 2" | "Class 3",
+        },
+      })
+    }
+    className="border p-2 w-full"
+  >
+    <option value="">Select Class</option>
+    <option value="Class 1">Class 1</option>
+    <option value="Class 2">Class 2</option>
+    <option value="Class 3">Class 3</option>
+  </select>
+</div>
+
+
+        <div className="mb-2">
+  <label className="block text-sm font-bold">Present grade:</label>
+  <select
+    value={editingTeacher.qualifications?.present_grade || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          present_grade: e.target.value as "Grade I" | "Grade II" | "Grade III",
+        },
+      })
+    }
+    className="border p-2 w-full"
+  >
+    <option value="">Select Grade</option>
+    <option value="Grade I">Grade I</option>
+    <option value="Grade II">Grade II</option>
+    <option value="Grade III">Grade III</option>
+  </select>
+</div>
+
+         <div className="mb-2">
+          <label className="block text-sm font-bold">Appointment date for current class:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.appointment_date_for_current_class || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                appointment_date_for_current_class: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+         <div className="mb-2">
+          <label className="block text-sm font-bold">appointment date for current grade:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.appointment_date_for_current_grade || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                appointment_date_for_current_grade: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+         <div className="mb-2">
+          <label className="block text-sm font-bold">Current appointment service medium:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.current_appointment_service_medium || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                current_appointment_service_medium: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">Appointment subject section:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.appointed_subject_section || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                appointed_subject_section: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">appointed subject:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.subject_appointed || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                subject_appointed: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">Appointed date for current service:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.currentservice_appointed_date || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                currentservice_appointed_date: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">subjects that are taught first and second most:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.subjects_taught_most_and_second_most || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                subjects_taught_most_and_second_most: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">Position in the school:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.position_in_the_school || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                position_in_the_school: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">Assign date for the school:</label>
+          <input
+            type="text"
+            value={editingTeacher.qualifications?.assign_date_for_the_school || ""}
+            onChange={(e) => setEditingTeacher({
+              ...editingTeacher,
+              qualifications: { 
+                ...editingTeacher.qualifications, 
+                assign_date_for_the_school: e.target.value 
+              }
+            })}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        
 
         {/* Other Service Information */}
         <h4 className="font-bold text-lg mt-4 mb-2">Other Service Information</h4>
@@ -469,20 +1275,63 @@ const handleUpdate = async (event: React.FormEvent) => {
         </div>
 
         <div className="mb-2">
-          <label className="block text-sm font-bold">EDCS Membership:</label>
+  <label className="block text-sm font-bold">Have EDCS Membership?:</label>
+  <select
+    value={editingTeacher.teacherotherservice?.EDCS_membership || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teacherotherservice: {
+          ...editingTeacher.teacherotherservice,
+          EDCS_membership: e.target.value as "Yes" | "No",
+        },
+      })
+    }
+    className="border p-2 w-full"
+  >
+    <option value="">Select Option</option>
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+</div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-bold">WSOP number:</label>
           <input
             type="text"
-            value={editingTeacher.teacherotherservice?.EDCS_membership || ""}
+            value={editingTeacher.teacherotherservice?.WSOP_Number || ""}
             onChange={(e) => setEditingTeacher({
               ...editingTeacher,
               teacherotherservice: { 
                 ...editingTeacher.teacherotherservice, 
-                EDCS_membership: e.target.value 
+                WSOP_Number: e.target.value 
               }
             })}
             className="border p-2 w-full"
           />
         </div>
+
+       <div className="mb-2">
+  <label className="block text-sm font-bold">Have Agrahara insurance membership?:</label>
+  <select
+    value={editingTeacher.teacherotherservice?.Agrahara_insuarence_membership || ""}
+    onChange={(e) =>
+      setEditingTeacher({
+        ...editingTeacher,
+        teacherotherservice: {
+          ...editingTeacher.teacherotherservice,
+          Agrahara_insuarence_membership: e.target.value as "Yes" | "No",
+        },
+      })
+    }
+    className="border p-2 w-full"
+  >
+    <option value="">Select Option</option>
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+</div>
+
 
         {/* Save and Cancel Buttons */}
         <div className="flex justify-between mt-4">
@@ -495,7 +1344,380 @@ const handleUpdate = async (event: React.FormEvent) => {
 )}
 
     </div>
+    
     </div>
+    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+  <div className="max-w-4xl mx-auto p-4">
+    <h1 className="text-2xl font-bold mb-6 text-center">Teacher's Table</h1>
+
+    {/* STEP 1 */}
+    {step === 1 && (
+      <div>
+        <h3 className="text-xl font-bold mb-4">Step 1: Teacher's Basic Information</h3>
+        <div className="overflow-x-auto">
+  <div className="max-h-[500px] overflow-y-auto">
+    <table className="min-w-full border border-gray-300 text-sm">
+
+            <thead className="bg-gray-200 text-gray-800">
+              <tr>
+                {[
+                  "No.",
+                  "NIC Number",
+                  
+                  "Full Name",
+                  "Name with Initials",
+                  "Photo",
+                  "DOB",
+                  "Gender",
+                  "Ethnicity",
+                  "Religion",
+                  "Title",
+                  "Marital status",
+                  "Details about family members",
+                  "Emergency telephone number",
+                  "Email address",
+                  "Fixed telephone number",
+                  "Mobile number",
+                  "Whatsapp number",
+                ].map((title, i) => (
+                  <th key={i} className="border px-2 py-1 text-left">
+                    {title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+           <tbody>
+  {teachers.map((teacher, index) => (
+    <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-2 py-1">{teacher.personal?.Full_name ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Full_name_with_initial ?? "-"}</td>
+      <td className="border px-2 py-1">
+        {teacher.personal?.Photo ? (
+          <img src={`/storage/${teacher.personal.Photo}`} alt="Teacher" className="w-10 h-10 rounded-full" />
+        ) : (
+          "No Photo"
+        )}
+      </td>
+      <td className="border px-2 py-1">{teacher.personal?.Birthdate ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Gender ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Ethnicity ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Region ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Title ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Marital_status ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Details_about_family_members ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Emergency_telephone_number ?? "-"}</td>
+      <td className="border px-2 py-1">{(teacher.personal?.Email_address)}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Fixed_telephone_number ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Mobile_number ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.personal?.Whatsapp_number ?? "-"}</td>
+    </tr>
+  ))}
+</tbody>
+          </table>
+        </div>
+</div>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={handleNextStep}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* STEP 2 */}
+    {step === 2 && (
+      <div>
+        <h3 className="text-xl font-bold mb-4">Step 2: Address Information</h3>
+        <div className="overflow-x-auto">
+  <div className="max-h-[500px] overflow-y-auto">
+    <table className="min-w-full border border-gray-300 text-sm">
+
+            <thead className="bg-gray-200 text-gray-800">
+              <tr>
+                {[
+                  "No.",
+                  "NIC Number",
+                  "Permanent Address",
+                  "Residential Address",
+                  "GN Division",
+                  "GN Division No.",
+                  "Election Division",
+                  "Election Division No.",
+                ].map((title, i) => (
+                  <th key={i} className="border px-2 py-1 text-left">
+                    {title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.map((teacher, index) => (
+    <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-2 py-1">{teacher.teachersaddress?.permanent_address ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.teachersaddress?.permanent_residential_address ?? "-"}</td>
+      
+      <td className="border px-2 py-1">{teacher.teachersaddress?.grama_niladari_division ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.teachersaddress?.grama_niladari_division_number ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.teachersaddress?.election_division ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.teachersaddress?.election_division_number ?? "-"}</td>
+          </tr>
+  ))}
+            </tbody>
+          </table>
+        </div>
+</div>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handlePrevStep}
+            className="bg-gray-600 text-white px-4 py-2 rounded-md"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNextStep}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* STEP 3 */}
+    {step === 3 && (
+      <div>
+        <h3 className="text-xl font-bold mb-4">Step 3: Work Information</h3>
+        <div className="overflow-x-auto">
+  <div className="max-h-[500px] overflow-y-auto">
+    <table className="min-w-full border border-gray-300 text-sm">
+
+            <thead className="bg-gray-200 text-gray-800">
+              <tr>
+                {[
+                  "No.",
+                  "NIC",
+                  "Appointment Date",
+                  "Work Acceptance Date",
+                  "Appointment Type",
+                  "Salary Increment Date",
+                  "Current Grade",
+                  "School Acceptance Date",
+                  "Attached School/Institute",
+                  "Appointed Subject",
+                  "Grades Taught",
+                  "Current Subject",
+                  "Subjects Taught",
+                  "Assigned Class",
+                  "Other Responsibilities",
+                  "150-Hour Course Done",
+                  "Computing from School",
+                  "Distance to School",
+                  "Commuting Method",
+                  "Sign Sheet No.",
+                  "Salary Sheet No.",
+                ].map((title, i) => (
+                  <th key={i} className="border px-2 py-1 text-left">
+                    {title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.map((teacher, index) => (
+    <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-2 py-1">{teacher.appointed_date ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
+      
+      <td className="border px-2 py-1">{teacher.appointment_type ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.salary_increment_date ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.current_grade_of_teaching_service ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.temporary_attachedschool_or_institute_name ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.appointed_subject ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.which_grades_teaching_done ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.current_teaching_subject ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.other_subjects_taught ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.assigned_class ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.other_responsibilities_assigned ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.is_150_hrs_tamil_course_completed ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.commuting_from_school ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.distance_from_school ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.commuting_method_to_school?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.number_in_sign_sheet ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.number_in_salary_sheet ?? "-"}</td>
+        </tr>
+  ))}
+            </tbody>
+          </table>
+        </div>
+</div>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handlePrevStep}
+            className="bg-gray-600 text-white px-4 py-2 rounded-md"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNextStep}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* STEP 4 */}
+    {step === 4 && (
+      <div>
+        <h3 className="text-xl font-bold mb-4">Step 4: Qualification</h3>
+        <div className="overflow-x-auto">
+  <div className="max-h-[500px] overflow-y-auto">
+    <table className="min-w-full border border-gray-300 text-sm">
+
+            <thead className="bg-gray-200 text-gray-800">
+              <tr>
+                {[
+                  "No.",
+                  "NIC",
+                  "Service Type",
+                  "A/L Stream",
+                  "Highest Education",
+                  "Degree Stream",
+                  "Professional Qualification",
+                  "Present Class",
+                  "Present Grade",
+                  "Class Appointment Date",
+                  "Grade Appointment Date",
+                  "Service Medium",
+                  "Subject Section",
+                  "Appointed Subject",
+                  "Service Start Date",
+                  "Top Subjects Taught",
+                  "School Position",
+                  "School Join Date",
+                ].map((title, i) => (
+                  <th key={i} className="border px-2 py-1 text-left">
+                    {title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.map((teacher, index) => (
+    <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-2 py-1">{teacher.qualifications?.type_of_service_in_school ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.gce_al_subject_stream ?? "-"}</td>
+      
+      <td className="border px-2 py-1">{teacher.qualifications?.highest_education_qualification ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.basic_degree_stream ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.highest_professional_qualification ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.present_class ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.present_grade ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.appointment_date_for_current_class ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.appointment_date_for_current_grade ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.current_appointment_service_medium ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.appointed_subject_section ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.subject_appointed ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.currentservice_appointed_date ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.subjects_taught_most_and_second_most ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.position_in_the_school ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.qualifications?.assign_date_for_the_school ?? "-"}</td>
+      </tr>
+  ))}
+            </tbody>
+          </table>
+        </div>
+</div>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handlePrevStep}
+            className="bg-gray-600 text-white px-4 py-2 rounded-md"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNextStep}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* STEP 5 */}
+    {step === 5 && (
+      <div>
+        <h3 className="text-xl font-bold mb-4">Step 5: Responsibilities & Memberships</h3>
+       <div className="overflow-x-auto">
+  <div className="max-h-[500px] overflow-y-auto">
+    <table className="min-w-full border border-gray-300 text-sm">
+
+            <thead className="bg-gray-200 text-gray-800">
+              <tr>
+                {[
+                  "No.",
+                  "NIC",
+                  "School Responsibilities",
+                  "EDCS Membership",
+                  "WSOP No.",
+                  "Agrahara Insurance",
+                ].map((title, i) => (
+                  <th key={i} className="border px-2 py-1 text-left">
+                    {title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.map((teacher, index) => (
+    <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-2 py-1">{teacher.teacherotherservice?.other_responsibilities_in_school ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.teacherotherservice?.EDCS_membership ?? "-"}</td>
+      
+      <td className="border px-2 py-1">{teacher.teacherotherservice?.WSOP_Number ?? "-"}</td>
+      <td className="border px-2 py-1">{teacher.teacherotherservice?.Agrahara_insuarence_membership ?? "-"}</td>
+      </tr>
+  ))}
+            </tbody>
+          </table>
+        </div>
+</div>
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handlePrevStep}
+            className="bg-gray-600 text-white px-4 py-2 rounded-md"
+          >
+            Back
+          </button>
+          
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+<ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
     </AppLayout>
   );
   
