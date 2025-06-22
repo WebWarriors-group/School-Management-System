@@ -18,6 +18,10 @@ use App\Models\Img;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubjectController;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentAdmissionMail;
 
 Route::get('/', function () {
     $images = Img::all(); 
@@ -146,6 +150,30 @@ Route::get('/calendar', function () {
 
 
 
+
+//Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
+
+
+    // Your Dashboard route
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    // This is the route that loads your React Subject Management page via Inertia.
+    // It's under the 'web' middleware group (implicitly or explicitly if added).
+   // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
+
+
+    // ... any other web-based routes that render Inertia pages
+
+
+ 
+
+Route::middleware('auth')->group(function () {
+     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+    Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
+});
 
 
 require __DIR__ . '/settings.php';
