@@ -10,8 +10,9 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\MarkController; 
 use App\Http\Controllers\StudyMaterialController;
 use App\Http\Controllers\ReportController;
-
+use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Api\EventController;
 use App\Mail\StudentAdmissionMail;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
@@ -78,3 +79,21 @@ Route::put('study-materials/{id}', [StudyMaterialController::class, 'update']);
 Route::delete('study-materials/{id}', [StudyMaterialController::class, 'destroy']);
 
 Route::post('/students/import', [StudentImportController::class, 'import']);
+
+
+
+Route::get('/events', function () {
+    return \App\Models\Event::all([
+        'id',
+        'title',
+        'start',
+        'end'
+    ]);
+});
+
+
+
+Route::get('/events', [EventController::class, 'index']);
+Route::post('/events', [EventController::class, 'store']);
+Route::put('/events/{id}', [EventController::class, 'update']);
+Route::delete('/events/{id}', [EventController::class, 'destroy']);

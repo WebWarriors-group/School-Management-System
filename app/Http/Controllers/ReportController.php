@@ -19,19 +19,19 @@ class ReportController extends Controller
      */
     public function show($reg_no)
     {
-        // Fetch the student academic record, eager loading both marks and personal info.
-        // The relationship name 'studentPersonal' must match the method name in StudentAcademic model.
-        $student = StudentAcademic::with(['marks', 'studentPersonal'])->where('reg_no', $reg_no)->first();
+       
+       $student = StudentAcademic::with(['marks.subject', 'studentPersonal'])
+    ->where('reg_no', $reg_no)
+    ->first();
 
         if (!$student) {
-            // If student is not found, render the ReportPage with null student data.
+            
             return Inertia::render('Marks/ReportPage', [
                 'student' => null,
             ]);
         }
 
-        // If student is found, convert the student model to an array,
-        // which will include the loaded 'marks' and 'student_personal' relationships.
+        
         return Inertia::render('Marks/ReportPage', [
             'student' => $student->toArray(),
         ]);

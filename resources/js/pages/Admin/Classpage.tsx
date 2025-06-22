@@ -24,6 +24,9 @@ export default function AssignClassTeachers({ classes, teachers }: AssignClassTe
   const [selectedClassName, setSelectedClassName] = useState<string>('');
   const [selectedGrade, setSelectedGrade] = useState<number | ''>('');
   const [sectionAssignments, setSectionAssignments] = useState<Record<string, string>>({});
+const [submitted, setSubmitted] = useState(false); // NEW
+const [showForm, setShowForm] = useState(true); 
+
 
   const handleClassNameChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const className = e.target.value;
@@ -58,10 +61,27 @@ export default function AssignClassTeachers({ classes, teachers }: AssignClassTe
         grade: selectedGrade,
         sections: sectionAssignments,
       });
+
+      setSubmitted(true);
+      setShowForm(false);
+
+  // Optional: hide success message after 3 seconds
+  setTimeout(() => {setSubmitted(false);
+    setShowForm(true);
+  }, 2000);
     }
   };
 
   return (
+
+    <>
+    {submitted && (
+  <div className="  mb-1 p-4 bg-green-100 text-green-700 rounded border border-green-400 w-150 text-center ml-50 mt-[60px]">
+    ✅ Successfully submitted!
+  </div>
+)}
+
+{showForm && (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4">Assign Class Teachers</h1>
 
@@ -83,7 +103,9 @@ export default function AssignClassTeachers({ classes, teachers }: AssignClassTe
         </select>
       </div>
 
-      {/* Select Grade */}
+      
+
+     
       {selectedClassName && (
         <div className="mb-4">
           <label className="block mb-1 font-medium">Select Grade:</label>
@@ -133,5 +155,7 @@ export default function AssignClassTeachers({ classes, teachers }: AssignClassTe
         </div>
       )}
     </div>
+)}
+    </>
   );
 }
