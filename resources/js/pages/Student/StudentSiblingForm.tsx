@@ -4,7 +4,7 @@ import React from 'react';
 interface Sibling {
   sibling_name: string;
   relationship: string;
-  sibling_age: string;
+  sibling_age: number;
   occupation: string;
   contact: string;
 }

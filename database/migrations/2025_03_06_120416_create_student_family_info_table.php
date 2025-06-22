@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('mother_occupation', 100)->nullable();
             $table->decimal('mother_income', 10, 2)->nullable();
             $table->string('mother_working_place', 50)->nullable();
-            $table->string('mother_contact', 20)->unique();
+            $table->string('mother_contact', 20)->unique()->nullable();
             $table->string('mother_email', 50)->nullable()->unique();
             $table->string('mother_whatsapp', 20)->nullable();
 
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('father_occupation', 100)->nullable();
             $table->decimal('father_income', 10, 2)->nullable();
             $table->string('father_working_place', 50)->nullable();
-            $table->string('father_contact', 20)->unique();
+            $table->string('father_contact', 20)->unique()->nullable();
             $table->string('father_email', 50)->nullable()->unique();
             $table->string('father_whatsapp', 20)->nullable();
             $table->timestamps();

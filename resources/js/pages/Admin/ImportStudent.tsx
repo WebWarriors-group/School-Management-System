@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import('./Dashboardoverview') 
 
 interface ImportStudentProps {
     fetchStudents: () => void;
@@ -30,30 +31,32 @@ const ImportStudent = ({ fetchStudents, onClose }: ImportStudentProps) => {
                             const sheet = workbook.Sheets[sheetName];
                             const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-                            const headers = json[0];
-                            if (!Array.isArray(headers)) {
-                                toast.error("❌ The uploaded file does not have a header row.");
-                                setFile(null);
-                                return;
-                            }
+                            // const headers = json[0]?.map(h => String(h).trim().toLowerCase());
 
-                            const requiredColumns = [
-                                'reg_no',
-                                'class_id',
-                                'distance_to_school',
-                                'method_of_coming_to_school',
-                                'receiving_any_grade_5_scholarship',
-                                'receiving_any_samurdhi_aswesuma',
-                                'receiving_any_scholarship'
-                            ];
+                            // if (!Array.isArray(headers)) {
+                            //     toast.error("❌ The uploaded file does not have a header row.");
+                            //     setFile(null);
+                            //     return;
+                            // }
 
-                            const missingColumns = requiredColumns.filter(col => !headers.includes(col));
-                            if (missingColumns.length > 0) {
-                                toast.error(`❌ Missing columns: ${missingColumns.join(', ')}`);
-                                setFile(null);
-                                if (fileInputRef.current) fileInputRef.current.value = "";
-                                return;
-                            }
+                           const requiredColumns = [
+    'reg_no',
+    'class_id',
+    'distance_to_school',
+    'method_of_coming_to_school',
+    'receiving_any_grade_5_scholarship',
+    'receiving_any_samurdhi_aswesuma',
+    'receiving_any_scholarship',
+];
+
+// const missingColumns = requiredColumns.filter(col => !headers.includes(col.toLowerCase()));
+
+                            // if (missingColumns.length > 0) {
+                            //     toast.error(`❌ Missing columns: ${missingColumns.join(', ')}`);
+                            //     setFile(null);
+                            //     if (fileInputRef.current) fileInputRef.current.value = "";
+                            //     return;
+                            // }
 
                             setFile(selectedFile);
                         } catch (error) {
@@ -118,16 +121,25 @@ const ImportStudent = ({ fetchStudents, onClose }: ImportStudentProps) => {
     };
 
     return (
-        <div className="flex justify-left mb-4 space-x-3 pt-4">
+        <div className="flex justify-left  space-x-3 pt-4">
             <input type="file" accept=".xlsx,.xls,.csv" onChange={handleFileChange} ref={fileInputRef} />
 
-            <Button onClick={handleImport} className="bg-green-600 text-white px-4 py-2 ml-2 rounded">
-                Import
-            </Button>
+            <Button
+  onClick={handleImport}
+  disabled={!file}
+  className={`px-4 py-2 ml-2 rounded text-white ${
+    file ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
+  }`}
+>
+  Import
+</Button>
+
 
             <Button onClick={onClose} className="bg-red-700 text-white px-4 py-2 rounded">
                 Cancel
             </Button>
+            {file && <p className="text-sm text-gray-600 ml-2">Selected: {file.name}</p>}
+
         </div>
     );
 };

@@ -8,80 +8,153 @@ interface StudentAdmissionFormProps {
   setShowForm: (val: boolean) => void
 }
 
+interface Sibling {
+  sibling_name: string;
+  relationship: string;
+  sibling_age: number;
+  occupation: string;
+  contact: string;
+}
+
+
 export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFormProps) {
-  const [form, setForm] = useState({
-    reg_no: '',
-    class_id: '',
-    distance_to_school: '',
-    method_of_coming_to_school: '',
-    grade_6_9_asthectic_subjects: '',
-    grade_10_11_basket1_subjects: '',
-    grade_10_11_basket2_subjects: '',
-    grade_10_11_basket3_subjects: '',
-    receiving_any_grade_5_scholarship: false,
-    receiving_any_samurdhi_aswesuma: false,
-    receiving_any_scholarship: false,
-    full_name: '',
-    fullname_with_initial: '',
-    photo: null,
-    birthday: '',
-    ethnicity: '',
-    religion: '',
-    gender: '',
-    birth_certificate_number: '',
-    address: '',
-    nic_number: '',
-    postal_ic_number: '',
-    age: '',
-    special_needs: false,
-    height: '',
-    weight: '',
-    mother_name: '',
-    mother_occupation: '',
-    mother_income: '',
-    mother_working_place: '',
-    mother_contact: '',
-    mother_email: '',
-    mother_whatsapp: '',
-    father_name: '',
-    father_occupation: '',
-    father_income: '',
-    father_working_place: '',
-    father_contact: '',
-    father_email: '',
-    father_whatsapp: '',
-  });
+type StudentFormValues = {
+  reg_no: string;
+  class_id: string;
+  distance_to_school: string;
+  method_of_coming_to_school: string;
+  grade_6_9_asthectic_subjects: string;
+  grade_10_11_basket1_subjects: string;
+  grade_10_11_basket2_subjects: string;
+  grade_10_11_basket3_subjects: string;
+  receiving_any_grade_5_scholarship: boolean;
+  receiving_any_samurdhi_aswesuma: boolean;
+  receiving_any_scholarship: boolean;
+  full_name: string;
+  full_name_with_initial: string;
+  photo: File | null;
+  birthday: string;
+  ethnicity: string;
+  religion: string;
+  gender: string;
+  birth_certificate_number: string;
+  address: string;
+  nic_number: string;
+  postal_ic_number: string;
+  age: string;
+  special_needs: boolean;
+  height: string;
+  weight: string;
+  mother_name: string;
+  mother_occupation: string;
+  mother_income: string;
+  mother_working_place: string;
+  mother_contact: string;
+  mother_email: string;
+  mother_whatsapp: string;
+  father_name: string;
+  father_occupation: string;
+  father_income: string;
+  father_working_place: string;
+  father_contact: string;
+  father_email: string;
+  father_whatsapp: string;
+};
+
+  const initialFormValues: StudentFormValues = {
+  reg_no: '',
+  class_id: '',
+  distance_to_school: '',
+  method_of_coming_to_school: '',
+  grade_6_9_asthectic_subjects: '',
+  grade_10_11_basket1_subjects: '',
+  grade_10_11_basket2_subjects: '',
+  grade_10_11_basket3_subjects: '',
+  receiving_any_grade_5_scholarship: false,
+  receiving_any_samurdhi_aswesuma: false,
+  receiving_any_scholarship: false,
+  full_name: '',
+  full_name_with_initial: '',
+  photo: null,
+  birthday: '',
+  ethnicity: '',
+  religion: '',
+  gender: '',
+  birth_certificate_number: '',
+  address: '',
+  nic_number: '',
+  postal_ic_number: '',
+  age: '',
+  special_needs: false,
+  height: '',
+  weight: '',
+  mother_name: '',
+  mother_occupation: '',
+  mother_income: '',
+  mother_working_place: '',
+  mother_contact: '',
+  mother_email: '',
+  mother_whatsapp: '',
+  father_name: '',
+  father_occupation: '',
+  father_income: '',
+  father_working_place: '',
+  father_contact: '',
+  father_email: '',
+  father_whatsapp: '',
+};
+
+ const [form, setForm] = useState<StudentFormValues>(initialFormValues);
+
+
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5;
+const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+const resetFormState = () => {
+  setForm(initialFormValues);
+  setSiblings([{ sibling_name: '', relationship: '', sibling_age: 0, occupation: '', contact: '' }]);
+
+  setCurrentPage(1);
+};
 
 
-  useEffect(() => {
-    let objectUrl: string | null = null;
-    if (form.photo && typeof form.photo !== "string") {
-      objectUrl = URL.createObjectURL(form.photo);
-    }
-    return () => {
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
+
+useEffect(() => {
+  if (!form.photo || typeof form.photo === "string") return;
+
+  const objectUrl = URL.createObjectURL(form.photo);
+  setPhotoPreview(objectUrl);
+  return () => URL.revokeObjectURL(objectUrl);
+}, [form.photo]);
+
+const [siblings, setSiblings] = React.useState<Sibling[]>([
+  { sibling_name: '', relationship: '', sibling_age: 0, occupation: '', contact: '' }
+]);
+
+
+const handleSiblingChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  index: number
+) => {
+  const { name, value } = e.target;
+  setSiblings((prev) => {
+    const newSiblings = [...prev];
+    newSiblings[index] = {
+      ...newSiblings[index],
+      [name]: name === "sibling_age" ? Number(value) : value,
     };
-  }, [form.photo]);
-  const [siblings, setSiblings] = React.useState([
-    { sibling_name: '', relationship: '', sibling_age: '', occupation: '', contact: '' }
-  ]);
-  const handleSiblingChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    index: number
-  ) => {
-    const { name, value } = e.target;
-    setSiblings((prev) => {
-      const newSiblings = [...prev];
-      newSiblings[index] = { ...newSiblings[index], [name]: value };
-      return newSiblings;
-    });
-  };
+    return newSiblings;
+  });
+};
 
-  const addSibling = () => {
-    setSiblings((prev) => [...prev, { sibling_name: '', relationship: '', sibling_age: '', occupation: '', contact: '' }]);
-  };
+
+const addSibling = () => {
+  setSiblings((prev) => [
+    ...prev,
+    { sibling_name: '', relationship: '', sibling_age: 0, occupation: '', contact: '' }
+  ]);
+};
+
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -141,51 +214,115 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
     }
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  // 🔒 Confirmation dialog before proceeding
-  if (!window.confirm('Are you sure you want to submit this admission form?')) return;
+    if (!window.confirm('Are you sure you want to submit this admission form?')) return;
 
-  try {
-    const response = await fetch(`http://127.0.0.1:8000/api/students`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...form,
-        siblings: siblings,
-      }),
+
+    const payload = new FormData();
+    payload.append('reg_no', form.reg_no);
+    payload.append('class_id', form.class_id);
+    payload.append('distance_to_school', form.distance_to_school);
+    payload.append('method_of_coming_to_school', form.method_of_coming_to_school);
+    payload.append('grade_6_9_asthectic_subjects', form.grade_6_9_asthectic_subjects);
+    payload.append('grade_10_11_basket1_subjects', form.grade_10_11_basket1_subjects);
+    payload.append('grade_10_11_basket2_subjects', form.grade_10_11_basket2_subjects);
+    payload.append('grade_10_11_basket3_subjects', form.grade_10_11_basket3_subjects);
+payload.append('receiving_any_grade_5_scholarship', String(form.receiving_any_grade_5_scholarship ? 1 : 0));
+payload.append('receiving_any_samurdhi_aswesuma', String(form.receiving_any_samurdhi_aswesuma ? 1 : 0));
+payload.append('receiving_any_scholarship', String(form.receiving_any_scholarship ? 1 : 0));
+
+   payload.append('personal[birthday]', form.birthday);
+payload.append('personal[full_name]', form.full_name);
+payload.append('personal[full_name_with_initial]', form.full_name_with_initial);
+
+payload.append('personal[ethnicity]', form.ethnicity);
+
+payload.append('personal[religion]', form.religion);
+
+    payload.append('personal[gender]', form.gender);
+    payload.append('personal[birth_certificate_number]', form.birth_certificate_number);
+    payload.append('personal[address]', form.address);
+    payload.append('personal[nic_number]', form.nic_number);
+    payload.append('personal[postal_ic_number]', form.postal_ic_number);
+    payload.append('personal[age]', form.age);
+    payload.append('personal[special_needs]', String(form.special_needs ? 1 : 0));
+    payload.append('personal[height]', form.height);
+    payload.append('personal[weight]', form.weight);
+    if (form.photo) {
+      payload.append('personal[photo]', form.photo);
+    }
+// Sample: Add these inside your payload setup
+payload.append('family[mother_name]', form.mother_name || '');
+payload.append('family[mother_occupation]', form.mother_occupation || '');
+payload.append('family[mother_income]', form.mother_income || '');
+payload.append('family[mother_working_place]', form.mother_working_place || '');
+payload.append('family[mother_contact]', form.mother_contact || '');
+payload.append('family[mother_email]', form.mother_email || '');
+payload.append('family[mother_whatsapp]', form.mother_whatsapp || '');
+
+payload.append('family[father_name]', form.father_name || '');
+payload.append('family[father_occupation]', form.father_occupation || '');
+payload.append('family[father_income]', form.father_income || '');
+payload.append('family[father_working_place]', form.father_working_place || '');
+payload.append('family[father_contact]', form.father_contact || '');
+payload.append('family[father_email]', form.father_email || '');
+payload.append('family[father_whatsapp]', form.father_whatsapp || '');
+
+
+    siblings.forEach((sibling, index) => {
+      payload.append(`siblings[${index}][sibling_name]`, sibling.sibling_name);
+      payload.append(`siblings[${index}][relationship]`, sibling.relationship);
+payload.append(`siblings[${index}][sibling_age]`, sibling.sibling_age.toString());
+
+
+      payload.append(`siblings[${index}][occupation]`, sibling.occupation);
+      payload.append(`siblings[${index}][contact]`, sibling.contact);
     });
+   if (!form.reg_no || !form.class_id || !form.full_name || !form.birthday) {
+  alert("Please fill in all required fields.");
+  return;
+}
 
+fetch('/api/student', {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+  },
+  body: payload,
+})
+
+  .then(async (response) => {
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Validation or server error:', errorData);
-      alert('Failed to submit admission. Please check the input.');
-      return;
+      console.error('Error:', errorData);
+      alert("Submission failed. Please check the data.");
+    } else {
+      const data = await response.json();
+      console.log('Success:', data);
+      alert("Student admission submitted successfully!");
+      resetFormState(); // optional
+      setShowForm(false); // close the form
     }
+  })
+  .catch((error) => {
+    console.error('Network error:', error);
+    alert("Network error occurred while submitting the form.");
+  });
 
-    const data = await response.json();
-    console.log('Submission success:', data);
-    alert('Student admission submitted successfully!');
-    setShowForm(false);
-  } catch (error) {
-    console.error('Submission error:', error);
-    alert('Something went wrong. Please try again.');
   }
-};
-
-
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg  space-y-1 transition-all duration-300 ease-in-out max-h-[90vh] overflow-y-auto">
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg z-10 relative space-y-1 transition-all duration-300 ease-in-out left-50 top-20 max-w-3xl p-4 mx-auto max-h-[75vh] overflow-y-auto"
+>
 
       <div className="relative mb-6">
 
 
         <button
           type="button"
-          onClick={() => setShowForm(false)}
+          onClick={() => { resetFormState();
+            setShowForm(false)}}
           className="absolute top-0 right-0 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-300 ease-in-out"
         >
           X
@@ -193,17 +330,17 @@ const handleSubmit = async (e: React.FormEvent) => {
         <h2 className="text-3xl font-semibold text-red-700 text-center">Student Admission Form</h2>
       </div>
       {currentPage === 1 && (
-  <StudentAcademicForm form={form} handleChange={handleChange} />
-)}
-{currentPage === 2 && (
-  <StudentFamilyForm form={form} handleChange={handleChange} />
-)}
-{currentPage === 3 && (
-  <StudentPersonalForm form={form} handleChange={handleChange} />
-)}
-{currentPage === 4 && (
-  <StudentSiblingForm siblings={siblings} handleSiblingChange={handleSiblingChange} addSibling={addSibling} />
-)}
+        <StudentAcademicForm form={form} handleChange={handleChange} />
+      )}
+      {currentPage === 2 && (
+        <StudentFamilyForm form={form} handleChange={handleChange} />
+      )}
+      {currentPage === 3 && (
+        <StudentPersonalForm form={form} handleChange={handleChange} />
+      )}
+      {currentPage === 4 && (
+        <StudentSiblingForm siblings={siblings} handleSiblingChange={handleSiblingChange} addSibling={addSibling} />
+      )}
 
 
       {currentPage === 5 && (
@@ -228,7 +365,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
             <p><strong>Full Name:</strong> {form.full_name}</p>
-            <p><strong>Full Name with Initial:</strong> {form.fullname_with_initial}</p>
+            <p><strong>Full Name with Initial:</strong> {form.full_name_with_initial}</p>
             <p><strong>Birthday:</strong> {form.birthday}</p>
             <p><strong>Age:</strong> {form.age}</p>
             <p><strong>Ethnicity:</strong> {form.ethnicity}</p>
@@ -241,16 +378,20 @@ const handleSubmit = async (e: React.FormEvent) => {
             <p><strong>Special Needs:</strong> {form.special_needs ? "Yes" : "No"}</p>
             <p><strong>Height:</strong> {form.height} cm</p>
             <p><strong>Weight:</strong> {form.weight} kg</p>
-            {form.photo && (
-              <div>
-                <strong>Photo:</strong>
-                <img
-                  src={URL.createObjectURL(form.photo)}
-                  alt="Uploaded"
-                  className="mt-1 h-24 w-24 object-cover rounded border"
-                />
-              </div>
-            )}
+           {form.photo && (
+  <div>
+    <strong>Photo:</strong>
+    {typeof form.photo !== "string" && (
+      <img
+        src={URL.createObjectURL(form.photo)}
+        alt="Uploaded"
+        className="mt-1 h-24 w-24 object-cover rounded border"
+      />
+    )}
+  </div>
+)}
+
+
 
 
             <hr className="my-3" />
@@ -276,19 +417,19 @@ const handleSubmit = async (e: React.FormEvent) => {
             <hr className="my-3" />
             <h4 className="font-bold text-lg">Sibiling's Information</h4>
             {siblings.map((s, i) => (
-               <div key={i}>
-            <p><strong>Name:</strong> {s.sibling_name}</p>
-            <p><strong>RelationShip</strong> {s.relationship}</p>
-            <p><strong>Age:</strong> {s.sibling_age}</p>
-            <p><strong>Occupation:</strong> {s.occupation}</p>
-            <p><strong>Contact:</strong> {s.contact}</p>
-            <hr className="my-2" />
-  </div>
-))}
+              <div key={i}>
+                <p><strong>Name:</strong> {s.sibling_name}</p>
+                <p><strong>RelationShip</strong> {s.relationship}</p>
+                <p><strong>Age:</strong> {s.sibling_age}</p>
+                <p><strong>Occupation:</strong> {s.occupation}</p>
+                <p><strong>Contact:</strong> {s.contact}</p>
+                <hr className="my-2" />
+              </div>
+            ))}
           </div>
         </div>
       )}
-      <div className="flex justify-between items-center mt-6 px-4">
+      <div className="flex justify-between items-center mt-6 px-4 gap-4">
         {currentPage > 1 && (
           <button
             type="button"

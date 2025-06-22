@@ -1,9 +1,10 @@
 import React from 'react';
+import { useEffect } from 'react';
 
 interface StudentPersonalFormProps {
   form: {
     full_name: string;
-    fullname_with_initial: string;
+    full_name_with_initial: string;
     birthday: string;
     age: string;
     ethnicity: string;
@@ -21,12 +22,22 @@ interface StudentPersonalFormProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 
+
 // You can define min/max outside the component if static
 const currentYear = new Date().getFullYear();
 const minDate = `${currentYear - 20}-01-01`;
 const maxDate = `${currentYear - 10}-01-01`;
 
 const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleChange }) => {
+  useEffect(() => {
+  if (form.birthday) {
+    const birthDate = new Date(form.birthday);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    // Optionally consider month/day for accuracy
+    form.age = age.toString(); // OR call a setForm function to update
+  }
+}, [form.birthday]);
   return (
     <div>
       <h4 className="text-2xl font-semibold text-yellow-900 mb-4 text-center">
@@ -42,7 +53,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             type="text"
             value={form.full_name}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -50,11 +61,11 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         <div>
           <label className="block text-lg font-medium text-gray-700 mb-2">Full Name with Initial *</label>
           <input
-            name="fullname_with_initial"
+            name="full_name_with_initial"
             type="text"
-            value={form.fullname_with_initial}
+            value={form.full_name_with_initial}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -89,7 +100,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             min={minDate}
             max={maxDate}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -103,7 +114,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             max="21"
             value={form.age}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             readOnly
           />
         </div>
@@ -117,7 +128,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             name="ethnicity"
             value={form.ethnicity}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select</option>
             <option value="Sinhalese">Sinhalese</option>
@@ -133,7 +144,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             name="religion"
             value={form.religion}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select</option>
             <option value="Buddhism">Buddhism</option>
@@ -153,7 +164,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             name="gender"
             value={form.gender}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select</option>
             <option value="Male">Male</option>
@@ -183,7 +194,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             type="text"
             value={form.birth_certificate_number}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -194,7 +205,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             type="text"
             value={form.nic_number}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
@@ -208,7 +219,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             type="text"
             value={form.postal_ic_number}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -218,7 +229,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             name="address"
             value={form.address}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={4}
           />
         </div>
@@ -234,7 +245,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             min="0"
             value={form.height}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -246,7 +257,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
             min="0"
             value={form.weight}
             onChange={handleChange}
-            className="w-full border-2 border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border-2 border-gray-300 hover:border-blue-400 transition duration-300  rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>

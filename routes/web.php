@@ -9,8 +9,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassController;
-use App\Http\Controllers\TeacherRequestController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TeacherRequestController;
+
 
 Route::get('/', function () {
     return Inertia::render('homepage');
@@ -88,3 +89,8 @@ Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
+Route::get('/students/all', function () {
+    return Inertia::render('Student/ViewAllStudents', [
+        // You can pass props here
+    ]);
+})->name('students.all');

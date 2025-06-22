@@ -16,6 +16,7 @@ use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\StudyMaterialController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
+use App\Http\Controllers\ReportController;
 
 
 use Illuminate\Support\Facades\Route;
