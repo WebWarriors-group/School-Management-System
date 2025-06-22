@@ -52,7 +52,7 @@ class StudentAcademic extends Model
     {
         return $this->hasMany(StudentSibling::class, 'reg_no', 'reg_no');
     }
-    public function class()
+    public function academicClass()
     {
         return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
     }
