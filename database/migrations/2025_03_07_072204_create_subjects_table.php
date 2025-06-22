@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->integer('subject_id')->primary();
             $table->string('subject_name');
+            
             $table->timestamps();
         });
     }
