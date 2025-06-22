@@ -14,15 +14,16 @@ return new class extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->integer('class_id')->primary();
              $table->softDeletes();
-            $table->string('teacher_NIC',20); // Define the column first
+            $table->string('teacher_NIC',20)->nullable(); // Define the column first
             $table->foreign('teacher_NIC')
                 ->references('teacher_NIC')
                 ->on('teacher_work_infos')
                 ->onDelete('cascade')->nullable();
             $table->string('class_name', 10)->nullable();
             $table->smallInteger('grade');
-            $table->integer('number_of_students');
+            $table->integer('number_of_students')->nullable();
             $table->char('section');
+          
            
             $table->timestamps();
         });

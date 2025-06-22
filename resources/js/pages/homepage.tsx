@@ -1,160 +1,212 @@
 import { Head, Link } from '@inertiajs/react';
 import { Facebook, Mail, MapPin, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
-import { useEffect, useRef } from "react";
-
-
+import { usePage } from '@inertiajs/react';
 
 export default function Navbar() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const {
+    img
+  } = usePage<{
+    img: {
+      data: {
+        title: string,
+        path: string,
+        id: number
+      }[]
+    }
+  }>().props;
 
   interface ModalProps {
-  image: { src: string; alt: string };
-  onClose: () => void;
-}
+    image: { src: string; alt: string };
+    onClose: () => void;
+  }
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const Modal = ({ image, onClose }: ModalProps) => {
-  const modalRef = useRef<HTMLDivElement>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
-  }, [onClose]);
-}
+    useEffect(() => {
+      const handleKeydown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeydown);
+      return () => window.removeEventListener("keydown", handleKeydown);
+    }, [onClose]);
+  };
 
   return (
     <>
+      
+
+  
+    
       <Head title="Mahadivulwewa National School" />
-      <div className="relative w-full min-h-screen overflow-hidden bg-white">
-     
-        <div className="bg-yellow-500 text-brown-900 text-md py-4 px-6 flex justify-between items-center ">
-          <div>Welcome to Mahadivulwewa National School</div>
-          <div className="space-x-4 hidden md:flex">
-            <a href="https://www.facebook.com/ttnmmv"><Facebook size={18} /></a>
-            <a href="mailto:ttnmahadivulwewamv@gmail.com"><Mail size={18} /></a>
-            <a href="https://maps.google.com?q=Mahadivulwewa School"><MapPin size={18} /></a>
+
+      <div className="min-h-screen bg-white text-gray-900">
+
+        {/* Top Bar */}
+        <div className=" sticky top-0 left-0 bg-yellow-500 text-brown-900 py-4 px-4 text-[16px] flex justify-between items-center shadow z-50 ">
+          <span>Welcome to Mahadivulwewa National School</span>
+          <div className="space-x-3 hidden md:flex">
+            <a href="https://www.facebook.com/ttnmmv" className="hover:text-blue-800"><Facebook size={18} /></a>
+            <a href="mailto:ttnmahadivulwewamv@gmail.com" className="hover:text-blue-800"><Mail size={18} /></a>
+            <a href="https://maps.google.com?q=Mahadivulwewa School" className="hover:text-blue-800"><MapPin size={18} /></a>
           </div>
         </div>
 
-        
-        <nav className="bg-[#783204] text-white py-3 px-6 shadow-md relative z-10" >
+        {/* Navbar */}
+        <nav className=" sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50">
           <div className="flex justify-between items-center">
-            
-            <div className="flex items-center">
+            <div className="flex items-center space-x-3">
               <img src="/images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
-              <span className="ml-3 font-orbitron text-xl font-bold">
-                T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)
-              </span>
+              <h1 className="font-orbitron text-lg md:text-xl font-bold leading-tight">
+                T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)<br className="hidden md:block" />
+                
+              </h1>
             </div>
 
-           
-            <div className="flex items-center space-x-4">
-              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Login</Link>
-              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Forms</Link>
-              <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
+            <div className="flex items-center gap-4">
+              <Link href={route('login')} className="hidden md:inline-block bg-white text-[#650000] px-4 py-2 rounded-full font-semibold hover:bg-yellow-400 transition-all">Login</Link>
+              <Link href={route('login')} className="hidden md:inline-block bg-white text-[#650000] px-4 py-2 rounded-full font-semibold hover:bg-yellow-400 transition-all">Forms</Link>
+              <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
 
-          
           {menuOpen && (
             <div className="bg-white text-black px-4 py-3 md:hidden">
-              <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-2 py-1 hover:text-blue-600">
-                <Facebook size={20} /> <span>Facebook</span>
-              </a>
-              <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center space-x-2 py-1 hover:text-blue-600">
-                <Mail size={20} /> <span>Email</span>
-              </a>
-              <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center space-x-2 py-1 hover:text-blue-600">
-                <MapPin size={20} /> <span>Location</span>
-              </a>
-              <Link href={route('login')} className="block mt-3 rounded bg-brown-800 text-white px-4 py-2 text-center">
-                Login
-              </Link>
+              <a href="https://www.facebook.com/ttnmmv" className="flex items-center gap-2 py-2 hover:text-blue-600"><Facebook size={20} /> Facebook</a>
+              <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center gap-2 py-2 hover:text-blue-600"><Mail size={20} /> Email</a>
+              <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center gap-2 py-2 hover:text-blue-600"><MapPin size={20} /> Location</a>
+              <Link href={route('login')} className="block mt-3 bg-[#650000] text-white rounded px-4 py-2 text-center">Login</Link>
             </div>
           )}
         </nav>
 
-       
-        <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20  h-148 bg-yellow-100" >
-          <div
-  className="absolute bottom-4 right-0 w-[800px] h-[430px] bg-no-repeat bg-cover "
-  style={{
-    backgroundImage: `url('/images/texure.jpg')`, // <-- Replace with your actual image path
-    clipPath: 'polygon(100% 0, 100% 100%, 0% 100%)'
-  }}
-></div>
+      
+        <section 
+  className="relative bg-cover bg-center bg-no-repeat py-45 px-6 md:px-20"
+ style={{ backgroundImage: 'url(images/tag1.jpg)' }}
 
-          <div className="md:w-155 text-center md:text-left space-y-5 mt-[-118px] 
-">
-          <img src="images/book4.png" className="ml-20 w-90 h-60 mt-30"></img>
-            <h1 className="text-4xl md:text-5xl font-bold text- py-10 w-200 mt-[-60px] text-[#783204]">
-              Let us develop wisdom and good qualities.<span className="text-brown-700 ml-10 text-[30px]"><sub>(motto)</sub></span>
-            </h1>
 
-            <p className="text-xl text-yellow-700 mt-[-20px]  ">
-             To develop a confident and capable generation of students who can sucessfully overcome all challanges.
-             <span className="text-yellow-700 ml-15 text-[25px]"><sub>(vision)</sub></span>
-            </p>
-            <div className="mt-8 ">
-              <Link
-                href={route('login')}
-                className="bg-yellow-500 text-[black] px-6 py-2 rounded-full font-medium hover:bg-yellow-500"
-              >
-                About Us
-              </Link>
 
-              <Link
-                href={route('login')}
-                className="bg-yellow-500 text-[black] px-6 py-2 rounded-full font-medium hover:bg-yellow-500 ml-5"
-              >
-                Join Us
-              </Link>
-            </div>
-          </div>
+>
+  {/* Optional overlay */}
+  <div className="absolute inset-0 bg-black/40 z-0"></div>
 
-        
-            <div className="w-600  md:mt-0 relative mt-[-30px]  h-100 ml-20 rounded-full">
-             <img
-              src="/images/back4.png"
-              alt="School"
-              className="w-[980px] h-[450px] absolute  ml-23 mt-10 "
-            />
-            
-          
-          </div> 
-        </section>
-      </div>
-      <div>
-  <section className="grid grid-cols-1 md:grid-cols-1 gap-10 px-4 md:px-20  h-148 items-center justify-center mt-[-50px]">
-  
+  <div className="relative z-10 max-w-5xl mx-auto text-center text-white space-y-8">
+    <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
+      අපි <span className="text-yellow-400">දක්ෂතා</span> සහ යහපත් <span className="text-yellow-400">ගුණාංග</span> වර්ධනය කරමු.
+    </h1>
 
-  
-  <div className="text-center md:mt-0  h-80 p-4 bg-sky-700 shadow-md">
-    <h2 className="font-bold text-xl w-100 justify-center item-center bg-yellow-500 py-1 ml-120">Mission /භාරකාරකම </h2>
-    <p className="text-lg py-6 text-[white]">
-      "Our mission is to contribute to the nation a wise, virtuous,and courages generation of students by building a noble life philosophy
-       drawn from all religious perspectives,fostering unity among all ethnic groups,and promoting mental and educational development" <br /><br/>
-      "අපගේ මෙහෙවර වනුයේ සියලු ආගමික දර්ශන වලින් ලබා ගත් උතුම් ජීවන දර්ශනයකින්, සියලු ජාතික කණ්ඩායම් අතර එකතාවය ප්‍රවර්ධනය කරමින්, මනෝබල සහ අධ්‍යාපනික සංවර්ධනය උස්සමින්, ශ්‍රී ලංකාවට බුද්ධිමත්, සුගතික සහ සාරධර්මී ශිෂ්‍ය පරපුරක් පිහිටුවීමයි."
+    <p className="text-xl">
+      සියලු අභියෝග ජයගෙන යා හැකි විශ්වාස සහ කුසලතා පිරුණු ශිෂ්‍ය පරපුරක් ගොඩනඟා ගැනීම.
     </p>
- <h2 className="text-yellow-500 text-lg">----Mahadivulwewa Maha Vidyalaya-----</h2>
- <h2 className="text-[white]">****************************************</h2>
+
+    <div className="flex justify-center gap-4 flex-wrap">
+      <Link
+        href={route('login')}
+        className="bg-yellow-500 text-black px-6 py-3 rounded-full hover:bg-purple-700 transition"
+      >
+        Get Started
+      </Link>
+      <Link
+        href={route('login')}
+        className="text-yellow-400 font-semibold hover:underline flex items-center gap-2"
+      >
+        ▶ Watch Video
+      </Link>
+    </div>
   </div>
 </section>
 
 
-  
-   
-   
-</div>
+
+       
+        <section className="py-16 px-6 md:px-20 bg-gray-200">
+          <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 mt-15">Mission</h2>
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="w-full md:w-1/2 flex justify-center bg-gray-200 ">
+              <img src="/images/tag4" alt="Mission" className="bg-gray-200  w-[460px] h-[350px] object-cover" />
+            </div>
+            <div className="w-full md:w-250 bg-white p-10 shadow-md ml-[-84px] ">
+              <h3 className="text-2xl font-semibold text-red-800 mb-4">Mission / භාරකාරකම</h3>
+              <p className="text-gray-800 mb-4">
+                "Our mission is to contribute to the nation a wise, virtuous, and courageous generation of students by building a noble life philosophy drawn from all religious perspectives, fostering unity among all ethnic groups, and promoting mental and educational development."
+              </p>
+              <p className="text-yellow-800 mb-4">
+                "අපගේ මෙහෙවර වනුයේ සියලු ආගමික දර්ශන වලින් ලබා ගත් උතුම් ජීවන දර්ශනයකින්, සියලු ජාතික කණ්ඩායම් අතර එකතාවය ප්‍රවර්ධනය කරමින්, මනෝබල සහ අධ්‍යාපනික සංවර්ධනය උස්සමින්, ශ්‍රී ලංකාවට බුද්ධිමත්, සුගතික සහ සාරධර්මී ශිෂ්‍ය පරපුරක් පිහිටුවීමයි."
+              </p>
+              <p className="text-sky-800">---- Mahadivulwewa Maha Vidyalaya -----</p>
+              <p className="text-sky-900">******************************************************</p>
+            </div>
+          </div>
+        </section>
 
 
 
+       
+        <section className="py-16 px-6 md:px-20 bg-gray-200 ">
+           <h2 className="text-4xl font-bold text-black text-center mb-10">Gallery</h2>
+          <div className="flex overflow-x-auto space-x-4 px-20 py-6 mt-10 bg-gray-800">
+            {img.data.map((image) => (
+              <div
+                key={image.id}
+                className="relative flex-shrink-0 w-[250px] group cursor-pointer overflow-hidden  shadow-md"
+                onClick={() => setSelectedImage(`/images/${image.path}`)}
+              >
+                <img
+                  src={`/images/${image.path}`}
+                  alt={image.title || 'Gallery image'}
+                  className="w-full h-[260px] object-cover transform transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {image.title}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+       
+        {selectedImage && (
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center" onClick={() => setSelectedImage(null)}>
+            <div className="relative max-w-5xl w-full p-4">
+              <img src={selectedImage} alt="Full View" className="w-full max-h-[80vh] object-contain rounded-lg hover:cursor-pointer" />
+              <button
+                onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
+                className="absolute top-2 right-2 bg-black/60 text-white px-3 py-1 rounded hover:bg-black cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+
+       
+        <footer className="bg-[#650000] text-white py-7 ">
+          <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0 text-center md:text-left">
+              <h2 className="text-lg font-semibold">Mahadivulwewa National School</h2>
+              <p className="text-sm text-gray-300">© 2025 All rights reserved.</p>
+            </div>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-300 hover:text-white">Home</a>
+              <a href="#" className="text-gray-300 hover:text-white">About</a>
+              <a href="#" className="text-gray-300 hover:text-white">Contact</a>
+              <a href="#" className="text-gray-300 hover:text-white">Privacy</a>
+            </div>
+          </div>
+        </footer>
+      </div>
     </>
   );
 }
+
+   
+
