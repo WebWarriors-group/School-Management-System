@@ -42,8 +42,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             <Head title="Login" />
 
             <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6 text-[#800000]">
-                    <div className="grid gap-2 text-[20px]">
+                <div className="grid gap-6 text-[#5D4037]">
+                    <div className="grid gap-2 text-[20px] text-[#5D4037]">
                         <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
@@ -63,7 +63,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
                             {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm text-[blue]" tabIndex={5}>
+                                <TextLink href={route('password.request')} className="ml-auto text-[17px] text-yellow-700" tabIndex={5}>
                                     Forgot password?
                                 </TextLink>
                             )}
@@ -94,7 +94,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                     <Button
                         type="submit"
-                        className="text-maroon relative mt-4 w-full bg-red-100 transition-transform duration-300 hover:z-50 hover:scale-105 hover:bg-red-100"
+                        className="text-[black] relative mt-4 w-full bg-yellow-600 transition-transform duration-300 hover: cursor-[pointer] z-50 hover:scale-105 hover:bg-yellow-900"
                         tabIndex={4}
                         disabled={processing}
                     >

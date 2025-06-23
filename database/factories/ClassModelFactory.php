@@ -12,18 +12,33 @@ class ClassModelFactory extends Factory
 
     public function definition(): array
     {
+        static $usedGradeSections = [];
 
-        
-            // Define your predefined teacher NIC values
-           
-        return [
-            'class_id' => $this->faker->unique()->numberBetween(1, 100), // Generates C001, C002, etc.
-            'teacher_NIC' =>  Teacher::all()->random()->teacher_NIC,  // Example: 123456789V
-            'class_name' => $this->faker->randomElement(['Math', 'Science', 'English', 'History']),
-            'grade' => $this->faker->numberBetween(1, 12),
-            'section' => $this->faker->randomElement(['A', 'B', 'C', 'D']),
-            'number_of_students' => $this->faker->numberBetween(10, 50),
-        ];
-    }
+do {
+    $grade = $this->faker->numberBetween(6, 13);
+    $section = $this->faker->randomElement(['A', 'B']);
+    $key = "$grade-$section";
+} while (in_array($key, $usedGradeSections));
+
+$usedGradeSections[] = $key;
+
+// Determine class_name based on grade
+if ($grade >= 6 && $grade <= 9) {
+    $className = 'junior';
+} elseif ($grade >= 10 && $grade <= 11) {
+    $className = 'O/L';
+} else {
+    $className = 'A/L';
 }
 
+return [
+    'class_id' => $this->faker->unique()->numberBetween(1, 100),
+    'teacher_NIC' => Teacher::all()->random()->teacher_NIC,
+    'class_name' => $className,
+    'grade' => $grade,
+    'section' => $section,
+    'number_of_students' => $this->faker->numberBetween(10, 50),
+];
+
+    }
+}

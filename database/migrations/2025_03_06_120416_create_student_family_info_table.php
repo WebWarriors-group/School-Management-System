@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student_family_info', function (Blueprint $table) {
             $table->id();// Primary Key
-            $table->string('reg_no',50);
+            $table->integer('reg_no');
            $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
             // Mother's Details
             $table->string('mother_name', 50);

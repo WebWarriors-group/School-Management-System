@@ -15,10 +15,11 @@ class StudentAcademicFactory extends Factory
     public function definition(): array
     {
         return [
-            'reg_no' => $this->faker->unique()->numerify('REG-#####'),
-            'class_id' => ClassModel::inRandomOrder()->first()->class_id,   // Replace with your actual class IDs
-            'distance_to_school' => $this->faker->randomFloat(2, 0, 20),  // Random float between 0 and 20
-            'method_of_coming_to_school' => $this->faker->randomElement(['Walking', 'Bus', 'Bicycle', 'Car']),  // Example modes of transport
+            'reg_no' => $this->faker->unique()->numberBetween(1000, 9999),
+
+            'class_id' => ClassModel::inRandomOrder()->first()->class_id, 
+            'distance_to_school' => $this->faker->randomFloat(2, 0, 20),  
+            'method_of_coming_to_school' => $this->faker->randomElement(['Walking', 'Bus', 'Bicycle', 'Car']),  
             'grade_6_9_asthectic_subjects' => $this->faker->randomElement(['Art', 'Dance', 'Music', 'Drama & Theatre']),
             'grade_10_11_basket1_subjects' => $this->faker->randomElement(['Commerce', 'Civics', 'Geography', 'Home Science']),
             'grade_10_11_basket2_subjects' => $this->faker->randomElement(['Design & Technology', 'Tamil Literature', 'English Literature', 'Sinhala Literature', 'Art', 'Dance', 'Music', 'Drama & Theatre']),

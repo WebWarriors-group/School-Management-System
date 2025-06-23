@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Inertia\Inertia;
 use App\Models\Marks;
 use Illuminate\Http\Request;
@@ -15,13 +16,25 @@ class MarkController extends Controller
 {
     $query = Marks::query();
 
-    if ($request->filled('reg_no')) {
-        $query->where('reg_no', 'LIKE', '%' . $request->reg_no . '%');
+    if ($request->has('reg_no')) {
+        $query->where('reg_no', 'LIKE', '%' . $request->input('reg_no') . '%');
     }
 
-    if ($request->filled('subject_id')) {
-        $query->where('subject_id', $request->subject_id);
+
+    if ($request->has('subject_id')) {
+        $query->where('subject_id', 'like', '%' . $request->input('subject_id') . '%');
     }
+
+    if ($request->has('marks_obtained')) {
+        $query->where('marks_obtained', $request->input('marks_obtained'));
+    }
+
+    if ($request->has('grade')) {
+        $query->where('grade', strtoupper($request->input('grade')));
+    }
+
+    $marks = $query->get();
+
 
     $marks = $query->paginate($request->get('limit', 10)); // You can customize the limit default (10)
 
@@ -36,21 +49,7 @@ class MarkController extends Controller
     // Store a new mark
     public function store(Request $request)
 {
-    // Validate incoming request
-    /*$validated = $request->validate([
-        'reg_no' => 'required|exists:student_academics_infos,reg_no',  // Ensure 'reg_no' exists in the 'student_academics_infos' table
-        'subject_id' => 'required|exists:subjects,subject_id', // Ensure 'subject_id' exists in the 'subjects' table
-        'marks_obtained' => 'required|integer',
-        'grade' => 'required|string|max:2',
-    ]);
-
-    // Create a new mark
-    $mark = Marks::create([
-        'reg_no' => $validated['reg_no'],
-        'subject_id' => $validated['subject_id'],
-        'marks_obtained' => $validated['marks_obtained'],
-        'grade' => $validated['grade'],
-    ]);*/
+    
     $mark = Marks::create([
         'reg_no' => $request->reg_no,
         'subject_id' => $request->subject_id,
@@ -89,7 +88,7 @@ class MarkController extends Controller
 
         // Validate incoming request
         $validated = $request->validate([
-            'reg_no' => 'required|string|max:20',
+            'reg_no' => 'required|integer',
             'subject_id' => 'required|integer',
             'marks_obtained' => 'required|integer',
             'grade' => 'required|string|max:1|in:A,B,C,D,E,F'

@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->unsignedBigInteger('last_activity')->change();
+        Schema::create('events', function (Blueprint $table) {
+            $table->id();
+            
+    $table->string('title');
+    $table->datetime('start');
+    $table->datetime('end')->nullable();
+    
+            $table->timestamps();
         });
     }
 
@@ -21,8 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->timestamp('last_activity')->nullable()->change();
-        });
+        Schema::dropIfExists('events');
     }
 };

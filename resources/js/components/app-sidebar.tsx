@@ -45,7 +45,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
     ];
 
     const roleBackgrounds: Record<string, string> = {
-        admin: '#550000', // maroon gradient
+        admin: '#152238', // maroon gradient
         teacher: '#51087E', // green gradient
         student: 'green', // b#80008lue gradient
     };
@@ -53,6 +53,8 @@ export function AppSidebar({ role }: AppSidebarProps) {
     const sidebarBackground = roleBackgrounds[role] || '#800000';
 
     return (
+        <>
+         {(role !== 'student' && role !== 'teacher') && (
         <Sidebar collapsible="icon" variant="inset" className="text-white" style={{ background: sidebarBackground }}>
             <SidebarHeader>
                 <SidebarMenu>
@@ -76,13 +78,17 @@ export function AppSidebar({ role }: AppSidebarProps) {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent className="text-[white]" style={{ background: sidebarBackground }}>
-                <NavMain items={mainNavItems} />
-            </SidebarContent>
-
+           
+                <SidebarContent className="text-[white]" style={{ background: sidebarBackground }}>
+                    <NavMain items={mainNavItems} />
+                </SidebarContent>
+          
             <SidebarFooter className="bg-[white] text-white">
                 <NavFooter items={footerNavItems} className="mt-auto" />
             </SidebarFooter>
         </Sidebar>
+          )}
+        </>
     );
+
 }

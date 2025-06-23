@@ -23,7 +23,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Posts() {
+interface props{
+
+    userfooter:string,
+    teacherfooter:string,
+studentActivity:string,
+}
+
+export default function Posts({userfooter,teacherfooter,studentActivity}:props) {
     const { users, activeSessions, roleCounts, totalUserCount, teacherCount, studentCount } = usePage<{
         users: {
             data: { id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string }[];
@@ -80,16 +87,16 @@ export default function Posts() {
             icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
             title: 'Registered Users',
             value: totalUserCount,
-            footer: 'Get More Space...',
-            footerColor: 'text-red-500',
+            footer: userfooter,
+            footerColor: 'text-blue-500',
         },
         {
             color: 'bg-green-500',
             icon: <FontAwesomeIcon icon={faPeopleArrows} className="text-4xl text-white" />,
             title: 'Total Members',
             value: teacherCount + studentCount,
-            footer: 'Last 24 Hours',
-            footerColor: 'text-gray-400',
+            footer: studentActivity||teacherfooter,
+            footerColor: 'text-blue-500',
         },
         {
             color: 'bg-green-700',
@@ -97,7 +104,7 @@ export default function Posts() {
             title: 'Active Sessions',
             value: activeSessions?.length || 0,
             footer: 'Tracked from Github',
-            footerColor: 'text-gray-400',
+            footerColor: 'text-blue-500',
         },
         {
             color: 'bg-sky-500',
@@ -105,15 +112,15 @@ export default function Posts() {
             title: 'Dissable Accounts',
             value: activeSessions?.length || 0,
             footer: 'Just Updated',
-            footerColor: 'text-gray-400',
+            footerColor: 'text-blue-500',
         },
         {
             color: 'bg-purple-500',
             icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
             title: 'Unregistered Users',
-            value: activeSessions?.length || 0,
-            footer: 'Just Updated',
-            footerColor: 'text-gray-400',
+            value: teacherCount + studentCount-totalUserCount,
+            footer: userfooter||studentActivity||teacherfooter,
+            footerColor: 'text-blue-500',
         },
         {
             color: 'bg-red-700',
@@ -121,7 +128,7 @@ export default function Posts() {
             title: 'Dissable Accounts',
             value: activeSessions?.length || 0,
             footer: 'Just Updated',
-            footerColor: 'text-gray-400',
+            footerColor: 'text-blue-500',
         },
         {
             color: 'bg-sky-500',
@@ -129,7 +136,7 @@ export default function Posts() {
             title: ' Today Login Users',
             value: activeSessions?.length || 0,
             footer: 'Just Updated',
-            footerColor: 'text-gray-400',
+            footerColor: 'text-blue-500',
         },
     ];
 
@@ -149,10 +156,10 @@ export default function Posts() {
             </header>
             {!isVisible ? (
                 <>
-                    <main className="flex h-full flex-1 flex-col gap-6 p-6">
+                    <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-100">
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
                             {cards.map((card, index) => (
-                                <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-sm transition hover:shadow-md">
+                                <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-lg transition hover:shadow-md">
                                     {/* Colored square icon */}
                                     <div
                                         className={`absolute z-0 -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}
