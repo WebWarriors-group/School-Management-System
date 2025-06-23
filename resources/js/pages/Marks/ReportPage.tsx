@@ -4,19 +4,24 @@ import React from 'react';
 import { User, BookOpen, GraduationCap, MapPin, School, Ruler, Scale, HeartHandshake, Award, Building, Info, CircleAlert, Hash, PersonStanding, Cake, IdCard, Home, LocateFixed } from 'lucide-react';
 
 // Define the Mark interface
+interface Subject {
+  subject_id: number;
+  subject_name: string;
+}
+
 interface Mark {
   id: number;
   subject_id: number;
   marks_obtained: number;
   grade: string;
+  subject: Subject;
 }
 
-// Define the StudentPersonal interface based on your model's fillable fields
 interface StudentPersonal {
   reg_no: string;
   full_name: string;
   full_name_with_initial: string;
-  photo?: string; // Optional, as it might be a path or nullable
+  photo?: string;
   birthday: string;
   gender: string;
   ethnicity: string;
@@ -26,12 +31,11 @@ interface StudentPersonal {
   nic_number: string;
   postal_ic_number: string;
   age: number;
-  special_needs?: string; // Optional, as it might be nullable
-  height?: number; // Optional, as it might be nullable
-  weight?: number; // Optional, as it might be nullable
+  special_needs?: string;
+  height?: number;
+  weight?: number;
 }
 
-// Define the StudentAcademic interface, now including studentPersonal
 interface StudentAcademic {
   reg_no: string;
   class_id: number;
@@ -45,9 +49,9 @@ interface StudentAcademic {
   receiving_any_samurdhi_aswesuma: boolean;
   receiving_any_scholarship: boolean;
   marks: Mark[];
-  student_personal?: StudentPersonal; // Optional, as it might not always exist or be loaded
-  name?: string; // Example: assuming a 'name' field might exist
-  email?: string; // Example: assuming an 'email' field might exist
+  student_personal?: StudentPersonal;
+  name?: string;
+  email?: string;
 }
 
 // ReportPage component receives 'student' data as a prop directly from Laravel.
@@ -164,11 +168,7 @@ export default function ReportPage({ student }: { student: StudentAcademic | nul
                 <span className="font-semibold min-w-[120px] flex items-center text-gray-600"><Hash size={18} className="mr-2 text-gray-500"/> NIC Number:</span>
                 <span className="flex-1 ml-2 text-gray-900 font-medium">{student.student_personal.nic_number || 'N/A'}</span>
               </div>
-              <div className="flex items-start">
-                <span className="font-semibold min-w-[120px] flex items-center text-gray-600"><LocateFixed size={18} className="mr-2 text-gray-500"/> Postal IC No:</span>
-                <span className="flex-1 ml-2 text-gray-900 font-medium">{student.student_personal.postal_ic_number || 'N/A'}</span>
-              </div>
-
+              
               {/* Contact & Physical */}
               <div className="col-span-full pb-2 mb-2 border-b border-blue-200 flex items-center mt-4">
                 <Home className="mr-2 text-blue-500" size={20} /> <span className="font-bold text-blue-700">Contact & Physical</span>
@@ -213,38 +213,10 @@ export default function ReportPage({ student }: { student: StudentAcademic | nul
               <span className="font-semibold w-44 min-w-[120px] flex items-center"><Building size={18} className="mr-2 text-gray-500"/> Class ID:</span>
               <span className="flex-1 ml-2 text-gray-900 font-medium">{student.class_id}</span>
             </div>
-            <div className="flex items-center">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><MapPin size={18} className="mr-2 text-gray-500"/> Distance to School:</span>
-              <span className="flex-1 ml-2 text-gray-900 font-medium">{student.distance_to_school} km</span>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><School size={18} className="mr-2 text-gray-500"/> Travel Method:</span>
-              <span className="flex-1 ml-2 text-gray-900 font-medium">{student.method_of_coming_to_school}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><BookOpen size={18} className="mr-2 text-gray-500"/> Aesthetic (G6-9):</span>
-              <span className="flex-1 ml-2 text-gray-900 font-medium">{student.grade_6_9_asthectic_subjects || 'N/A'}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><BookOpen size={18} className="mr-2 text-gray-500"/> Basket 1 (G10-11):</span>
-              <span className="flex-1 ml-2 text-gray-900 font-medium">{student.grade_10_11_basket1_subjects || 'N/A'}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><BookOpen size={18} className="mr-2 text-gray-500"/> Basket 2 (G10-11):</span>
-              <span className="flex-1 ml-2 text-gray-900 font-medium">{student.grade_10_11_basket2_subjects || 'N/A'}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><BookOpen size={18} className="mr-2 text-gray-500"/> Basket 3 (G10-11):</span>
-              <span className="flex-1 ml-2 text-gray-900 font-medium">{student.grade_10_11_basket3_subjects || 'N/A'}</span>
-            </div>
-            <div className="flex items-center col-span-full sm:col-span-1 lg:col-span-1">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><Award size={18} className="mr-2 text-gray-500"/> G5 Scholarship:</span>
-              {renderBooleanStatus(student.receiving_any_grade_5_scholarship)}
-            </div>
-            <div className="flex items-center col-span-full sm:col-span-1 lg:col-span-1">
-              <span className="font-semibold w-44 min-w-[120px] flex items-center"><HeartHandshake size={18} className="mr-2 text-gray-500"/> Samurdhi/Aswesuma:</span>
-              {renderBooleanStatus(student.receiving_any_samurdhi_aswesuma)}
-            </div>
+            
+            
+           
+           
             <div className="flex items-center col-span-full sm:col-span-1 lg:col-span-1">
               <span className="font-semibold w-44 min-w-[120px] flex items-center"><Award size={18} className="mr-2 text-gray-500"/> Other Scholarship:</span>
               {renderBooleanStatus(student.receiving_any_scholarship)}
@@ -276,7 +248,8 @@ export default function ReportPage({ student }: { student: StudentAcademic | nul
                 <tbody className="bg-white divide-y divide-gray-100">
                   {student.marks.map((mark, index) => (
                     <tr key={mark.id || index} className="hover:bg-blue-50 transition-colors duration-150 ease-in-out">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{mark.subject_id}</td>
+                     
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mark.subject.subject_name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mark.marks_obtained}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mark.grade}</td>
                     </tr>
