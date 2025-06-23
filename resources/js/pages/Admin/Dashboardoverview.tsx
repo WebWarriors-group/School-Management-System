@@ -2,13 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { usePage } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 import AddTeacherForm from '@/pages/Teacher/teacherForm';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
 import AssignTeachersPage from '@/pages/Admin/teacher_sub';
 import ClassIndex from '@/pages/Admin/ClassCrud';
 import { Button } from '@headlessui/react';
+import SubjectIndex from '@/pages/Admin/SubjectIndex';
 import Gallery from '@/pages/Admin/imagegallery';
 import CalendarPage from '@/pages/Admin/CalendarPage';
 
@@ -135,6 +136,9 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
   const [addteacher, setteacher] = useState(false);
    const [showCalendar, setshowCalendar] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [showSubjects, setShowSubjects] = useState(false);
+ // const backSubjects = () => setShowSubjects(false);
+
 
   
   const [filters, setFilters] = useState<{ grade?: string; section?: string; class_name?: string }>(initialFilters || {});
@@ -202,6 +206,13 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
       filtered = filtered.filter(c => c.section === filters.section);
     }
 
+const handleCardClick = (card:Card) => {
+ if (card.id === 1) {
+    setShowSubjects(true); // instead of router.visit
+  } else {
+    setSelectedCard(card);
+  }
+};
     if (filters.class_name && filters.class_name !== '') {
       filtered = filtered.filter(c => c.class_name === filters.class_name);
     }
@@ -243,7 +254,67 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
 
   const back1 = () => {
     setteacher(false);
+  }
+  const back3=()=>{
+    setSelectedCard(null);
+  }
+
+   const back4=()=>{
+    setShowSubjects(false);
+  }
+
+
+   const {
+  teachers,
+  students,
+  class1,
+  classfooter,
+  teacherfooter,
+  studentfooter,
+  subjects ,
+  classData,
+  teacher12,
+  classes,
+  subject,
+  classstudent
+  
+} = usePage<{
+  teachers: number;
+  students: number;
+  class1: number;
+  classfooter: string;
+  teacherfooter: string;
+  studentfooter: string;
+  subject: number;
+  classData: {
+    data: {
+      class_id: number;
+      class_name: string;
+      grade: number;
+      section: string;
+      studentacademics_count:number;
+      teacher_NIC: string;
+      studentacademics?: Student[];
+    }[];
   };
+  
+  teacher12: {
+    teacher_NIC: string;
+    
+  }[];
+  classes: {
+      [class_name: string]: {
+    [grade: number]: ClassItem[]; // sections only
+  }
+    };
+
+    subjects: {
+    id: number;
+    name: string;
+    code: string;
+    // include any other fields your SubjectIndex.tsx expects
+  }[];
+}>().props;
 
   const back3 = () => {
     setSelectedCard(null);
@@ -257,6 +328,41 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
+                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
+
+                
+                   
+                <p>1</p>
+            </header>
+ <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
+  {/* ✅ SubjectIndex View */}
+        {showSubjects ? (
+          <>
+            <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back4}>Back</Button>
+    
+            <SubjectIndex subjects={subjects} />
+
+          </>
+
+         ) : selectedCard && selectedCard.id === 2 ? (
+    <> 
+    <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>Back</Button>
+    
+      <ClassIndex
+  classes={classData.data.map(c => ({
+    ...c,
+    studentacademics: c.studentacademics ?? [],  // default empty array
+  }))}
+/>
+      </>
+    ) : 
+showclass ?  (
+
+  addteacher ? (
+    <>
+     <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>Back</Button>
+      <div className="mt-[-100px]">
+       
        
        <p className="bg-white text-white"> ghdopgkb</p>
       </header>

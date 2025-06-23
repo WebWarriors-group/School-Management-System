@@ -53,12 +53,15 @@ Route::post('/send-admission-form', function (Illuminate\Http\Request $request) 
 
     return response()->json(['message' => 'Admission form email sent successfully!']);
 });
-Route::post('/subjects', [SubjectController::class, 'store']);
-Route::get('/subjects', [SubjectController::class, 'index']);
+
+
+
+Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
 Route::get('/subjects/{subject_id}', [SubjectController::class, 'show']);
 Route::put('/subjects/{subject_id}', [SubjectController::class, 'update']);
-Route::delete('/subjects/{subject_id}', [SubjectController::class, 'destroy']);
+//Route::delete('/subjects/{subject_id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 
+Route::post('/subjects', [SubjectController::class, 'store']);
 
 Route::post('/marks', [MarkController::class, 'store']);
 Route::get('/marks', [MarkController::class, 'create']);
@@ -66,7 +69,7 @@ Route::get('/marks/{id}', [MarkController::class, 'show']);
 Route::put('/marks/{id}', [MarkController::class, 'update']);
 Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
 
-Route::get('/report/{reg_no}', [ReportController::class, 'show']);
+//Route::get('/report/{reg_no}', [ReportController::class, 'show']);
 
 
 

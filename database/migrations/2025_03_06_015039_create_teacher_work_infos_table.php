@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('which_grades_teaching_done');
             $table->string('current_teaching_subject', 20);
             $table->string('other_subjects_taught');
-            $table->string('assigned_class',);
+            $table->string('assigned_class');
             $table->string('other_responsibilities_assigned');
             $table->boolean('150_hrs_tamil_course_completed')->default(false);
             $table->enum('commuting_from_school', ['Home', 'Boarding', 'Hostel', 'Other']);

@@ -51,3 +51,9 @@ export interface Student {
   receiving_any_scholarship: boolean;
 }
 
+export interface PageProps extends SharedData {
+    flash: {
+        success?: string;
+        error?: string;
+    };
+}
