@@ -15,11 +15,15 @@ export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
             { title: 'Dashboard Overview', url: '/admin/dashboardoverview', icon: LayoutGrid },
+            { title: 'School Event Calendar', url: '/admin/calendar', icon: LayoutGrid },
+              { title: 'Overall Performance', url: '/admin/performance', icon: LayoutGrid },
+              
             { title: 'User Management', url: '/admin/usermanage', icon: LayoutGrid },
-            { title: 'Teacher', url: '/admin/teacher', icon: Users },
-            { title: 'Students', url: '/admin/studentdashboard', icon: UsersRound },
+            { title: 'Teachers Management', url: '/admin/teacher', icon: Users },
+            { title: 'Students Management', url: '/admin/studentdashboard', icon: UsersRound },
             { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
+             { title: 'Old Students History', url: '/admin/Old', icon: LayoutGrid },
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/teacher/dashboard/{teacher_NIC}', icon: LayoutGrid },

@@ -252,6 +252,9 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
   const handle10=()=>{
     setshowCalendar(true);
   }
+  const close4=()=>{
+    setshowCalendar(false);
+  }
   
 
   return (
@@ -427,32 +430,14 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
   <AssignTeachersPage/>
   </div>
   </>
-) : showCalendar? (
+)
 
-<>
-  <div className="mt-4 bg">
- <Button
-              className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
-              onClick={CloseClick8}
-            >
-              Back
-            </Button>
-
-<CalendarPage/>
-  </div>
-  </>
-
-        ) : (
+        : (
           <>
-          <Button
-              className="text-[black] justify-right bg-yellow-500 w-45 h-10 mt-10  text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
-              onClick={handle10}
-            >
-              Events' Calendar
-            </Button>
+          
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-1g00">
               <div
-                className="relative mt-5 h-18 w-80 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer"
+                className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer"
                 onClick={handleAddTeacherClick}
               >
                 <span className="text-[20px] font-semibold text-yellow-700">
@@ -461,20 +446,20 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700 " />
               </div>
 
-              <div className="relative mt-5  h-18 w-80 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer">
+              <div className="relative mt-5  h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer">
                 <span className="text-[20px] font-semibold text-blue-900">Add New Students</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-blue-900" />
               </div>
 
               <div
-                className="relative mt-5  h-18 w-80 bg-white p-4 shadow-xl transition transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer"
+                className="relative mt-5  h-20 w-77 bg-white p-4 shadow-xl transition transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer"
                 onClick={handle2}
               >
                 <span className="text-[20px] font-semibold text-green-700"> Teachers  &  Classes</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-[green]" />
               </div>
 
-              <div className="relative mt-5  h-16 w-80 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer"
+              <div className="relative mt-5  h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer"
               onClick={handle4}>
                 <span className="text-[20px] font-semibold text-[maroon]">Teacher & Subjects</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-[maroon]" />
