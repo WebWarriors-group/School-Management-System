@@ -175,6 +175,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
+Route::get('/students/all', function () {
+    return Inertia::render('Student/ViewAllStudents', [
+        // You can pass props here
+    ]);
+})->name('students.all');
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
