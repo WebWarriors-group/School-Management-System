@@ -25,12 +25,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // User::factory(80)->create();
+        User::factory(80)->create();
         Teacher::factory(30)->create();
-         TeacherPersonal::factory(30)->create();
+        TeacherPersonal::factory(30)->create();
         TeacherOtherServices::factory(20)->create();
         Qualification::factory(50)->create();
-        // StudyMaterial::factory(50)->create();
+        StudyMaterial::factory(50)->create();
         ClassModel::factory(10)->create();
         StudentAcademic::factory(50)->create();
         StudentPersonal::factory(50)->create();

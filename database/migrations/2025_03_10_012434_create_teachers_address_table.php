@@ -23,9 +23,9 @@ return new class extends Migration
             $table->string('permanent_address');
             $table->string('permanent_residential_address', 255)->nullable();
             $table->string('grama_niladari_division', 100);
-            $table->integer('grama_niladari_division_number')->unsigned()->nullable()->length(5);
+            $table->integer('grama_niladari_division_number')->unsigned()->nullable()->length(10);
             $table->string('election_division', 100);
-            $table->integer('election_division_number')->unsigned()->nullable()->length(5);
+            $table->integer('election_division_number')->unsigned()->nullable()->length(10);
            
 
         });
