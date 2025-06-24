@@ -42,11 +42,6 @@ class Teacher extends Model
         'number_in_salary_sheet',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function subjects()
     {
         return $this->belongsToMany(Subject::class, 'teach_subjects', 'teacher_NIC', 'subject_id');
