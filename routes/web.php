@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -22,6 +23,8 @@ use App\Http\Controllers\SubjectController;
 
 
 use App\Mail\StudentAdmissionMail;
+
+Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
 Route::get('/', function () {
     $images = Img::all(); 
@@ -79,9 +82,6 @@ Route::post('/classadd', [ClassController::class, 'store']);
 })->name('add-teacher');
 Route::get('/Teacher/teacherForm', function () {
     return Inertia::render('Teacher/dashboard');
-});
-
-
 });
 
 
