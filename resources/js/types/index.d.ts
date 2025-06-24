@@ -52,3 +52,11 @@ export interface Student {
   admission_date:Date;
 }
 
+
+export interface PageProps extends SharedData {
+    flash: {
+        success?: string;
+        error?: string;
+    };
+}
+

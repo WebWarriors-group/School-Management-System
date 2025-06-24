@@ -4,79 +4,52 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Http\Controllers\Auth\Validator;
+use App\Mail\WelcomeMail; // ✅ make sure you have this
 
 class RegisteredUserController extends Controller
 {
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Show user creation form
      */
-
-     
-
-        public function create(): Response
+    public function create(): Response
     {
-         return Inertia::render('Admin/userManagement');
+        return Inertia::render('Admin/userManagement');
     }
-     
-    
-    public function store(Request $request)
+
+    /**
+     * Store a new user by admin
+     */
+    public function store(Request $request): RedirectResponse
     {
-
-        /*$validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422); // Send validation errors as JSON
-        }*/
-
-        // $user = User::create([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => Hash::make($request->password),
-        // ]);
-
-        // event(new Registered($user));
-
-        // return response()->json([
-        //     'message' => 'User registered successfully!',
-        //     'user' => $user,
-        // ], 201);
-
-
-
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:users,email',
             'role' => 'required|string|max:255',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+       
+        $password = $request->password;
+
+       
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($password),
         ]);
-
-        // event(new Registered($user));
-
-        
-         return Inertia::render('Admin/userManagement');
-                
-
+\Log::info('Before mail send');
+Mail::to($user->email)->send(new WelcomeMail($user));
+\Log::info('After mail send');
+        return route();
     }
 }

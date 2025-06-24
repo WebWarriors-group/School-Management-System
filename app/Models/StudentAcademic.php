@@ -18,7 +18,7 @@ class StudentAcademic extends Model
     public $incrementing = false;
 
     protected $keyType = 'integer';
-
+  
     protected $fillable = [
         'reg_no',
         'class_id',

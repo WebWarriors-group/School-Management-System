@@ -28,7 +28,7 @@ class TeacherFactory extends Factory
             'other_subjects_taught' => $this->faker->randomElement(['ICT', 'Physics', 'None']),
             'assigned_class' => $this->faker->randomElement(['6A', '8B', '10C', 'None']),
             'other_responsibilities_assigned' => $this->faker->randomElement(['Class Teacher', 'Discipline Head', 'None']),
-            '150_hrs_tamil_course_completed' => $this->faker->boolean(),
+            'is_150_hrs_tamil_course_completed' => $this->faker->boolean(),
 
             'commuting_from_school' => $this->faker->randomElement(['Home','Boarding','Hostel','Other']),
             'distance_from_school' => $this->faker->randomFloat(1, 0.5, 50), // Distance in km

@@ -3,27 +3,28 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Subject;  // Make sure this is the correct model
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subject>
  */
 class SubjectFactory extends Factory
 {
-   
-    protected $model = Subject::class;
-
     public function definition(): array
     {
-        return [
-            'subject_id' => $this->faker->unique()->numberBetween(1, 1000),// If using UUID as primary key
-            'subject_name' => $this->faker->name,
-                
+        static $counter = 101; // Start from 101 or any number you want
+
+        $subjectNames = [
+            'Science', 'Maths', 'Tamil', 'English', 'Geography', 'Civics',
+            'Islam', 'Hinduism', 'Buddhism', 'History', 'Physics', 'Chemistry',
+            'Combined Maths', 'Art', 'Sinhala', 'Tamil Literature', 'Agriculture', 'Biology'
+        ];
+
         
+
+        return [
+            'subject_id' => $counter++, // Increment for each subject
+            'subject_name' => $this->faker->randomElement($subjectNames),
+             
         ];
     }
 }
-
-
-
