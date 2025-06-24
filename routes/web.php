@@ -59,6 +59,7 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
 
 
 
+    });
 });
 
 
