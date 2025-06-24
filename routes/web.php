@@ -85,9 +85,6 @@ Route::get('/Teacher/teacherForm', function () {
 });
 
 
-});
-
-
 
 
 

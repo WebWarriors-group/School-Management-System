@@ -16,9 +16,9 @@ return new class extends Migration
             $table->integer('reg_no'); // Foreign key to students table
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
 
-            $table->string('sibling_name', 100);
-            $table->string('relationship', 20); // Brother, Sister, etc.
-            $table->integer('age')->nullable(); // Optional
+            $table->string('sibling_name', 100)->nullable();
+            $table->string('relationship', 20)->nullable(); // Brother, Sister, etc.
+            $table->integer('sibling_age')->nullable(); // Optional
             $table->string('occupation', 150)->nullable(); // Optional
             $table->string('contact', 20)->nullable(); // Optional, sibling's contact
             $table->timestamps();

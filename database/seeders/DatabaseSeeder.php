@@ -25,20 +25,29 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory(80)->create();
-        Teacher::factory(30)->create();
-         TeacherPersonal::factory(30)->create();
-        TeacherOtherServices::factory(20)->create();
-        Qualification::factory(50)->create();
-        StudyMaterial::factory(50)->create();
+        User::factory(10)->create();
+        Teacher::factory(10)->create();
+         TeacherPersonal::factory(10)->create();
+        TeacherOtherServices::factory(10)->create();
+        Qualification::factory(10)->create();
+        StudyMaterial::factory(10)->create();
         ClassModel::factory(10)->create();
-        StudentAcademic::factory(10)->create();
-        StudentPersonal::factory(10)->create();
-        StudentFamilyInfo::factory(10)->create();
-        StudentSibling::factory(10)->create();
-        Subject::factory(20)->create();
-        Marks::factory(50)->create();
+        Subject::factory(10)->create();
+$students = StudentAcademic::factory(200)->create();
+        Marks::factory(10)->create();
 
+        // Create related info for each student
+        foreach ($students as $student) {
+            StudentPersonal::factory()->create([
+                'reg_no' => $student->reg_no,
+            ]);
+             StudentFamilyInfo::factory()->create([
+                'reg_no' => $student->reg_no,
+            ]);
+            StudentSibling::factory(rand(1, 3))->create([
+                'reg_no' => $student->reg_no,
+            ]);
+        }
         User::updateOrCreate(
             ['email' => 'admin@sms.lk'], // Unique constraint
             [

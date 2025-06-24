@@ -49,21 +49,7 @@ class MarkController extends Controller
     // Store a new mark
     public function store(Request $request)
 {
-    // Validate incoming request
-    /*$validated = $request->validate([
-        'reg_no' => 'required|exists:student_academics_infos,reg_no',  // Ensure 'reg_no' exists in the 'student_academics_infos' table
-        'subject_id' => 'required|exists:subjects,subject_id', // Ensure 'subject_id' exists in the 'subjects' table
-        'marks_obtained' => 'required|integer',
-        'grade' => 'required|string|max:2',
-    ]);
-
-    // Create a new mark
-    $mark = Marks::create([
-        'reg_no' => $validated['reg_no'],
-        'subject_id' => $validated['subject_id'],
-        'marks_obtained' => $validated['marks_obtained'],
-        'grade' => $validated['grade'],
-    ]);*/
+    
     $mark = Marks::create([
         'reg_no' => $request->reg_no,
         'subject_id' => $request->subject_id,
