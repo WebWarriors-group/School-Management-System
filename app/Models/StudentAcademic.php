@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\StudentPersonal;
+use App\Models\ClassModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudentAcademic extends Model
@@ -58,7 +59,7 @@ class StudentAcademic extends Model
 
     public function class()
     {
-        return $this->belongsTo(ClassModel::class, 'class_id');
+        return $this->belongsTo(ClassModel::class, 'class_id','class_id');
     }
 
     public function marks()
