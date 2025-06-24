@@ -1,6 +1,5 @@
 import React from 'react';
-// Importing lucide-react for icons to enhance user-friendliness
-// Corrected: IdentificationCard changed to IdCard
+
 import { User, BookOpen, GraduationCap, MapPin, School, Ruler, Scale, HeartHandshake, Award, Building, Info, CircleAlert, Hash, PersonStanding, Cake, IdCard, Home, LocateFixed } from 'lucide-react';
 
 // Define the Mark interface
