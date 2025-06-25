@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\SubjectController;
 
 
 use App\Mail\StudentAdmissionMail;
+
+Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
