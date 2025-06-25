@@ -20,21 +20,7 @@ class TeacherController extends Controller
 {
     public function dashboard()
     {
-        $user = Auth::user();
-
-        $teacher = $user->teacher()->with([
-            'teachersaddress',
-            'personal',
-            'qualifications',
-            'teacherotherService',
-            'class',
-            'class.studentacademics',
-            'class.studentacademics.studentpersonal'
-        ])->first();
-
-        return Inertia::render('Teacher/dashboard', [
-            'teacher' => $teacher,
-        ]);
+        return Inertia::render('Teacher/dashboard');
     }
 
     public function personalDashboard($teacher_NIC)

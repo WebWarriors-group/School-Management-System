@@ -35,9 +35,6 @@ return new class extends Migration
             $table->string('number_in_salary_sheet', 20);
             $table->integer('count')->default(0);
 
-            $table->unsignedBigInteger('user_id')->nullable()->unique();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
