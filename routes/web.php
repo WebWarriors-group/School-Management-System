@@ -5,7 +5,6 @@ use Inertia\Inertia;
 use App\Models\User;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
