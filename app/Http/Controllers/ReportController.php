@@ -19,7 +19,7 @@ class ReportController extends Controller
     $student = StudentAcademic::with([
         'marks.subject',
         'studentPersonal',
-        'academicClass',
+        'class',
     ])->where('reg_no', $reg_no)->first();
 
     if (!$student) {
