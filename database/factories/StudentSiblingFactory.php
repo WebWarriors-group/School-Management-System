@@ -25,7 +25,7 @@ class StudentSiblingFactory extends Factory
             'reg_no' => StudentAcademic::all()->random()->reg_no,
             'sibling_name' => $this->faker->name,
             'relationship' => $this->faker->randomElement(['Brother', 'Sister']),
-            'age' => $this->faker->numberBetween(5, 30),
+            'sibling_age' => $this->faker->numberBetween(5, 30),
             'occupation' => $this->faker->optional()->jobTitle,
             'contact' => $this->faker->optional()->phoneNumber,
         ];

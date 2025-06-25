@@ -14,6 +14,9 @@ class StudentAcademicFactory extends Factory
     protected $model = StudentAcademic::class;
     public function definition(): array
     {
+        // Random date between 2001-01-01 and today
+
+
         return [
             'reg_no' => $this->faker->unique()->numberBetween(1000, 9999),
 
@@ -26,7 +29,9 @@ class StudentAcademicFactory extends Factory
             'grade_10_11_basket3_subjects' => $this->faker->randomElement(['ICT', 'Health Science', 'Agriculture']),
             'receiving_any_grade_5_scholarship' => $this->faker->boolean(),
             'receiving_any_samurdhi_aswesuma' => $this->faker->boolean(),
-            'receiving_any_scholarship' => $this->faker->boolean()
+            'receiving_any_scholarship' => $this->faker->boolean(),
+            'admission_date' => $this->faker->dateTimeBetween('2001-01-01', 'now')->format('Y-m-d'),
+
 
         ];
     }

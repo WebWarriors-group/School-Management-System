@@ -25,12 +25,12 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female']);
             $table->string('ethnicity', 50);
             $table->string('religion', 50);
-            $table->string('birth_certificate_number', 50);
+            $table->string('birth_certificate_number', 50)->nullable();
             $table->string('address', 255);
-            $table->string('nic_number', 50);
-            $table->string('postal_ic_number', 50);
-            $table->integer('age')->nullable();
-            $table->boolean('special_needs')->default(false);
+            $table->string('nic_number', 50)->nullable();
+            $table->string('postal_ic_number', 50)->nullable();
+            $table->integer('age');
+            $table->boolean('special_needs')->default(false)->nullable();
             $table->float('height')->nullable();
             $table->float('weight')->nullable();
             $table->timestamps();

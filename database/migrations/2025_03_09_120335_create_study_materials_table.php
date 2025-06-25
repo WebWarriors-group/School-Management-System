@@ -13,17 +13,16 @@ return new class extends Migration
     {
         Schema::create('study_materials', function (Blueprint $table) {
             $table->id(); // material_id (Primary Key)
-            $table->integer('subject_id');
-            $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
-            $table->string('category',25)->nullable();
+            $table->string('subject', 40);
+            $table->string('category',25);
             $table->string('title',255);
             $table->smallinteger('grade');
-            $table->string('subject', 40);
-            $table->integer('year');
-            $table->string('file_path');
+            $table->integer('year')->nullable();
+            $table->string('file_url');
+            $table->unsignedBigInteger('uploaded_by');
+            $table->foreign('uploaded_by')->references('id')->on('users');
             $table->timestamps();
 
-            // Foreign Key Constraints
 
         });
     }
