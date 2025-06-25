@@ -12,13 +12,20 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+type Uploader = {
+    id: number;
+    name: string;
+    role: string;
+}
+
 interface StudyMaterial {
     id: number;
     title: string;
-    description: string;
     grade: number;
     subject: string;
     year: number;
+    file_url: string;
+    uploaded_by: Uploader;
 }
 
 interface Props {
@@ -43,6 +50,9 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
     const filteredMaterials = (selectedSubject ? filteredMaterials0.filter((m) => m.subject == String(selectedSubject)) : filteredMaterials0).sort((a, b) => b.year - a.year);
 
     const [showForm, setShowForm] = useState(false);
+    const handleUploadSuccess = () => {
+        setShowForm(false);
+    };
     
 
     return (
@@ -75,7 +85,13 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                     </div>
 
                     {showForm && (
-                        <UploadForm category={category} subjects={"sdf"} />
+                        <UploadForm
+                            category={category}
+                            onClose={() => {
+                                handleUploadSuccess();
+                                window.location.reload();
+                            }}
+                        />
                     )}
 
                     {/* Grade Selector */}
@@ -119,23 +135,74 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                     {filteredMaterials.length ? (
                         <ul className="space-y-5">
                             {filteredMaterials.map((material) => (
-                                <li
-                                    key={material.id}
-                                    className="p-6 border-l-4 border-red-700 bg-gray-50 rounded-xl shadow-sm hover:scale-102 duration-300 cursor-pointer"
-                                >
-                                     {/* Year Badge */}
-                                    <div className="flex-shrink-0">
-                                        <span className="inline-block text-white bg-red-800 rounded-full px-4 py-1 text-sm font-semibold shadow-md">
-                                            {material.year}
-                                        </span>
-                                    </div>
+                                <div key={material.id} className="group relative">
+                                    {/* Three-dot menu */}
+                                    {/*<div className="absolute top-3 right-3">
+                                        <div className="relative inline-block">
+                                            <button 
+                                            className="text-gray-400 hover:text-gray-600 p-1 rounded-full focus:outline-none"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                            >
+                                            <svg 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                className="h-5 w-5" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                            >
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                            </svg>
+                                            </button>*/}
+                                            
+                                            {/* Dropdown menu (hidden by default) */}
+                                            {/*<div className="hidden absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100">
+                                            <button 
+                                                className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <svg 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                className="h-4 w-4 mr-2" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                                >
+                                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                                Delete
+                                            </button>
+                                            </div>
+                                        </div>
+                                    </div>*/}
 
-                                    {/* Content */}
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-800">{material.title}</h3>
-                                        <p className="mt-2 text-sm text-gray-600 leading-relaxed">{material.description}</p>
-                                    </div>
-                                </li>
+                                    <a 
+                                        href={`/storage/${encodeURIComponent(material.file_url)}`}
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="block"
+                                    >
+                                        <li className="p-6 border-l-4 border-red-700 bg-gray-50 rounded-xl shadow-sm hover:scale-102 duration-300 cursor-pointer hover:shadow-md">
+                                            {/* Year Badge */}
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <span className="inline-block text-white bg-red-800 rounded-full px-4 py-1 text-sm font-semibold shadow-md">
+                                                    {material.year}
+                                                </span>
+                                                <span className="inline-block text-white bg-blue-600 rounded-full px-4 py-1 text-sm font-semibold shadow-md">
+                                                    Grade {material.grade}
+                                                </span>
+                                                <span className="inline-block text-white bg-green-600 rounded-full px-4 py-1 text-sm font-semibold shadow-md">
+                                                    {material.subject}
+                                                </span>
+                                            </div>
+
+                                            {/* Content */}
+                                            <div>
+                                                <h3 className="text-lg font-semibold text-gray-800 mb-2">{material.title}</h3>
+                                                <p className="text-gray-600 text-sm">Uploaded by: {material.uploaded_by.name} ({material.uploaded_by.role})</p>
+                                            </div>
+                                        </li>
+                                    </a>
+                                </div>
                             ))}
                         </ul>
                     ) : (
