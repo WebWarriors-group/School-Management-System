@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-
+use App\Models\User;
 use App\Models\StudyMaterial;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -24,13 +24,13 @@ class StudyMaterialFactory extends Factory
     public function definition(): array
     {
         return [
-            'subject_id' => Subject::factory(),
+            'uploaded_by' =>  User::all()->random()->id,
             'category' => $this->faker->randomElement(['pastPapers', 'teachersHandbooks', 'notes']),
             'title' => $this->faker->sentence,
             'grade' => $this->faker->randomElement(['6', '7', '8', '9', '10']),
             'subject' => $this->faker->randomElement(['English', 'Science', 'Mathematics', 'Biology', 'Physics']),
             'year' => $this->faker->year,
-            'file_path' => $this->faker->filePath(),
+            'file_url' => $this->faker->filePath(),
         ];
     }
 }

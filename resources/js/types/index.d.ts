@@ -49,6 +49,15 @@ export interface Student {
   receiving_any_grade_5_scholarship: boolean;
   receiving_any_samurdhi_aswesuma: boolean;
   receiving_any_scholarship: boolean;
+  admission_date:Date;
+}
+
+
+export interface PageProps extends SharedData {
+    flash: {
+        success?: string;
+        error?: string;
+    };
 }
 
 export interface PageProps extends SharedData {
