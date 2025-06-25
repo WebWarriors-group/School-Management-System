@@ -49,7 +49,7 @@ export default function Navbar() {
       <div className="min-h-screen bg-white text-gray-900">
 
         {/* Top Bar */}
-        <div className=" sticky top-0 left-0 bg-yellow-500 text-brown-900 py-4 px-4 text-[16px] flex justify-between items-center shadow z-50 ">
+        <div className=" sticky top-0 left-0 bg-yellow-500 text-brown-900 py-4 px-4 text-[16px] flex justify-between items-center shadow z-50  max-[639px]:py-4 max-[639px]:px-3 max-[639px]:text-[16px]">
           <span>Welcome to Mahadivulwewa National School</span>
           <div className="space-x-3 hidden md:flex">
             <a href="https://www.facebook.com/ttnmmv" className="hover:text-blue-800"><Facebook size={18} /></a>
@@ -59,11 +59,12 @@ export default function Navbar() {
         </div>
 
         {/* Navbar */}
-        <nav className=" sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50">
+       <nav className="sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50  max-[639px]:py-2 max-[639px]:px-3">
+
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <img src="/images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
-              <h1 className="font-orbitron text-lg md:text-xl font-bold leading-tight">
+              <h1 className="font-orbitron text-lg md:text-xl font-bold leading-tight max-[639px]:hidden ">
                 T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)<br className="hidden md:block" />
                 
               </h1>
@@ -90,7 +91,7 @@ export default function Navbar() {
 
       
         <section 
-  className="relative bg-cover bg-center bg-no-repeat py-45 px-6 md:px-20"
+  className="relative bg-cover bg-center bg-no-repeat py-45 px-6 md:px-20 max-[639px]:py-9"
  style={{ backgroundImage: 'url(images/tag1.jpg)' }}
 
 
@@ -99,19 +100,19 @@ export default function Navbar() {
   {/* Optional overlay */}
   <div className="absolute inset-0 bg-black/40 z-0"></div>
 
-  <div className="relative z-10 max-w-5xl mx-auto text-center text-white space-y-8">
-    <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
+  <div className="relative z-10 max-w-5xl mx-auto text-center text-white space-y-8 ">
+    <h1 className="text-4xl md:text-5xl font-extrabold leading-tight max-[639px]:text-2xl ">
       අපි <span className="text-yellow-400">දක්ෂතා</span> සහ යහපත් <span className="text-yellow-400">ගුණාංග</span> වර්ධනය කරමු.
     </h1>
 
-    <p className="text-xl">
+    <p className="text-xl max-[639px]:text-[19px]">
       සියලු අභියෝග ජයගෙන යා හැකි විශ්වාස සහ කුසලතා පිරුණු ශිෂ්‍ය පරපුරක් ගොඩනඟා ගැනීම.
     </p>
 
     <div className="flex justify-center gap-4 flex-wrap">
       <Link
         href={route('login')}
-        className="bg-yellow-500 text-black px-6 py-3 rounded-full hover:bg-purple-700 transition"
+        className="bg-yellow-500 text-black px-6 py-3 rounded-full hover:bg-purple-700 transition max-[639px]:px-4 max-[639px]:py-2"
       >
         Get Started
       </Link>
@@ -129,12 +130,12 @@ export default function Navbar() {
 
        
         <section className="py-16 px-6 md:px-20 bg-gray-200">
-          <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 mt-15">Mission</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 mt-15 max-[639px]:text-3xl max-[639px]:mt-1">Mission</h2>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="w-full md:w-1/2 flex justify-center bg-gray-200 ">
-              <img src="/images/tag4" alt="Mission" className="bg-gray-200  w-[460px] h-[350px] object-cover" />
+              <img src="/images/tag4" alt="Mission" className="bg-gray-200  w-[460px] h-[350px] object-cover max-[639px]:w-[300px] max-[639px]:h-[200px]" />
             </div>
-            <div className="w-full md:w-250 bg-white p-10 shadow-md ml-[-84px] ">
+            <div className="w-full md:w-250 bg-white p-10 shadow-md ml-[-84px] max-[639px]:w- ">
               <h3 className="text-2xl font-semibold text-red-800 mb-4">Mission / භාරකාරකම</h3>
               <p className="text-gray-800 mb-4">
                 "Our mission is to contribute to the nation a wise, virtuous, and courageous generation of students by building a noble life philosophy drawn from all religious perspectives, fostering unity among all ethnic groups, and promoting mental and educational development."

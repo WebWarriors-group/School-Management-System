@@ -83,6 +83,7 @@ export default function ReportPage({ student }: { student: StudentAcademic | nul
   // Display a simple "No Student Data Found" message if student is null
   if (!student) {
     return (
+      
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 font-inter">
         <div className="bg-white p-8 rounded-lg shadow-xl text-center border-l-4 border-yellow-500 animate-fade-in-up transition-all duration-300 transform hover:scale-105">
           <CircleAlert className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
