@@ -383,7 +383,7 @@ const handleCreateMark = async () => {
                       </button>
                       
                       <button
-                        onClick={() => window.location.href = `/Marks/${mark.reg_no}`}
+                        onClick={() =>  window.location.href = `/mark/ReportPage/${mark.reg_no}`}
                         className="bg-purple-500 text-white px-3 py-2 rounded-md hover:bg-purple-300 transition duration-300 ml-2"
                       >
                         View
