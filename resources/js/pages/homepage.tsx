@@ -70,10 +70,11 @@ export default function Navbar() {
               </h1>
             </div>
 
-            <div className="flex items-center gap-4">
-              <Link href={route('login')} className="hidden md:inline-block bg-white text-[#650000] px-4 py-2 rounded-full font-semibold hover:bg-yellow-400 transition-all">Login</Link>
-              <Link href={route('login')} className="hidden md:inline-block bg-white text-[#650000] px-4 py-2 rounded-full font-semibold hover:bg-yellow-400 transition-all">Forms</Link>
-              <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-yellow-300">
+           
+            <div className="flex items-center space-x-4">
+              <Link href={route('loginCheckout')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Login</Link>
+              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Forms</Link>
+              <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>

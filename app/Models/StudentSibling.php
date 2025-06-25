@@ -15,7 +15,7 @@ class StudentSibling extends Model
         'reg_no',
         'sibling_name',
         'relationship',
-        'age',
+        'sibling_age',
         'occupation',
         'contact'
     ];
