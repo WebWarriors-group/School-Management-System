@@ -27,8 +27,6 @@ use App\Mail\StudentAdmissionMail;
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
-Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
-
 Route::get('/', function () {
     $images = Img::all(); 
 
@@ -154,7 +152,6 @@ Route::get('/calendar', function () {
 
 
 
-
 //Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 
@@ -184,7 +181,6 @@ Route::get('/students/all', function () {
         // You can pass props here
     ]);
 })->name('students.all');
-
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
