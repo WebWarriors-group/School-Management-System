@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useForm } from '@inertiajs/react';
+import { useForm,router } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type TeacherForm = {
   teacher_NIC: string;
@@ -24,7 +26,7 @@ type TeacherForm = {
   Mobile_number: string;
   Whatsapp_number: string;
   permanent_address: string;
-  residential_address: string;
+  permanent_residential_address: string;
   grama_niladari_division: string;
   grama_niladari_division_number: string;
   election_division: string;
@@ -97,7 +99,7 @@ export default function AddTeacherForm() {
     Mobile_number: '',
     Whatsapp_number: '',
     permanent_address: '',
-    residential_address: '',
+    permanent_residential_address: '',
     grama_niladari_division: '',
     grama_niladari_division_number: '',
     election_division: '',
@@ -129,7 +131,7 @@ export default function AddTeacherForm() {
     basic_degree_stream: '',
     highest_professional_qualification: '',
     present_class: "class I",
-    present_grade: "Grade I",
+    present_grade: "Grade 1",
     appointment_date_for_current_class: '',
     appointment_date_for_current_grade: '',
     current_appointment_service_medium: "Tamil",
@@ -151,7 +153,7 @@ export default function AddTeacherForm() {
 
     setData('current_grade_of_teaching_service', data.current_grade_of_teaching_service || 'Grade I'); // Default value if empty
     setData('present_class', data.present_class || 'class I');
-    setData('present_grade', data.present_grade || 'Grade I');
+    setData('present_grade', data.present_grade || 'Grade 1');
     setData('current_appointment_service_medium', data.current_appointment_service_medium || 'Tamil');
     setData('is_150_hrs_tamil_course_completed', data.is_150_hrs_tamil_course_completed !== undefined ? data.is_150_hrs_tamil_course_completed : false); // Default to false if undefined
   setData('commuting_from_school', data.commuting_from_school || 'Home'); // Default to 'Home' if empty
@@ -160,12 +162,25 @@ export default function AddTeacherForm() {
   setData('WSOP_Number', data.WSOP_Number || null); // Default to null if empty
 
     
-    post(route('teacher.requests'), {
+   post(route('teacher.requests'), {
+  forceFormData: true,
+  onSuccess: () => {
+    toast.success('Form submitted. Awaiting admin approval!');
+    //router.visit(route('add-teacher')); // OR reload/redirect to another page
+
+  },
+  onError: (errors) => {
+    //console.log('Validation Errors:', errors);
+    toast.error('Failed to submit. Please check the form.');
+  },
+});
+
+//  post(route('teacher.requests'), {
       
-    headers: { "Content-Type": "multipart/form-data" }, 
-      onSuccess: () => alert('Teacher data added successfully!'),
-      onError: (errors) => console.log('Validation Errors:', errors),
-    });
+//     headers: { "Content-Type": "multipart/form-data" }, 
+//       onSuccess: () => alert('Teacher data added successfully!'),
+//       onError: (errors) => console.log('Validation Errors:', errors),
+//     });
   };
     
         const [step, setStep] = useState(1);
@@ -257,6 +272,7 @@ export default function AddTeacherForm() {
         id="Photo"
         name="Photo"
         className="w-full p-2 border rounded"
+        accept="image/*"
         onChange={(e) => setData('Photo', e.target.files ? e.target.files[0] : null)}
       />
       <InputError message={errors.Photo} className="mt-2" />
@@ -513,19 +529,19 @@ export default function AddTeacherForm() {
 
 {/* Residential Address */}
 <div className="mb-4">
-  <label htmlFor="residential_address" className="block text-sm font-medium text-gray-700">
+  <label htmlFor="permanent_residential_address" className="block text-sm font-medium text-gray-700">
     Residential Address
   </label>
   <input
     type="text"
-    id="residential_address"
-    name="residential_address"
+    id="permanent_residential_address"
+    name="permanent_residential_address"
     className="w-full p-2 border rounded mt-1"
-    value={data.residential_address}
-    onChange={(e) => setData('residential_address', e.target.value)}
+    value={data.permanent_residential_address}
+    onChange={(e) => setData('permanent_residential_address', e.target.value)}
     required
   />
-  <InputError message={errors.residential_address} className="mt-2" />
+  <InputError message={errors.permanent_residential_address} className="mt-2" />
 </div>
 
 {/* Grama Niladari Division */}
@@ -847,13 +863,13 @@ export default function AddTeacherForm() {
 
     {/* 150 Hours Tamil Course Completed */}
     <div className="mb-4">
-      <label htmlFor="150_hrs_tamil_course_completed" className="block text-sm font-medium text-gray-700">
-        150 Hours Tamil Course Completed
+      <label htmlFor="is_150_hrs_tamil_course_completed" className="block text-sm font-medium text-gray-700">
+        150 Hours Tamil Course Completed or Not
       </label>
       <input
         type="checkbox"
-        name="150_hrs_tamil_course_completed"
-        id="150_hrs_tamil_course_completed"
+        name="is_150_hrs_tamil_course_completed"
+        id="is_150_hrs_tamil_course_completed"
         checked={data.is_150_hrs_tamil_course_completed}
         onChange={(e) => setData('is_150_hrs_tamil_course_completed', e.target.checked)} // Set true or false
 
@@ -1109,11 +1125,11 @@ export default function AddTeacherForm() {
       name="present_grade" 
       className="w-full p-2 border rounded"
       value={data.present_grade}
-      onChange={(e)=>setData('present_grade',e.target.value as "Grade I" | "Grade II" | "Grade III")}
+      onChange={(e)=>setData('present_grade',e.target.value as "Grade 1" | "Grade 2" | "Grade 3")}
       required>
-        <option value="Grade I">Grade I</option>
-        <option value="Grade II">Grade II</option>
-        <option value="Grade III">Grade III</option>
+        <option value="Grade 1">Grade 1</option>
+        <option value="Grade 2">Grade 2</option>
+        <option value="Grade 3">Grade 3</option>
       </select>
       <InputError message={errors.present_grade} className="mt-2" />
 
@@ -1380,6 +1396,8 @@ export default function AddTeacherForm() {
   </div>
 )}
 </form>
+<ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
 </div>
     )
   }

@@ -1,8 +1,11 @@
 
 import { type BreadcrumbItem } from '@/types';
-import { usePage, router } from '@inertiajs/react';
+import { usePage, router,Link } from '@inertiajs/react';
 import { useEffect ,} from 'react';
 import AppLayout from "@/layouts/app-layout";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 type FormData={
   teacher_NIC:string;
 }
@@ -43,16 +46,31 @@ export default function TeacherRequests()  {
 
   
   const handleApprove = (id: number) => {
-    if (confirm("Are you sure you want to approve this request?")) {
-      router.post(`/admin/teacher-requests/${id}/approve`);
-    }
-  };
+  if (confirm("Are you sure you want to approve this request?")) {
+    router.post(`/admin/teacher-requests/${id}/approve`, {}, {
+      onSuccess: () => {
+        toast.success("Request approved successfully!");
+      },
+      onError: () => {
+        toast.error("Failed to approve the request.");
+      }
+    });
+  }
+};
 
-  const handleReject = (id: number) => {
-    if (confirm("Are you sure you want to reject this request?")) {
-      router.post(`/admin/teacher-requests/${id}/reject`);
-    }
-  };
+const handleReject = (id: number) => {
+  if (confirm("Are you sure you want to reject this request?")) {
+    router.post(`/admin/teacher-requests/${id}/reject`, {}, {
+      onSuccess: () => {
+        toast.success("Request rejected.");
+      },
+      onError: () => {
+        toast.error("Failed to reject the request.");
+      }
+    });
+  }
+};
+
   useEffect(() => {
     if(count!=0){
       
@@ -67,7 +85,8 @@ export default function TeacherRequests()  {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
     <div className="p-8">
-        
+       
+ 
       <h1 className="text-2xl font-bold mb-6">Teacher Form Requests</h1>
       
       {pendingRequests.length === 0 ? (
@@ -129,6 +148,8 @@ export default function TeacherRequests()  {
 
       
     </div>
+    <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
     </AppLayout>
   );
 }

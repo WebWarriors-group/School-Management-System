@@ -4,12 +4,9 @@ import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
-import StudentAdmissionForm from "./StudentAdmissionForm";
-
-import AddStudent from "./AddStudent";
+// import StudentAdmissionForm from "../Student/StudentAdmissionForm";
 import { Trash2, Eye } from "lucide-react";
 import { Student } from "@/types";
-import ImportStudent from "./ImportStudent";
 import SearchStudent from "./SearchStudent";
 import ViewStudent from "./ViewStudent";
 import DeleteStudent from "./DeleteStudent";
@@ -19,9 +16,6 @@ const breadcrumbs = [
 ];
 
 const StudentDashboard: React.FC = () => {
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [showImportForm, setImportForm] = useState(false);
 
   const [students, setStudents] = useState<Student[]>([]);
   const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
@@ -31,6 +25,13 @@ const StudentDashboard: React.FC = () => {
 
   const [searchedStudents, setSearchedStudents] = useState<Student[]>([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  
+
+  const handleSearchResults = (results: Student[]) => {
+    setSearchedStudents(results);
+    setIsSearchModalOpen(true);
+  };
 
   const fetchStudents = async () => {
     try {
@@ -47,16 +48,10 @@ const StudentDashboard: React.FC = () => {
     fetchStudents();
   }, []);
 
-
-  const handleSearchResults = (results: Student[]) => {
-    setSearchedStudents(results);
-    setIsSearchModalOpen(true);
+  const handleDeleteClick = (reg_no: string) => {
+    setStudentToDelete(reg_no);
+    setIsDeleteModalOpen(true);
   };
-
-  // const handleDeleteClick = (reg_no: string) => {
-  //   setStudentToDelete(reg_no);
-  //   setIsDeleteModalOpen(true);
-  // };
 
   const confirmDelete = async () => {
     if (!studentToDelete) return;
@@ -109,74 +104,54 @@ const StudentDashboard: React.FC = () => {
             <SearchStudent students={students} />
           </header>
 
+<div className="grid grid-cols-3 gap-1 md:grid-cols-3 mt-4 mx-2 mb-2">
+  <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+    <h3 className="text-maroon-700 text-base font-semibold">Total Students</h3>
+    <p className="mt-1 text-lg font-bold text-green-600">{students.length}</p>
+  </div>
+  <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+    <h3 className="text-maroon-700 text-base font-semibold">Class Enrolled</h3>
+    <p className="mt-1 text-lg font-bold text-red-600">{uniqueClassCount}</p>
+  </div>
+  <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+    <h3 className="text-maroon-700 text-base font-semibold">Receiving Scholarship</h3>
+    <p className="mt-1 text-lg font-bold text-blue-600">{scholarshipCount}</p>
+  </div>
+</div>
 
-          <div className="grid grid-cols-3 gap-2 md:grid-cols-3 mt-9 mr-5 ml-5 mb-5">
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-6 shadow">
-              <h3 className="text-maroon-700 text-lg font-bold">Total Students</h3>
-              <p className="mt-2 text-xl font-bold text-green-600">{students.length}</p>
-            </div>
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-6 shadow">
-              <h3 className="text-maroon-700 text-lg font-bold">Class Enrolled</h3>
-              <p className="mt-2 text-3xl font-bold text-red-600">{uniqueClassCount}</p>
-            </div>
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-6 shadow">
-              <h3 className="text-maroon-700 text-lg font-bold">Receiving Scholarship</h3>
-              <p className="mt-2 text-3xl font-bold text-blue-600">{scholarshipCount}</p>
-            </div>
-          </div>
 
 
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
-            <div className="flex justify-left mb-4">
-              <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
+            
+              {/* <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
                 Admission Form
-              </Button>
-              <Button onClick={() => setShowAddForm(true)} className="bg-green-600 text-white ml-2">
-                Add New Student
-              </Button>
-              <Button onClick={() => setImportForm(true)} className="bg-green-600 text-white ml-2">
-                Import Students
-              </Button>
-            </div>
+              </Button> */}
+              
+           
 
-            {showForm && (
+            {/* {showForm && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
                   <StudentAdmissionForm setShowForm={setShowForm} />
                 </div>
               </div>
-            )}
+            )} */}
 
-            {showImportForm && (
-              <ImportStudent
-                fetchStudents={fetchStudents}
-                onClose={() => setImportForm(false)}
-              />
-            )}
-
-            {showAddForm && (
-              <AddStudent
-                onClose={() => setShowAddForm(false)}
-                onStudentAdded={(newStudent) => {
-                  setStudents((prev) => [...prev, newStudent]);
-                  setShowAddForm(false);
-                }}
-              />
-            )}
+           
 
             <Table
-              columns={["Reg No", "Class ID", "Distance", "Method", "Actions"]}
+              columns={["Reg No", "Distance", "Method", "Actions"]}
               data={students.map((student) => ({
                 "Reg No": student.reg_no,
-                "Class ID": student.class_id,
+               
                 "Distance": student.distance_to_school,
                 "Method": student.method_of_coming_to_school,
                 Actions: (
                   <div className="flex gap-2">
 
-                    {/* <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white">
+                    <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white">
                       <Trash2 size={16} />
-                    </Button> */}
+                    </Button>
                     <Button onClick={() => handleViewClick(student)} className="bg-purple-500 text-white">
                       <Eye size={16} />
                     </Button>
@@ -187,11 +162,21 @@ const StudentDashboard: React.FC = () => {
 
 
 
-            <ViewStudent
-              student={viewingStudent}
-              isOpen={isViewModalOpen}
-              onClose={() => setIsViewModalOpen(false)}
-            />
+   <ViewStudent
+  student={viewingStudent}
+  isOpen={isViewModalOpen}
+  onClose={() => setIsViewModalOpen(false)}
+  onStudentUpdated={(updatedStudent) => {
+    setViewingStudent(updatedStudent); // ✅ fix applied
+    // Optional: also update the student in the main students list
+    setStudents((prev) =>
+      prev.map((s) =>
+        s.reg_no === updatedStudent.reg_no ? updatedStudent : s
+      )
+    );
+  }}
+/>
+
 
             <DeleteStudent
               isOpen={isDeleteModalOpen}

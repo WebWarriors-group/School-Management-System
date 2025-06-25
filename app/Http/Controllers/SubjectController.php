@@ -3,92 +3,95 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Subject;
+use App\Models\Subject; // Ensure this is correct
+use Illuminate\Validation\Rule; // Import for unique validation rules
+use Inertia\Inertia; // Import Inertia
 
 class SubjectController extends Controller
 {
     /**
-     * Display a listing of subjects.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // Get all subjects
-        return response()->json(Subject::all(), 200);
-    }
-
-    /**
-     * Store a newly created subject.
+     * Display a listing of subjects and render the Inertia page.
+     * This method handles initial page load, search, and pagination.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
+     */
+public function index()
+{
+    $subjects = Subject::all(); // No pagination
+
+    return Inertia::render('Admin/SubjectIndex', [
+        'subjects' => $subjects
+    ]);
+}
+
+
+    // The `create` method is now removed.
+    // Subject creation will happen in a modal on the `index` page,
+    // using the `store` API endpoint.
+    // public function create()
+    // {
+    //     return Inertia::render('Subjects/Create');
+    // }
+
+    /**
+     * Store a newly created subject in storage.
+     * This method acts as an API endpoint, returning JSON.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'subject_id' => 'required|integer|unique:subjects,subject_id', // Ensure subject_id is unique and integer
-            'subject_name' => 'required|string|max:255',
+        // Validation rules are updated to match React form and include 'status'.
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:subjects,name'],
+            'code' => ['required', 'string', 'max:20', 'unique:subjects,code'],
+            'description' => ['nullable', 'string'],
+            'status' => ['required', Rule::in(['active', 'inactive'])], // Added status validation
         ]);
-    
-        // Create a new subject using the validated data
-        $subject = Subject::create([
-            'subject_id' => $validatedData['subject_id'],
-            'subject_name' => $validatedData['subject_name'],
-        ]);
-    
-        // Return the created subject as a response
-        return response()->json([
-            'message' => 'Subject created successfully',
-            'subject' => $subject
-        ], 201);
+
+        $subject = Subject::create($validated);
+
+        // Return the created subject with a 201 Created status
+        return response()->json($subject, 201);
     }
-    
 
     /**
      * Display the specified subject.
+     * This method acts as an API endpoint, returning JSON.
+     * Uses Route Model Binding for cleaner subject retrieval.
      *
-     * @param  int  $subject_id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Subject  $subject
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($subject_id)
+    public function show(Subject $subject) // Changed $subject_id to Subject $subject
     {
-        // Find the subject by subject_id
-        $subject = Subject::find($subject_id);
-
-        // If the subject is not found, return a 404 response
-        if (!$subject) {
-            return response()->json(['message' => 'Subject not found'], 404);
-        }
-
-        // Return the subject data
+        // Route Model Binding automatically handles 404 if subject is not found.
         return response()->json($subject, 200);
     }
 
     /**
-     * Update the specified subject.
+     * Update the specified subject in storage.
+     * This method acts as an API endpoint, returning JSON.
+     * Uses Route Model Binding for cleaner subject retrieval.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $subject_id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Subject  $subject
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $subject_id)
+    public function update(Request $request, Subject $subject) // Changed $subject_id to Subject $subject
     {
-        // Find the subject by subject_id
-        $subject = Subject::find($subject_id);
-
-        // If the subject is not found, return a 404 response
-        if (!$subject) {
-            return response()->json(['message' => 'Subject not found'], 404);
-        }
-
-        // Validate the request data
+        // Validation rules are updated to match React form and include 'status',
+        // also handling unique rules for name/code while ignoring the current subject.
         $validatedData = $request->validate([
-            'subject_name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', Rule::unique('subjects')->ignore($subject->id)],
+            'code' => ['required', 'string', 'max:20', Rule::unique('subjects')->ignore($subject->id)],
+            'description' => ['nullable', 'string'],
+            'status' => ['required', Rule::in(['active', 'inactive'])],
         ]);
 
-        // Update the subject
+        // Update the subject with the validated data
         $subject->update($validatedData);
 
         // Return the updated subject data
@@ -96,25 +99,19 @@ class SubjectController extends Controller
     }
 
     /**
-     * Remove the specified subject.
+     * Remove the specified subject from storage.
+     * This method acts as an API endpoint, returning JSON.
+     * Uses Route Model Binding for cleaner subject retrieval.
      *
-     * @param  int  $subject_id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Subject  $subject
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($subject_id)
-    {
-        // Find the subject by subject_id
-        $subject = Subject::find($subject_id);
+   public function destroy($id)
+{
+    $subject = Subject::findOrFail($id);
+    $subject->delete();
 
-        // If the subject is not found, return a 404 response
-        if (!$subject) {
-            return response()->json(['message' => 'Subject not found'], 404);
-        }
+    return redirect()->route('subjects.index')->with('success', 'Subject deleted successfully');
+}
 
-        // Delete the subject
-        $subject->delete();
-
-        // Return a success message
-        return response()->json(['message' => 'Subject deleted successfully'], 200);
-    }
 }

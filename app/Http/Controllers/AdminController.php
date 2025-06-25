@@ -80,6 +80,7 @@ $classDeleted = ClassModel::onlyTrashed()
 'classfooter'=>$classFooter,
 'teacherfooter'=>$teacherFooter,
 'studentfooter'=>$studentActivity,
+'subjects' => Subject::all(), // ✅ Required
 'grades'=>$grades,
 'subject'=>$subject,
 'subjects'=>$subjects,

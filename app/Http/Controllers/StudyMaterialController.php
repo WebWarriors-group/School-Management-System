@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\Models\StudyMaterial;
 
 class StudyMaterialController extends Controller
@@ -17,7 +19,9 @@ class StudyMaterialController extends Controller
      */
     public function index($category)
     {
-        $materials = StudyMaterial::where('category', $category)->get();
+        $materials = StudyMaterial::with('uploaded_by:id,name,role')
+            ->where('category', $category)
+            ->get();
 
         return Inertia::render('studyMaterial/studyMaterialIndex', [
             'category' => $category,
@@ -31,25 +35,50 @@ class StudyMaterialController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming request
-        $validated = $request->validate([
-            'subject_id' => 'required|integer|exists:subjects,subject_id', // subject_id must exist in subjects table
-            'title' => 'required|string|max:255',
-            'file_path' => 'required|string',
-        ]);
+        try {
+            $validated = $request->validate([
+               'title' => 'required|string|max:255',
+               'grade' => 'required|integer|min:6|max:13',
+               'subject' => 'required|string',
+               'year' => 'required|integer',
+               'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:52428800',
+               'category' => 'required|string',
+            ]);
 
-        // Create a new material
-        $material = StudyMaterial::create([
-            'subject_id' => $validated['subject_id'],
-            'title' => $validated['title'],
-            'file_path' => $validated['file_path'],
+            // Store the file with original name and public visibility
+            $file = $request->file('file');
+            if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+                return response()->json(['message' => 'No valid file uploaded'], 400);
+            }
+            $path = $file->storeAs('materials', time().'_'.Str::slug($file->getClientOriginalName()), 'public');
 
-        ]);
+            // Save to DB
+            $material = StudyMaterial::create([
+                'title' => $validated['title'],
+                'uploaded_by' => auth()->id(),
+                'grade' => $validated['grade'],
+                'subject' => $validated['subject'],
+                'year' => $validated['year'],
+                'file_url' => $path,
+                'category' => $validated['category'],
+            ]);
 
-        return response()->json([
-            'message' => 'StudyMaterial created successfully',
-            'material' => $material
-        ], 201);
+            return response()->json([
+                'message' => 'Material uploaded successfully',
+                'material' => $material,
+            ], 201);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'File upload failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
