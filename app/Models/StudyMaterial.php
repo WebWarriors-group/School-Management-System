@@ -12,23 +12,17 @@ class StudyMaterial extends Model
     protected $table = 'study_materials';
 
     protected $fillable = [
-        'subject_id', 
         'uploaded_by', 
+        'category',
         'title', 
         'grade', 
         'subject', 
         'year',
-        'file_path', 
-        'uploaded_at'
+        'file_url', 
     ];
 
-    public function subject()
+    public function uploaded_by()
     {
-        return $this->belongsToMany(Subject::class, 'subject_id');
-    }
-
-    public function teacher()
-    {
-        return $this->belongsTo(Teacher::class, 'uploaded_by');
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 }

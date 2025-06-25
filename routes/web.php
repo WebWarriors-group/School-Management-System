@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
@@ -20,8 +21,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 
-use Illuminate\Support\Facades\Mail;
+
 use App\Mail\StudentAdmissionMail;
+
+Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
 Route::get('/', function () {
     $images = Img::all(); 
@@ -56,6 +59,7 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
 
 
 
+    });
 });
 
 
@@ -79,9 +83,6 @@ Route::post('/classadd', [ClassController::class, 'store']);
 })->name('add-teacher');
 Route::get('/Teacher/teacherForm', function () {
     return Inertia::render('Teacher/dashboard');
-});
-
-
 });
 
 
@@ -150,7 +151,6 @@ Route::get('/calendar', function () {
 
 
 
-
 //Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 
@@ -175,6 +175,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
+Route::get('/students/all', function () {
+    return Inertia::render('Student/ViewAllStudents', [
+        // You can pass props here
+    ]);
+})->name('students.all');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

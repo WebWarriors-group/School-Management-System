@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { usePage } from '@inertiajs/react';
-//import html2pdf from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 
 type Mark = {
   subject_id: number;

@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     // Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     
-
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
     Route::post('/google-login', [AuthenticatedSessionController::class, 'googleLoginStore']);
@@ -50,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
     Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
+    Route::post('/study_material', [StudyMaterialController::class, 'store']);
 });
 
 
