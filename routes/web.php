@@ -138,7 +138,7 @@ Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
 
-Route::get('/calendar', function () {
+Route::get('admin/calendar', function () {
     return Inertia::render('Admin/CalendarPage');
 })->name('calendar');
 

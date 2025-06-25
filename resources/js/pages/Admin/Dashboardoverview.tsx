@@ -274,6 +274,10 @@ export default function StatsOverviewPage({grades,subjects,classes: classesGroup
   const back3 = () => {
     setSelectedCard(null);
   }
+  const close4=()=>{
+    setshowCalendar(false);
+  }
+  
 
 
   const {
