@@ -123,22 +123,21 @@ Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'perso
 Route::get('/dashboard/teacher-count', [TeacherController::class, 'getTeacherCount']);
 
 
-// Teacher submitting a request
+
 Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->name('teacher.requests');
 
 
 
-Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
 
 
 Route::get('/teacher_details', function () {
-    return inertia::render('Admin/techerInfo'); // This should return the Inertia page
+    return inertia::render('Admin/techerInfo'); 
 })->name('teacher_details');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
 
-Route::get('/calendar', function () {
+Route::get('admin/calendar', function () {
     return Inertia::render('Admin/CalendarPage');
 })->name('calendar');
 
