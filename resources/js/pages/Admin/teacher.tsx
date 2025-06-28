@@ -45,7 +45,7 @@ export default function AdminTeacherDashboard() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <div className="flex flex-col gap-8 p-8 bg-gray-50 min-h-screen">
+      <div className="flex flex-col gap-8 p-8 bg-gray-50 min-h-screen bg-gyay-200">
 
         {/* Top Cards: Total Teachers & Registered Teachers */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
