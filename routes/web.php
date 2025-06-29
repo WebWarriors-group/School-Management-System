@@ -119,7 +119,7 @@ Route::get('/admin/teacher-requests', [TeacherRequestController::class, 'index']
 
 
 
-Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'personalDashboard'])->name('personaldashboard');
+//Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'personalDashboard'])->name('personaldashboard');
 Route::get('/dashboard/teacher-count', [TeacherController::class, 'getTeacherCount']);
 
 
@@ -128,7 +128,7 @@ Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->nam
 
 
 
-Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
+//Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
 
 
 Route::get('/teacher_details', function () {
