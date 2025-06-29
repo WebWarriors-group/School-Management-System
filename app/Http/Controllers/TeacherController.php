@@ -19,29 +19,9 @@ use Illuminate\Support\Facades\Log;
 class TeacherController extends Controller
 {
 
-    public function personalDashboard()
+    public function dashboard()
     {
-        $user = Auth::user();
-        $teacherUser = $user->teacher();
-
-        if (!($teacherUser->exists())) {
-            return redirect()->route('add-teacher');
-        }
-
-        $teacher = $teacherUser->with([
-            'teachersaddress',
-            'personal',
-            'qualifications',
-            'teacherotherService',
-            'class',
-            'class.studentacademics',
-            'class.studentacademics.studentpersonal'
-        ])->first();
-
-        return Inertia::render('Teacher/personalDash', [
-            'teacher' => $teacher
-        ]);
-        
+        return Inertia::render('Teacher/dashboard');
     }
 
     /**
