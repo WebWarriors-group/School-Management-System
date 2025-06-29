@@ -4,6 +4,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import axios from 'axios';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+ 
 
 interface CalendarEvent {
   id?: string;
@@ -13,7 +16,15 @@ interface CalendarEvent {
   allDay?: boolean;
 }
 
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: ' 📅 School Event Calendar',
+    href: '/',
+  },
+];
+
 export default function CalendarPage() {
+  
   const [events, setEvents] = useState<CalendarEvent[]>([]);
 
   useEffect(() => {
@@ -56,14 +67,47 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-100 flex flex-col mt-10">
+    <AppLayout breadcrumbs={breadcrumbs}>
+    <div className="min-h-screen bg-gray-200 flex flex-col mt-10">
       {/* Header */}
-      <header className="bg-white shadow-md py-6 mb-10">
+
+      
+<style>
+  {`
+
+  .fc .fc-col-header thead tr {
+  background-color:rgb(12, 56, 103) !important; /* Tailwind yellow-500 */}
+    .fc .fc-button {
+      color: #2563EB !important; /* Tailwind blue-600 */
+      border-color: #2563EB !important;
+      background-color: white !important;
+    }
+.fc .fc-col-header-cell-cushion {
+      
+      padding: 8px 0;
+      border-radius: 0.375rem; /* rounded-md */
+      font-weight: 600;
+      color:rgb(228, 228, 228); /* Tailwind blue-900 for contrast */
+      text-align: center;
+    }
+    .fc .fc-button:hover,
+    .fc .fc-button.fc-button-active {
+      background-color:rgb(174, 108, 22) !important;
+      color: white !important;
+    }
+
+    .fc .fc-daygrid-day-number {
+      color: #2563EB !important; /* Tailwind blue-600 */
+      font-weight: 600;
+    }
+  `}
+</style>
+
+
+      <header className="bg-white shadow-md py-1 mb-10">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row md:items-center md:justify-between">
-          <h1 className="text-3xl font-extrabold text-blue-900 tracking-tight">
-            📅 School Event Calendar
-          </h1>
-          <p className="mt-2 md:mt-0 text-gray-600 text-sm md:text-base">
+          
+          <p className="mt-[-10px] text-gray-600 text-sm md:text-base">
             Stay organized with your important events and exams.
           </p>
         </div>
@@ -89,7 +133,7 @@ export default function CalendarPage() {
               day: 'Day',
             }}
             eventColor="#2563EB" // Tailwind blue-600
-            eventTextColor="#ffffff"
+            eventTextColor="blue"
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
@@ -101,9 +145,8 @@ export default function CalendarPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 py-6 bg-white text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} Your School Name. All rights reserved.
-      </footer>
+      
     </div>
+    </AppLayout>
   );
 }

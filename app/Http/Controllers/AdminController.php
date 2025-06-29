@@ -165,7 +165,9 @@ $teacherDeleted = Teacher::onlyTrashed()
         ]);
 
 
-Mail::to($user->email)->queue(new WelcomeMail($user));
+Mail::to($user->email)->queue(new WelcomeMail($user,$request->password));
+
+
        
          }
 
