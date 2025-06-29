@@ -23,21 +23,21 @@ class TeacherController extends Controller
         return Inertia::render('Teacher/dashboard');
     }
 
-    public function personalDashboard($teacher_NIC)
-    {
-        $teacher = Teacher::with([
-            'teachersaddress', 'personal', 'qualifications', 'teacherotherService'
-        ])->where('teacher_NIC', $teacher_NIC)->first();  // Change to first() from find()
+    // public function personalDashboard($teacher_NIC)
+    // {
+    //     $teacher = Teacher::with([
+    //         'teachersaddress', 'personal', 'qualifications', 'teacherotherService'
+    //     ])->where('teacher_NIC', $teacher_NIC)->first();  // Change to first() from find()
 
-        if (!$teacher) {
-            return redirect()->route('dashboard')->with('error', 'Teacher not found');
-        }
+    //     if (!$teacher) {
+    //         return redirect()->route('dashboard')->with('error', 'Teacher not found');
+    //     }
 
-        return Inertia::render('Teacher/personalDash', [
-            'teacher' => $teacher
-        ]);
+    //     return Inertia::render('Teacher/personalDash', [
+    //         'teacher' => $teacher
+    //     ]);
         
-    }
+    // }
 
     /**
      * Display a listing of teachers.
