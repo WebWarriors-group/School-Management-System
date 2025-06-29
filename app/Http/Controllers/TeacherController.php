@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
+
     public function dashboard()
     {
         return Inertia::render('Teacher/dashboard');
