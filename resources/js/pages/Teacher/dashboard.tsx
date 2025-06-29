@@ -31,7 +31,7 @@ const [tasks, setTasks] = useState<Task[]>(() => {
   const [newTask, setNewTask] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isMessagingOpen, setIsMessagingOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+   const [menuOpen, setMenuOpen] = useState(false);
 useEffect(() => {
   localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
 }, [tasks]);
@@ -40,7 +40,7 @@ const data = [
   { name: 'Girls', value: 45 },
 ];
 
-const COLORS = ['#0088FE', '#FF69B4'];
+const COLORS = ['#CC7722', '#FFBF00'];
 
   const addTask = () => {
     if (!newTask.trim()) return;
@@ -287,7 +287,7 @@ const COLORS = ['#0088FE', '#FF69B4'];
           outerRadius={80}
           fill="#8884d8"
           dataKey="value"
-          label
+          // label
         >
           {data.map((_entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
