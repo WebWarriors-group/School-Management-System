@@ -12,10 +12,12 @@ class WelcomeMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
+    public $password;
 
-public function __construct($user)
+public function __construct($user,$password)
 {
     $this->user = $user;
+     $this->password = $password;
 }
 
     public function build()
@@ -24,3 +26,4 @@ public function __construct($user)
                     ->view('emails.welcome');
     }
 }
+ 

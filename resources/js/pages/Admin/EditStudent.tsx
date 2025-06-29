@@ -1,4 +1,9 @@
 
+import React, { useState, useEffect } from "react";
+
+// import StudentAdmissionForm from "../Student/StudentAdmissionForm";
+
+import { Student } from "@/types";
 
 interface Props {
     student: Student;

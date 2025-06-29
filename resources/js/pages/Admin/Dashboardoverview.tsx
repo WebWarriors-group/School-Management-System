@@ -2,13 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { router, usePage } from '@inertiajs/react';
-import React, { useEffect, useState } from 'react';
-import ImportStudent from "./ImportStudent";
+
+import React, { useState, useEffect } from 'react';
 import AddTeacherForm from '@/pages/Teacher/teacherForm';
-import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
-import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
-import ViewAllStudents from '@/pages/Student/ViewAllStudents';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
 import AssignTeachersPage from '@/pages/Admin/teacher_sub';
 import ClassIndex from '@/pages/Admin/ClassCrud';
@@ -16,6 +12,12 @@ import { Button } from '@headlessui/react';
 import Gallery from '@/pages/Admin/imagegallery';
 import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
+import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
+import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
+import ImportStudent from '@/pages/Admin/ImportStudent';
+import ViewAllStudents from '@/pages/Student/ViewAllStudents';
+ 
+
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -120,6 +122,18 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const [addteacher, setteacher] = useState(false);
   const [showCalendar, setshowCalendar] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+
+  
+  
+  
+  
+
+  
+ 
+ 
+  
+  
+
   const [showStudentForm, setShowStudentForm] = useState(false);
   const [showImportForm, setImportForm] = useState(false);
   const [Fetchedstudents, setFetchedStudents] = useState<Student[]>([]);
@@ -175,9 +189,8 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const handleAddStudentClick = () => {
     setShowStudentForm(true);
   };
-
   const CloseClick = () => {
-    setShowStudentForm(false);
+    setShowForm(false);
   };
 
   const handle2 = () => {
@@ -208,6 +221,13 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     setSelectedCard(null);
   };
 
+  const handle10=()=>{
+    setshowCalendar(true);
+  }
+  const close4=()=>{
+    setshowCalendar(false);
+  }
+  
   const cards = [
     {
       id: 1,
@@ -247,20 +267,31 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     },
   ];
 
+  
+    
+
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
-        <p>1</p>
+      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
+       
+       <p className="bg-white text-white"> ghdopgkb</p>
       </header>
-      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
-        {selectedCard && selectedCard.id === 4 ? (
-          <>
-            <ViewAllStudents />
-            <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
+      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-100">
+        {selectedCard && selectedCard.id === 1?(
+
+<div>
+   <Button
+              className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
+              onClick={back3}
+            >
               Back
             </Button>
-          </>
-        ) : selectedCard && selectedCard.id === 2 ? (
+  <SubjectIndex subjects={subjects} grades={grades}/> 
+</div>
+
+
+        ):selectedCard && selectedCard.id === 2 ? (
           <>
             <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>
               Back
@@ -272,7 +303,19 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
               }))}
             />
           </>
-        ) : showclass ? (
+        ):selectedCard && selectedCard.id === 4 ? (
+          <>
+            <ViewAllStudents />
+            <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
+              Back
+            </Button>
+          </>
+        ) :
+        
+        
+        
+        
+        showclass ? (
           addteacher ? (
             <>
               <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>
