@@ -60,3 +60,11 @@ export interface PageProps extends SharedData {
     };
 }
 
+
+export interface PageProps extends SharedData {
+    flash: {
+        success?: string;
+        error?: string;
+    };
+}
+

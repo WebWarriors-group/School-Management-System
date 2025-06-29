@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
-use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
@@ -107,28 +106,28 @@ Route::get('/admin/teacher-requests', [TeacherRequestController::class, 'index']
 
 
 
+//Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'personalDashboard'])->name('personaldashboard');
 Route::get('/dashboard/teacher-count', [TeacherController::class, 'getTeacherCount']);
 
 
-// Teacher submitting a request
+
 Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->name('teacher.requests');
 
 
 
-Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
+//Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
 
 
 Route::get('/teacher_details', function () {
-    return inertia::render('Admin/techerInfo'); // This should return the Inertia page
+    return inertia::render('Admin/techerInfo'); 
 })->name('teacher_details');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
 
-Route::get('/calendar', function () {
+Route::get('admin/calendar', function () {
     return Inertia::render('Admin/CalendarPage');
 })->name('calendar');
-
 
 
 
@@ -168,7 +167,6 @@ Route::get('/students/all', function () {
         // You can pass props here
     ]);
 })->name('students.all');
-
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
