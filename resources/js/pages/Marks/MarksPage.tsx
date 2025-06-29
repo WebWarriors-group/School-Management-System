@@ -74,7 +74,7 @@ const fetchMarks = useCallback(async () => {
 
     console.log("Fetching marks with params:", params.toString()); // Debugging log
     
-    const response = await fetch(`/api/marks/?${params}`);
+    const response = await fetch(`/marks/?${params}`);
     const data = await response.json();
 
     console.log("Fetched data:", data); // Check the fetched data
@@ -150,7 +150,7 @@ const fetchMarks = useCallback(async () => {
   const confirmDeleteMark = async () => {
   if (!markToDelete) return;
   try {
-    await fetch(`/api/marks/${markToDelete.id}`, { method: 'DELETE' });
+    await fetch(`/marks/${markToDelete.id}`, { method: 'DELETE' });
 
     toast.success("Mark deleted successfully!", {
       style: {
@@ -203,7 +203,7 @@ const fetchMarks = useCallback(async () => {
   
       console.log("Sending to backend:", markToSend);
   
-      await fetch(`/api/marks/${editingMark.id}`, {
+      await fetch(`/marks/${editingMark.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(markToSend),
@@ -223,7 +223,7 @@ const fetchMarks = useCallback(async () => {
   
 const handleCreateMark = async () => {
   try {
-    const response = await fetch('/api/marks', {
+    const response = await fetch('/marks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newMark),

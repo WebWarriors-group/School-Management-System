@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
     // Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
     Route::post('/google-login', [AuthenticatedSessionController::class, 'googleLoginStore']);
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
@@ -69,7 +69,6 @@ Route::middleware('auth', 'admin')->group(function () {
 
 
 Route::middleware('auth', 'teacher')->group(function () {
-     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
@@ -87,6 +86,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+    Route::post('/marks', [MarkController::class, 'store']);
+    Route::get('/marks', [MarkController::class, 'create']);
+    Route::get('/marks/{id}', [MarkController::class, 'show']);
+    Route::put('/marks/{id}', [MarkController::class, 'update']);
+    Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
 });
 
 

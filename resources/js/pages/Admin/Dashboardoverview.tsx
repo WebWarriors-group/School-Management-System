@@ -2,9 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { usePage } from '@inertiajs/react';
+
 import React, { useState, useEffect } from 'react';
 import AddTeacherForm from '@/pages/Teacher/teacherForm';
+import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
+import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
+import ViewAllStudents from '@/pages/Student/ViewAllStudents';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
 import AssignTeachersPage from '@/pages/Admin/teacher_sub';
 import ClassIndex from '@/pages/Admin/ClassCrud';
@@ -12,10 +15,8 @@ import { Button } from '@headlessui/react';
 import Gallery from '@/pages/Admin/imagegallery';
 import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
-import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
-import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
 import ImportStudent from '@/pages/Admin/ImportStudent';
-
+ 
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -119,60 +120,41 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const [showclass, setClass] = useState(false);
   const [showSub, setSub] = useState(false);
   const [addteacher, setteacher] = useState(false);
-   const [showStudentForm, setShowStudentForm] = useState(false);
   const [showCalendar, setshowCalendar] = useState(false);
-   const [showImportForm,setImportForm ] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   
-  const [filters, setFilters] = useState<{ grade?: string; section?: string; class_name?: string }>(initialFilters || {});
+  
+  
+  
 
   
+ 
+ 
+  
+  
+
+  const [showStudentForm, setShowStudentForm] = useState(false);
+  const [showImportForm, setImportForm] = useState(false);
+  const [Fetchedstudents, setFetchedStudents] = useState<Student[]>([]);
+  const [filters, setFilters] = useState<{ grade?: string; section?: string; class_name?: string }>(initialFilters || {});
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
-  
- 
- 
-  const cards = [
-    {
-      id: 1,
-      color: 'bg-yellow-500',
-      icon: faUsers,
-      title: 'Total Subjects',
-      value: subject,
-      footer: 'Total count of overall subjects',
-      footerColor: 'text-blue-500',
-    },
-    {
-      id: 2,
-      color: 'bg-stone-800',
-      icon: faUsers,
-      title: 'Classes',
-      value: class1,
-      footer: classfooter,
-      footerColor: 'text-blue-500',
-    },
-    {
-      id: 3,
-      color: 'bg-stone-500',
-      icon: faUsers,
-      title: 'Staffs',
-      value: teachers,
-      footer: teacherfooter,
-      footerColor: 'text-blue-500',
-    },
-    {
-      id: 4,
-      color: 'bg-sky-900',
-      icon: faUsers,
-      title: 'Students',
-      value: students,
-      footer: studentfooter,
-      footerColor: 'text-blue-500',
-    },
-  ];
+  const fetchStudents = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/students");
+      if (!response.ok) throw new Error("Error fetching students");
+      const data = await response.json();
+      setFetchedStudents(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-  
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
   useEffect(() => {
     setFilteredClasses(classData.data);
   }, [classData.data]);
@@ -209,7 +191,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   };
 
   const CloseClick = () => {
-    setShowForm(false);
+    setShowStudentForm(false);
   };
 
   const handle2 = () => {
@@ -247,28 +229,63 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     setshowCalendar(false);
   }
   
+  const cards = [
+    {
+      id: 1,
+      color: 'bg-yellow-500',
+      icon: faUsers,
+      title: 'Total Subjects',
+      value: subject,
+      footer: 'Total count of overall subjects',
+      footerColor: 'text-gray-400',
+    },
+    {
+      id: 2,
+      color: 'bg-stone-800',
+      icon: faUsers,
+      title: 'Classes',
+      value: class1,
+      footer: classfooter,
+      footerColor: 'text-gray-400',
+    },
+    {
+      id: 3,
+      color: 'bg-stone-500',
+      icon: faUsers,
+      title: 'Staffs',
+      value: teachers,
+      footer: teacherfooter,
+      footerColor: 'text-gray-400',
+    },
+    {
+      id: 4,
+      color: 'bg-sky-900',
+      icon: faUsers,
+      title: 'Students',
+      value: students,
+      footer: studentfooter,
+      footerColor: 'text-gray-400',
+    },
+  ];
+
+  
+    
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
-       
-       <p className="bg-white text-white"> ghdopgkb</p>
+      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
+        <p>1</p>
       </header>
-      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-100">
-        {selectedCard && selectedCard.id === 1?(
-
-<div>
-   <Button
-              className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
-              onClick={back3}
-            >
+      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
+        {selectedCard && selectedCard.id === 4 ? (
+          <>
+            <ViewAllStudents />
+            <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
               Back
             </Button>
-  <SubjectIndex subjects={subjects} grades={grades}/> 
-</div>
-
-
-        ):selectedCard && selectedCard.id === 2 ? (
+          </>
+        ) : selectedCard && selectedCard.id === 2 ? (
           <>
             <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>
               Back
@@ -280,7 +297,19 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
               }))}
             />
           </>
-        ) : showclass ? (
+        ):selectedCard && selectedCard.id === 4 ? (
+          <>
+            <ViewAllStudents />
+            <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
+              Back
+            </Button>
+          </>
+        ) :
+        
+        
+        
+        
+        showclass ? (
           addteacher ? (
             <>
               <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>
