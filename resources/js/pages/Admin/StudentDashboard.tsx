@@ -1,32 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
 import Table from "@/components/ui/table";
 import { Toaster, toast } from "sonner";
-// import StudentAdmissionForm from "../Student/StudentAdmissionForm";
-import { Trash2, Eye } from "lucide-react";
+import { Trash2, Eye, FileText } from "lucide-react"; // FileText is used for "Marks" button
 import { Student } from "@/types";
 import SearchStudent from "./SearchStudent";
 import ViewStudent from "./ViewStudent";
 import DeleteStudent from "./DeleteStudent";
+
 
 const breadcrumbs = [
   { title: "🎓 Student Dashboard", href: "/student/dashboard" },
 ];
 
 const StudentDashboard: React.FC = () => {
-
   const [students, setStudents] = useState<Student[]>([]);
   const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
   const [studentToDelete, setStudentToDelete] = useState<string | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [searchedStudents, setSearchedStudents] = useState<Student[]>([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  
 
   const handleSearchResults = (results: Student[]) => {
     setSearchedStudents(results);
@@ -85,7 +81,6 @@ const StudentDashboard: React.FC = () => {
     setIsViewModalOpen(true);
   };
 
-
   const uniqueClassCount = new Set(students.map((s) => s.class_id)).size;
   const scholarshipCount = students.filter(
     (s) =>
@@ -104,79 +99,68 @@ const StudentDashboard: React.FC = () => {
             <SearchStudent students={students} />
           </header>
 
-<div className="grid grid-cols-3 gap-1 md:grid-cols-3 mt-4 mx-2 mb-2">
-  <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
-    <h3 className="text-maroon-700 text-base font-semibold">Total Students</h3>
-    <p className="mt-1 text-lg font-bold text-green-600">{students.length}</p>
-  </div>
-  <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
-    <h3 className="text-maroon-700 text-base font-semibold">Class Enrolled</h3>
-    <p className="mt-1 text-lg font-bold text-red-600">{uniqueClassCount}</p>
-  </div>
-  <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
-    <h3 className="text-maroon-700 text-base font-semibold">Receiving Scholarship</h3>
-    <p className="mt-1 text-lg font-bold text-blue-600">{scholarshipCount}</p>
-  </div>
-</div>
-
-
+          <div className="grid grid-cols-3 gap-1 md:grid-cols-3 mt-4 mx-2 mb-2">
+            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+              <h3 className="text-maroon-700 text-base font-semibold">Total Students</h3>
+              <p className="mt-1 text-lg font-bold text-green-600">{students.length}</p>
+            </div>
+            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+              <h3 className="text-maroon-700 text-base font-semibold">Class Enrolled</h3>
+              <p className="mt-1 text-lg font-bold text-red-600">{uniqueClassCount}</p>
+            </div>
+            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+              <h3 className="text-maroon-700 text-base font-semibold">Receiving Scholarship</h3>
+              <p className="mt-1 text-lg font-bold text-blue-600">{scholarshipCount}</p>
+            </div>
+          </div>
 
           <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
-            
-              {/* <Button onClick={() => setShowForm(true)} className="bg-green-700 text-white">
-                Admission Form
-              </Button> */}
-              
-           
-
-            {/* {showForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-                  <StudentAdmissionForm setShowForm={setShowForm} />
-                </div>
-              </div>
-            )} */}
-
-           
-
             <Table
               columns={["Reg No", "Distance", "Method", "Actions"]}
               data={students.map((student) => ({
                 "Reg No": student.reg_no,
-               
                 "Distance": student.distance_to_school,
                 "Method": student.method_of_coming_to_school,
                 Actions: (
                   <div className="flex gap-2">
-
-                    <Button onClick={() => handleDeleteClick(student.reg_no)} className="bg-red-600 text-white">
+                    <Button
+                      onClick={() => handleDeleteClick(student.reg_no)}
+                      className="bg-red-600 text-white"
+                    >
                       <Trash2 size={16} />
                     </Button>
-                    <Button onClick={() => handleViewClick(student)} className="bg-purple-500 text-white">
+                    <Button
+                      onClick={() => handleViewClick(student)}
+                      className="bg-purple-500 text-white"
+                    >
                       <Eye size={16} />
                     </Button>
+                  <Button
+  onClick={() => router.visit(`/mark/ReportPage/${student.reg_no}`)}
+  className="bg-indigo-700 text-white flex items-center gap-2 px-3 py-2 rounded-md hover:bg-indigo-600 transition duration-300"
+  title="View Report Card"
+>
+  <FileText size={18} />
+  
+</Button>
                   </div>
                 ),
               }))}
             />
 
-
-
-   <ViewStudent
-  student={viewingStudent}
-  isOpen={isViewModalOpen}
-  onClose={() => setIsViewModalOpen(false)}
-  onStudentUpdated={(updatedStudent) => {
-    setViewingStudent(updatedStudent); // ✅ fix applied
-    // Optional: also update the student in the main students list
-    setStudents((prev) =>
-      prev.map((s) =>
-        s.reg_no === updatedStudent.reg_no ? updatedStudent : s
-      )
-    );
-  }}
-/>
-
+            <ViewStudent
+              student={viewingStudent}
+              isOpen={isViewModalOpen}
+              onClose={() => setIsViewModalOpen(false)}
+              onStudentUpdated={(updatedStudent) => {
+                setViewingStudent(updatedStudent);
+                setStudents((prev) =>
+                  prev.map((s) =>
+                    s.reg_no === updatedStudent.reg_no ? updatedStudent : s
+                  )
+                );
+              }}
+            />
 
             <DeleteStudent
               isOpen={isDeleteModalOpen}
