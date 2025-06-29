@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
