@@ -67,12 +67,6 @@ Route::put('/subjects/{subject_id}', [SubjectController::class, 'update']);
 
 Route::post('/subjects', [SubjectController::class, 'store']);
 
-Route::post('/marks', [MarkController::class, 'store']);
-Route::get('/marks', [MarkController::class, 'create']);
-Route::get('/marks/{id}', [MarkController::class, 'show']);
-Route::put('/marks/{id}', [MarkController::class, 'update']);
-Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
-
 //Route::get('/report/{reg_no}', [ReportController::class, 'show']);
 
 

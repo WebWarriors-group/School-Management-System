@@ -14,13 +14,89 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/dashboard',
   },
 ];
+
+type Teacher = {
+    teacher_NIC: string;
+  personal:{
+  Full_name: string;
+  Full_name_with_initial: string;
+  Photo: File | null;
+  Gender: string;
+  Region: string;
+  Ethnicity: string;
+  Birthdate: string;
+  Title: string;
+  Marital_status: string;
+  Details_about_family_members: string;
+  Emergency_telephone_number: string;
+  Email_address: string;
+  Fixed_telephone_number: string;
+  Mobile_number: string;
+  Whatsapp_number: string;
+  };
+  teachersaddress : {
+  permanent_address: string;
+  residential_address: string;
+  grama_niladari_division: string;
+  grama_niladari_division_number: string;
+  election_division: string;
+  election_division_number: string;
+  };
+  appointed_date: string;
+  work_acceptance_date: string;
+  
+  // New Fields
+  appointment_type: string;
+  salary_increment_date: string; // ISO format date (YYYY-MM-DD)
+  current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
+  work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
+  temporary_attachedschool_or_institute_name: string;
+  appointed_subject: string;
+  which_grades_teaching_done: string;
+  current_teaching_subject: string;
+  other_subjects_taught: string;
+  assigned_class: string;
+  other_responsibilities_assigned: string;
+  is_150_hrs_tamil_course_completed: boolean;
+  commuting_from_school: "Home" | "Boarding" | "Hostel" | "Other";
+  distance_from_school: number;
+  commuting_method_to_school: "Bicycle" | "MotorBike" | "Car" | "Bus" | "Threewheeler" | "Walk" | "Other";
+  number_in_sign_sheet: string;
+  number_in_salary_sheet: string;
+  qualifications:{
+  type_of_service_in_school:string;
+  gce_al_subject_stream: string;
+  highest_education_qualification: string;
+  basic_degree_stream: string;
+  highest_professional_qualification: string;
+  present_class: string;
+  present_grade: string;
+  appointment_date_for_current_class: string;
+  appointment_date_for_current_grade: string;
+  current_appointment_service_medium: string;
+  appointed_subject_section: string;
+  subject_appointed: string;
+  currentservice_appointed_date: string;
+  subjects_taught_most_and_second_most: string;
+  position_in_the_school: string;
+  assign_date_for_the_school: string;
+  };
+  teacherotherservice:{
+  other_responsibilities_in_school: string;
+  EDCS_membership: string;
+  WSOP_Number: number | null;
+  Agrahara_insuarence_membership: string;
+  };
+
+};
+
 type Task = {
   id: number;
   text: string;
   completed: boolean;
 };
 
-export default function PersonalDash() {
+export default function dashboard({ teacher }: { teacher: Teacher }) {
   const [date, setDate] = useState(new Date());
 const [tasks, setTasks] = useState<Task[]>(() => {
   const saved = localStorage.getItem('teacher_todo_tasks');
@@ -304,7 +380,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
       <ul className="text-sm text-gray-700 list-disc list-inside">
         
       </ul>
-      <Link href="/leave_details">
+      <Link href="/mark/MarksPage">
                     <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
                       Marks Details
                     </button>

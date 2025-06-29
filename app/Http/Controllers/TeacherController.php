@@ -21,7 +21,26 @@ class TeacherController extends Controller
 
     public function dashboard()
     {
-        return Inertia::render('Teacher/dashboard');
+        $user = Auth::user();
+        $teacherUser = $user->teacher();
+
+        if (!($teacherUser->exists())) {
+            return redirect()->route('add-teacher');
+        }
+
+        $teacher = $teacherUser->with([
+            'teachersaddress',
+            'personal',
+            'qualifications',
+            'teacherotherService',
+            'class',
+            'class.studentacademics',
+            'class.studentacademics.studentpersonal'
+        ])->first();
+
+        return Inertia::render('Teacher/dashboard', [
+            'teacher' => $teacher
+        ]);
     }
 
     /**
