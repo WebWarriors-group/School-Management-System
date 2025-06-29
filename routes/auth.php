@@ -86,6 +86,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+    Route::post('/marks', [MarkController::class, 'store']);
+    Route::get('/marks', [MarkController::class, 'create']);
+    Route::get('/marks/{id}', [MarkController::class, 'show']);
+    Route::put('/marks/{id}', [MarkController::class, 'update']);
+    Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
 });
 
 

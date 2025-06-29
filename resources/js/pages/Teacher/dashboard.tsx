@@ -380,7 +380,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
       <ul className="text-sm text-gray-700 list-disc list-inside">
         
       </ul>
-      <Link href="/leave_details">
+      <Link href="/mark/MarksPage">
                     <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
                       Marks Details
                     </button>
