@@ -18,20 +18,25 @@ use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
-    public function dashboard()
-    {
-        return Inertia::render('Teacher/dashboard');
-    }
 
-    public function personalDashboard($teacher_NIC)
+    public function personalDashboard()
     {
-        $teacher = Teacher::with([
-            'teachersaddress', 'personal', 'qualifications', 'teacherotherService'
-        ])->where('teacher_NIC', $teacher_NIC)->first();  // Change to first() from find()
+        $user = Auth::user();
+        $teacherUser = $user->teacher();
 
-        if (!$teacher) {
-            return redirect()->route('dashboard')->with('error', 'Teacher not found');
+        if (!($teacherUser->exists())) {
+            return redirect()->route('add-teacher');
         }
+
+        $teacher = $teacherUser->with([
+            'teachersaddress',
+            'personal',
+            'qualifications',
+            'teacherotherService',
+            'class',
+            'class.studentacademics',
+            'class.studentacademics.studentpersonal'
+        ])->first();
 
         return Inertia::render('Teacher/personalDash', [
             'teacher' => $teacher
