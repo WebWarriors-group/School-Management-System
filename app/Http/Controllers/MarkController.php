@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Marks;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MarkController extends Controller
 {
@@ -14,7 +15,19 @@ class MarkController extends Controller
     // Fetch all marks
     public function create(Request $request)
 {
+    $user = Auth::user();
     $query = Marks::query();
+
+    if ($user->teacher()->exists()) {
+        $teacher = $user->teacher()->with('class.studentacademics')->first();
+        if($teacher && $teacher->class && $teacher->class->studentacademics){
+            $studentRegNos = $teacher->class->studentacademics
+                ->pluck('reg_no')
+                ->unique()
+                ->toArray();
+            $query->whereIn('reg_no', $studentRegNos);
+        }
+    }
 
     if ($request->has('reg_no')) {
         $query->where('reg_no', 'LIKE', '%' . $request->input('reg_no') . '%');

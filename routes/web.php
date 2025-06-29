@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -20,8 +19,6 @@ use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
-
-
 use App\Mail\StudentAdmissionMail;
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
@@ -63,13 +60,6 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
 });
 
 
-
-
-    
-
-
-
-
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 
 Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
@@ -81,9 +71,6 @@ Route::post('/classadd', [ClassController::class, 'store']);
  Route::get('/add-teacher', function () {
     return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
 })->name('add-teacher');
-Route::get('/Teacher/teacherForm', function () {
-    return Inertia::render('Teacher/dashboard');
-});
 
 
 
