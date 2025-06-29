@@ -52,7 +52,7 @@ $images=Img::all();
    $studentupdate=StudentAcademic::latest('updated_at')->value('updated_at');
     
    $classupdate=ClassModel::latest('updated_at')->value('updated_at');
-    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC','class_name')
+    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC','class_name','year')
         ->get()
         ->groupBy('class_name') 
         ->map->groupBy('grade');  

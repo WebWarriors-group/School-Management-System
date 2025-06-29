@@ -23,6 +23,7 @@ use SoftDeletes;
         'teacher_NIC',
         'class_name',
         'grade',
+        'year',
         'section',
         'number_of_students'
     ];

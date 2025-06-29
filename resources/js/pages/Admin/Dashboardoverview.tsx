@@ -3,6 +3,7 @@ import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 
+import { Pointer } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import AddTeacherForm from '@/pages/Teacher/teacherForm';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
@@ -40,6 +41,7 @@ interface Class {
   class_id: number;
   class_name: string;
   grade: number;
+   year: number;
   section: string;
   studentacademics_count: number;
   teacher_NIC: string;
@@ -59,6 +61,7 @@ interface Card {
 interface ClassItem {
   class_id: number;
   grade: number;
+   year: number;
   section: string;
   class_name: string;
   teacher_NIC: string;
@@ -127,6 +130,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   
    
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+ 
 
   
   
@@ -237,6 +241,17 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const close4=()=>{
     setshowCalendar(false);
   }
+const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 2000); // animation duration
+    },9000); // repeat every 2 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   
   const cards = [
     {
@@ -246,7 +261,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       title: 'Total Subjects',
       value: subject,
       footer: 'Total count of overall subjects',
-      footerColor: 'text-gray-400',
+      footerColor: 'text-blue-500',
     },
     {
       id: 2,
@@ -255,7 +270,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       title: 'Classes',
       value: class1,
       footer: classfooter,
-      footerColor: 'text-gray-400',
+      footerColor: 'text-blue-500',
     },
     {
       id: 3,
@@ -264,7 +279,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       title: 'Staffs',
       value: teachers,
       footer: teacherfooter,
-      footerColor: 'text-gray-400',
+      footerColor: 'text-blue-500',
     },
     {
       id: 4,
@@ -273,7 +288,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       title: 'Students',
       value: students,
       footer: studentfooter,
-      footerColor: 'text-gray-400',
+      footerColor: 'text-blue-500',
     },
   ];
 
@@ -433,7 +448,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
           </>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-100">
               <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddTeacherClick}>
                 <span className="text-[20px] font-semibold text-yellow-700">Add New Teachers</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700" />
@@ -473,7 +488,24 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                 </div>
               ))}
             </div>
+ <div className="p-6 flex">
+              <StudentAdmissionChart />
+            <div className="relative w-74 h-60 bg-white  shadow-xl ml-22 flex flex-col justify-center items-center p-6">
+      <h1 className="text-xl font-semibold text-gray-800">Yearly Updates</h1>
+      <p className="text-gray-500 text-sm mt-2 text-center">
+        Track and manage yearly academic changes here.
+      </p>
 
+      <div
+        className={`absolute top-10 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full shadow-lg text-sm font-medium transition-all duration-300 ${
+          animate ? 'animate-bounce' : ''
+        }`}
+      >
+        <Pointer size={50} className="animate-pulse text-xl py-2" />
+        Click here for yearly updates
+      </div>
+    </div>
+            </div>
             <Gallery />
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 bg-white rounded-lg shadow-md">
@@ -485,9 +517,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
               ))}
             </div>
 
-            <div className="p-6">
-              <StudentAdmissionChart />
-            </div>
+            
           </>
         )}
 
