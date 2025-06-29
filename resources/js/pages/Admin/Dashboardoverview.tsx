@@ -10,7 +10,7 @@ import AssignTeachersPage from '@/pages/Admin/teacher_sub';
 import ClassIndex from '@/pages/Admin/ClassCrud';
 import { Button } from '@headlessui/react';
 import Gallery from '@/pages/Admin/imagegallery';
-
+import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
 import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
 import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
@@ -120,12 +120,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const [showclass, setClass] = useState(false);
   const [showSub, setSub] = useState(false);
   const [addteacher, setteacher] = useState(false);
-
   const [showCalendar, setshowCalendar] = useState(false);
-  
-   
-  
-   
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   
@@ -160,7 +155,6 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     fetchStudents();
   }, []);
 
-
   useEffect(() => {
     setFilteredClasses(classData.data);
   }, [classData.data]);
@@ -192,12 +186,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     setShowForm(true);
   };
 
-
   const handleAddStudentClick = () => {
     setShowStudentForm(true);
   };
-
-
   const CloseClick = () => {
     setShowForm(false);
   };
@@ -229,7 +220,6 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const back3 = () => {
     setSelectedCard(null);
   };
-
 
   const handle10=()=>{
     setshowCalendar(true);
@@ -306,7 +296,6 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
             <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>
               Back
             </Button>
-
             <ClassIndex
               classes={classData.data.map(c => ({
                 ...c,
