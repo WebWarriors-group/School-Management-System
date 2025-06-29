@@ -15,10 +15,7 @@ import { Button } from '@headlessui/react';
 import Gallery from '@/pages/Admin/imagegallery';
 import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
-import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
-import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
 import ImportStudent from '@/pages/Admin/ImportStudent';
-import ViewAllStudents from '@/pages/Student/ViewAllStudents';
  
 
 
