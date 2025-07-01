@@ -102,6 +102,7 @@ public function assignTeachers(Request $request)
             'class_teacher' => 'sometimes|nullable|required|exists:teachers,id',
             'class_name' => 'sometimes|nullable|string|max:10',
             'grade' => 'sometimes|required|integer',
+            'year' => 'sometimes|required|integer',
             'section' => 'sometimes|required|string|max:5',
             'number_of_students' => 'sometimes|required|integer|min:0|max:100',
         ]);

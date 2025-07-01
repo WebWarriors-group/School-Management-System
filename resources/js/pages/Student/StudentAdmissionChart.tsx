@@ -71,7 +71,7 @@ export default function StudentAdmissionLineChart() {
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow">
+    <div className="p-4 bg-white rounded shadow-xl w-200 h-100">
       <Line data={data} options={options} />
     </div>
   );
