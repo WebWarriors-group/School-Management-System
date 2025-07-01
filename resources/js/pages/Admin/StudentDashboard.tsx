@@ -9,7 +9,10 @@ import { Student } from "@/types";
 import SearchStudent from "./SearchStudent";
 import ViewStudent from "./ViewStudent";
 import DeleteStudent from "./DeleteStudent";
-
+import { Card, CardContent } from "@/components/ui/card"; // If using shadcn/ui
+import { User, GraduationCap, Home, Users } from "lucide-react"; // Optional: icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUsers, faSchool ,faGraduationCap} from '@fortawesome/free-solid-svg-icons';
 
 const breadcrumbs = [
   { title: "🎓 Student Dashboard", href: "/student/dashboard" },
@@ -39,7 +42,15 @@ const StudentDashboard: React.FC = () => {
       console.error("Error:", error);
     }
   };
-
+interface Card {
+  id: number;
+  title: string;
+  value: string | number;
+  footer: string;
+  footerColor: string;
+  icon: any;
+  color: string;
+}
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -75,13 +86,17 @@ const StudentDashboard: React.FC = () => {
       setStudentToDelete(null);
     }
   };
+    const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  
+  const handleCardClick = (card: Card) => {
+    setSelectedCard(card);
+  };
 
   const handleViewClick = (student: Student) => {
     setViewingStudent(student);
     setIsViewModalOpen(true);
   };
-
-  const uniqueClassCount = new Set(students.map((s) => s.class_id)).size;
+   const uniqueClassCount = new Set(students.map((s) => s.class_id)).size;
   const scholarshipCount = students.filter(
     (s) =>
       s.receiving_any_grade_5_scholarship ||
@@ -89,6 +104,34 @@ const StudentDashboard: React.FC = () => {
       s.receiving_any_scholarship
   ).length;
 
+  const cards = [
+    {
+      id: 1,
+      color: 'bg-yellow-500',
+      icon: faUsers,
+      title: 'Total Students',
+      value: students.length,
+      footerColor: 'text-blue-500',
+    },
+    {
+      id: 2,
+      color: 'bg-stone-800',
+      icon: faSchool,
+      title: 'Class Enrolled',
+      value: uniqueClassCount,
+      footerColor: 'text-blue-500',
+    },
+   
+    {
+      id: 3,
+      color: 'bg-sky-900',
+      icon: faGraduationCap,
+      title: 'Receiving Scholarship',
+      value: scholarshipCount,
+      footerColor: 'text-blue-500',
+    },
+  ];
+ 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Student Dashboard" />
@@ -98,23 +141,26 @@ const StudentDashboard: React.FC = () => {
           <header className="flex justify-end border-b bg-white shadow-sm">
             <SearchStudent students={students} />
           </header>
+ <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-4 mx-auto max-w-6xl p-6">
+              {cards.map((card, index) => (
+                <div
+                  key={index}
+                  className="relative mt-14 ml-5 h-35 w-78 border bg-white p-6 ml-[-10px] shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md flex items-center justify-center transform scale-90 z-40 cursor-pointer shadow-xl"
+                  
+                >
+                  <div className={`absolute z-0 -top-10 left-4 flex h-28 w-28 items-center justify-center text-white shadow-lg ${card.color}`}>
+                    <FontAwesomeIcon icon={card.icon} className="text-5xl" />
+                  </div>
+                  <div className="mt-[-30px] ml-30 pt-8 text-">
+                    <p className="text-[16px] text-gray-500">{card.title}</p>
+                    <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
+                    <p className={`mt-3 text-[14px] ${card.footerColor}`}></p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          <div className="grid grid-cols-3 gap-1 md:grid-cols-3 mt-4 mx-2 mb-2">
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
-              <h3 className="text-maroon-700 text-base font-semibold">Total Students</h3>
-              <p className="mt-1 text-lg font-bold text-green-600">{students.length}</p>
-            </div>
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
-              <h3 className="text-maroon-700 text-base font-semibold">Class Enrolled</h3>
-              <p className="mt-1 text-lg font-bold text-red-600">{uniqueClassCount}</p>
-            </div>
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
-              <h3 className="text-maroon-700 text-base font-semibold">Receiving Scholarship</h3>
-              <p className="mt-1 text-lg font-bold text-blue-600">{scholarshipCount}</p>
-            </div>
-          </div>
-
-          <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
+          {/* <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">
             <Table
               columns={["Reg No", "Distance", "Method", "Actions"]}
               data={students.map((student) => ({
@@ -167,7 +213,59 @@ const StudentDashboard: React.FC = () => {
               onClose={() => setIsDeleteModalOpen(false)}
               onConfirm={confirmDelete}
             />
-          </main>
+          </main> */}
+          <div className="bg-gray-200 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-6">
+      
+      {/* Academic Info Card */}
+      <Card className="shadow-lg border-t-4 border-blue-600 rounded">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-lg text-blue-700">Academic</h3>
+            <GraduationCap className="text-blue-600 w-20 h-20" />
+          </div>
+          {/* <p className="mt-2 text-gray-700 text-sm">Class: {student?.academic?.class_name}</p>
+          <p className="text-gray-700 text-sm">Reg No: {student?.academic?.reg_no}</p> */}
+        </CardContent>
+      </Card>
+
+      {/* Personal Info Card */}
+      <Card className="shadow-lg border-t-4 border-green-600 rounded ">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-lg text-green-700">Personal</h3>
+            <User className="text-green-600 w-20 h-20" />
+          </div>
+          {/* <p className="mt-2 text-gray-700 text-sm">Name: {student?.personal?.full_name}</p>
+          <p className="text-gray-700 text-sm">DOB: {student?.personal?.dob}</p> */}
+        </CardContent>
+      </Card>
+
+      {/* Family Info Card */}
+      <Card className="shadow-lg border-t-4 border-yellow-600 rounded">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-lg text-yellow-700">Family</h3>
+            <Home className="text-yellow-600 w-20 h-20" />
+          </div>
+          {/* <p className="mt-2 text-gray-700 text-sm">Father: {student?.family?.father_name}</p>
+          <p className="text-gray-700 text-sm">Mother: {student?.family?.mother_name}</p> */}
+        </CardContent>
+      </Card>
+
+      {/* Siblings Info Card */}
+      <Card className="shadow-lg border-t-4 border-purple-600 rounded">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-lg text-purple-700">Siblings</h3>
+            <Users className="text-purple-600 w-20 h-20" />
+          </div>
+          {/* <p className="mt-2 text-gray-700 text-sm">
+            Total Siblings: {student?.siblings?.length || 0}
+          </p> */}
+        </CardContent>
+      </Card>
+
+    </div>
         </div>
       </div>
     </AppLayout>
