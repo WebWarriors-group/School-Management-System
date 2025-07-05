@@ -41,7 +41,7 @@ const fetchStudents = async () => {
     const data = await res.json();
     console.log("One sample student:", data[0]);
 
-    console.log("Fetched students:", data); // <-- Add this
+    console.log("Fetched students:", data); 
     setStudents(data);
   } catch (error) {
     console.error('Error fetching students:', error);

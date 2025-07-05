@@ -35,10 +35,20 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Admission form sent successfully!']);
     }
+public function academicPage()
+{
+    $academicData = StudentAcademic::with('class')->get();
+
+    return Inertia::render('Student/AcademicTable', [
+        'academicData' => $academicData,
+        'filters' => ['search' => ''] // <-- Add this line
+    ]);
+}
+
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::with(['personal', 'class'])->get();
+        $students = StudentAcademic::with(['personal', 'class','family','siblings'])->get();
 
         return response()->json($students);
     }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminController;
@@ -72,6 +73,7 @@ Route::post('/classadd', [ClassController::class, 'store']);
     return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
 })->name('add-teacher');
 
+Route::get('/student/academic', [StudentController::class, 'academicPage']);
 
 
 
