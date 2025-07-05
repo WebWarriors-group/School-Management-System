@@ -32,7 +32,7 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
     <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">👤 Personal Information</h2>
 
-      {/* Filters */}
+
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
           type="text"
@@ -55,63 +55,63 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
         </select>
       </div>
 
-      {/* Table */}
+
       <div className="w-full overflow-x-auto">
 
         <table className="min-w-full border border-gray-300 text-sm md:text-base">
-   <thead className="bg-green-100 text-green-800">
-  <tr>
-    <th className="p-2 border">Reg. No</th>
-    <th className="p-2 border">Full Name</th>
-    <th className="p-2 border">Full Name with Initial</th>
-    <th className="p-2 border">Birthday</th>
-    <th className="p-2 border">Ethnicity</th>
-    <th className="p-2 border">Religion</th>
-    <th className="p-2 border">Gender</th>
-    <th className="p-2 border">Birth Certificate No</th>
-    <th className="p-2 border">Address</th>
-    <th className="p-2 border">NIC Number</th>
-    <th className="p-2 border">Postal IC Number</th>
-    <th className="p-2 border">Age</th>
-    <th className="p-2 border">Special Needs</th>
-    <th className="p-2 border">Height (cm)</th>
-    <th className="p-2 border">Weight (kg)</th>
-  </tr>
-</thead>
-<tbody>
-  {currentData.length === 0 ? (
-    <tr>
-      <td colSpan={15} className="text-center p-4 text-gray-500">
-        No records found.
-      </td>
-    </tr>
-  ) : (
-    currentData.map((s) => (
-      <tr key={s.reg_no} className="border-t hover:bg-green-50">
-        <td className="p-2 border">{s.reg_no}</td>
-        <td className="p-2 border">{s.full_name}</td>
-        <td className="p-2 border">{s.full_name_with_initial}</td>
-        <td className="p-2 border">{s.birthday}</td>
-        <td className="p-2 border">{s.ethnicity}</td>
-        <td className="p-2 border">{s.religion}</td>
-        <td className="p-2 border">{s.gender}</td>
-        <td className="p-2 border">{s.birth_certificate_number || '-'}</td>
-        <td className="p-2 border">{s.address}</td>
-        <td className="p-2 border">{s.nic_number || '-'}</td>
-        <td className="p-2 border">{s.postal_ic_number || '-'}</td>
-        <td className="p-2 border">{s.age}</td>
-        <td className="p-2 border">{s.special_needs || '-'}</td>
-        <td className="p-2 border">{s.height ?? '-'}</td>
-        <td className="p-2 border">{s.weight ?? '-'}</td>
-      </tr>
-    ))
-  )}
-</tbody>
+          <thead className="bg-green-100 text-green-800">
+            <tr>
+              <th className="p-2 border">Reg. No</th>
+              <th className="p-2 border">Full Name</th>
+              <th className="p-2 border">Full Name with Initial</th>
+              <th className="p-2 border">Birthday</th>
+              <th className="p-2 border">Ethnicity</th>
+              <th className="p-2 border">Religion</th>
+              <th className="p-2 border">Gender</th>
+              <th className="p-2 border">Birth Certificate No</th>
+              <th className="p-2 border">Address</th>
+              <th className="p-2 border">NIC Number</th>
+              <th className="p-2 border">Postal IC Number</th>
+              <th className="p-2 border">Age</th>
+              <th className="p-2 border">Special Needs</th>
+              <th className="p-2 border">Height (cm)</th>
+              <th className="p-2 border">Weight (kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentData.length === 0 ? (
+              <tr>
+                <td colSpan={15} className="text-center p-4 text-gray-500">
+                  No records found.
+                </td>
+              </tr>
+            ) : (
+              currentData.map((s) => (
+                <tr key={s.reg_no} className="border-t hover:bg-green-50">
+                  <td className="p-2 border">{s.reg_no}</td>
+                  <td className="p-2 border">{s.full_name}</td>
+                  <td className="p-2 border">{s.full_name_with_initial}</td>
+                  <td className="p-2 border">{s.birthday}</td>
+                  <td className="p-2 border">{s.ethnicity}</td>
+                  <td className="p-2 border">{s.religion}</td>
+                  <td className="p-2 border">{s.gender}</td>
+                  <td className="p-2 border">{s.birth_certificate_number || '-'}</td>
+                  <td className="p-2 border">{s.address}</td>
+                  <td className="p-2 border">{s.nic_number || '-'}</td>
+                  <td className="p-2 border">{s.postal_ic_number || '-'}</td>
+                  <td className="p-2 border">{s.age}</td>
+                  <td className="p-2 border">{s.special_needs || '-'}</td>
+                  <td className="p-2 border">{s.height ?? '-'}</td>
+                  <td className="p-2 border">{s.weight ?? '-'}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
 
         </table>
       </div>
 
-      {/* Pagination */}
+
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}

@@ -63,9 +63,9 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
     <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
 
-      {/* Filters */}
+
       <div className="flex flex-col md:flex-row gap-4 mb-4">
-        {/* Search */}
+
         <input
           type="text"
           placeholder="Search by Reg. No or Student ID"
@@ -74,7 +74,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
           className="p-2 border border-gray-300 rounded w-full md:w-1/3"
         />
 
-        {/* Class Filter */}
+
         <select
           value={filterClass}
           onChange={(e) => setFilterClass(e.target.value ? Number(e.target.value) : '')}
@@ -89,7 +89,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </select>
       </div>
 
-      {/* Table */}
+
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 text-sm md:text-base">
           <thead className="bg-blue-100 text-blue-800">
@@ -133,7 +133,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </table>
       </div>
 
-      {/* Pagination Controls */}
+
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={prevPage}

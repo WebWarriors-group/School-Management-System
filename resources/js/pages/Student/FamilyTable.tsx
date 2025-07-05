@@ -6,7 +6,7 @@ interface FamilyTableProps {
 }
 
 
-const FamilyTable = ({ familyData }:FamilyTableProps) => {
+const FamilyTable = ({ familyData }: FamilyTableProps) => {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
@@ -29,7 +29,7 @@ const FamilyTable = ({ familyData }:FamilyTableProps) => {
     <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">👨‍👩‍👧‍👦 Family Information</h2>
 
-      {/* Search */}
+
       <div className="mb-4">
         <input
           type="text"
@@ -40,7 +40,7 @@ const FamilyTable = ({ familyData }:FamilyTableProps) => {
         />
       </div>
 
-      {/* Table */}
+
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 text-sm md:text-base">
           <thead className="bg-green-100 text-green-800">
@@ -61,48 +61,48 @@ const FamilyTable = ({ familyData }:FamilyTableProps) => {
               <th className="p-2 border">Father Email</th>
               <th className="p-2 border">Father WhatsApp</th>
             </tr>
-            
+
           </thead>
-         <tbody>
-  {currentData.length === 0 ? (
-    <tr>
-      <td colSpan={15} className="text-center p-4 text-gray-500">
-        No records found.
-      </td>
-    </tr>
-  ) : (
-    currentData.map((s) => (
-      
-     <tr key={s.reg_no} className="border-t hover:bg-green-50">
-  <td className="p-2 border">{s.reg_no}</td>
-       <td className="p-2 border">{s.mother_name?.trim() || 'Not provided'}</td>
-<td className="p-2 border">{s.mother_occupation || '-'}</td>
-<td className="p-2 border">{s.mother_income ?? '-'}</td>
-<td className="p-2 border">{s.mother_working_place || '-'}</td>
-<td className="p-2 border">{s.mother_contact || '-'}</td>
-<td className="p-2 border">{s.mother_email || '-'}</td>
-<td className="p-2 border">{s.mother_whatsapp || '-'}</td>
+          <tbody>
+            {currentData.length === 0 ? (
+              <tr>
+                <td colSpan={15} className="text-center p-4 text-gray-500">
+                  No records found.
+                </td>
+              </tr>
+            ) : (
+              currentData.map((s) => (
 
-<td className="p-2 border">{s.father_name?.trim() || 'Not provided'}</td>
-<td className="p-2 border">{s.father_occupation || '-'}</td>
-<td className="p-2 border">{s.father_income ?? '-'}</td>
-<td className="p-2 border">{s.father_working_place || '-'}</td>
-<td className="p-2 border">{s.father_contact || '-'}</td>
-<td className="p-2 border">{s.father_email || '-'}</td>
-<td className="p-2 border">{s.father_whatsapp || '-'}</td>
+                <tr key={s.reg_no} className="border-t hover:bg-green-50">
+                  <td className="p-2 border">{s.reg_no}</td>
+                  <td className="p-2 border">{s.mother_name?.trim() || 'Not provided'}</td>
+                  <td className="p-2 border">{s.mother_occupation || '-'}</td>
+                  <td className="p-2 border">{s.mother_income ?? '-'}</td>
+                  <td className="p-2 border">{s.mother_working_place || '-'}</td>
+                  <td className="p-2 border">{s.mother_contact || '-'}</td>
+                  <td className="p-2 border">{s.mother_email || '-'}</td>
+                  <td className="p-2 border">{s.mother_whatsapp || '-'}</td>
 
-      </tr>
-      
-    ))
-  )}
-  
-</tbody>
-</table>
-</div>
+                  <td className="p-2 border">{s.father_name?.trim() || 'Not provided'}</td>
+                  <td className="p-2 border">{s.father_occupation || '-'}</td>
+                  <td className="p-2 border">{s.father_income ?? '-'}</td>
+                  <td className="p-2 border">{s.father_working_place || '-'}</td>
+                  <td className="p-2 border">{s.father_contact || '-'}</td>
+                  <td className="p-2 border">{s.father_email || '-'}</td>
+                  <td className="p-2 border">{s.father_whatsapp || '-'}</td>
+
+                </tr>
+
+              ))
+            )}
+
+          </tbody>
+        </table>
+      </div>
 
 
 
-      {/* Pagination */}
+
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
@@ -122,9 +122,9 @@ const FamilyTable = ({ familyData }:FamilyTableProps) => {
           Next
         </button>
       </div>
-     
+
     </div>
-    
+
   );
 }
 export default FamilyTable;

@@ -311,8 +311,24 @@ public function updateSibling(Request $request, $reg_no)
             'error' => $e->getMessage(),
         ], 500);
     }
+
+
+
+    
 }
 
+public function yearlyPerformance()
+{
+    $performance = DB::table('student_reports')
+        ->selectRaw('YEAR(exam_year) as year')
+        ->selectRaw('SUM(CASE WHEN exam_type = "OL" AND result = "passed" THEN 1 ELSE 0 END) as ol_passed')
+        ->selectRaw('SUM(CASE WHEN exam_type = "AL" AND result = "passed" THEN 1 ELSE 0 END) as al_passed')
+        ->groupBy(DB::raw('YEAR(exam_year)'))
+        ->orderBy('year')
+        ->get();
+
+    return response()->json($performance);
+}
 
 
 

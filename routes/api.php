@@ -32,6 +32,7 @@ Route::post('/student', [StudentController::class, 'store']);
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 
 Route::get('/students', [StudentController::class, 'index']);
+Route::get('/student-performance', [StudentController::class, 'yearlyPerformance']);
 
 
 Route::delete('/students/{reg_no}', [StudentController::class, 'destroy']);
