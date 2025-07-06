@@ -27,7 +27,7 @@ use SoftDeletes;
         'number_of_students'
     ];
    
-    public function teachers()
+    public function teacher()
     {
         return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');
     }

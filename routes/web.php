@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use App\Mail\StudentAdmissionMail;
+use App\Http\Controllers\MarkController;
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
@@ -131,7 +132,7 @@ Route::get('admin/calendar', function () {
 
 
 
-
+Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
 
 
 

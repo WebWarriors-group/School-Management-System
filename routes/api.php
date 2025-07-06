@@ -41,6 +41,7 @@ Route::put('/students/{reg_no}', [StudentController::class, 'update']);
 Route::put('/student-personal/{reg_no}', [StudentController::class, 'updatePersonal']);
 Route::put('/student-family/{reg_no}', [StudentController::class, 'updateFamily']);
 Route::put('/student-sibling/{reg_no}', [StudentController::class, 'updateSibling']);
+Route::get('/students/{reg_no}/performance', [StudentController::class, 'apiStudentPerformance']);
 
 Route::get('/classes', [ClassController::class, 'index']);
 Route::post('/send-admission-form', function (Illuminate\Http\Request $request) {
@@ -104,4 +105,3 @@ Route::get('/events', [EventController::class, 'index']);
 Route::post('/events', [EventController::class, 'store']);
 Route::put('/events/{id}', [EventController::class, 'update']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
-
