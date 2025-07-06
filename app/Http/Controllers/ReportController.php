@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+
 class ReportController extends Controller
 {
     public function show($reg_no)
@@ -87,5 +88,18 @@ class ReportController extends Controller
         ],
     ]);
 }
+
+
+
+public function overallPerformance()
+{
+    $totalStudents = StudentAcademic::count();
+
+    return Inertia::render('Admin/OverallPerformance', [
+        'totalStudents' => $totalStudents,
+    ]);
+}
+
+
 
 }

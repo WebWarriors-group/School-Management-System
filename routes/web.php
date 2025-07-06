@@ -50,7 +50,8 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
      Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
      Route::get('/test-session', function (Request $request) {
-    
+  
+
     session(['current_url' => $request->fullUrl()]);
     session()->save();
     return 'Session data: ' . session('current_url');
@@ -168,6 +169,10 @@ Route::get('/students/all', function () {
         // You can pass props here
     ]);
 })->name('students.all');
+
+
+Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
+    ->name('admin.overallPerformance');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
