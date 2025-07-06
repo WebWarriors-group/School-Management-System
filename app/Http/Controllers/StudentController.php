@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Storage;
 use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use App\Models\StudentAcademic;
 use App\Models\StudentPersonal;
@@ -29,36 +29,39 @@ class StudentController extends Controller
         ]);
 
         $formLink = url('/admission-form?reg_no=' . $request->reg_no);
-        $email = 'test@example.com';
+        $email = $request->input('email');
 
         Mail::to($email)->send(new StudentAdmissionMail($formLink));
 
         return response()->json(['message' => 'Admission form sent successfully!']);
     }
-public function academicPage()
-{
-    $academicData = StudentAcademic::with('class')->get();
+    public function academicPage()
+    {
+        $academicData = StudentAcademic::all();
 
-    return Inertia::render('Student/AcademicTable', [
-        'academicData' => $academicData,
-        'filters' => ['search' => ''] // <-- Add this line
-    ]);
-}
-
+        return Inertia::render('Student/AcademicTable', [
+            'academicData' => $academicData,
+            'filters' => ['search' => '']
+        ]);
+    }
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::with(['personal', 'class','family','siblings'])->get();
+        $students = StudentAcademic::all();
 
         return response()->json($students);
     }
 
-
     public function getClassIds()
     {
-        $classIds = ClassModel::pluck('class_id');
+        $classIds = Cache::remember('class_ids', 60 * 60, function () {
+            return ClassModel::pluck('class_id');
+
+        });
 
         return response()->json($classIds);
+
+
     }
     public function store(Request $request)
     {
@@ -89,7 +92,6 @@ public function academicPage()
                 'receiving_any_scholarship' => $request->receiving_any_scholarship,
                 'admission_date' => $request->admission_date,
             ]);
-
 
             $student->personal()->create([
                 'reg_no' => $request->reg_no,
@@ -164,7 +166,7 @@ public function academicPage()
 
     public function show($reg_no)
     {
-        $student = StudentAcademic::with(['personal', 'family', 'siblings'])->where('reg_no', $reg_no)->first();
+        $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
 
         if (!$student) {
             return response()->json(['message' => 'Student not found'], 404);
@@ -173,37 +175,48 @@ public function academicPage()
         return response()->json($student);
     }
 
+    public function update(Request $request, $reg_no)
+    {
+        $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
 
-public function update(Request $request, $reg_no)
-{
-    $student = StudentAcademic::where('reg_no', $reg_no)->first();
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
 
-    if (!$student) {
-        return response()->json(['message' => 'Student not found'], 404);
+        $student->update($request->only([
+            'class_id',
+            'distance_to_school',
+            'method_of_coming_to_school',
+            'grade_6_9_asthectic_subjects',
+            'grade_10_11_basket1_subjects',
+            'grade_10_11_basket2_subjects',
+            'grade_10_11_basket3_subjects',
+            'receiving_any_grade_5_scholarship',
+            'receiving_any_samurdhi_aswesuma',
+            'receiving_any_scholarship',
+            'admission_date',
+        ]));
+
+        return response()->json($student);
     }
-
-   
-
-    $student->update($request->all());
-
-    return response()->json($student);
-}
-
-
 
     public function destroy($reg_no): JsonResponse
     {
-        $student = StudentAcademic::with(['personal', 'family', 'siblings'])->where('reg_no', $reg_no)->first();
-
+        $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
 
         if (!$student) {
             return response()->json(['message' => 'Student record not found'], 404);
         }
 
         $student->delete();
+        $student->personal()->delete();
+        $student->family()->delete();
+        $student->siblings()->delete();
+
 
         return response()->json(['message' => 'Student academic record deleted successfully!'], 200);
     }
+
     public function import(Request $request)
     {
         try {
@@ -222,7 +235,8 @@ public function update(Request $request, $reg_no)
             ], 500);
         }
     }
-    public function admissionsPerYear()
+
+    public function getAdmissionsPerYear()
     {
         $data = DB::table('student_academic_info')
             ->selectRaw('YEAR(admission_date) as year, COUNT(*) as total')
@@ -234,7 +248,7 @@ public function update(Request $request, $reg_no)
     }
     public function showPersonal($reg_no)
     {
-        $personal = StudentPersonal::where('reg_no', $reg_no)->first();
+        $personal = StudentPersonal::where('reg_no', $reg_no)->firstOrFail();
 
         if (!$personal) {
             return response()->json(['message' => 'Personal info not found'], 404);
@@ -244,7 +258,7 @@ public function update(Request $request, $reg_no)
     }
     public function showFamily($reg_no)
     {
-        $family = StudentFamilyInfo::where('reg_no', $reg_no)->first();
+        $family = StudentFamilyInfo::where('reg_no', $reg_no)->firstOrFail();
 
         if (!$family) {
             return response()->json(['message' => 'Family info not found'], 404);
@@ -252,84 +266,159 @@ public function update(Request $request, $reg_no)
 
         return response()->json($family);
     }
+
     public function showSibling($reg_no)
     {
         $siblings = StudentSibling::where('reg_no', $reg_no)->get();
 
-
-
         return response()->json($siblings);
     }
     public function updatePersonal(Request $request, $reg_no)
-{
-    $student = StudentPersonal::where('reg_no', $reg_no)->first();
+    {
+        $student = StudentPersonal::where('reg_no', $reg_no)->firstOrFail();
 
-    if (!$student) {
-        return response()->json(['message' => 'Student not found'], 404);
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'full_name_with_initial' => 'required|string|max:100',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'birthday' => 'required|date|before:today',
+            'gender' => 'required|in:male,female,other',
+            'ethnicity' => 'nullable|string|max:100',
+            'religion' => 'nullable|string|max:100',
+            'birth_certificate_number' => 'nullable|string|max:50',
+            'address' => 'required|string|max:255',
+            'nic_number' => 'nullable|string|max:20|regex:/^[0-9]{9}[vVxX]$/',
+            'postal_ic_number' => 'nullable|string|max:20',
+            'age' => 'required|integer|min:3|max:25',
+            'special_needs' => 'nullable|string|max:255',
+            'height' => 'nullable|numeric|min:30|max:250',
+            'weight' => 'nullable|numeric|min:10|max:200'
+        ]);
+        $student->update($request->only([
+            'full_name',
+            'full_name_with_initial',
+            'photo',
+            'birthday',
+            'gender',
+            'ethnicity',
+            'religion',
+            'birth_certificate_number',
+            'address',
+            'nic_number',
+            'postal_ic_number',
+            'age',
+            'special_needs',
+            'height',
+            'weight'
+        ]));
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('student_photos', 'public');
+            $student->update(['photo' => Storage::url($path)]);
+        }
+        return response()->json($student);
     }
 
-    $student->update($request->all()); // or validate before update
-    return response()->json($student);
-}
-public function updateFamily(Request $request, $reg_no)
-{
-    $family = StudentFamilyInfo::where('reg_no', $reg_no)->first();
+    public function updateFamily(Request $request, $reg_no)
+    {
+        $family = StudentFamilyInfo::where('reg_no', $reg_no)->firstOrFail();
 
-    if (!$family) {
-        return response()->json(['message' => 'Family info not found'], 404);
+        if (!$family) {
+            return response()->json(['message' => 'Family info not found'], 404);
+        }
+        $request->validate([
+            'mother_name' => 'required|string|max:100',
+            'mother_occupation' => 'nullable|string|max:100',
+            'mother_income' => 'nullable|numeric|min:0|max:100000000',
+            'mother_working_place' => 'nullable|string|max:100',
+            'mother_contact' => [
+                'nullable',
+                'string',
+                'regex:/^(?:\+94|0)?\d{9}$/',
+                'max:15'],
+            'mother_email' => 'nullable|email|max:100',
+            'mother_whatsapp' => [
+                'nullable',
+                'string',
+                'regex:/^(?:\+94|0)?\d{9}$/',
+                'max:15'],
+            'father_name' => 'required|string|max:100',
+            'father_occupation' => 'nullable|string|max:100',
+            'father_income' => 'nullable|numeric|min:0|max:100000000',
+            'father_working_place' => 'nullable|string|max:100',
+            'father_contact'  => [
+                'nullable',
+                'string',
+                'regex:/^(?:\+94|0)?\d{9}$/',
+                'max:15'],
+            'father_email' => 'nullable|email|max:100',
+            'father_whatsapp'  => [
+                'nullable',
+                'string',
+                'regex:/^(?:\+94|0)?\d{9}$/',
+                'max:15'],
+        ]);
+        $family->update($request->only(
+            [
+                'mother_name',
+                'mother_occupation',
+                'mother_income',
+                'mother_working_place',
+                'mother_contact',
+                'mother_email',
+                'mother_whatsapp',
+                'father_name',
+                'father_occupation',
+                'father_income',
+                'father_working_place',
+                'father_contact',
+                'father_email',
+                'father_whatsapp',
+            ]
+        ));
+        return response()->json($family);
     }
 
-    
+    public function updateSibling(Request $request, $reg_no)
+    {
+        try {
+            $siblingsData = $request->all();
+            $siblingsData = array_map(function ($sibling) use ($reg_no) {
+                $sibling['reg_no'] = $reg_no;
+                unset($sibling['created_at'], $sibling['updated_at']);
+                return $sibling;
+            }, $siblingsData);
 
-    $family->update($request->all()); // or $request->all() if you trust frontend
-    return response()->json($family);
-}
+            StudentSibling::upsert(
+                $siblingsData,
+                ['id'],
+                ['sibling_name', 'relationship', 'sibling_age', 'occupation', 'contact', 'reg_no']
+            );
 
-public function updateSibling(Request $request, $reg_no)
-{
-    try {
-        $siblingsData = $request->all();
+            $siblings = StudentSibling::where('reg_no', $reg_no)->get();
 
-        // Remove created_at and updated_at fields from each item
-        $siblingsData = array_map(function ($sibling) use ($reg_no) {
-            $sibling['reg_no'] = $reg_no;
-            unset($sibling['created_at'], $sibling['updated_at']); // REMOVE timestamps
-            return $sibling;
-        }, $siblingsData);
+            return response()->json($siblings);
 
-        StudentSibling::upsert(
-            $siblingsData,
-            ['id'],
-            ['sibling_name', 'relationship', 'sibling_age', 'occupation', 'contact', 'reg_no']
-        );
-
-        $siblings = StudentSibling::where('reg_no', $reg_no)->get();
-        return response()->json($siblings);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'message' => 'Failed to update sibling info.',
-            'error' => $e->getMessage(),
-        ], 500);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update sibling info.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
+    public function yearlyPerformance()
+    {
+        $performance = DB::table('student_reports')
+            ->selectRaw('YEAR(exam_year) as year')
+            ->selectRaw('SUM(CASE WHEN exam_type = "OL" AND result = "passed" THEN 1 ELSE 0 END) as ol_passed')
+            ->selectRaw('SUM(CASE WHEN exam_type = "AL" AND result = "passed" THEN 1 ELSE 0 END) as al_passed')
+            ->groupBy(DB::raw('YEAR(exam_year)'))
+            ->orderBy('year')
+            ->get();
 
-
-    
-}
-
-public function yearlyPerformance()
-{
-    $performance = DB::table('student_reports')
-        ->selectRaw('YEAR(exam_year) as year')
-        ->selectRaw('SUM(CASE WHEN exam_type = "OL" AND result = "passed" THEN 1 ELSE 0 END) as ol_passed')
-        ->selectRaw('SUM(CASE WHEN exam_type = "AL" AND result = "passed" THEN 1 ELSE 0 END) as al_passed')
-        ->groupBy(DB::raw('YEAR(exam_year)'))
-        ->orderBy('year')
-        ->get();
-
-    return response()->json($performance);
-}
-
-
-
+        return response()->json($performance);
+    }
 }
