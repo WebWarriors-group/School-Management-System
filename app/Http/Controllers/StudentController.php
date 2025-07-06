@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Requests\StoreStudentRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\StudentsImport;
@@ -24,9 +25,7 @@ class StudentController extends Controller
     }
     public function sendAdmissionForm(Request $request)
     {
-        $request->validate([
-            'reg_no' => 'required|string'
-        ]);
+        $request->validate(['email'=>'required|email']);
 
         $formLink = url('/admission-form?reg_no=' . $request->reg_no);
         $email = $request->input('email');
@@ -37,7 +36,7 @@ class StudentController extends Controller
     }
     public function academicPage()
     {
-        $academicData = StudentAcademic::all();
+        $academicData = StudentAcademic::paginate(10);
 
         return Inertia::render('Student/AcademicTable', [
             'academicData' => $academicData,
@@ -47,7 +46,7 @@ class StudentController extends Controller
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::all();
+        $students = StudentAcademic::paginate(10);
 
         return response()->json($students);
     }
@@ -63,16 +62,9 @@ class StudentController extends Controller
 
 
     }
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        $validated = $request->validate([
-            'reg_no' => 'required|unique:student_academic_info,reg_no',
-            'class_id' => 'required|string',
-            'personal.full_name' => 'required|string',
-            'personal.full_name_with_initial' => 'required|string|max:50',
-            'family.mother_name' => 'nullable|string',
-            'siblings.*.sibling_name' => 'nullable|string',
-        ]);
+
 
         DB::beginTransaction();
 
@@ -167,21 +159,12 @@ class StudentController extends Controller
     public function show($reg_no)
     {
         $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
-
-        if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
-        }
-
         return response()->json($student);
     }
 
     public function update(Request $request, $reg_no)
     {
         $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
-
-        if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
-        }
 
         $student->update($request->only([
             'class_id',
@@ -207,11 +190,17 @@ class StudentController extends Controller
         if (!$student) {
             return response()->json(['message' => 'Student record not found'], 404);
         }
+        if ($student->personal && $student->personal->photo) {
+            $photoPath = str_replace('/storage/', '', $student->personal->photo);
+            Storage::disk('public')->delete($photoPath);
+        }
+        DB::transaction(function () use ($student) {
+            $student->personal()->delete();
+            $student->family()->delete();
+            $student->siblings()->delete();
+            $student->delete();
+        });
 
-        $student->delete();
-        $student->personal()->delete();
-        $student->family()->delete();
-        $student->siblings()->delete();
 
 
         return response()->json(['message' => 'Student academic record deleted successfully!'], 200);
@@ -228,21 +217,23 @@ class StudentController extends Controller
 
             return response()->json(['message' => 'Students imported successfully!']);
         } catch (\Throwable $e) {
+            \Log::error('Student import failed', ['error' => $e->getMessage()]);
             return response()->json([
-                'message' => 'Import failed',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'message' => 'Import failed.Please check the file format or content.',
             ], 500);
         }
     }
 
     public function getAdmissionsPerYear()
     {
-        $data = DB::table('student_academic_info')
-            ->selectRaw('YEAR(admission_date) as year, COUNT(*) as total')
-            ->groupBy('year')
-            ->orderBy('year')
-            ->get();
+        $data = Cache::remember('admissions_per_year',3600,function(){
+            return DB::table('student_academic_info')
+                ->selectRaw('YEAR(admission_date) as year, COUNT(*) as total')
+                ->groupBy('year')
+                ->orderBy('year')
+                ->get();
+        });
+       
 
         return response()->json($data);
     }
@@ -316,8 +307,11 @@ class StudentController extends Controller
         ]));
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('student_photos', 'public');
-            $student->update(['photo' => Storage::url($path)]);
+            $photoUrl = Storage::url($path);
+            $student->photo=$photoUrl;
         }
+        $student->update($request->except('photo'));
+
         return response()->json($student);
     }
 
@@ -337,28 +331,32 @@ class StudentController extends Controller
                 'nullable',
                 'string',
                 'regex:/^(?:\+94|0)?\d{9}$/',
-                'max:15'],
+                'max:15'
+            ],
             'mother_email' => 'nullable|email|max:100',
             'mother_whatsapp' => [
                 'nullable',
                 'string',
                 'regex:/^(?:\+94|0)?\d{9}$/',
-                'max:15'],
+                'max:15'
+            ],
             'father_name' => 'required|string|max:100',
             'father_occupation' => 'nullable|string|max:100',
             'father_income' => 'nullable|numeric|min:0|max:100000000',
             'father_working_place' => 'nullable|string|max:100',
-            'father_contact'  => [
+            'father_contact' => [
                 'nullable',
                 'string',
                 'regex:/^(?:\+94|0)?\d{9}$/',
-                'max:15'],
+                'max:15'
+            ],
             'father_email' => 'nullable|email|max:100',
-            'father_whatsapp'  => [
+            'father_whatsapp' => [
                 'nullable',
                 'string',
                 'regex:/^(?:\+94|0)?\d{9}$/',
-                'max:15'],
+                'max:15'
+            ],
         ]);
         $family->update($request->only(
             [
@@ -390,7 +388,9 @@ class StudentController extends Controller
                 unset($sibling['created_at'], $sibling['updated_at']);
                 return $sibling;
             }, $siblingsData);
-
+            if (empty($siblingsData)) {
+                return response()->json(['message' => 'No siblings data received'], 422);
+            }
             StudentSibling::upsert(
                 $siblingsData,
                 ['id'],
@@ -411,13 +411,15 @@ class StudentController extends Controller
 
     public function yearlyPerformance()
     {
-        $performance = DB::table('student_reports')
-            ->selectRaw('YEAR(exam_year) as year')
-            ->selectRaw('SUM(CASE WHEN exam_type = "OL" AND result = "passed" THEN 1 ELSE 0 END) as ol_passed')
-            ->selectRaw('SUM(CASE WHEN exam_type = "AL" AND result = "passed" THEN 1 ELSE 0 END) as al_passed')
+        $performance = Cache::remember('yearly_performance',3600,function(){
+        return DB::table('student_reports')
+            ->selectRaw('YEAR(exam_year) as year,
+            SUM(CASE WHEN exam_type = "OL" AND result = "passed" THEN 1 ELSE 0 END) as ol_passed,
+            SUM(CASE WHEN exam_type = "AL" AND result = "passed" THEN 1 ELSE 0 END) as al_passed')
             ->groupBy(DB::raw('YEAR(exam_year)'))
             ->orderBy('year')
             ->get();
+    });
 
         return response()->json($performance);
     }
