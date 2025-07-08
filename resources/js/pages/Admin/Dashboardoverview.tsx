@@ -129,6 +129,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const [showStudentForm, setShowStudentForm] = useState(false);
   const [showImportForm, setImportForm] = useState(false);
   const [Fetchedstudents, setFetchedStudents] = useState<Student[]>([]);
+
   const [filters, setFilters] = useState<{ grade?: string; section?: string; class_name?: string }>(initialFilters || {});
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
@@ -283,7 +284,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
         {selectedCard && selectedCard.id === 4 ? (
           <>
-            <ViewAllStudents />
+          <ViewAllStudents />
+
+
             <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
               Back
             </Button>

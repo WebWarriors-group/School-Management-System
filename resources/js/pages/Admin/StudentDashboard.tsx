@@ -36,23 +36,51 @@ const StudentDashboard: React.FC = () => {
     setSearchedStudents(results);
     setIsSearchModalOpen(true);
   };
+type PaginatedResponse<T> = {
+  data: T[];
+  current_page: number;
+  last_page: number;
+  total: number;
+  per_page: number;
+  next_page_url: string | null;
+  prev_page_url: string | null;
+};
 
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/students");
-      if (!response.ok) throw new Error("Error fetching students");
-      const data = await response.json();
-      setStudents(data);
-    } catch (error) {
-      console.error("Error:", error);
+
+const fetchStudents = async () => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/students");
+    if (!response.ok) throw new Error("Error fetching students");
+
+    const data: PaginatedResponse<Student> = await response.json();
+setStudents(data.data);
+
+
+    if (Array.isArray(data.data)) {
+      setStudents(data.data); // ✅ CORRECT: access the paginated array inside `data`
+    } else {
+      console.error("Invalid response format:", data);
+      toast.error("Failed to load student data");
     }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    toast.error("Failed to fetch students. Please try again.");
+  }
+};
 
 
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
+
+
+
+useEffect(() => {
+  fetchStudents();
+}, []);
+
+useEffect(() => {
+  console.log("Fetched students:", students);
+}, [students]);
+
 
   const handleDeleteClick = (reg_no: string) => {
     setStudentToDelete(reg_no);
@@ -102,6 +130,10 @@ const getAcademicData = (): AcademicRecord[] =>
     grade_10_11_basket2_subjects: s.grade_10_11_basket2_subjects ?? null,
     grade_10_11_basket3_subjects: s.grade_10_11_basket3_subjects ?? null,
     receiving_any_scholarship: s.receiving_any_scholarship ?? false,
+    receiving_any_grade_5_scholarship: s.receiving_any_grade_5_scholarship ?? false,
+receiving_any_samurdhi_aswesuma: s.receiving_any_samurdhi_aswesuma ?? false,
+
+    admission_date: s.admission_date ?? '',
   }));
 const getPersonalData = (): PersonalRecord[] =>
   students.map((s) => ({
@@ -248,7 +280,8 @@ const getSiblingsData = (): SiblingsRecord[] =>
               </CardContent>
             </Card>
 
-            <Card onClick={() => handleCardClick("personal")} className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-green-100 via-white to-green-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl">
+            <Card onClick={() => handleCardClick("personal")}
+              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-green-500 opacity-10 rounded-full"></div>
@@ -262,7 +295,8 @@ const getSiblingsData = (): SiblingsRecord[] =>
               </CardContent>
             </Card>
 
-            <Card  onClick={() => handleCardClick("family")} className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-yellow-100 via-white to-yellow-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl">
+           <Card onClick={() => handleCardClick("family")}
+              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-yellow-500 opacity-10 rounded-full"></div>
@@ -276,7 +310,8 @@ const getSiblingsData = (): SiblingsRecord[] =>
               </CardContent>
             </Card>
 
-            <Card onClick={() => handleCardClick("siblings")} className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-purple-100 via-white to-purple-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl">
+            <Card onClick={() => handleCardClick("siblings")}
+              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-purple-500 opacity-10 rounded-full"></div>
@@ -295,7 +330,17 @@ const getSiblingsData = (): SiblingsRecord[] =>
 {selectedSection === "academic" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
     <h2 className="text-2xl font-bold text-blue-700 mb-4">Academic Information</h2>
-    <AcademicTable academicData={getAcademicData()} />
+   <AcademicTable academicData={{ 
+  current_page: 1,
+  data: getAcademicData(),
+  total: getAcademicData().length,
+  per_page: getAcademicData().length,
+  last_page: 1
+}} />
+
+
+
+
     <div className="mt-4">
       <Button
         onClick={() => setSelectedSection(null)}

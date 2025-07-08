@@ -81,12 +81,12 @@ Route::put('study-materials/{id}', [StudyMaterialController::class, 'update']);
 Route::delete('study-materials/{id}', [StudyMaterialController::class, 'destroy']);
 
 Route::post('/students/import', [StudentController::class, 'import']);
-Route::get('/admissions-per-year', [StudentController::class, 'admissionsPerYear']);
+Route::get('/admissions-per-year', [StudentController::class, 'getAdmissionsPerYear']);
 Route::get('/student-family/{reg_no}', [StudentController::class, 'showFamily']);
 Route::get('/student-sibling/{reg_no}', [StudentController::class, 'showSibling']);
 Route::get('/student-personal/{reg_no}', [StudentController::class, 'showPersonal']);
 
-Route::post('/students/import', [StudentImportController::class, 'import']);
+Route::post('/students/import', [StudentController::class, 'import']);
 
 
 

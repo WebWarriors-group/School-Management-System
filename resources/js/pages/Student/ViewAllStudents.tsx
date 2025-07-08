@@ -14,11 +14,13 @@ type Student = {
     section: string;
   };
 };
+interface ViewAllStudentsProps {
+  students: Student[];
+}
 
 
 
-
-export default function ViewAllStudents() {
+const ViewAllStudents = () => {
   const [students, setStudents] = useState<Student[]>([]);
  const [filterQuery, setFilterQuery] = useState('');
 const [filterClass, setFilterClass] = useState('');
@@ -42,7 +44,8 @@ const fetchStudents = async () => {
     console.log("One sample student:", data[0]);
 
     console.log("Fetched students:", data); 
-    setStudents(data);
+    setStudents(data.data);  // ✅ Extract array from pagination
+
   } catch (error) {
     console.error('Error fetching students:', error);
   }
@@ -291,3 +294,5 @@ useEffect(() => {
   );
   
 }
+
+export default ViewAllStudents;

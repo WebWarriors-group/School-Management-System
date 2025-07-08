@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { PersonalRecord } from '@/types';
+import { Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import ViewStudent from '../Admin/ViewStudent';
+import StudentPreviewCard from './StudentPreviewCard';
 
 type AcademicRecord = {
   reg_no: number;
@@ -11,10 +15,21 @@ type AcademicRecord = {
   grade_10_11_basket2_subjects: string | null;
   grade_10_11_basket3_subjects: string | null;
   receiving_any_scholarship: boolean;
+  receiving_any_grade_5_scholarship: boolean;
+  receiving_any_samurdhi_aswesuma: boolean;
+  admission_date: string; 
+};
+
+type PaginationData<T> = {
+  current_page: number;
+  data: T[];
+  total: number;
+  per_page: number;
+  last_page: number;
 };
 
 type AcademicTableProps = {
-  academicData: AcademicRecord[];
+  academicData: PaginationData<AcademicRecord>;
 };
 
 export default function AcademicTable({ academicData }: AcademicTableProps) {
@@ -22,14 +37,67 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   const [filterClass, setFilterClass] = useState<number | ''>('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
+  const [selectedStudent, setSelectedStudent] = useState<AcademicRecord | null>(null);
+  const [previewStudent, setPreviewStudent] = useState<AcademicRecord | null>(null);
+  const [previewPosition, setPreviewPosition] = useState<{ x: number; y: number } | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
 
-  // Get unique class IDs for class filter dropdown
-  const uniqueClasses = Array.from(new Set(academicData.map((a) => a.class_id))).sort(
+  const handleRowClick = (e: React.MouseEvent, student: AcademicRecord) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPreviewPosition({
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY
+    });
+    setPreviewStudent(student);
+  };
+
+  const handleViewIconClick = async (e: React.MouseEvent, reg_no: number) => {
+    e.stopPropagation(); // Prevent row click from triggering
+    
+    try {
+      const response = await fetch(`/api/students/${reg_no}`);
+      const data = await response.json();
+      if (response.ok) {
+        setSelectedStudent(data as AcademicRecord);
+        setIsViewModalOpen(true);
+        setPreviewStudent(null); // Close preview when modal opens
+      } else {
+        alert("Failed to load student details.");
+      }
+    } catch (error) {
+      console.error("Error fetching student:", error);
+      alert("An error occurred while loading the student data.");
+    }
+  };
+
+  // Close preview when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (previewRef.current && !previewRef.current.contains(e.target as Node)) {
+        setPreviewStudent(null);
+        setPreviewPosition(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  if (!academicData || !academicData.data) {
+    return (
+      <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
+        <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
+        <p className="text-gray-500">No academic data available.</p>
+      </div>
+    );
+  }
+
+  const uniqueClasses = Array.from(new Set(academicData.data.map((a) => a.class_id))).sort(
     (a, b) => a - b
   );
 
-  // Filtering logic
-  const filteredData = academicData.filter((student) => {
+  const filteredData = academicData.data.filter((student) => {
     const matchesSearch =
       !search ||
       student.reg_no.toString().includes(search) ||
@@ -40,32 +108,28 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
     return matchesSearch && matchesClass;
   });
 
-  // Pagination calculations
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   const indexOfLast = currentPage * rowsPerPage;
   const indexOfFirst = indexOfLast - rowsPerPage;
   const currentData = filteredData.slice(indexOfFirst, indexOfLast);
-
-  // Pagination handlers
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((p) => p + 1);
-  };
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage((p) => p - 1);
-  };
-
-  // Reset page on filter/search change
+  
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filterClass]);
+
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((p) => p + 1);
+  };
+  
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage((p) => p - 1);
+  };
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
 
-
       <div className="flex flex-col md:flex-row gap-4 mb-4">
-
         <input
           type="text"
           placeholder="Search by Reg. No or Student ID"
@@ -73,7 +137,6 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
           onChange={(e) => setSearch(e.target.value)}
           className="p-2 border border-gray-300 rounded w-full md:w-1/3"
         />
-
 
         <select
           value={filterClass}
@@ -89,43 +152,80 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </select>
       </div>
 
-
       <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm md:text-base">
+        <table className="min-w-full border border-gray-300 text-sm">
           <thead className="bg-blue-100 text-blue-800">
             <tr>
-              <th className="p-2 border">Reg. No</th>
-              <th className="p-2 border">Student ID</th>
-              <th className="p-2 border">Class</th>
-              <th className="p-2 border">Distance</th>
-              <th className="p-2 border">Method</th>
-              <th className="p-2 border">Grade 6–9 Aesthetic</th>
-              <th className="p-2 border">Grade 10–11 Basket1</th>
-              <th className="p-2 border">Grade 10–11 Basket2</th>
-              <th className="p-2 border">Grade 10–11 Basket3</th>
-              <th className="p-2 border">Scholarship</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Reg. No</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Student ID</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Class</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Distance</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Method</th>
+              <th className="p-2 border font-semibold whitespace-nowrap min-w-[120px]">Grade 6–9 Aesthetic</th>
+              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket1</th>
+              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket2</th>
+              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket3</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Grade 5 Scholarship</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Aswesuma Scholarship</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">Any Other Scholarship</th>
+              <th className="p-2 border font-semibold whitespace-nowrap">View</th>
             </tr>
           </thead>
           <tbody>
             {currentData.length === 0 ? (
               <tr>
-                <td colSpan={10} className="text-center p-4 text-gray-500">
+                <td colSpan={13} className="text-center p-4 text-gray-500">
                   No records found.
                 </td>
               </tr>
             ) : (
               currentData.map((student) => (
-                <tr key={student.reg_no} className="border-t hover:bg-blue-50 cursor-pointer">
+                <tr 
+                  key={student.reg_no} 
+                  className="border-t hover:bg-blue-50 cursor-pointer"
+                  onClick={(e) => handleRowClick(e, student)}
+                >
                   <td className="p-2 border">{student.reg_no}</td>
                   <td className="p-2 border">{student.student_id_no}</td>
                   <td className="p-2 border">{student.class_id}</td>
                   <td className="p-2 border">{student.distance_to_school ?? '—'}</td>
                   <td className="p-2 border">{student.method_of_coming_to_school ?? '—'}</td>
-                  <td className="p-2 border">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
-                  <td className="p-2 border">{student.grade_10_11_basket1_subjects ?? '—'}</td>
-                  <td className="p-2 border">{student.grade_10_11_basket2_subjects ?? '—'}</td>
-                  <td className="p-2 border">{student.grade_10_11_basket3_subjects ?? '—'}</td>
-                  <td className="p-2 border">{student.receiving_any_scholarship ? 'Yes' : 'No'}</td>
+                  <td className="p-2 border whitespace-nowrap">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
+                  <td className="p-2 border whitespace-nowrap ">{student.grade_10_11_basket1_subjects ?? '—'}</td>
+                  <td className="p-2 border whitespace-nowrap">{student.grade_10_11_basket2_subjects ?? '—'}</td>
+                  <td className="p-2 border whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
+                  <td className="p-2 border">
+                    {student.receiving_any_grade_5_scholarship ? (
+                      <span className="text-green-600 font-medium">Yes</span>
+                    ) : (
+                      <span className="text-red-500 font-medium">No</span>
+                    )}
+                  </td>
+                  <td className="p-2 border">
+                    {student.receiving_any_samurdhi_aswesuma ? (
+                      <span className="text-green-600 font-medium">Yes</span>
+                    ) : (
+                      <span className="text-red-500 font-medium">No</span>
+                    )}
+                  </td>
+                  <td className="p-2 border">
+                    {student.receiving_any_scholarship ? (
+                      <span className="text-green-600 font-medium">Yes</span>
+                    ) : (
+                      <span className="text-red-500 font-medium">No</span>
+                    )}
+                  </td>
+                  <td className="p-2 border">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={(e) => handleViewIconClick(e, student.reg_no)}
+                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        title="View full details"
+                      >
+                        <Eye size={18} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))
             )}
@@ -133,14 +233,13 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </table>
       </div>
 
-
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={prevPage}
           disabled={currentPage === 1}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded disabled:opacity-50"
+          className="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded disabled:opacity-50"
         >
-          Previous
+          <ChevronLeft size={16} /> Previous
         </button>
         <span className="text-gray-700 font-medium">
           Page {currentPage} of {totalPages || 1}
@@ -148,11 +247,33 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages || totalPages === 0}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded disabled:opacity-50"
+          className="flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded disabled:opacity-50"
         >
-          Next
+          Next <ChevronRight size={16} />
         </button>
       </div>
+      
+      <ViewStudent
+        student={selectedStudent}
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        onStudentUpdated={(updated) => {
+          setSelectedStudent(updated);
+        }}
+      />
+      
+      {previewStudent && previewPosition && (
+        <div ref={previewRef}>
+          <StudentPreviewCard 
+            student={{
+              reg_no: previewStudent.reg_no,
+              class_id: previewStudent.class_id,
+              student_id_no: previewStudent.student_id_no
+            }} 
+            position={previewPosition} 
+          />
+        </div>
+      )}
     </div>
   );
 }

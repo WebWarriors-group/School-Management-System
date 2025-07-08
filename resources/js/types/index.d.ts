@@ -70,6 +70,9 @@ export interface AcademicRecord {
   grade_10_11_basket2_subjects: string | null;
   grade_10_11_basket3_subjects: string | null;
   receiving_any_scholarship: boolean;
+   receiving_any_grade_5_scholarship: boolean;
+  receiving_any_samurdhi_aswesuma: boolean;
+  admission_date: string;
 }
 
 export type PersonalRecord = {
@@ -84,12 +87,12 @@ export type PersonalRecord = {
   gender: string;
   birth_certificate_number?: string | null;
   address: string;
-  nic_number?: string | null;
-  postal_ic_number?: string | null;
+  nic_number: string | null;
+  postal_ic_number: string | null;
   age: number;
-  special_needs?: string | null;
-  height?: number | null;
-  weight?: number | null;
+  special_needs: string | null;
+  height: number | null;
+  weight: number | null;
 };
 
 export type FamilyRecord = {

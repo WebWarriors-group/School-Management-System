@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\StudentPerformance;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
         Subject::factory(10)->create();
 $students = StudentAcademic::factory(200)->create();
         Marks::factory(10)->create();
+        StudentPerformance::factory(10)->create();
 
         // Create related info for each student
         foreach ($students as $student) {

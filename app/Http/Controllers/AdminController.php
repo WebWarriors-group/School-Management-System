@@ -39,7 +39,7 @@ class AdminController extends Controller
      $grades = Grade::all();
     $classData = ClassModel::withCount('studentacademics')
         ->with([
-            'studentacademics.studentpersonal' // Include nested relationship
+            'studentacademics.personal' 
         ])
         ->get();
 

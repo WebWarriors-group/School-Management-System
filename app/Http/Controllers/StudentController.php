@@ -44,12 +44,20 @@ class StudentController extends Controller
         ]);
     }
 
-    public function index(): JsonResponse
-    {
-        $students = StudentAcademic::paginate(10);
+  public function index(): JsonResponse
+{
+    $students = StudentAcademic::paginate(10);
 
-        return response()->json($students);
-    }
+    // This will trigger Laravel to auto-load the related models
+    $students->getCollection()->each(function ($student) {
+        $student->family;
+        $student->personal;
+        $student->siblings;
+    });
+
+    return response()->json($students);
+}
+
 
     public function getClassIds()
     {
@@ -409,18 +417,21 @@ class StudentController extends Controller
         }
     }
 
-    public function yearlyPerformance()
-    {
-        $performance = Cache::remember('yearly_performance',3600,function(){
-        return DB::table('student_reports')
-            ->selectRaw('YEAR(exam_year) as year,
-            SUM(CASE WHEN exam_type = "OL" AND result = "passed" THEN 1 ELSE 0 END) as ol_passed,
-            SUM(CASE WHEN exam_type = "AL" AND result = "passed" THEN 1 ELSE 0 END) as al_passed')
-            ->groupBy(DB::raw('YEAR(exam_year)'))
+   public function yearlyPerformance()
+{
+    $performance = Cache::remember('yearly_performance', 3600, function () {
+        return DB::table('student_performances')  // plural table name
+            ->selectRaw('
+            year,
+            ROUND(AVG(ol_passed)) as ol_passed,
+            ROUND(AVG(ol_expected)) as ol_expected,
+            ROUND(AVG(al_passed)) as al_passed,
+            ROUND(AVG(al_expected)) as al_expected
+        ')->groupBy('year')
             ->orderBy('year')
             ->get();
     });
 
-        return response()->json($performance);
-    }
+    return response()->json($performance);
+}
 }
