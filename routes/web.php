@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use App\Mail\StudentAdmissionMail;
+use App\Http\Controllers\TeacherAttendanceController;
+use App\Http\Controllers\TeacherLeaveRequestController;
+use App\Http\Controllers\AdminLeaveRequestController;
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
@@ -69,7 +72,11 @@ Route::post('/classadd', [ClassController::class, 'store']);
 
 
  Route::get('/add-teacher', function () {
-    return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
+
+    $user_id = Auth::id();
+    return inertia::render('Teacher/teacherForm',[
+        'user_id' => $user_id,
+    ]); 
 })->name('add-teacher');
 
 
@@ -79,9 +86,9 @@ Route::post('/classadd', [ClassController::class, 'store']);
 
 
 
-Route::get('/teacher_details', function () {
+Route::get('/teacher-info', function () {
     return inertia::render('Admin/techerInfo'); 
-})->name('teacher_details');
+})->name('teacher-info');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
@@ -118,9 +125,9 @@ Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->nam
 //Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
 
 
-Route::get('/teacher_details', function () {
+Route::get('/teacher-info', function () {
     return inertia::render('Admin/techerInfo'); 
-})->name('teacher_details');
+})->name('teacher-info');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
@@ -132,12 +139,29 @@ Route::get('admin/calendar', function () {
 
 
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/teacher-attendance', [TeacherAttendanceController::class, 'index'])->name('teacher.attendance.index');
+    Route::post('/admin/teacher-attendance', [TeacherAttendanceController::class, 'store']);
+    Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
+});
 
+Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
 
-
-
-
-
+Route::get('/api/teacher-attendance-summary', [TeacherAttendanceController::class, 'summary']);
+Route::get('/teacher_attendance', function () {
+    return inertia::render('Admin\teacherAttendance'); 
+})->name('teacher_attendance');
+Route::get('/Admin/teacherAttendance', function () {
+    return Inertia::render('Admin/teacher');
+});
+Route::get('/teacher-leave-requests', function () {
+    return inertia::render('Admin/LeaveRequests'); 
+})->name('teacher-leave-requests');
+Route::get('/Admin/LeaveRequests', function () {
+    return Inertia::render('Admin/teacher');
+});
+Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
+//D:\schoolProj\School-Management-System\resources\js\pages\Admin\teacherAttendance.tsx
 //Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 
@@ -153,8 +177,18 @@ Route::get('admin/calendar', function () {
 
     // ... any other web-based routes that render Inertia pages
 
+Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
+Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
 
- 
+
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/teacher-leave-requests', [AdminLeaveRequestController::class, 'index']);
+    Route::post('/admin/teacher-leave-requests/{id}/approve', [AdminLeaveRequestController::class, 'approve']);
+    Route::post('/admin/teacher-leave-requests/{id}/reject', [AdminLeaveRequestController::class, 'reject']);
+});
+ Route::get('/api/teacher/today-leave-count', [AdminLeaveRequestController::class, 'getTodayLeaveCount']);
+
 
 Route::middleware('auth')->group(function () {
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');

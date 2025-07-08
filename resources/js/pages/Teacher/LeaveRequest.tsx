@@ -2,149 +2,202 @@ import { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 
 export default function TeacherLeaveRequest() {
-    const [formData, setFormData] = useState({
-        leave_type: '',
-        leave_start_date: '',
-        leave_end_date: '',
-        reason: '',
-        requires_substitute: false,
-        substitute_teacher_name: '',
-        substitute_teacher_contact: '',
-        comments: '',
+  const [formData, setFormData] = useState({
+    leave_type: '',
+    leave_start_date: '',
+    leave_end_date: '',
+    reason: '',
+    requires_substitute: false,
+    substitute_teacher_name: '',
+    substitute_teacher_contact: '',
+    comments: '',
+    supporting_document: null as File | null,
+  });
+type Teacher = {
+    teacher_NIC: string;
+    user_id:number;
+};
+  const calculateLeaveDays = () => {
+    const start = new Date(formData.leave_start_date);
+    const end = new Date(formData.leave_end_date);
+    const diff = (end.getTime() - start.getTime()) / (1000 * 3600 * 24) + 1;
+    return diff > 0 ? diff : 0;
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: val,
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      supporting_document: e.target.files?.[0] ?? null,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null) {
+        payload.append(key, value as any);
+      }
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+Inertia.post('/teacher/leave/request', payload, {
+  forceFormData: true,
+});
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        Inertia.post('/teacher/leave/request', formData);
-    };
-
-    return (
-        <div style={{ maxWidth: '800px', margin: '20px auto', padding: '30px', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <h3 style={{ fontSize: '24px', color: '#333', marginBottom: '20px' }}>Teacher Leave Request</h3>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '15px' }}>
-                    <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Leave Type</label>
-                    <input
-                        type="text"
-                        name="leave_type"
-                        value={formData.leave_type}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                    <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Leave Start Date</label>
-                    <input
-                        type="date"
-                        name="leave_start_date"
-                        value={formData.leave_start_date}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                    <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Leave End Date</label>
-                    <input
-                        type="date"
-                        name="leave_end_date"
-                        value={formData.leave_end_date}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                    <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Reason for Leave</label>
-                    <textarea
-                        name="reason"
-                        value={formData.reason}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', minHeight: '100px' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                    <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Requires Substitute?</label>
-                    <input
-                        type="checkbox"
-                        name="requires_substitute"
-                        checked={formData.requires_substitute}
-                        onChange={(e) =>
-                            setFormData({ ...formData, requires_substitute: e.target.checked })
-                        }
-                        style={{ marginRight: '8px' }}
-                    />
-                </div>
-
-                {formData.requires_substitute && (
-                    <div style={{ padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '4px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: '15px' }}>
-                        <h4 style={{ fontSize: '20px', fontWeight: 'bold' }}>Substitute Details</h4>
-                        <div style={{ marginBottom: '15px' }}>
-                            <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Substitute Teacher's Name</label>
-                            <input
-                                type="text"
-                                name="substitute_teacher_name"
-                                value={formData.substitute_teacher_name}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
-                            />
-                        </div>
-
-                        <div style={{ marginBottom: '15px' }}>
-                            <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Substitute Teacher's Contact</label>
-                            <input
-                                type="text"
-                                name="substitute_teacher_contact"
-                                value={formData.substitute_teacher_contact}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                <div style={{ marginBottom: '15px' }}>
-                    <label style={{ fontSize: '16px', color: '#444', display: 'block', marginBottom: '8px' }}>Comments (Optional)</label>
-                    <textarea
-                        name="comments"
-                        value={formData.comments}
-                        onChange={handleChange}
-                        style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', minHeight: '100px' }}
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    style={{
-                        padding: '12px 20px',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        fontSize: '16px',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        width: '100%',
-                        transition: 'background-color 0.3s',
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
-                >
-                    Submit Leave Request
-                </button>
-            </form>
+  return (
+    <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">📝 Leave Request Form</h2>
+     
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Leave Type */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Leave Type</label>
+          <select
+            name="leave_type"
+            value={formData.leave_type}
+            onChange={handleChange}
+            required
+            className="w-full border border-gray-300 rounded-md px-4 py-2"
+          >
+            <option value="">Select Leave Type</option>
+            <option value="Casual">Casual</option>
+            <option value="Medical">Medical</option>
+            <option value="Emergency">Emergency</option>
+            <option value="Duty">Duty</option>
+          </select>
         </div>
-    );
+
+        {/* Start & End Dates */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block mb-2 font-medium text-gray-700">Start Date</label>
+            <input
+              type="date"
+              name="leave_start_date"
+              value={formData.leave_start_date}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium text-gray-700">End Date</label>
+            <input
+              type="date"
+              name="leave_end_date"
+              value={formData.leave_end_date}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+          </div>
+        </div>
+
+        {/* Total Leave Days */}
+        {formData.leave_start_date && formData.leave_end_date && (
+          <p className="text-sm text-gray-600">
+            📅 Total Leave Days: <span className="font-semibold">{calculateLeaveDays()}</span>
+          </p>
+        )}
+
+        {/* Reason */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Reason for Leave</label>
+          <textarea
+            name="reason"
+            value={formData.reason}
+            onChange={handleChange}
+            required
+            className="w-full border border-gray-300 rounded-md px-4 py-2 min-h-[100px]"
+          />
+        </div>
+
+        {/* Supporting Document */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Upload Document (optional)</label>
+          <input
+            type="file"
+            name="supporting_document"
+            onChange={handleFileChange}
+            className="w-full"
+          />
+        </div>
+
+        {/* Requires Substitute */}
+        <div>
+          <label className="flex items-center gap-3 text-gray-700 font-medium">
+            <input
+              type="checkbox"
+              name="requires_substitute"
+              checked={formData.requires_substitute}
+              onChange={handleChange}
+              className="h-4 w-4"
+            />
+            Requires Substitute?
+          </label>
+        </div>
+
+        {/* Substitute Details */}
+        {formData.requires_substitute && (
+          <div className="p-4 bg-gray-100 rounded-md shadow-inner">
+            <h4 className="text-lg font-semibold mb-4">Substitute Details</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 font-medium text-gray-700">Substitute Name</label>
+                <input
+                  type="text"
+                  name="substitute_teacher_name"
+                  value={formData.substitute_teacher_name}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-2 font-medium text-gray-700">Substitute Contact</label>
+                <input
+                  type="text"
+                  name="substitute_teacher_contact"
+                  value={formData.substitute_teacher_contact}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Comments */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Additional Comments (Optional)</label>
+          <textarea
+            name="comments"
+            value={formData.comments}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-md px-4 py-2 min-h-[80px]"
+          />
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md transition"
+        >
+          Submit Leave Request
+        </button>
+      </form>
+    </div>
+  );
 }

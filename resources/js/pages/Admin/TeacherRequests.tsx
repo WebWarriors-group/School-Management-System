@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type FormData={
    teacher_NIC: string;
+   user_id:number;
   personal:{
   Full_name: string;
   Full_name_with_initial: string;
@@ -214,6 +215,7 @@ const handleReject = (id: number) => {
 <div className="text-left">
                         <h3 className="font-bold text-lg text-purple-700 mb-4 border-b pb-2">Work Information</h3>
                            <p><strong>Appointed Date:</strong> {req.form_data?.appointed_date ?? "N/A"}</p>
+                            <p><strong>User id:</strong> {req.form_data?.user_id ?? "N/A"}</p>
           <p><strong>Work Acceptance Date:</strong> {req.form_data?.work_acceptance_date ?? "N/A"}</p>
           <p><strong>Appointment Type:</strong> {req.form_data?.appointment_type ?? "N/A"}</p>
           <p><strong>Salary Increment Date:</strong> {req.form_data?.salary_increment_date ?? "N/A"}</p>
