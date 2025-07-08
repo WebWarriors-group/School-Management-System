@@ -88,90 +88,58 @@ class ReportController extends Controller
         ]);
     }
 
-    public function overallPerformance()
-    {
-        $totalStudents = StudentAcademic::count();
+    // Inside ReportController.php
 
-        // Join student_academic_info with students_personal_info on reg_no to get gender counts
-        $genderCounts = StudentAcademic::select('students_personal_info.gender', DB::raw('COUNT(*) as count'))
-            ->join('students_personal_info', 'student_academic_info.reg_no', '=', 'students_personal_info.reg_no')
-            ->groupBy('students_personal_info.gender')
-            ->pluck('count', 'gender');
+// Inside ReportController.php
 
-        // Students per class with grade and class name, ordered ascending
-        $studentsPerClass = ClassModel::select(
-            'class_id',
-            'class_name',
-            'grade',
-            DB::raw('(SELECT COUNT(*) FROM student_academic_info WHERE student_academic_info.class_id = classes.class_id) as total')
-        )
-            ->orderBy('grade')
-            ->orderBy('class_name')
-            ->get()
-            ->map(function ($row) {
-                return [
-                    'class_id' => $row->class_id,
-                    'total' => $row->total,
-                    'class' => [
-                        'name' => $row->grade . '-' . $row->class_name,
-                    ],
-                ];
-            });
+public function overallPerformance()
+{
+    $totalStudents = StudentAcademic::count();
 
-        // Average marks by class
-        $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
-            ->join('student_academic_info', 'marks.reg_no', '=', 'student_academic_info.reg_no')
-            ->groupBy('student_academic_info.class_id')
-            ->get();
+    $genderCounts = StudentAcademic::select('students_personal_info.gender', DB::raw('COUNT(*) as count'))
+        ->join('students_personal_info', 'student_academic_info.reg_no', '=', 'students_personal_info.reg_no')
+        ->groupBy('students_personal_info.gender')
+        ->pluck('count', 'gender');
 
-        // Average marks by subject
-        $avgBySubject = Marks::select('subject_id', DB::raw('AVG(marks_obtained) as avg_marks'))
-            ->groupBy('subject_id')
-            ->get();
+    $studentsPerClass = ClassModel::select(
+        'class_id',
+        'class_name',
+        'grade',
+        DB::raw('(SELECT COUNT(*) FROM student_academic_info WHERE student_academic_info.class_id = classes.class_id) as total')
+    )
+    ->orderBy('grade')
+    ->orderBy('class_name')
+    ->get()
+    ->map(function ($row) {
+        return [
+            'class_id' => $row->class_id,
+            'total' => $row->total,
+            'class' => [
+                'name' => $row->grade . '-' . $row->class_name,
+            ],
+        ];
+    });
 
-        // Grade distribution
-        $gradeDistribution = Marks::select('grade', DB::raw('COUNT(*) as count'))
-            ->groupBy('grade')
-            ->get();
+    // ✅ Convert avg_marks to float for safety
+    $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
+        ->join('student_academic_info', 'marks.reg_no', '=', 'student_academic_info.reg_no')
+        ->groupBy('student_academic_info.class_id')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'class_id' => $item->class_id,
+                'avg_marks' => (float) $item->avg_marks,
+            ];
+        });
 
-        // Top 5 performers by average marks
-        $topPerformers = StudentAcademic::with(['personal', 'marks'])
-            ->get()
-            ->map(function ($student) {
-                return [
-                    'id' => $student->id,
-                    'student_personal' => ['name' => $student->personal->full_name ?? 'N/A'],
-                    'marks_avg_marks' => round($student->marks->avg('marks_obtained') ?? 0, 2),
-                ];
-            })
-            ->sortByDesc('marks_avg_marks')
-            ->take(5)
-            ->values();
+    return Inertia::render('Admin/OverallPerformance', [
+        'totalStudents' => $totalStudents,
+        'maleStudents' => $genderCounts['Male'] ?? 0,
+        'femaleStudents' => $genderCounts['Female'] ?? 0,
+        'studentsPerClass' => $studentsPerClass,
+        'avgByClass' => $avgByClass,
+    ]);
+}
 
-        // Bottom 5 performers by average marks
-        $bottomPerformers = StudentAcademic::with(['personal', 'marks'])
-            ->get()
-            ->map(function ($student) {
-                return [
-                    'id' => $student->id,
-                    'student_personal' => ['name' => $student->personal->full_name ?? 'N/A'],
-                    'marks_avg_marks' => round($student->marks->avg('marks_obtained') ?? 0, 2),
-                ];
-            })
-            ->sortBy('marks_avg_marks')
-            ->take(5)
-            ->values();
 
-        return Inertia::render('Admin/OverallPerformance', [
-            'totalStudents' => $totalStudents,
-            'maleStudents' => $genderCounts['Male'] ?? 0,
-            'femaleStudents' => $genderCounts['Female'] ?? 0,
-            'studentsPerClass' => $studentsPerClass,
-            'avgByClass' => $avgByClass,
-            'avgBySubject' => $avgBySubject,
-            'gradeDistribution' => $gradeDistribution,
-            'topPerformers' => $topPerformers,
-            'bottomPerformers' => $bottomPerformers,
-        ]);
-    }
 }

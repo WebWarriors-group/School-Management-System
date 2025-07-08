@@ -1,52 +1,32 @@
+// components/PieChart.tsx
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js';
 
-// Register chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Define the prop type for the component
-interface UserRolesPieChartProps {
-  roleCounts: {
-    admin: number;
-    teacher: number;
-    student: number;
-  };
-  secondRoleCounts?: {
-    teacher: number;
-    student: number;
-  };
+interface PieChartProps {
+  labels: string[];
+  values: number[];
+  title?: string;
+  colors?: string[]; // Optional colors for slices
 }
 
-const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({
-  roleCounts,
-  secondRoleCounts,
-}) => {
-  // First chart data
+const PieChart: React.FC<PieChartProps> = ({ labels, values, title, colors }) => {
+  const defaultColors = [
+    '#3b82f6', '#10b981', '#ec4899', '#f59e0b', '#8b5cf6', '#ef4444',
+  ];
+
   const data = {
-    labels: ['Admin', 'Teacher', 'Student'],
+    labels,
     datasets: [
       {
-        data: [roleCounts.admin, roleCounts.teacher, roleCounts.student],
-        backgroundColor: ['rgb(76, 234, 181)', 'rgb(214, 17, 168)', '#8B5CF6'],
-        hoverBackgroundColor: ['#800000', '#004953', '#FFD166'],
+        data: values,
+        backgroundColor: colors || defaultColors,
+        hoverOffset: 10,
       },
     ],
   };
-
-  // Optional second chart data
-  const data2 = secondRoleCounts
-    ? {
-        labels: ['Teacher', 'Student'],
-        datasets: [
-          {
-            data: [secondRoleCounts.teacher, secondRoleCounts.student],
-            backgroundColor: ['#4C9F70', '#FFD700'],
-            hoverBackgroundColor: ['#4C9F70', '#FFD700'],
-          },
-        ],
-      }
-    : null;
 
   const options: ChartOptions<'pie'> = {
     responsive: true,
@@ -54,30 +34,17 @@ const UserRolesPieChart: React.FC<UserRolesPieChartProps> = ({
       legend: {
         position: 'bottom',
       },
+      title: {
+        display: !!title,
+        text: title,
+        font: {
+          size: 18,
+        },
+      },
     },
   };
 
-  return (
-    <div className="flex gap-10 px-10 items-start">
-      {/* First Pie Chart */}
-      <div className="w-[300px] h-[250px]">
-        <h3 className="text-[22px] font-bold text-[maroon] ml-3 mb-2">
-          User Roles Distribution
-        </h3>
-        <Pie data={data} options={options} />
-      </div>
-
-      {/* Second Pie Chart */}
-      {data2 && (
-        <div className="w-[300px] h-[230px]">
-          <h3 className="text-[22px] font-bold text-green-700 ml-3 mb-2">
-            Total Distribution
-          </h3>
-          <Pie data={data2} options={options} />
-        </div>
-      )}
-    </div>
-  );
+  return <Pie data={data} options={options} />;
 };
 
-export default UserRolesPieChart;
+export default PieChart;
