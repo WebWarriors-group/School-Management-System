@@ -16,6 +16,7 @@ use App\Models\StudentSibling;
 use App\Models\StudyMaterial;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\TeachSubject;
 use App\Models\TeacherAddress;
 use App\Models\TeacherOtherServices;
 use App\Models\TeacherPersonal;
@@ -27,12 +28,13 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
         Teacher::factory(10)->create();
-         TeacherPersonal::factory(10)->create();
+        TeacherPersonal::factory(10)->create();
         TeacherOtherServices::factory(10)->create();
         Qualification::factory(10)->create();
         StudyMaterial::factory(10)->create();
         ClassModel::factory(10)->create();
         Subject::factory(10)->create();
+        TeachSubject::factory(10)->create();
 $students = StudentAcademic::factory(200)->create();
         Marks::factory(10)->create();
 
