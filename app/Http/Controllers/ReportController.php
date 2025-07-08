@@ -120,7 +120,6 @@ public function overallPerformance()
         ];
     });
 
-    // ✅ Convert avg_marks to float for safety
     $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
         ->join('student_academic_info', 'marks.reg_no', '=', 'student_academic_info.reg_no')
         ->groupBy('student_academic_info.class_id')
@@ -132,14 +131,28 @@ public function overallPerformance()
             ];
         });
 
+    $avgBySubject = Marks::select('marks.subject_id', 'subjects.subject_name', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
+        ->join('subjects', 'marks.subject_id', '=', 'subjects.subject_id')
+        ->groupBy('marks.subject_id', 'subjects.subject_name')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'subject_id' => $item->subject_id,
+                'subject_name' => $item->subject_name,
+                'avg_marks' => (float) $item->avg_marks,
+            ];
+        });
+
     return Inertia::render('Admin/OverallPerformance', [
         'totalStudents' => $totalStudents,
         'maleStudents' => $genderCounts['Male'] ?? 0,
         'femaleStudents' => $genderCounts['Female'] ?? 0,
         'studentsPerClass' => $studentsPerClass,
         'avgByClass' => $avgByClass,
+        'avgBySubject' => $avgBySubject,
     ]);
 }
+
 
 
 }

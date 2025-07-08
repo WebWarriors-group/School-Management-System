@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-
 import {
   ResponsiveContainer,
   BarChart,
@@ -12,23 +11,24 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
-
-import PieChart from '@/components/PieChart';  // import the reusable pie chart
+import PieChart from '@/components/PieChart';
 
 interface StudentsPerClass {
   class_id: number;
   total: number;
-  class: {
-    name: string;
-  };
+  class: { name: string };
 }
 
 interface AvgByClass {
   class_id: number;
   avg_marks: number;
-  class: {
-    name: string;
-  };
+  class: { name: string };
+}
+
+interface AvgBySubject {
+  subject_id: number;
+  avg_marks: number;
+  subject_name: string;
 }
 
 interface Props extends PageProps {
@@ -37,6 +37,7 @@ interface Props extends PageProps {
   femaleStudents: number;
   studentsPerClass: StudentsPerClass[];
   avgByClass: AvgByClass[];
+  avgBySubject: AvgBySubject[];
 }
 
 export default function OverallPerformance({
@@ -46,14 +47,21 @@ export default function OverallPerformance({
   femaleStudents,
   studentsPerClass,
   avgByClass,
+  avgBySubject,
 }: Props) {
   const [showTotalStudentsDetails, setShowTotalStudentsDetails] = useState(false);
   const [showAverageScoreDetails, setShowAverageScoreDetails] = useState(false);
+  const [showSubjectAverageDetails, setShowSubjectAverageDetails] = useState(false);
 
   const genderData = [
     { gender: 'Male', count: maleStudents },
     { gender: 'Female', count: femaleStudents },
   ];
+
+  const bestSubject = avgBySubject.reduce((top, current) =>
+    current.avg_marks > top.avg_marks ? current : top,
+    avgBySubject[0]
+  );
 
   // === Total Students Detail View ===
   if (showTotalStudentsDetails) {
@@ -67,9 +75,7 @@ export default function OverallPerformance({
           >
             ← Back
           </button>
-
           <h1 className="text-2xl font-bold mb-6">Total Students - Class-wise Breakdown</h1>
-
           <div className="bg-white border rounded shadow p-4 mb-8">
             <ul>
               {studentsPerClass.map((item, idx) => (
@@ -80,11 +86,10 @@ export default function OverallPerformance({
               ))}
             </ul>
           </div>
-
           <div className="bg-white border rounded shadow p-4 mb-8">
             <h2 className="text-xl font-semibold mb-4">Student Count by Class (Chart)</h2>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={studentsPerClass} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barSize={40}>
+              <BarChart data={studentsPerClass}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="class.name" tick={{ fontSize: 12 }} />
                 <YAxis allowDecimals={false} />
@@ -93,11 +98,10 @@ export default function OverallPerformance({
               </BarChart>
             </ResponsiveContainer>
           </div>
-
           <div className="bg-white border rounded shadow p-4">
             <h2 className="text-xl font-semibold mb-4">Gender Distribution</h2>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={genderData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barSize={60}>
+              <BarChart data={genderData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="gender" />
                 <YAxis allowDecimals={false} />
@@ -111,11 +115,10 @@ export default function OverallPerformance({
     );
   }
 
-  // === Average Class Score Detail View with Pie Chart ===
+  // === Average Class Score Detail View ===
   if (showAverageScoreDetails) {
-    // Prepare labels and values for PieChart
-    const labels = avgByClass.map((item) => item.class?.name ?? `Class ${item.class_id}`);
-    const values = avgByClass.map((item) => item.avg_marks);
+    const labels = avgByClass.map(item => item.class?.name ?? `Class ${item.class_id}`);
+    const values = avgByClass.map(item => item.avg_marks);
 
     return (
       <AppLayout user={auth.user}>
@@ -127,9 +130,7 @@ export default function OverallPerformance({
           >
             ← Back
           </button>
-
           <h1 className="text-2xl font-bold mb-6">Average Class Scores</h1>
-
           <div className="bg-white border rounded shadow p-4 mb-8">
             <ul>
               {avgByClass.map((item, idx) => (
@@ -140,7 +141,6 @@ export default function OverallPerformance({
               ))}
             </ul>
           </div>
-
           <div className="bg-white border rounded shadow p-4">
             <h2 className="text-xl font-semibold mb-4">Average Marks by Class (Pie Chart)</h2>
             <div style={{ width: '100%', height: 350 }}>
@@ -152,7 +152,44 @@ export default function OverallPerformance({
     );
   }
 
-  // === Overview Dashboard ===
+  // === Average Subject Score Detail View ===
+  if (showSubjectAverageDetails) {
+    const labels = avgBySubject.map(item => item.subject_name);
+    const values = avgBySubject.map(item => item.avg_marks);
+
+    return (
+      <AppLayout user={auth.user}>
+        <Head title="Average Subject Scores" />
+        <div className="py-6 px-8 max-w-4xl mx-auto">
+          <button
+            onClick={() => setShowSubjectAverageDetails(false)}
+            className="mb-4 px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-200"
+          >
+            ← Back
+          </button>
+          <h1 className="text-2xl font-bold mb-6">Average Subject Scores</h1>
+          <div className="bg-white border rounded shadow p-4 mb-8">
+            <ul>
+              {avgBySubject.map((item, idx) => (
+                <li key={idx} className="flex justify-between py-2 border-b last:border-b-0">
+                  <span>{item.subject_name}</span>
+                  <span>{item.avg_marks.toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-white border rounded shadow p-4">
+            <h2 className="text-xl font-semibold mb-4">Average Marks by Subject (Pie Chart)</h2>
+            <div style={{ width: '100%', height: 350 }}>
+              <PieChart labels={labels} values={values} />
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  // === Dashboard View ===
   return (
     <AppLayout user={auth.user}>
       <Head title="Overall Performance" />
@@ -160,7 +197,6 @@ export default function OverallPerformance({
         <h1 className="text-2xl font-bold mb-6">📊 Overall Performance Overview</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {/* Total Students Card */}
           <div
             className="bg-blue-100 p-4 rounded-lg shadow cursor-pointer flex flex-col"
             onClick={() => setShowTotalStudentsDetails(true)}
@@ -169,7 +205,7 @@ export default function OverallPerformance({
             <p className="text-3xl font-bold text-blue-600 mb-2">{totalStudents}</p>
             <div style={{ width: '100%', height: 100 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={studentsPerClass} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <BarChart data={studentsPerClass}>
                   <XAxis dataKey="class.name" hide />
                   <YAxis hide />
                   <Tooltip formatter={(value: number) => [`${value} students`, 'Count']} />
@@ -179,7 +215,6 @@ export default function OverallPerformance({
             </div>
           </div>
 
-          {/* Average Score Card */}
           <div
             className="bg-green-100 p-4 rounded-lg shadow cursor-pointer"
             onClick={() => setShowAverageScoreDetails(true)}
@@ -188,20 +223,13 @@ export default function OverallPerformance({
             <p className="text-3xl font-bold text-green-600">View</p>
           </div>
 
-          {/* Placeholder Cards */}
-          <div className="bg-yellow-100 p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-800">Top Performing Class</h2>
-            <p className="text-3xl font-bold text-yellow-600">–</p>
-          </div>
-
-          <div className="bg-indigo-100 p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-800">Best Subject</h2>
-            <p className="text-3xl font-bold text-indigo-600">–</p>
-          </div>
-
-          <div className="bg-pink-100 p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-800">Grade A+ Students</h2>
-            <p className="text-3xl font-bold text-pink-600">–</p>
+          <div
+            className="bg-indigo-100 p-4 rounded-lg shadow cursor-pointer"
+            onClick={() => setShowSubjectAverageDetails(true)}
+          >
+            <h2 className="text-lg font-semibold text-gray-800">Average Subject Score</h2>
+            <p className="text-xl font-bold text-indigo-600">{bestSubject?.subject_name ?? '–'}</p>
+            <p className="text-sm text-gray-600 mt-1">Avg Marks: {bestSubject?.avg_marks.toFixed(2)}</p>
           </div>
         </div>
       </div>
