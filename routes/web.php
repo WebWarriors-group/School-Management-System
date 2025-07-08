@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use App\Mail\StudentAdmissionMail;
+use App\Http\Controllers\TeacherAssignedController;
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
@@ -69,7 +70,11 @@ Route::post('/classadd', [ClassController::class, 'store']);
 
 
  Route::get('/add-teacher', function () {
-    return inertia::render('Teacher/teacherForm'); // This should return the Inertia page
+    
+    $user_id=Auth::id();
+    return inertia::render('Teacher/teacherForm',[
+        'user'=>$user_id
+    ]); // This should return the Inertia page
 })->name('add-teacher');
 
 
@@ -106,7 +111,7 @@ Route::get('/admin/teacher-requests', [TeacherRequestController::class, 'index']
 
 
 
-//Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'personalDashboard'])->name('personaldashboard');
+
 Route::get('/dashboard/teacher-count', [TeacherController::class, 'getTeacherCount']);
 
 
@@ -115,7 +120,7 @@ Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->nam
 
 
 
-//Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
+
 
 
 Route::get('/teacher_details', function () {
@@ -138,20 +143,10 @@ Route::get('admin/calendar', function () {
 
 
 
-//Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
+    
 
-    // Your Dashboard route
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
-    // This is the route that loads your React Subject Management page via Inertia.
-    // It's under the 'web' middleware group (implicitly or explicitly if added).
-   // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
-
-
-    // ... any other web-based routes that render Inertia pages
+    
 
 
  
@@ -167,6 +162,16 @@ Route::get('/students/all', function () {
         // You can pass props here
     ]);
 })->name('students.all');
+
+
+Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
+Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
+
+// web.php
+Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
+Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index']);
+
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

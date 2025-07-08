@@ -20,6 +20,7 @@ class Teacher extends Model
 
     protected $fillable = [
         'teacher_NIC',
+        'user_id',
         'appointed_date',
         'work_acceptance_date',
         'appointment_type',
@@ -44,7 +45,7 @@ class Teacher extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id','id');
     }
     
     public function subjects()

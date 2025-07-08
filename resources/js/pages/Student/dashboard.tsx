@@ -31,7 +31,7 @@ export default function Dashboard() {
         </div>
 
         
-        <nav className="bg-[#5D4037] text-white py-3 px-6 shadow-md relative z-10">
+        <nav className="bg-[#650000] text-white py-3 px-6 shadow-md relative z-10">
           <div className="flex justify-between items-center">
             
             <div className="flex items-center">

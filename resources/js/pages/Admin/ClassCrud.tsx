@@ -74,47 +74,61 @@ export default function ClassIndex({ classes }: Props) {
   return (
     <>
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 h-60">
-        {Object.entries(gradeSummary).map(([grade, total]) => (
-          <div
-            key={grade}
-            className="relative bg-white shadow-lg rounded p-4 min-h-[120px] w-72 overflow-hidden"
-          >
-            <div className="text-white absolute bottom-0 right-0 w-0 h-0 border-b-[90px] border-l-[100px] border-b-sky-900 border-l-transparent"></div>
-            <h2 className="text-xl font-semibold text-green-800">Grade {grade}</h2>
-            <p className="text-lg text-sky-700">Total Students: {total}</p>
+      <div className="mb-8">
+   <h1 className="text-2xl font-bold text-white  bg-gradient-to-br from-blue-900 to-sky-700  text-center py-3 ">Grade Summary</h1>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-13">
+    {Object.entries(gradeSummary).map(([grade, total]) => (
+      <div
+        key={grade}
+        className="bg-white shadow-2xl hover:shadow-xl transition-shadow duration-300 px-6 py-4  flex flex-col justify-between"
+      >
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-blue-800">GRADE  {grade}</h2>
+            
           </div>
-        ))}
+          <p className="text-lg font-semibold text-green-700">
+            👩‍🎓 Total Students:
+            <span className="ml-2 text-sky-900">{total}</span>
+          </p>
+        </div>
+        <p className="text-sm text-blue-600 mt-2">
+          Last updated: {/* Add dynamic time if needed */}
+        </p>
       </div>
+    ))}
+  </div>
+</div>
 
-      {/* Class Management Form */}
-      <div className="w-300 mx-auto p-7 bg-white rounded shadow mt-10">
-        <h1 className="text-2xl font-bold mb-4">Manage Classes</h1>
 
-        <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+       <h1 className="text-2xl font-bold text-white mt-17  bg-gradient-to-br from-blue-900 to-sky-700  py-3 text-center "> Manage Classes</h1>
+
+      <div className="w-300 mx-auto p-7 bg-white rounded shadow-2xl mt-5">
+        
+        <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 ">
           <input
             type="number"
             placeholder="Class ID"
-            className="border rounded px-3 py-2"
+            className="border rounded px-3 py-2 shadow-lg"
             value={data.class_id}
             onChange={e => setData('class_id', e.target.value)}
           />
           <input
             type="number"
             placeholder="Grade"
-            className="border rounded px-3 py-2"
+            className="border rounded px-3 py-2 shadow-lg"
             value={data.grade}
             onChange={e => setData('grade', e.target.value)}
           />
           <input
             type="text"
             placeholder="Section"
-            className="border rounded px-3 py-2"
+            className="border rounded px-3 py-2 shadow-lg"
             value={data.section}
             onChange={e => setData('section', e.target.value)}
           />
           <select
-            className="border rounded px-3 py-2"
+            className="border rounded px-3 py-2 shadow-lg"
             value={data.class_name}
             onChange={e => setData('class_name', e.target.value)}
           >
@@ -126,7 +140,7 @@ export default function ClassIndex({ classes }: Props) {
           <input
             type="number"
             placeholder="Year"
-            className="border rounded px-3 py-2"
+            className="border rounded px-3 py-2 shadow-lg"
             value={data.year}
             onChange={e => setData('year', e.target.value)}
           />
@@ -139,110 +153,131 @@ export default function ClassIndex({ classes }: Props) {
         </form>
 
         {/* Class Table */}
-        <table className="w-full table-auto border-collapse">
-          <thead>
-            <tr className="bg-sky-900 text-left text-white">
-              <th className="p-2 border">Class ID</th>
-              <th className="p-2 border">Year</th>
-              <th className="p-2 border">Grade</th>
-              <th className="p-2 border">Section</th>
-              <th className="p-2 border">Class Name</th>
-              <th className="p-2 border">Class Teacher</th>
-              <th className="p-2 border">Students</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {classes.map(cls => (
-              <React.Fragment key={cls.class_id}>
-                <tr
-                  className="border-t hover:bg-gray-50 cursor-pointer"
-                  onClick={() => toggleStudents(cls)}
-                >
-                  <td className="p-2 border">{cls.class_id}</td>
-                  <td className="p-2 border">{cls.year}</td>
-                  <td className="p-2 border">{cls.grade}</td>
-                  <td className="p-2 border">{cls.section}</td>
-                  <td className="p-2 border">{cls.class_name}</td>
-                  <td className="p-2 border">{cls.teacher_NIC || '-'}</td>
-                  <td className="p-2 border">{cls.studentacademics_count}</td>
-                  <td className="p-2 border space-x-2">
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        editClass(cls);
-                      }}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        deleteClass(cls.class_id);
-                      }}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+       <table className="w-full table-auto border-collapse shadow-md  overflow-hidden">
+  <thead className="bg-blue-200 text-black text-sm uppercase ">
+    <tr>
+      <th className="p-3 border border-gray-200">Class ID</th>
+      <th className="p-3 border border-gray-200">Year</th>
+      <th className="p-3 border border-gray-200">Grade</th>
+      <th className="p-3 border border-gray-200">Section</th>
+      <th className="p-3 border border-gray-200">Class Name</th>
+      <th className="p-3 border border-gray-200">Class Teacher</th>
+      <th className="p-3 border border-gray-200">Students</th>
+      <th className="p-3 border border-gray-200 text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody className="text-gray-700 text-sm">
+    {classes.map((cls, index) => (
+      <tr
+        key={cls.class_id}
+        className={`${
+          index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+        } hover:bg-yellow-50 transition cursor-pointer`}
+        onClick={() => toggleStudents(cls)}
+      >
+        <td className="px-3 py-2 border border-gray-200">{cls.class_id}</td>
+        <td className="p-3 py-2 border border-gray-200">{cls.year}</td>
+        <td className="p-3  py-2 border border-gray-200">{cls.grade}</td>
+        <td className="p-3 py-2 border border-gray-200">{cls.section}</td>
+        <td className="p-3 py-2 border border-gray-200">{cls.class_name}</td>
+        <td className="p-3 py-2 border border-gray-200">{cls.teacher_NIC || '-'}</td>
+        <td className="p-3 py-2 border border-gray-200">{cls.studentacademics_count}</td>
+        <td className="p-3 py-2 border border-gray-200 text-center space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              editClass(cls);
+            }}
+            className="inline-flex items-center justify-center px-2 py-1 text-blue-600 hover:text-blue-800 transition"
+            title="Edit"
+          >
+            🖊️
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteClass(cls.class_id);
+            }}
+            className="inline-flex items-center justify-center px-2 py-1 text-red-600 hover:text-red-800 transition"
+            title="Delete"
+          >
+            🗑️
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
       </div>
 
       {/* Student Detail View */}
       {openClassId && (
-        <div className="bg-white shadow rounded-lg p-6 mt-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            Class: {openClassId.grade} - {openClassId.section}
-          </h3>
+        <div className="bg-white shadow-xl rounded-xl p-8 mt-6 space-y-8">
+  {/* Class Title */}
+  <h3 className="text-3xl font-bold text-sky-900">
+    📘 Class: {openClassId.grade} - {openClassId.section}
+  </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-14 text-gray-700 mb-6">
-            <p className="text-lg bg-sky-800 py-2 text-center text-white">
-              <span className="text-md text-white">Class Teacher:</span> {openClassId.teacher_NIC}
-            </p>
-            <p className="text-lg bg-sky-800 py-2 text-center text-white">
-              <span className="text-md text-white">Class Name:</span> {openClassId.class_name}
-            </p>
-            <p className="text-lg bg-sky-800 py-2 text-center text-white">
-              <span className="text-md text-white">Total Students:</span> {openClassId.studentacademics_count}
-            </p>
-          </div>
+  {/* Class Info Cards */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-800">
+    {/* Class Teacher */}
+    <div className="bg-gradient-to-br from-sky-900 to-sky-600 text-white  shadow p-6 text-center">
+      <p className="text-sm uppercase tracking-wide font-medium mb-1">Class Teacher</p>
+      <p className="text-xl font-bold">{openClassId.teacher_NIC}</p>
+    </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-md text-left border border-gray-200">
-              <thead className="bg-[#650000] text-white">
-                <tr>
-                  <th className="px-4 py-2 border">Reg No</th>
-                  <th className="px-4 py-2 border">Name</th>
-                  <th className="px-4 py-2 border">Gender</th>
-                </tr>
-              </thead>
-              <tbody>
-                {openClassId.studentacademics.length > 0 ? (
-                  openClassId.studentacademics.map(student => (
-                    <tr key={student.reg_no} className="hover:bg-yellow-100 border-b">
-                      <td className="px-4 py-2 border">{student.reg_no}</td>
-                      <td className="px-4 py-2 border">
-                        {student.studentpersonal?.full_name_with_initial || 'Not Available'}
-                      </td>
-                      <td className="px-4 py-2 border">{student.studentpersonal?.gender ?? 'N/A'}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3} className="px-4 py-4 text-center text-gray-500">
-                      No students found for this class.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    {/* Class Name */}
+    <div className="bg-gradient-to-r from-pink-800 to-purple-900 border border-gray-200  shadow p-6 text-center">
+      <p className="text-sm uppercase tracking-wide font-semibold text-white mb-1">Class Name</p>
+      <p className="text-xl font-bold text-white">{openClassId.class_name}</p>
+    </div>
+
+    {/* Total Students */}
+    <div className="bg-gradient-to-br from-indigo-900 to-purple-400 text-white  shadow p-6 text-center">
+      <p className="text-sm uppercase tracking-wide font-medium mb-1">Total Students</p>
+      <p className="text-xl font-bold">{openClassId.studentacademics_count}</p>
+    </div>
+  </div>
+
+  {/* Students Table */}
+  <div className="overflow-x-auto  shadow-md border border-gray-200">
+    <table className="w-full text-sm text-left">
+      <thead className="bg-blue-200 text-black uppercase text-sm tracking-wider">
+        <tr>
+          <th className="px-6 py-3 border-r">Reg No</th>
+          <th className="px-6 py-3 border-r">Name</th>
+          <th className="px-6 py-3">Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        {openClassId.studentacademics.length > 0 ? (
+          openClassId.studentacademics.map((student, index) => (
+            <tr
+              key={student.reg_no}
+              className={`${
+                index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+              } hover:bg-yellow-100 transition duration-200 border-b`}
+            >
+              <td className="px-6 py-3 border-r">{student.reg_no}</td>
+              <td className="px-6 py-3 border-r">
+                {student.studentpersonal?.full_name_with_initial || 'Not Available'}
+              </td>
+              <td className="px-6 py-3">{student.studentpersonal?.gender ?? 'N/A'}</td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={3} className="px-6 py-6 text-center text-gray-500">
+              No students found for this class.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+
       )}
     </>
   );

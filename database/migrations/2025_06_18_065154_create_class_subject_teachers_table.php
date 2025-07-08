@@ -19,7 +19,7 @@ return new class extends Migration
              $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
               $table->string('teacher_NIC');
              $table->foreign('teacher_NIC')->references('teacher_NIC')->on('teacher_work_infos')->onDelete('cascade');
-              $table->integer('year');
+             
             $table->timestamps();
         });
     }

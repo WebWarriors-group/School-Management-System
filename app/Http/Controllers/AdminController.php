@@ -28,16 +28,33 @@ use App\Mail\WelcomeMail;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-   $teacher = Teacher::count();
+$teacher = Teacher::count();
    $subject = Subject::count();
    $student = StudentAcademic::count();
    $student1 = StudentAcademic::select('class_id','reg_no')->get();
    $class = ClassModel::count();
     $subjects = Subject::all();
      $grades = Grade::all();
-    $classData = ClassModel::withCount('studentacademics')
+
+$query=ClassModel::query();
+
+if ($request->filled('grade')) {
+    $query->where('grade', (int) $request->grade); // cast to int explicitly
+}
+
+
+if($request->filled('section')){
+    $query->where('section',$request->section);
+}
+
+if($request->filled('class_name')){
+    $query->where('class_name',$request->class_name);
+}
+
+
+    $classData = $query->withCount('studentacademics')
         ->with([
             'studentacademics.studentpersonal' // Include nested relationship
         ])
@@ -58,6 +75,8 @@ $images=Img::all();
         ->map->groupBy('grade');  
 
     $teachers = Teacher::select('teacher_NIC')->get();
+    $teachers = Teacher::with('qualifications','personal')->select('teacher_NIC')->get();
+
 
    $studentDeleted = StudentAcademic::onlyTrashed()
         ->latest('deleted_at')
@@ -80,7 +99,7 @@ $classDeleted = ClassModel::onlyTrashed()
 'classfooter'=>$classFooter,
 'teacherfooter'=>$teacherFooter,
 'studentfooter'=>$studentActivity,
-'subjects' => Subject::all(), // ✅ Required
+'subjects' => Subject::all(), 
 'grades'=>$grades,
 'subject'=>$subject,
 'subjects'=>$subjects,
@@ -94,6 +113,8 @@ $classDeleted = ClassModel::onlyTrashed()
             'img'=>[
                 'data'=>$images,
             ],
+
+            'filters'=>$request->only(['grade','section','class_name'])
             
 ]);
     }

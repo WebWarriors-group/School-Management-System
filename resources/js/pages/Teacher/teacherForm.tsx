@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type TeacherForm = {
   teacher_NIC: string;
+  user_id:number|string;
   Full_name: string;
   Full_name_with_initial: string;
   Photo: File | null;
@@ -74,15 +75,18 @@ type TeacherForm = {
   Agrahara_insuarence_membership: string;
 
 };
+ interface props{
+  user:number;
+ }
 
 
 
 
-
-export default function AddTeacherForm() {
+export default function AddTeacherForm({user}:props) {
   const { data, setData, post, processing, errors } = useForm<TeacherForm>({
     // TeacherForm Fields
     teacher_NIC: '',
+    user_id:user,
     Full_name: '',
     Full_name_with_initial: '',
     Photo: null,
@@ -224,6 +228,23 @@ export default function AddTeacherForm() {
         required
       />
       <InputError message={errors.teacher_NIC} className="mt-2" />
+    </div>
+
+    <div className="mb-4 py-5 hidden">
+      <label htmlFor="teacher_NIC" className="block text-sm font-medium text-gray-700">
+        user_id
+      </label>
+      <input
+        type="text"
+        id="user_id"
+        name="user_id"
+        className="w-full p-2 border rounded"
+       
+        value={data.user_id}
+        onChange={(e) => setData('user_id', e.target.value)}
+        required
+      />
+      
     </div>
 
     {/* Full Name */}

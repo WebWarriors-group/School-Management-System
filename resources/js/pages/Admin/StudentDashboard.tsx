@@ -99,16 +99,16 @@ const StudentDashboard: React.FC = () => {
             <SearchStudent students={students} />
           </header>
 
-          <div className="grid grid-cols-3 gap-1 md:grid-cols-3 mt-4 mx-2 mb-2">
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+          <div className="grid grid-cols-3 gap-8 md:grid-cols-3 mt-4 mx-2 mb-5">
+            <div className="border-yellow-600 rounded-xl border-t-4 bg-white py-6 px-2 shadow">
               <h3 className="text-maroon-700 text-base font-semibold">Total Students</h3>
               <p className="mt-1 text-lg font-bold text-green-600">{students.length}</p>
             </div>
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+            <div className="border-yellow-600 rounded-xl border-t-4 bg-white py-6 px-2 shadow">
               <h3 className="text-maroon-700 text-base font-semibold">Class Enrolled</h3>
               <p className="mt-1 text-lg font-bold text-red-600">{uniqueClassCount}</p>
             </div>
-            <div className="border-yellow-500 rounded-xl border-t-4 bg-white p-3 shadow">
+            <div className="border-yellow-600 rounded-xl border-t-4 bg-white py-6 px-2 shadow">
               <h3 className="text-maroon-700 text-base font-semibold">Receiving Scholarship</h3>
               <p className="mt-1 text-lg font-bold text-blue-600">{scholarshipCount}</p>
             </div>

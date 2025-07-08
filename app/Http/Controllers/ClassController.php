@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ClassModel;
+
+
+use App\Models\SubjectTeacher;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +19,21 @@ class ClassController extends Controller
      */
     public function index()
     {
-        return response()->json(ClassModel::all(), 200);
+       
+    $teachers = Teacher::with('qualifications', 'personal')->get();
+
+    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC', 'class_name', 'year')
+        ->get()
+        ->groupBy('class_name')
+        ->map(function ($gradeGroups) {
+            return $gradeGroups->groupBy('grade');
+        });
+
+    return Inertia::render('Admin/Classpage', [
+        'classes' => $classes,
+        'teachers' => $teachers,
+    ]);
+
     }
 
     public function classpage()
@@ -52,7 +69,7 @@ public function assignTeachers(Request $request)
             ->update(['teacher_NIC' => $teacherNIC]);
     }
 
-    return redirect()->back()->with('success', 'Class teachers updated successfully.');
+    return ;
 }
 
     /**
@@ -143,4 +160,33 @@ public function assignTeachers(Request $request)
         'filters' => $filters,
     ]);
 }
+
+
+
+
+public function reset(Request $request)
+{
+    $request->validate([
+        'class_name' => 'required|string',
+        'grade' => 'required|integer',
+    ]);
+
+    $className = $request->input('class_name');
+    $grade = $request->input('grade');
+
+    // Assuming you have a Class model with class_name and grade columns
+    // and SubjectTeacher model with teacher_NIC that you want to nullify
+
+    // Get the relevant classes/sections matching class_name and grade
+    $classIds = ClassModel::where('class_name', $className)
+        ->where('grade', $grade)
+        ->pluck('class_id');
+
+    // Update all assignments for those classes to set teacher_NIC to null
+    // SubjectTeacher::query()->update(['teacher_NIC' => null]);
+    ClassModel::query()->update(['teacher_NIC' => null]);
+
+    return redirect()->back();
+}
+
 }

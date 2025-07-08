@@ -14,6 +14,7 @@ interface AppSidebarProps {
 export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
+            
             { title: 'Dashboard Overview', url: '/admin/dashboardoverview', icon: LayoutGrid },
             { title: 'School Event Calendar', url: '/admin/calendar', icon: LayoutGrid },
               { title: 'Overall Performance', url: '/admin/performance', icon: LayoutGrid },
@@ -87,9 +88,8 @@ export function AppSidebar({ role }: AppSidebarProps) {
                     <NavMain items={mainNavItems} />
                 </SidebarContent>
           
-            <SidebarFooter className="bg-[white] text-white">
-                <NavFooter items={footerNavItems} className="mt-auto" />
-            </SidebarFooter>
+            
+            
         </Sidebar>
           )}
         </>

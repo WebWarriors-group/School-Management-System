@@ -65,15 +65,15 @@ export default function Navbar() {
             <div className="flex items-center space-x-3">
               <img src="/images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
               <h1 className="font-orbitron text-lg md:text-xl font-bold leading-tight max-[639px]:hidden ">
-                T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)<br className="hidden md:block" />
+                T / Tn / Mahadivulwewa Maha Vidyalaya ( National School )<br className="hidden md:block" />
                 
               </h1>
             </div>
 
            
             <div className="flex items-center space-x-4">
-              <Link href={route('loginCheckout')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Login</Link>
-              <Link href={route('login')} className="hidden md:inline-block bg-[#fbe8d6] text-red-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Forms</Link>
+              <Link href={route('loginCheckout')} className="hidden md:inline-block bg-white rounded-full text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Login</Link>
+              <Link href={route('login')} className="hidden md:inline-block rounded-full bg-white text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Forms</Link>
               <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -115,14 +115,9 @@ export default function Navbar() {
         href={route('login')}
         className="bg-yellow-500 text-black px-6 py-3 rounded-full hover:bg-purple-700 transition max-[639px]:px-4 max-[639px]:py-2"
       >
-        Get Started
+         ▶ Watch Video
       </Link>
-      <Link
-        href={route('login')}
-        className="text-yellow-400 font-semibold hover:underline flex items-center gap-2"
-      >
-        ▶ Watch Video
-      </Link>
+      
     </div>
   </div>
 </section>
