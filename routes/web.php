@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 
-use Illuminate\Support\Facades\Mail;
+
 use App\Mail\StudentAdmissionMail;
 
 Route::get('/', function () {

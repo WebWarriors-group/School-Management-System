@@ -13,7 +13,6 @@ import SubjectIndex from '@/pages/Admin/SubjectIndex';
 import Gallery from '@/pages/Admin/imagegallery';
 import CalendarPage from '@/pages/Admin/CalendarPage';
 
-import SubjectIndex from '@/pages/Admin/subject';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
