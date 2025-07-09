@@ -193,7 +193,7 @@ setClass(true);
 };
 
 
-  const [filters, setFilters] = useState<{ grade?: string; section?: string; class_name?: string }>(initialFilters || {});
+  
   const [filteredClasses, setFilteredClasses] = useState<Class[]>([]);
 
 
@@ -366,7 +366,7 @@ setClass(true);
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
-        <p>1</p>
+        
       </header>
       <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
         {selectedCard && selectedCard.id === 4 ? (
@@ -378,7 +378,9 @@ setClass(true);
               Back
             </Button>
           </>
-        ) : selectedCard && selectedCard.id === 2 ? (
+        ) 
+        
+        : selectedCard && selectedCard.id === 2 ? (
           <>
             <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>
               Back
@@ -390,16 +392,8 @@ setClass(true);
               }))}
             />
           </>
-        ) : selectedCard && selectedCard.id === 4 ? (
-          <>
-            <ViewAllStudents />
-            <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
-              Back
-            </Button>
-          </>
-        ) :
-
-        selectedCard && selectedCard.id === 1 ? (
+        ) 
+        :selectedCard && selectedCard.id === 1 ? (
           <>
           <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
               Back
@@ -407,13 +401,10 @@ setClass(true);
             <SubjectIndex subjects={subjects} grades={grades} />
             
           </>
-        ) :
+        ) 
         
-        
-        
-        
-        showclass  ? (
-          addteacher ? (
+        :showclass  ? (
+           addteacher ? (
             <>
               <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>
                 Back
@@ -422,7 +413,8 @@ setClass(true);
                 {/* <AssignClassTeachers teachers={teacher12} classes={classesGrouped} /> */}
               </div>
             </>
-          ) :(
+                       )
+             :(
             <>
               <div className="flex">
                 <Button className="bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={handleBackClick1}>
@@ -444,18 +436,18 @@ setClass(true);
       <form onSubmit={handleFilterSubmit} className="mb-4 space-x-4">
         {/* Grade Dropdown */}
         <select
-  value={grade}
- onChange={(e) => {
-  const val = e.target.value;
-  setGrade(val === '' ? '' : parseInt(val, 10));
-}}
-  className="border p-2 rounded"
->
-  <option value="">-- Select Grade --</option>
-  {grades.map(g => (
-    <option key={g.id} value={g.grade}>{g.grade}</option>
-  ))}
-</select>
+       value={grade}
+        onChange={(e) => {
+        const val = e.target.value;
+          setGrade(val === '' ? '' : parseInt(val, 10));
+            }}
+           className="border p-2 rounded"
+                             >
+                <option value="">-- Select Grade --</option>
+            {grades.map(g => (
+           <option key={g.id} value={g.grade}>{g.grade}</option>
+           ))}
+            </select>
 
         {/* Section Input */}
         <input
@@ -518,7 +510,8 @@ setClass(true);
               </div>
             </>
           )
-        ) : showForm ? (
+        ) 
+        : showForm ? (
           <div className="mt-4">
             <Button className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick}>
               Back
@@ -529,7 +522,8 @@ setClass(true);
             </div>
             {/* <AddTeacherForm /> */}
           </div>
-        ) : showStudentForm ? (
+        ) 
+        : showStudentForm ? (
           <>
             <div className="jflex justify-left mb-4 mt-10 z-10">
               <Button
@@ -550,136 +544,24 @@ setClass(true);
               <StudentAdmissionForm setShowForm={setShowStudentForm} />
             </div>
           </>
-        ) : showSub ? (
+        ) 
+        : showSub ? (
           <>
 
 
 
 
 
-          showclass ? (
-            addteacher ? (
-              <>
-                <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>
-                  Back
-                </Button>
-                <div className="mt-[-100px]">
-                  <AssignClassTeachers teachers={teacher12} classes={classesGrouped} />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex">
-                  <Button className="bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick1}>
-                    Back
-                  </Button>
-                  <Button className="text-[white] justify-right bg-sky-700 w-40 h-10 mt-10 ml-170 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick2}>
-                    Add teacher
-                  </Button>
-                  <Button className="text-[white] justify-right bg-amber-700 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick2}>
-                    Filter
-                  </Button>
-                </div>
-                <div className="p-6">
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full border border-sky-900 text-left">
-                      <thead className="bg-sky-900 text-[white]">
-                        <tr>
-                          <th className="border px-4 py-2">Class ID</th>
-                          <th className="border px-4 py-2">Class Name</th>
-                          <th className="border px-4 py-2">Grade</th>
-                          <th className="border px-4 py-2">TeacherNIC</th>
-                          <th className="border px-4 py-2">Section</th>
-                          <th className="border px-4 py-2">Students</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {classData?.data?.length > 0 ? (
-                          classData.data.map((c1) => (
-                            <tr key={c1.class_id} className="bg-white hover:bg-yellow-100">
-                              <td className="border px-4 py-2">{c1.class_id}</td>
-                              <td className="border px-4 py-2">{c1.class_name}</td>
-                              <td className="border px-4 py-2">{c1.grade}</td>
-                              <td className="border px-4 py-2">{c1.teacher_NIC}</td>
-                              <td className="border px-4 py-2">{c1.section}</td>
-                              <td className="border px-4 py-2">{c1.studentacademics_count}</td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr>
-                            <td colSpan={6} className="py-4 text-center text-gray-500">
-                              No classes available.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </>
-            )
-          ) : showForm ? (
-
-            <div className="mt-4">
-              <Button className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick}>
-                Back
-              </Button>
-              <span className="ml-212">Total Teachers</span>
-              <div className="mt- ml-250 absolute bg-yellow-500 rounded-full w-30 h-30 flex items-center justify-center text-[#152238] text-2xl font-bold border-14 border-[#152238]">
-                {teachers}
-              </div>
-              <AddTeacherForm />
-            </div>
-
-          </>
-        ) : (
+           (
           <>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
               <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddTeacherClick}>
                 <span className="text-[20px] font-semibold text-yellow-700">Add New Teachers</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700" />
 
-          ) : showStudentForm ? (
+          )  : (
             <>
-              <div className="jflex justify-left mb-4 mt-10 z-10">
-                <Button
-                  className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
-                  onClick={CloseClick}
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={() => {
-                    console.log("Import Clicked");
-                    setImportForm(true);
-                  }}
-                  className="bg-green-700 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
-                >
-                  Import Students
-                </Button>
-                <StudentAdmissionForm setShowForm={setShowStudentForm} />
-
-              </div>
-            </>
-          ) : showSub ? (
-            <>
-              <div className="mt-4">
-                <Button
-                  className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
-                  onClick={CloseClick8}
-                >
-                  Back
-                </Button>
-                <AssignTeachersPage />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-100">
-                <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddTeacherClick}>
-                  <span className="text-[20px] font-semibold text-yellow-700">Add New Teachers</span>
-                  <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700" />
-                </div>
+              
 
 
               <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={() => router.visit('/admin/dashboardoverview/classpage')}>
@@ -692,40 +574,22 @@ setClass(true);
        
                 <span className="text-[20px] font-semibold text-[maroon]">Teacher & Subjects</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-[maroon]" />
+                </div>
 
                 <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddStudentClick}>
                   <span className="text-[20px] font-semibold text-blue-900">Add New Students</span>
                   <FontAwesomeIcon icon={faPlus} className="text-3xl text-blue-900" />
                 </div>
 
-                <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handle2}>
-                  <span className="text-[20px] font-semibold text-green-700">Teachers & Classes</span>
-                  <FontAwesomeIcon icon={faPlus} className="text-3xl text-[green]" />
-                </div>
+                
 
-                <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handle4}>
-                  <span className="text-[20px] font-semibold text-[maroon]">Teacher & Subjects</span>
-                  <FontAwesomeIcon icon={faPlus} className="text-3xl text-[maroon]" />
-                </div>
+                
 
-              </div>
+              
 
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
-              {cards.map((card, index) => (
-                <div
-                  key={index}
-                  className="relative mt-14 ml-5 h-35 w-78 border bg-white p-6 ml-[-10px] shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md flex items-center justify-between transform scale-90 z-40 cursor-pointer shadow-xl"
-                  onClick={() => handleCardClick(card)}
-                >
-                  <div className={`absolute z-0 -top-10 left-4 flex h-28 w-28 items-center justify-center text-white shadow-lg ${card.color}`}>
-                    <FontAwesomeIcon icon={card.icon} className="text-3xl" />
-                  </div>
-                  <div className="mt-[-30px] ml-30 pt-8 text-">
-                    <p className="text-[19px] text-gray-500">{card.title}</p>
-                    <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
-                    <p className={`mt-3 text-[14px] ${card.footerColor}`}>{card.footer}</p>
-
+              
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-100">
                 {cards.map((card, index) => (
                   <div
