@@ -241,7 +241,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 {/* 
           <header className="flex justify-end border-b bg-white shadow-sm">
             <SearchStudent students={students} />
-          </header> */}
+
 
         {!selectedSection && (
   <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-4 mx-auto max-w-6xl p-6">
@@ -309,6 +309,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
                 </div>
               </CardContent>
             </Card>
+
 
             <Card onClick={() => handleCardClick("siblings")}
               className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">

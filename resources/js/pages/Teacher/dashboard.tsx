@@ -178,7 +178,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
         </div>
 
         
-        <nav className="bg-[#5D4037] text-white py-3 px-6 shadow-md relative z-10">
+        <nav className="bg-[#650000] text-white py-3 px-6 shadow-md relative z-10">
           <div className="flex justify-between items-center">
             
             <div className="flex items-center">
@@ -232,6 +232,15 @@ const COLORS = ['#CC7722', '#FFBF00'];
     ?
   </div>
 
+
+          {/* Calendar */}
+          <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
+  <Calendar
+    value={date}
+    
+    className="text-sm border border-gray-300 rounded-lg"
+  />
+
   {/* View Profile Button */}
   <Link
     href={route('teacher.profile')}
@@ -239,6 +248,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
   >
     View My Profile
   </Link>
+
 </div>
 
 <div className="p-6">

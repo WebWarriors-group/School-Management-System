@@ -32,11 +32,13 @@ class DatabaseSeeder extends Seeder
         TeacherOtherServices::factory(10)->create();
         Qualification::factory(10)->create();
         StudyMaterial::factory(10)->create();
-        ClassModel::factory(10)->create();
+        ClassModel::factory(16)->create();
         Subject::factory(10)->create();
 $students = StudentAcademic::factory(200)->create();
+
         Marks::factory(10)->create();
         StudentPerformance::factory(10)->create();
+
 
         // Create related info for each student
         foreach ($students as $student) {

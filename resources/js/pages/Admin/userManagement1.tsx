@@ -188,7 +188,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
 
                             <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
                                 <thead>
-                                    <tr className="text-[rgb(7, 72, 79)] border-b bg-gray-100">
+                                    <tr className="text-[rgb(7, 72, 79)] border-b bg-blue-200">
                                         {['Email', 'Name', 'Role', 'Create_at', 'Updated_at'].map((header) => (
                                             <th key={header} className="border p-3 text-left">
                                                 {header}
@@ -244,7 +244,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                             <h3 className="text-lg font-bold text-[#800000]">Active users Records</h3>
                             <table className="w-full border-collapse rounded-lg bg-white text-black shadow-sm">
                                 <thead>
-                                    <tr className="border-b bg-gray-100 text-gray-800">
+                                    <tr className="border-b bg-blue-200 text-gray-800">
                                         {['Username', 'Email', 'IPAddress', 'UserAgent', 'Last Activity', 'Status'].map((header) => (
                                             <th key={header} className="border p-3 text-left">
                                                 {header}

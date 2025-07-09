@@ -10,19 +10,23 @@ class ClassModelFactory extends Factory
 {
     protected $model = ClassModel::class;
 
+    protected static $gradeSectionPairs = [];
+
     public function definition(): array
     {
-        static $usedGradeSections = [];
+        // Pre-generate the full list of grade-section pairs once
+        if (empty(static::$gradeSectionPairs)) {
+            foreach (range(6, 13) as $grade) {
+                foreach (['A', 'B'] as $section) {
+                    static::$gradeSectionPairs[] = [$grade, $section];
+                }
+            }
+        }
 
-        do {
-            $grade = $this->faker->numberBetween(6, 13);
-            $section = $this->faker->randomElement(['A', 'B']);
-            $key = "$grade-$section";
-        } while (in_array($key, $usedGradeSections));
+        // Pop the next unique grade-section pair
+        [$grade, $section] = array_shift(static::$gradeSectionPairs);
 
-        $usedGradeSections[] = $key;
-
-        // Determine class_name
+        // Assign class_name based on grade
         if ($grade >= 6 && $grade <= 9) {
             $className = 'junior';
         } elseif ($grade >= 10 && $grade <= 11) {
@@ -32,14 +36,12 @@ class ClassModelFactory extends Factory
         }
 
         return [
-            'class_id' => $this->faker->unique()->numberBetween(1, 100), // Generates C001, C002, etc.
-            'teacher_NIC' =>  Teacher::all()->random()->teacher_NIC,  // Example: 123456789V
-            'class_name' => $this->faker->randomElement(['junior', 'O/L','A/L']),
-            'grade' => $this->faker->numberBetween(6, 13),
-           'year' => $this->faker->numberBetween(2000, 2025),
-
-            'section' => $this->faker->randomElement([ 'A', 'B'
-        ]),
+            'class_id' => $this->faker->unique()->numberBetween(1, 100),
+            'teacher_NIC' => Teacher::inRandomOrder()->first()->teacher_NIC,
+            'class_name' => $className,
+            'grade' => $grade,
+            'section' => $section,
+            'year' => $this->faker->numberBetween(2000, 2029),
             'number_of_students' => $this->faker->numberBetween(10, 50),
         ];
     }

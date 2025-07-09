@@ -20,6 +20,7 @@ class Teacher extends Model
 
     protected $fillable = [
         'teacher_NIC',
+        'user_id',
         'appointed_date',
         'work_acceptance_date',
         'appointment_type',

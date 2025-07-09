@@ -50,7 +50,7 @@ const [editing, setEditing] = useState(false);
         {/* Subject Section */}
         <div>
           <div className="items-center justify-between ">
-            <h1 className="text-2xl md:text-3xl font-bold mt-3 text-gray-800 ">Subjects</h1>
+            <h1 className="text-2xl font-bold text-white    text-center bg-gradient-to-br from-blue-900 to-sky-700 er py-3 ">Subjects' Summary</h1>
             
 
              <form  className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 mt-10 bg-white py-5 px-10 shadow-lg">
@@ -80,8 +80,9 @@ const [editing, setEditing] = useState(false);
           </div>
 
           <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+             
             <table className="min-w-full table-auto text-sm text-gray-700">
-              <thead className="bg-blue-100 text-left text-sm font-semibold uppercase text-gray-600">
+              <thead className="bg-blue-200 text-left text-sm font-semibold uppercase text-black">
                 <tr>
                   <th className="px-6 py-4">Subject Code</th>
                   <th className="px-6 py-4">Subject Name</th>
@@ -130,7 +131,7 @@ const [editing, setEditing] = useState(false);
         {/* Grade Section */}
         <div>
           <div className=" items-center justify-between mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Grades and Subjects</h2>
+            <h1 className="text-2xl font-bold text-white  bg-gradient-to-br from-blue-900 to-sky-700   text-center py-3 "> Grade and Subjects</h1>
              <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 mt-10 bg-white py-5 px-10 shadow-lg">
           <input
             type="number"
@@ -180,7 +181,7 @@ const [editing, setEditing] = useState(false);
 
           <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
             <table className="min-w-full table-auto text-sm text-gray-700">
-              <thead className="bg-blue-100 text-left text-sm font-semibold uppercase text-gray-600 ">
+              <thead className="bg-blue-200 text-left text-sm font-semibold uppercase text-black ">
                 <tr>
                   <th className="px-6 py-4">Grade</th>
                   <th className="px-6 py-4">Subject</th>

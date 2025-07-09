@@ -46,6 +46,17 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+
+        <nav className="bg-[#650000] text-white py-3 px-6 shadow-md relative z-10">
+          <div className="flex justify-between items-center">
+            
+            <div className="flex items-center">
+              <img src="/images/School.jpg" alt="Logo" className="h-14 w-14 rounded-full" />
+              <span className="ml-3 font-orbitron text-xl font-bold">
+                T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)
+              </span>
+            </div>
+
         {menuOpen && (
           <div className="bg-white text-black px-4 py-3 md:hidden">
             <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-2 py-1 hover:text-blue-600">
@@ -71,6 +82,7 @@ export default function StudentDashboard() {
   <h2 className="text-lg font-bold text-yellow-700 mb-4">🎓 Student Menu</h2>
   <StudentSidebar />
 </aside>
+
 
 
         {/* Main Content */}

@@ -182,38 +182,67 @@ const handleReject = (id: number) => {
                 </button>
 
       {expanded && (
-          <div className="mt-6 border border-gray-300 rounded-lg bg-gray-100 p-8 shadow-inner">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 text-m text-gray-800">
+          <div className="mt-6 border border-gray-300 rounded-lg bg-gray-200 p-8 shadow-inner  bg-cover bg-center ">
+            
+                    <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 text-m text-gray-800 ">
         {/* Personal Info */}
-        <div className="text-left">
-<h3 className="font-bold text-lg text-blue-700 mb-4 border-b pb-2">Personal Information</h3>          <p><strong>Full Name:</strong> {req.form_data?.personal?.Full_name ?? "N/A"}</p>
-          <p><strong>Name with Initial:</strong> {req.form_data?.personal?.Full_name_with_initial ?? "N/A"}</p>
-          <p><strong>Gender:</strong> {req.form_data?.personal?.Gender ?? "N/A"}</p>
-          <p><strong>Birthdate:</strong> {req.form_data?.personal?.Birthdate ?? "N/A"}</p>
-          <p><strong>Region:</strong> {req.form_data?.personal?.Region ?? "N/A"}</p>
-          <p><strong>Ethnicity:</strong> {req.form_data?.personal?.Ethnicity ?? "N/A"}</p>
-          <p><strong>Title:</strong> {req.form_data?.personal?.Title ?? "N/A"}</p>
-          <p><strong>Marital Status:</strong> {req.form_data?.personal?.Marital_status ?? "N/A"}</p>
-          <p><strong>Email:</strong> {req.form_data?.personal?.Email_address ?? "N/A"}</p>
-          <p><strong>Mobile:</strong> {req.form_data?.personal?.Mobile_number ?? "N/A"}</p>
-          <p><strong>Whatsapp:</strong> {req.form_data?.personal?.Whatsapp_number ?? "N/A"}</p>
-          <p><strong>Fixed Tel:</strong> {req.form_data?.personal?.Fixed_telephone_number ?? "N/A"}</p>
-          <p><strong>Emergency Tel:</strong> {req.form_data?.personal?.Emergency_telephone_number ?? "N/A"}</p>
-          <p><strong>Family Details:</strong> {req.form_data?.personal?.Details_about_family_members ?? "N/A"}</p>
+       <div className="bg-white text-gray-800 shadow-2xl    p-10">
+  <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
+    PERSONAL INFORMATION
+  </h3>
+
+  <div className=" grid grid-cols-2 text-lg text-purple-900 text-left  space-y-4 space-x-3">
+    <p><strong className="text-gray-600">Full Name:</strong> {req.form_data?.personal?.Full_name ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Name with Initial:</strong> {req.form_data?.personal?.Full_name_with_initial ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Gender:</strong> {req.form_data?.personal?.Gender ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Birthdate:</strong> {req.form_data?.personal?.Birthdate ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Region:</strong> {req.form_data?.personal?.Region ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Ethnicity:</strong> {req.form_data?.personal?.Ethnicity ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Title:</strong> {req.form_data?.personal?.Title ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Marital Status:</strong> {req.form_data?.personal?.Marital_status ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Email:</strong> {req.form_data?.personal?.Email_address ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Mobile:</strong> {req.form_data?.personal?.Mobile_number ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Whatsapp:</strong> {req.form_data?.personal?.Whatsapp_number ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Fixed Tel:</strong> {req.form_data?.personal?.Fixed_telephone_number ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Emergency Tel:</strong> {req.form_data?.personal?.Emergency_telephone_number ?? "N/A"}</p>
+    <p><strong className="text-gray-600">Family Details:</strong> {req.form_data?.personal?.Details_about_family_members ?? "N/A"}</p>
+  </div>
 </div>
+
+<div className="bg-white text-gray-800 shadow-2xl w-full   p-10">
+                       <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
+        QUALIFICATIONS INFORMATIONS
+  </h3>
+   <div className=" grid grid-cols-2 text-lg  text-left  space-y-4 space-x-3 text-gray-600">
+     
+                  <p><strong>AL Subject Stream:</strong> {req.form_data?.qualifications?.gce_al_subject_stream ?? "N/A"}</p>
+          <p><strong>Type of Service:</strong> {req.form_data?.qualifications?.type_of_service_in_school ?? "N/A"}</p>
+          <p><strong>Highest Education Qualification:</strong> {req.form_data?.qualifications?.highest_education_qualification ?? "N/A"}</p>
+          <p><strong>Basic Degree Stream:</strong> {req.form_data?.qualifications?.basic_degree_stream ?? "N/A"}</p>
+          <p><strong>Highest Professional Qualification:</strong> {req.form_data?.qualifications?.highest_professional_qualification ?? "N/A"}</p>
+          <p><strong>Present Class:</strong> {req.form_data?.qualifications?.present_class ?? "N/A"}</p>
+          <p><strong>Present Grade:</strong> {req.form_data?.qualifications?.present_grade ?? "N/A"}</p>
+          <p><strong>Appointment Date (Class):</strong> {req.form_data?.qualifications?.appointment_date_for_current_class ?? "N/A"}</p>
+          <p><strong>Appointment Date (Grade):</strong> {req.form_data?.qualifications?.appointment_date_for_current_grade ?? "N/A"}</p>
+          <p><strong>Service Medium:</strong> {req.form_data?.qualifications?.current_appointment_service_medium ?? "N/A"}</p>
+          <p><strong>Subject Section:</strong> {req.form_data?.qualifications?.appointed_subject_section ?? "N/A"}</p>
+          <p><strong>Appointed Subject:</strong> {req.form_data?.qualifications?.subject_appointed ?? "N/A"}</p>
+          <p><strong>Current Appointment Date:</strong> {req.form_data?.qualifications?.currentservice_appointed_date ?? "N/A"}</p>
+          <p><strong>Subjects Taught:</strong> {req.form_data?.qualifications?.subjects_taught_most_and_second_most ?? "N/A"}</p>
+          <p><strong>Position in School:</strong> {req.form_data?.qualifications?.position_in_the_school ?? "N/A"}</p>
+          <p><strong>Assign Date for School:</strong> {req.form_data?.qualifications?.assign_date_for_the_school ?? "N/A"}</p>
+          </div>
+          </div>
+
           {/* Address Info */}
-<div className="text-left">
-                        <h3 className="font-bold text-lg text-green-700 mb-4 border-b pb-2">Address Information</h3>
-          <p><strong>Permanent Address:</strong> {req.form_data?.teachersaddress?.permanent_address ?? "N/A"}</p>
-          <p><strong>Residential Address:</strong> {req.form_data?.teachersaddress?.permanent_residential_address ?? "N/A"}</p>
-          <p><strong>Grama Niladari Division:</strong> {req.form_data?.teachersaddress?.grama_niladari_division ?? "N/A"}</p>
-          <p><strong>GN Division No:</strong> {req.form_data?.teachersaddress?.grama_niladari_division_number ?? "N/A"}</p>
-          <p><strong>Election Division:</strong> {req.form_data?.teachersaddress?.election_division ?? "N/A"}</p>
-          <p><strong>Election Division No:</strong> {req.form_data?.teachersaddress?.election_division_number ?? "N/A"}</p>
-</div>
-          {/* Work Info */}
-<div className="text-left">
-                        <h3 className="font-bold text-lg text-purple-700 mb-4 border-b pb-2">Work Information</h3>
+
+         
+
+<div className="bg-white text-gray-800 shadow-2xl w-full   p-10">
+                       <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
+        WORK INFORMATIONS
+  </h3>
+   <div className=" grid grid-cols-2 text-lg  text-left  space-y-4 space-x-3 text-gray-600">
                            <p><strong>Appointed Date:</strong> {req.form_data?.appointed_date ?? "N/A"}</p>
                             <p><strong>User id:</strong> {req.form_data?.user_id ?? "N/A"}</p>
           <p><strong>Work Acceptance Date:</strong> {req.form_data?.work_acceptance_date ?? "N/A"}</p>
@@ -235,33 +264,35 @@ const handleReject = (id: number) => {
           <p><strong>Sign Sheet No:</strong> {req.form_data?.number_in_sign_sheet ?? "N/A"}</p>
           <p><strong>Salary Sheet No:</strong> {req.form_data?.number_in_salary_sheet ?? "N/A"}</p>
          </div>
+         </div>
           {/* Qualifications */}
-<div className="text-left">
-                        <h3 className="font-bold text-lg text-yellow-700 mb-4 border-b pb-2">Qualifications</h3>
-                  <p><strong>AL Subject Stream:</strong> {req.form_data?.qualifications?.gce_al_subject_stream ?? "N/A"}</p>
-          <p><strong>Type of Service:</strong> {req.form_data?.qualifications?.type_of_service_in_school ?? "N/A"}</p>
-          <p><strong>Highest Education Qualification:</strong> {req.form_data?.qualifications?.highest_education_qualification ?? "N/A"}</p>
-          <p><strong>Basic Degree Stream:</strong> {req.form_data?.qualifications?.basic_degree_stream ?? "N/A"}</p>
-          <p><strong>Highest Professional Qualification:</strong> {req.form_data?.qualifications?.highest_professional_qualification ?? "N/A"}</p>
-          <p><strong>Present Class:</strong> {req.form_data?.qualifications?.present_class ?? "N/A"}</p>
-          <p><strong>Present Grade:</strong> {req.form_data?.qualifications?.present_grade ?? "N/A"}</p>
-          <p><strong>Appointment Date (Class):</strong> {req.form_data?.qualifications?.appointment_date_for_current_class ?? "N/A"}</p>
-          <p><strong>Appointment Date (Grade):</strong> {req.form_data?.qualifications?.appointment_date_for_current_grade ?? "N/A"}</p>
-          <p><strong>Service Medium:</strong> {req.form_data?.qualifications?.current_appointment_service_medium ?? "N/A"}</p>
-          <p><strong>Subject Section:</strong> {req.form_data?.qualifications?.appointed_subject_section ?? "N/A"}</p>
-          <p><strong>Appointed Subject:</strong> {req.form_data?.qualifications?.subject_appointed ?? "N/A"}</p>
-          <p><strong>Current Appointment Date:</strong> {req.form_data?.qualifications?.currentservice_appointed_date ?? "N/A"}</p>
-          <p><strong>Subjects Taught:</strong> {req.form_data?.qualifications?.subjects_taught_most_and_second_most ?? "N/A"}</p>
-          <p><strong>Position in School:</strong> {req.form_data?.qualifications?.position_in_the_school ?? "N/A"}</p>
-          <p><strong>Assign Date for School:</strong> {req.form_data?.qualifications?.assign_date_for_the_school ?? "N/A"}</p>
-          </div>
+
           {/* Other Service Info */}
- <div className="text-left">
-                        <h3 className="font-bold text-lg text-red-700 mb-4 border-b pb-2">Other Services</h3>
+ <div className="bg-white text-gray-800 shadow-2xl w-full   p-10">
+                       <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
+        OTHER SERVICES INFORMATIONS
+  </h3>
+   <div className=" grid grid-cols-2 text-lg  text-left  space-y-4 space-x-3 text-gray-600">
+                       
               <p><strong>Other Responsibilities in School:</strong> {req.form_data?.teacherotherservice?.other_responsibilities_in_school ?? "N/A"}</p>
           <p><strong>EDCS Membership:</strong> {req.form_data?.teacherotherservice?.EDCS_membership ?? "N/A"}</p>
           <p><strong>WSOP Number:</strong> {req.form_data?.teacherotherservice?.WSOP_Number ?? "N/A"}</p>
           <p><strong>Agrahara Insurance:</strong> {req.form_data?.teacherotherservice?.Agrahara_insuarence_membership ?? "N/A"}</p>
+</div>
+</div>
+
+<div className="bg-white text-gray-800 shadow-2xl w-full   p-10">
+                       <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
+    ADDRESS INFORMATIONS
+  </h3>
+  <div className=" grid grid-cols-2 text-lg  text-left  space-y-4 space-x-3 text-gray-600">
+          <p><strong>Permanent Address:</strong> {req.form_data?.teachersaddress?.permanent_address ?? "N/A"}</p>
+          <p><strong>Residential Address:</strong> {req.form_data?.teachersaddress?.permanent_residential_address ?? "N/A"}</p>
+          <p><strong>Grama Niladari Division:</strong> {req.form_data?.teachersaddress?.grama_niladari_division ?? "N/A"}</p>
+          <p><strong>GN Division No:</strong> {req.form_data?.teachersaddress?.grama_niladari_division_number ?? "N/A"}</p>
+          <p><strong>Election Division:</strong> {req.form_data?.teachersaddress?.election_division ?? "N/A"}</p>
+          <p><strong>Election Division No:</strong> {req.form_data?.teachersaddress?.election_division_number ?? "N/A"}</p>
+           </div>
 </div>
          
         </div>

@@ -21,10 +21,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use App\Mail\StudentAdmissionMail;
+
+use App\Http\Controllers\TeacherAssignedController;
+
 use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
+
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
@@ -76,11 +80,12 @@ Route::post('/classadd', [ClassController::class, 'store']);
 
 
  Route::get('/add-teacher', function () {
-
-    $user_id = Auth::id();
+    
+    $user_id=Auth::id();
     return inertia::render('Teacher/teacherForm',[
-        'user_id' => $user_id,
-    ]); 
+        'user'=>$user_id
+    ]); // This should return the Inertia page
+
 })->name('add-teacher');
 
 Route::get('/student/academic', [StudentController::class, 'academicPage']);
@@ -118,7 +123,7 @@ Route::get('/admin/teacher-requests', [TeacherRequestController::class, 'index']
 
 
 
-//Route::get('/teacher/dashboard/{teacher_NIC}', [TeacherController::class, 'personalDashboard'])->name('personaldashboard');
+
 Route::get('/dashboard/teacher-count', [TeacherController::class, 'getTeacherCount']);
 
 
@@ -127,7 +132,7 @@ Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->nam
 
 
 
-//Route::get('/admin/teacher-requests', [GradeController::class, 'index'])->name('admin.index');
+
 
 
 Route::get('/teacher-info', function () {
@@ -154,6 +159,7 @@ Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
 
 
 Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
+
 
 Route::get('/api/teacher-attendance-summary', [TeacherAttendanceController::class, 'summary']);
 Route::get('/teacher_attendance', function () {
@@ -183,7 +189,9 @@ Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('tea
    // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
 
 
-    // ... any other web-based routes that render Inertia pages
+    
+
+    
 
 Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
 Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
@@ -211,8 +219,19 @@ Route::get('/students/all', function () {
 })->name('students.all');
 
 
+
+Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
+Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
+
+// web.php
+Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
+Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index']);
+
+
+
 Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
     ->name('admin.overallPerformance');
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

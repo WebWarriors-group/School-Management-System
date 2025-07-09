@@ -8,7 +8,7 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $table = 'grades'; // Table name
+    protected $table = 'grade_subjects'; // Table name
 
     protected $fillable = [
         

@@ -157,3 +157,16 @@
         @apply bg-background text-foreground;
     }
 }
+
+#nprogress {
+  display: none !important;
+}
+
+#nprogress .bar {
+  display: none !important;
+}
+
+#nprogress .spinner {
+  display: none !important;
+}
+

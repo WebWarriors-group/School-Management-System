@@ -86,7 +86,11 @@ class TeacherController extends Controller
             'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
             'number_in_sign_sheet' => 'required|string|max:20',
             'number_in_salary_sheet' => 'required|string|max:20',
+
+             
+
             'user_id'=>'required|numeric',
+
         ]);
 
         // Create the teacher in teacher_work_infos table
@@ -112,6 +116,7 @@ class TeacherController extends Controller
             'number_in_sign_sheet' => $validatedData['number_in_sign_sheet'] ?? null, // Use null if not provided
             'number_in_salary_sheet' => $validatedData['number_in_salary_sheet'] ?? null, // Use null if not provided
             'user_id'=>$validatedData['user_id'],
+
         ]);
         
         // Store related records in respective tables
@@ -155,10 +160,8 @@ class TeacherController extends Controller
 
         Teacher::query()->increment('count');
 
-        return response()->json([
-            'message' => 'Teacher data added successfully!',
-            'teacher' => $teacherWorkInfo
-        ], 201);
+       return redirect()->route('login');
+
     }
 
     /**
@@ -185,6 +188,7 @@ class TeacherController extends Controller
 {
     $validatedData = $request->validate([
         'teacher_NIC' => 'required|string|max:12|unique:teacher_work_infos,teacher_NIC',
+        
         'appointed_date' => 'required|date',
         'work_acceptance_date' => 'required|date',
         'appointment_type' => 'required|string',
@@ -277,11 +281,11 @@ class TeacherController extends Controller
         'status' => 'pending',
     ]);
 
-    return response()->json([
+     return response()->json([
         'message' => 'Form submitted. Awaiting admin approval.',
         'request' => $teacherRequest,
     ]);
-}
+ }
 
 public function profile()
 {
