@@ -16,7 +16,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
         admin: [
             { title: 'Dashboard Overview', url: '/admin/dashboardoverview', icon: LayoutGrid },
             { title: 'School Event Calendar', url: '/admin/calendar', icon: LayoutGrid },
-              { title: 'Overall Performance', url: '/admin/performance', icon: LayoutGrid },
+              { title: 'Overall Performance', url: '/admin/OverallPerformance', icon: LayoutGrid },
               
             { title: 'User Management', url: '/admin/usermanage', icon: LayoutGrid },
             { title: 'Teachers Management', url: '/admin/teacher', icon: Users },

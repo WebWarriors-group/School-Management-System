@@ -31,6 +31,11 @@ export default function ReportPage() {
   const { student } = usePage().props as unknown as Props;
   const reportRef = useRef<HTMLDivElement>(null);
 
+  // ✅ Read the 'from' query param to decide where to go back
+  const url = usePage().url;
+const queryParams = new URLSearchParams(url.split('?')[1]);
+const from = queryParams.get('from');
+
   const handlePrint = () => {
     if (reportRef.current) {
       const printContents = reportRef.current.innerHTML;
@@ -38,7 +43,7 @@ export default function ReportPage() {
       document.body.innerHTML = printContents;
       window.print();
       document.body.innerHTML = originalContents;
-      window.location.reload(); // optional
+      window.location.reload();
     }
   };
 
@@ -77,17 +82,24 @@ export default function ReportPage() {
 
       <div className="max-w-6xl mx-auto px-6 py-10 bg-gradient-to-br from-white to-slate-50 shadow-xl rounded-xl mt-10">
 
-        {/* 🔙 Back button inside container */}
+        {/* ✅ Dynamic Back Button */}
         <div className="mb-6 print:hidden">
-          <button
-            onClick={() => router.visit('/admin/studentdashboard')}
-            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md shadow-sm transition font-medium"
-          >
-            ← Back to Dashboard
-          </button>
+        <button
+  onClick={() => {
+    if (from === 'mark') {
+      router.visit('/marks');
+    } else {
+      router.visit('/admin/studentdashboard');
+    }
+  }}
+  className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md shadow-sm transition font-medium"
+>
+  ← Back to {from === 'mark' ? 'Marks Page' : 'Dashboard'}
+</button>
+
         </div>
 
-        {/* 🔘 Action Buttons */}
+        {/* 🖨️ + 📄 Buttons */}
         <div className="flex justify-end mb-6 gap-4 print:hidden">
           <button
             onClick={handlePrint}
@@ -109,7 +121,7 @@ export default function ReportPage() {
             Student Academic Report
           </h1>
 
-          {/* Student Info Section */}
+          {/* Student Info */}
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
             {[
               ['👤 Full Name', student.full_name],
@@ -120,43 +132,29 @@ export default function ReportPage() {
               ['👩‍🏫 Class Teacher', student.class_teacher_name],
             ].map(([label, value]) => (
               <div key={label}>
-                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                  {label}
-                </h2>
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{label}</h2>
                 <p className="mt-1 text-lg font-medium text-gray-900">{value}</p>
               </div>
             ))}
           </section>
 
-          {/* Summary Cards */}
+          {/* Summary */}
           <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
             <div className="bg-indigo-100 p-6 rounded-xl shadow-md text-center">
-              <h3 className="text-base font-bold text-indigo-800 uppercase tracking-wide">
-                Total Marks
-              </h3>
-              <p className="text-3xl font-extrabold text-indigo-900 mt-2">
-                {student.total_marks}
-              </p>
+              <h3 className="text-base font-bold text-indigo-800 uppercase tracking-wide">Total Marks</h3>
+              <p className="text-3xl font-extrabold text-indigo-900 mt-2">{student.total_marks}</p>
             </div>
             <div className="bg-green-100 p-6 rounded-xl shadow-md text-center">
-              <h3 className="text-base font-bold text-green-800 uppercase tracking-wide">
-                Average Marks
-              </h3>
-              <p className="text-3xl font-extrabold text-green-900 mt-2">
-                {student.average_marks}
-              </p>
+              <h3 className="text-base font-bold text-green-800 uppercase tracking-wide">Average Marks</h3>
+              <p className="text-3xl font-extrabold text-green-900 mt-2">{student.average_marks}</p>
             </div>
             <div className="bg-yellow-100 p-6 rounded-xl shadow-md text-center">
-              <h3 className="text-base font-bold text-yellow-800 uppercase tracking-wide">
-                Rank
-              </h3>
-              <p className="text-3xl font-extrabold text-yellow-900 mt-2">
-                {student.rank}
-              </p>
+              <h3 className="text-base font-bold text-yellow-800 uppercase tracking-wide">Rank</h3>
+              <p className="text-3xl font-extrabold text-yellow-900 mt-2">{student.rank}</p>
             </div>
           </section>
 
-          {/* Subject Marks Table */}
+          {/* Subject Table */}
           <section>
             <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
               Subject-wise Marks
@@ -165,33 +163,19 @@ export default function ReportPage() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-slate-100">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-bold text-gray-800 uppercase tracking-wide">
-                      Subject ID
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-bold text-gray-800 uppercase tracking-wide">
-                      Subject Name
-                    </th>
-                    <th className="px-6 py-3 text-right text-sm font-bold text-gray-800 uppercase tracking-wide">
-                      Marks Obtained
-                    </th>
-                    <th className="px-6 py-3 text-right text-sm font-bold text-gray-800 uppercase tracking-wide">
-                      Highest Mark
-                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-gray-800 uppercase tracking-wide">Subject ID</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-gray-800 uppercase tracking-wide">Subject Name</th>
+                    <th className="px-6 py-3 text-right text-sm font-bold text-gray-800 uppercase tracking-wide">Marks Obtained</th>
+                    <th className="px-6 py-3 text-right text-sm font-bold text-gray-800 uppercase tracking-wide">Highest Mark</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-100">
                   {student.marks.map((mark) => (
                     <tr key={mark.subject_id} className="hover:bg-slate-50">
                       <td className="px-6 py-4 text-sm text-gray-700">{mark.subject_id}</td>
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        {mark.subject_name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-right text-indigo-700 font-bold">
-                        {mark.marks_obtained}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-right text-gray-600">
-                        {mark.highest_mark_in_subject}
-                      </td>
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{mark.subject_name}</td>
+                      <td className="px-6 py-4 text-sm text-right text-indigo-700 font-bold">{mark.marks_obtained}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-600">{mark.highest_mark_in_subject}</td>
                     </tr>
                   ))}
                 </tbody>
