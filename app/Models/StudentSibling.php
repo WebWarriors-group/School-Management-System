@@ -19,7 +19,7 @@ class StudentSibling extends Model
         'occupation',
         'contact'
     ];
-
+    protected $casts=['sibling_age'=>'integer',];
     public function studentacademic()
     {
         return $this->belongsTo(StudentAcademic::class, 'reg_no','reg_no');

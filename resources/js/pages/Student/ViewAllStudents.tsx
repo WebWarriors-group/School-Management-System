@@ -17,8 +17,13 @@ export type Student = {
     section: string;
   };
 };
+interface ViewAllStudentsProps {
+  students: Student[];
+}
 
-export default function ViewAllStudents() {
+
+
+const ViewAllStudents = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [filterQuery, setFilterQuery] = useState('');
   const [filterClass, setFilterClass] = useState('');
@@ -37,6 +42,26 @@ export default function ViewAllStudents() {
   useEffect(() => {
     fetchStudents();
   }, []);
+const fetchStudents = async () => {
+  try {
+    const res = await fetch('http://127.0.0.1:8000/api/students');
+    const data = await res.json();
+    console.log("One sample student:", data[0]);
+
+    console.log("Fetched students:", data); 
+    setStudents(data.data);  // ✅ Extract array from pagination
+
+  } catch (error) {
+    console.error('Error fetching students:', error);
+  }
+};
+
+const filteredStudents = students.filter((student) => {
+  const query = filterQuery.toLowerCase();
+  const matchesQuery =
+    !filterQuery ||
+    student.reg_no.toString().includes(query) ||
+    student.personal?.full_name.toLowerCase().includes(query);
 
   const fetchStudents = async () => {
     try {
@@ -216,3 +241,5 @@ const handlePerformanceClick = async (student: Student) => {
     </div>
   );
 }
+
+export default ViewAllStudents;

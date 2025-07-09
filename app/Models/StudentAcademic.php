@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\StudentPersonal;
@@ -9,17 +10,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudentAcademic extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-
+    use HasFactory, SoftDeletes;
     protected $table = 'student_academic_info';
-
     protected $primaryKey = 'reg_no';
-
     public $incrementing = false;
-
     protected $keyType = 'integer';
-  
+    protected $casts = ['admission_date' => 'date'];
     protected $fillable = [
         'reg_no',
         'class_id',
@@ -34,6 +30,7 @@ class StudentAcademic extends Model
         'receiving_any_scholarship',
         'admission_date',
     ];
+    protected $autoLoadRelations = true;
     public function subjects()
     {
 
@@ -59,17 +56,12 @@ class StudentAcademic extends Model
 
     public function class()
     {
-        return $this->belongsTo(ClassModel::class, 'class_id','class_id');
+        return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
     }
 
     public function marks()
     {
-        return $this->hasMany(Marks::class, 'reg_no', 'reg_no'); // Assuming 'reg_no' is the foreign key in Marks and local key in StudentAcademic
-    }
-
-public function studentPersonal()
-    {
-        return $this->belongsTo(StudentPersonal::class, 'student_id'); // Assuming 'student_id' is the foreign key in 'student_academics' table
+        return $this->hasMany(Marks::class, 'reg_no', 'reg_no');
     }
 
 
