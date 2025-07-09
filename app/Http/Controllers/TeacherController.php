@@ -22,12 +22,13 @@ class TeacherController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        
-        $teacherUser = $user->teacher;
 
-        if (!$teacherUser->exists()) {
-            return redirect()->route('add-teacher');
-        }
+       
+        
+       if (!$user->teacher()->exists()) {
+    return redirect()->route('add-teacher');
+}
+
 
         $teacher = $teacherUser->with([
             'teachersaddress',
