@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type TeacherForm = {
   teacher_NIC: string;
+  
   Full_name: string;
   Full_name_with_initial: string;
   Photo: File | null;
@@ -83,6 +84,7 @@ export default function AddTeacherForm() {
   const { data, setData, post, processing, errors } = useForm<TeacherForm>({
     // TeacherForm Fields
     teacher_NIC: '',
+    
     Full_name: '',
     Full_name_with_initial: '',
     Photo: null,
@@ -201,7 +203,10 @@ export default function AddTeacherForm() {
         }
     };
     return (
+
+     
         <div className="max-w-xl mx-auto mt-2 p-7 bg-white shadow-lg rounded-lg  border-t-6 border-t-[#152238]">
+          
             <h2 className="text-2xl font-bold mb-4 text-yellow-700">Add Teacher</h2>
             <form className="flex flex-col gap-6" onSubmit={submit} encType="multipart/form-data">
             {step === 1 && (
@@ -225,6 +230,10 @@ export default function AddTeacherForm() {
       />
       <InputError message={errors.teacher_NIC} className="mt-2" />
     </div>
+    
+
+      
+   
 
     {/* Full Name */}
     <div className="mb-4">
