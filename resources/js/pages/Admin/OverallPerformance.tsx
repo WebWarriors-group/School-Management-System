@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageProps } from '@/types';
+import { BreadcrumbItem, PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import {
@@ -52,7 +52,12 @@ export default function OverallPerformance({
   const [showTotalStudentsDetails, setShowTotalStudentsDetails] = useState(false);
   const [showAverageScoreDetails, setShowAverageScoreDetails] = useState(false);
   const [showSubjectAverageDetails, setShowSubjectAverageDetails] = useState(false);
-
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: ' 📊 Overall Performance Overview',
+    href: '/',
+  },
+];
   const genderData = [
     { gender: 'Male', count: maleStudents },
     { gender: 'Female', count: femaleStudents },
@@ -68,14 +73,15 @@ export default function OverallPerformance({
     return (
       <AppLayout user={auth.user}>
         <Head title="Total Students Details" />
+        <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
         <div className="py-6 px-8 max-w-4xl mx-auto">
           <button
             onClick={() => setShowTotalStudentsDetails(false)}
-            className="mb-4 px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-200"
+            className="mb-4 px-14 py-2 rounded bg-yellow-400 hover:bg-yellow-200"
           >
             ← Back
           </button>
-          <h1 className="text-2xl font-bold mb-6">Total Students - Class-wise Breakdown</h1>
+          <h1 className="text-xl text-white bg-gradient-to-r from-indigo-500 to-purple-600 py-3 font-bold mb-6 w-150">TOTAL STUDENTS - CLASS-WISE BREAKDOWN</h1>
           <div className="bg-white border rounded shadow p-4 mb-8">
             <ul>
               {studentsPerClass.map((item, idx) => (
@@ -100,7 +106,7 @@ export default function OverallPerformance({
           </div>
           <div className="bg-white border rounded shadow p-4">
             <h2 className="text-xl font-semibold mb-4">Gender Distribution</h2>
-            <ResponsiveContainer width="100%" height={250}>
+            <ResponsiveContainer width="50%" height={250}>
               <BarChart data={genderData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="gender" />
@@ -111,6 +117,7 @@ export default function OverallPerformance({
             </ResponsiveContainer>
           </div>
         </div>
+         </main>
       </AppLayout>
     );
   }
@@ -123,15 +130,17 @@ export default function OverallPerformance({
     return (
       <AppLayout user={auth.user}>
         <Head title="Average Class Scores" />
-        <div className="py-6 px-8 max-w-4xl mx-auto">
+        <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
+
+        <div className="py-6 px-8 max-w-10-xl mx-auto">
           <button
             onClick={() => setShowAverageScoreDetails(false)}
-            className="mb-4 px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-200"
+            className="mb-4 px-12 py-2 rounded bg-yellow-400 hover:bg-yellow-200"
           >
             ← Back
           </button>
           <h1 className="text-2xl font-bold mb-6">Average Class Scores</h1>
-          <div className="bg-white border rounded shadow p-4 mb-8">
+          <div className="bg-white border rounded shadow p-4 mb-8 w-200">
             <ul>
               {avgByClass.map((item, idx) => (
                 <li key={idx} className="flex justify-between py-2 border-b last:border-b-0">
@@ -148,6 +157,7 @@ export default function OverallPerformance({
             </div>
           </div>
         </div>
+        </main>
       </AppLayout>
     );
   }
@@ -160,15 +170,17 @@ export default function OverallPerformance({
     return (
       <AppLayout user={auth.user}>
         <Head title="Average Subject Scores" />
+        <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
+
         <div className="py-6 px-8 max-w-4xl mx-auto">
           <button
             onClick={() => setShowSubjectAverageDetails(false)}
-            className="mb-4 px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-200"
+            className="mb-4 px-12 py-1 rounded bg-yellow-400 hover:bg-yellow-200"
           >
             ← Back
           </button>
           <h1 className="text-2xl font-bold mb-6">Average Subject Scores</h1>
-          <div className="bg-white border rounded shadow p-4 mb-8">
+          <div className="bg-white w-200 border rounded shadow p-4 mb-8">
             <ul>
               {avgBySubject.map((item, idx) => (
                 <li key={idx} className="flex justify-between py-2 border-b last:border-b-0">
@@ -185,20 +197,23 @@ export default function OverallPerformance({
             </div>
           </div>
         </div>
+        </main>
       </AppLayout>
     );
   }
 
   // === Dashboard View ===
   return (
-    <AppLayout user={auth.user}>
+    <AppLayout user={auth.user} breadcrumbs={breadcrumbs}>
+      
       <Head title="Overall Performance" />
-      <div className="py-6 px-8 max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">📊 Overall Performance Overview</h1>
+      <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
+     
+        <h1 className="text-2xl font-bold mb-6"></h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-20 ">
           <div
-            className="bg-blue-100 p-4 rounded-lg shadow cursor-pointer flex flex-col"
+            className="bg-white p-4  shadow-xl cursor-pointer flex flex-col"
             onClick={() => setShowTotalStudentsDetails(true)}
           >
             <h2 className="text-lg font-semibold text-gray-800">Total Students</h2>
@@ -216,7 +231,7 @@ export default function OverallPerformance({
           </div>
 
           <div
-            className="bg-green-100 p-4 rounded-lg shadow cursor-pointer"
+            className="bg-white p-4  shadow-xl cursor-pointer"
             onClick={() => setShowAverageScoreDetails(true)}
           >
             <h2 className="text-lg font-semibold text-gray-800">Average Class Score</h2>
@@ -224,7 +239,7 @@ export default function OverallPerformance({
           </div>
 
           <div
-            className="bg-indigo-100 p-4 rounded-lg shadow cursor-pointer"
+            className="bg-white p-4  shadow-xl cursor-pointer"
             onClick={() => setShowSubjectAverageDetails(true)}
           >
             <h2 className="text-lg font-semibold text-gray-800">Average Subject Score</h2>
@@ -232,7 +247,8 @@ export default function OverallPerformance({
             <p className="text-sm text-gray-600 mt-1">Avg Marks: {bestSubject?.avg_marks.toFixed(2)}</p>
           </div>
         </div>
-      </div>
+      
+      </main>
     </AppLayout>
   );
 }
