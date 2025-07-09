@@ -16,6 +16,8 @@ use App\Models\ClassModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentAdmissionMail;
+use App\Models\Marks;
+use App\Models\Subject;
 class StudentController extends Controller
 {
     public function dashboard()
@@ -164,20 +166,20 @@ class StudentController extends Controller
     }
 
 
-public function update(Request $request, $reg_no)
-{
-    $student = StudentAcademic::where('reg_no', $reg_no)->first();
+    public function update(Request $request, $reg_no)
+    {   
+        $student = StudentAcademic::where('reg_no', $reg_no)->first();
 
-    if (!$student) {
+        if (!$student) {
         return response()->json(['message' => 'Student not found'], 404);
-    }
+        }
 
    
 
-    $student->update($request->all());
+        $student->update($request->all());
 
-    return response()->json($student);
-}
+        return response()->json($student);
+    }
 
 
 
@@ -194,6 +196,7 @@ public function update(Request $request, $reg_no)
 
         return response()->json(['message' => 'Student academic record deleted successfully!'], 200);
     }
+
     public function import(Request $request)
     {
         try {
@@ -211,7 +214,9 @@ public function update(Request $request, $reg_no)
                 'trace' => $e->getTraceAsString(),
             ], 500);
         }
+
     }
+
     public function admissionsPerYear()
     {
         $data = DB::table('student_academic_info')
@@ -251,7 +256,7 @@ public function update(Request $request, $reg_no)
         return response()->json($siblings);
     }
     public function updatePersonal(Request $request, $reg_no)
-{
+    {
     $student = StudentPersonal::where('reg_no', $reg_no)->first();
 
     if (!$student) {
@@ -260,9 +265,9 @@ public function update(Request $request, $reg_no)
 
     $student->update($request->all()); // or validate before update
     return response()->json($student);
-}
-public function updateFamily(Request $request, $reg_no)
-{
+    }
+    public function updateFamily(Request $request, $reg_no)
+    {
     $family = StudentFamilyInfo::where('reg_no', $reg_no)->first();
 
     if (!$family) {
@@ -273,10 +278,10 @@ public function updateFamily(Request $request, $reg_no)
 
     $family->update($request->all()); // or $request->all() if you trust frontend
     return response()->json($family);
-}
+    }
 
-public function updateSibling(Request $request, $reg_no)
-{
+    public function updateSibling(Request $request, $reg_no)
+    {   
     try {
         $siblingsData = $request->all();
 
@@ -295,15 +300,165 @@ public function updateSibling(Request $request, $reg_no)
 
         $siblings = StudentSibling::where('reg_no', $reg_no)->get();
         return response()->json($siblings);
-    } catch (\Throwable $e) {
+        } catch (\Throwable $e) {
         return response()->json([
             'message' => 'Failed to update sibling info.',
             'error' => $e->getMessage(),
         ], 500);
+        }
+}
+
+
+    public function apiStudentPerformance(string $reg_no): JsonResponse
+    {
+    $student = StudentAcademic::with(['personal', 'class.teacher', 'marks.subject'])
+        ->where('reg_no', $reg_no)
+        ->first();
+
+    if (!$student) {
+        return response()->json(['message' => 'Student not found'], 404);
     }
+
+    
+        // Calculate rank with tie handling
+       $totalMarks = $student->marks->sum('marks_obtained');
+    $averageMarks = $student->marks->count() > 0 ? $student->marks->avg('marks_obtained') : 0;
+    $studentsTotals = StudentAcademic::with('marks')
+        ->get()
+        ->map(function ($s) {
+            return [
+                'reg_no' => $s->reg_no,
+                'total_marks' => $s->marks->sum('marks_obtained'),
+            ];
+        })
+        ->sortByDesc('total_marks')
+        ->values();
+
+    $rank = 0;
+    $prevMark = null;
+    $skip = 0;
+
+    $studentsTotals = $studentsTotals->map(function ($item) use (&$rank, &$prevMark, &$skip) {
+        if ($prevMark !== $item['total_marks']) {
+            $rank = $rank + 1 + $skip;
+            $skip = 0;
+        } else {
+            $skip++;
+        }
+        $prevMark = $item['total_marks'];
+        $item['rank'] = $rank;
+        return $item;
+    });
+
+      $studentRank = $studentsTotals->firstWhere('reg_no', $reg_no)['rank'] ?? 'N/A';
+
+    $highestMarksBySubject = Marks::select('subject_id', DB::raw('MAX(marks_obtained) as highest'))
+    ->groupBy('subject_id')
+    ->pluck('highest', 'subject_id');
+
+    $marksData = $student->marks->map(function ($mark) use ($highestMarksBySubject) {
+        return [
+            'subject_id' => $mark->subject_id,
+            'subject_name' => $mark->subject->subject_name ?? 'Unknown Subject',
+            'marks_obtained' => $mark->marks_obtained,
+            'highest_mark_in_subject' => $highestMarksBySubject[$mark->subject_id] ?? 'N/A',
+        ];
+    })->toArray();
+
+    $report = [
+        'full_name' => $student->personal->full_name,
+        'reg_no' => $student->reg_no,
+        'class_name' => $student->class->class_name,
+        'grade' => $student->class->grade,
+        'section' => $student->class->section,
+        'class_teacher_name' => optional($student->class->teacher->personal)->Full_name ?? 'N/A',
+        'total_marks' => $student->marks->sum('marks_obtained'),
+        'average_marks' => round($student->marks->avg('marks_obtained'), 2),
+        'rank' => $studentRank, // You can add rank logic if needed
+        'marks' =>$marksData, // important to reset index
+    ];
+
+    return response()->json($report);
+}
+
+public function showReport($reg_no)
+{
+    $student = StudentAcademic::with([
+        'marks.subject',
+        'personal',
+        'class',
+    ])->where('reg_no', $reg_no)->first();
+
+    if (!$student) {
+        return Inertia::render('Marks/ReportPage', [
+            'student' => null,
+        ]);
+    }
+
+    $totalMarks = $student->marks->sum('marks_obtained');
+    $averageMarks = $student->marks->count() > 0 ? $student->marks->avg('marks_obtained') : 0;
+    $studentsTotals = StudentAcademic::with('marks')
+        ->get()
+        ->map(function ($s) {
+            return [
+                'reg_no' => $s->reg_no,
+                'total_marks' => $s->marks->sum('marks_obtained'),
+            ];
+        })
+        ->sortByDesc('total_marks')
+        ->values();
+
+    $rank = 0;
+    $prevMark = null;
+    $skip = 0;
+
+    $studentsTotals = $studentsTotals->map(function ($item) use (&$rank, &$prevMark, &$skip) {
+        if ($prevMark !== $item['total_marks']) {
+            $rank = $rank + 1 + $skip;
+            $skip = 0;
+        } else {
+            $skip++;
+        }
+        $prevMark = $item['total_marks'];
+        $item['rank'] = $rank;
+        return $item;
+    });
+
+      $studentRank = $studentsTotals->firstWhere('reg_no', $reg_no)['rank'] ?? 'N/A';
+
+    $highestMarksBySubject = Marks::select('subject_id', DB::raw('MAX(marks_obtained) as highest'))
+    ->groupBy('subject_id')
+    ->pluck('highest', 'subject_id');
+
+    $marksData = $student->marks->map(function ($mark) use ($highestMarksBySubject) {
+        return [
+            'subject_id' => $mark->subject_id,
+            'subject_name' => $mark->subject->subject_name ?? 'Unknown Subject',
+            'marks_obtained' => $mark->marks_obtained,
+            'highest_mark_in_subject' => $highestMarksBySubject[$mark->subject_id] ?? 'N/A',
+        ];
+    })->toArray();
+
+    return Inertia::render('Marks/ReportPage', [
+        'student' => [
+            'full_name' => $student->personal->full_name ?? 'N/A',
+            'reg_no' => $student->reg_no,
+            'class_name' => $student->class_name ?? ($student->class->class_name  ?? 'N/A'),
+            'grade' => $student->grade ?? ($student->class->grade ?? 'N/A'),
+            'section' => $student->section ?? ($student->class->section ?? 'N/A'),
+            'class_teacher_name' => optional(optional(optional($student->class)->teacher)->personal)->Full_name ?? 'N/A',
+            'total_marks' => $totalMarks,
+            'average_marks' => round($averageMarks, 2),
+            'rank' => $studentRank,
+            'marks' => $marksData,
+        ],
+    ]);
+}
+
+   
 }
 
 
 
 
-}
+

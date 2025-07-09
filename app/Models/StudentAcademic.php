@@ -67,9 +67,9 @@ class StudentAcademic extends Model
         return $this->hasMany(Marks::class, 'reg_no', 'reg_no'); // Assuming 'reg_no' is the foreign key in Marks and local key in StudentAcademic
     }
 
-public function studentpersonal()
+public function studentPersonal()
     {
-        return $this->hasOne(StudentPersonal::class, 'reg_no', 'reg_no'); 
+        return $this->belongsTo(StudentPersonal::class, 'student_id'); // Assuming 'student_id' is the foreign key in 'student_academics' table
     }
 
 
