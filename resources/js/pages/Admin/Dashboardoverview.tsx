@@ -10,7 +10,6 @@ import React, { useState, useEffect } from 'react';
 import AddTeacherForm from '@/pages/Teacher/teacherForm';
 import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
 import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
-import StudentPerformanceLineChart from '../Student/StudentPerformanceChart';
 // import ViewAllStudents from '@/pages/Student/ViewAllStudents';
 import AssignClassTeachers from '@/pages/Admin/Classpage';
 import AssignTeachersPage from '@/pages/Admin/AssignTeachersPage';
@@ -20,7 +19,6 @@ import Gallery from '@/pages/Admin/imagegallery';
 import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
 import ImportStudent from '@/pages/Admin/ImportStudent';
-
  import { router } from '@inertiajs/react';
 
 
@@ -45,7 +43,7 @@ interface Class {
   class_id: number;
   class_name: string;
   grade: number;
-  year: number;
+   year: number;
   section: string;
   studentacademics_count: number;
   teacher_NIC: string;
@@ -65,7 +63,7 @@ interface Card {
 interface ClassItem {
   class_id: number;
   grade: number;
-  year: number;
+   year: number;
   section: string;
   class_name: string;
   teacher_NIC: string;
@@ -158,7 +156,6 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   const [showImportForm, setImportForm] = useState(false);
   const [Fetchedstudents, setFetchedStudents] = useState<Student[]>([]);
 
-
   InertiaProgress.init({
    // Optional: hide spinner if enabled
   delay: 999999,    
@@ -194,7 +191,7 @@ setClass(true);
 
 
   
-  
+
   const fetchStudents = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/api/students");
@@ -276,10 +273,9 @@ setClass(true);
     setSelectedCard(null);
   };
 
-  const handle10 = () => {
+  const handle10=()=>{
     setshowCalendar(true);
   }
-
 
  const handleBackClick1 = () => {
   const filtersApplied = grade || section || classname;
@@ -302,22 +298,20 @@ setClass(true);
 };
 
   const close4=()=>{
-
-
     setshowCalendar(false);
   }
-  const [animate, setAnimate] = useState(false);
+const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimate(true);
-      setTimeout(() => setAnimate(false), 2000);
-    }, 9000);
+      setTimeout(() => setAnimate(false), 2000); // animation duration
+    },9000); // repeat every 2 seconds
 
     return () => clearInterval(interval);
   }, []);
 
-
+  
   const cards = [
     {
       id: 1,
@@ -357,28 +351,24 @@ setClass(true);
     },
   ];
 
-
-
+  
+    
 
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
-        
+        <p>1</p>
       </header>
       <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
         {selectedCard && selectedCard.id === 4 ? (
           <>
-          {/* <ViewAllStudents /> */}
-
-
+            {/* <ViewAllStudents /> */}
             <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
               Back
             </Button>
           </>
-        ) 
-        
-        : selectedCard && selectedCard.id === 2 ? (
+        ) : selectedCard && selectedCard.id === 2 ? (
           <>
             <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back3}>
               Back
@@ -390,8 +380,8 @@ setClass(true);
               }))}
             />
           </>
-        ) 
-        :selectedCard && selectedCard.id === 1 ? (
+         ) :
+        selectedCard && selectedCard.id === 1 ? (
           <>
           <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
               Back
@@ -399,10 +389,13 @@ setClass(true);
             <SubjectIndex subjects={subjects} grades={grades} />
             
           </>
-        ) 
+        ) :
         
-        :showclass  ? (
-           addteacher ? (
+        
+        
+        
+        showclass  ? (
+          addteacher ? (
             <>
               <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>
                 Back
@@ -411,8 +404,7 @@ setClass(true);
                 {/* <AssignClassTeachers teachers={teacher12} classes={classesGrouped} /> */}
               </div>
             </>
-                       )
-             :(
+          ) :(
             <>
               <div className="flex">
                 <Button className="bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={handleBackClick1}>
@@ -434,18 +426,18 @@ setClass(true);
       <form onSubmit={handleFilterSubmit} className="mb-4 space-x-4">
         {/* Grade Dropdown */}
         <select
-       value={grade}
-        onChange={(e) => {
-        const val = e.target.value;
-          setGrade(val === '' ? '' : parseInt(val, 10));
-            }}
-           className="border p-2 rounded"
-                             >
-                <option value="">-- Select Grade --</option>
-            {grades.map(g => (
-           <option key={g.id} value={g.grade}>{g.grade}</option>
-           ))}
-            </select>
+  value={grade}
+ onChange={(e) => {
+  const val = e.target.value;
+  setGrade(val === '' ? '' : parseInt(val, 10));
+}}
+  className="border p-2 rounded"
+>
+  <option value="">-- Select Grade --</option>
+  {grades.map(g => (
+    <option key={g.id} value={g.grade}>{g.grade}</option>
+  ))}
+</select>
 
         {/* Section Input */}
         <input
@@ -508,8 +500,7 @@ setClass(true);
               </div>
             </>
           )
-        ) 
-        : showForm ? (
+        ) : showForm ? (
           <div className="mt-4">
             <Button className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick}>
               Back
@@ -520,8 +511,7 @@ setClass(true);
             </div>
             {/* <AddTeacherForm /> */}
           </div>
-        ) 
-        : showStudentForm ? (
+        ) : showStudentForm ? (
           <>
             <div className="jflex justify-left mb-4 mt-10 z-10">
               <Button
@@ -542,25 +532,30 @@ setClass(true);
               <StudentAdmissionForm setShowForm={setShowStudentForm} />
             </div>
           </>
-        ) 
-        : showSub ? (
+        ) : showSub ? (
           <>
-
-
-
-
-
-           (
+            <div className="mt-4">
+              <Button
+                className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
+                onClick={CloseClick8}
+              >
+                Back
+              </Button>
+              <AssignTeachersPage />
+            </div>
+          </>
+        ) : (
           <>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
               <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddTeacherClick}>
                 <span className="text-[20px] font-semibold text-yellow-700">Add New Teachers</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-yellow-700" />
+              </div>
 
-          )  : (
-            <>
-              
-
+              <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddStudentClick}>
+                <span className="text-[20px] font-semibold text-blue-900">Add New Students</span>
+                <FontAwesomeIcon icon={faPlus} className="text-3xl text-blue-900" />
+              </div>
 
               <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={() => router.visit('/admin/dashboardoverview/classpage')}>
        
@@ -572,76 +567,59 @@ setClass(true);
        
                 <span className="text-[20px] font-semibold text-[maroon]">Teacher & Subjects</span>
                 <FontAwesomeIcon icon={faPlus} className="text-3xl text-[maroon]" />
-                </div>
-
-                <div className="relative mt-5 h-20 w-77 bg-white p-4 shadow-xl transition-transform duration-900 hover:scale-100 hover:shadow-md text-white flex items-center justify-between transform scale-90 z-40 cursor-pointer" onClick={handleAddStudentClick}>
-                  <span className="text-[20px] font-semibold text-blue-900">Add New Students</span>
-                  <FontAwesomeIcon icon={faPlus} className="text-3xl text-blue-900" />
-                </div>
-
-                
-
-                
-
-              
-
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-200">
-              
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 bg-gray-100">
-                {cards.map((card, index) => (
-                  <div
-                    key={index}
-                    className="relative mt-14 ml-5 h-35 w-78 border bg-white p-6 ml-[-10px] shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md flex items-center justify-between transform scale-90 z-40 cursor-pointer shadow-xl"
-                    onClick={() => handleCardClick(card)}
-                  >
-                    <div className={`absolute z-0 -top-10 left-4 flex h-28 w-28 items-center justify-center text-white shadow-lg ${card.color}`}>
-                      <FontAwesomeIcon icon={card.icon} className="text-3xl" />
-                    </div>
-                    <div className="mt-[-30px] ml-30 pt-8 text-">
-                      <p className="text-[16px] text-gray-500">{card.title}</p>
-                      <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
-                      <p className={`mt-3 text-[14px] ${card.footerColor}`}>{card.footer}</p>
-                    </div>
+              {cards.map((card, index) => (
+                <div
+                  key={index}
+                  className="relative mt-14 ml-5 h-35 w-78 border bg-white p-6 ml-[-10px] shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md flex items-center justify-between transform scale-90 z-40 cursor-pointer shadow-xl"
+                  onClick={() => handleCardClick(card)}
+                >
+                  <div className={`absolute z-0 -top-10 left-4 flex h-28 w-28 items-center justify-center text-white shadow-lg ${card.color}`}>
+                    <FontAwesomeIcon icon={card.icon} className="text-3xl" />
                   </div>
-                ))}
-              </div>
-              <div className="p-6 flex">
-                <StudentAdmissionChart />
-               
-                <div className="relative w-74 h-60 bg-white  shadow-xl ml-22 flex flex-col justify-center items-center p-6">
-                  <h1 className="text-xl font-semibold text-gray-800">Yearly Updates</h1>
-                  <p className="text-gray-500 text-sm mt-2 text-center">
-                    Track and manage yearly academic changes here.
-                  </p>
-
-                  <div
-                    className={`absolute top-10 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full shadow-lg text-sm font-medium transition-all duration-300 ${animate ? 'animate-bounce' : ''
-                      }`}
-                  >
-                    <Pointer size={50} className="animate-pulse text-xl py-2" />
-                    Click here for yearly updates
-
+                  <div className="mt-[-30px] ml-30 pt-8 text-">
+                    <p className="text-[19px] text-gray-500">{card.title}</p>
+                    <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
+                    <p className={`mt-3 text-[14px] ${card.footerColor}`}>{card.footer}</p>
                   </div>
                 </div>
-              </div>
-               <br/>
-                 <StudentPerformanceLineChart />
-              <Gallery />
-              
+              ))}
+            </div>
+ <div className="p-6 flex">
+              <StudentAdmissionChart />
+            <div className="relative w-74 h-60 bg-white  shadow-xl ml-22 flex flex-col justify-center items-center p-6">
+      <h1 className="text-xl font-semibold text-gray-800">Yearly Updates</h1>
+      <p className="text-gray-500 text-sm mt-2 text-center">
+        Track and manage yearly academic changes here.
+      </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 bg-white rounded-lg shadow-md">
-                {img.data.map(image => (
-                  <div key={image.id} className="...">
-                    <img src={`/images/${image.path}`} alt={image.title || 'Gallery image'} />
-                    {image.title && <p>{image.title}</p>}
-                  </div>
-                ))}
-              </div>
+      <div
+        className={`absolute top-10 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full shadow-lg text-sm font-medium transition-all duration-300 ${
+          animate ? 'animate-bounce' : ''
+        }`}
+      >
+        <Pointer size={50} className="animate-pulse text-xl py-2" />
+        Click here for yearly updates
+      </div>
+    </div>
+            </div>
+            <Gallery />
 
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 bg-white rounded-lg shadow-md">
+              {img.data.map(image => (
+                <div key={image.id} className="...">
+                  <img src={`/images/${image.path}`} alt={image.title || 'Gallery image'} />
+                  {image.title && <p>{image.title}</p>}
+                </div>
+              ))}
+            </div>
 
-            </>
-          )}
+            
+          </>
+        )}
 
         {showImportForm && (
           <div className="fixed top-50 left-80 z-50 flex items-center justify-center">
@@ -657,7 +635,7 @@ setClass(true);
 
 
 
-        </main>
+      </main>
     </AppLayout>
   );
 }
