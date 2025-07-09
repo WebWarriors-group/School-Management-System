@@ -32,6 +32,11 @@ export default function ReportPage() {
   const { student } = usePage().props as unknown as Props;
   const reportRef = useRef<HTMLDivElement>(null);
 
+  // ✅ Read the 'from' query param to decide where to go back
+  const url = usePage().url;
+const queryParams = new URLSearchParams(url.split('?')[1]);
+const from = queryParams.get('from');
+
   const handlePrint = () => {
     if (reportRef.current) {
       const printContents = reportRef.current.innerHTML;
@@ -141,7 +146,6 @@ export default function ReportPage() {
               </div>
             </div>
           </section>
-
           {/* 📌 Class Info */}
           <section>
             <h2 className="text-lg font-bold text-purple-800 mb-4 border-b pb-1 ">📌 ClASS INFORMATION</h2>

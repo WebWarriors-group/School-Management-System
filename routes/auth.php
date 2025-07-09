@@ -74,11 +74,12 @@ Route::middleware('auth', 'teacher')->group(function () {
 
    
 Route::get('/leave', function () {
-    return inertia::render('Teacher/LeaveRequest'); // This should return the Inertia page
+    $user_id = Auth::id();
+    return inertia::render('Teacher/LeaveRequest',[
+        'user_id' => $user_id,
+    ]); // This should return the Inertia page
 })->name('leave');
-Route::get('/Teacher/LeaveRequest', function () {
-    return Inertia::render('Teacher/personalDash');
-});
+
 });
 
 

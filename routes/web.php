@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminController;
@@ -20,7 +21,15 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use App\Mail\StudentAdmissionMail;
+
 use App\Http\Controllers\TeacherAssignedController;
+
+use App\Http\Controllers\TeacherAttendanceController;
+use App\Http\Controllers\TeacherLeaveRequestController;
+use App\Http\Controllers\AdminLeaveRequestController;
+use App\Http\Controllers\MarkController;
+
+
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
@@ -50,7 +59,8 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
      Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
      Route::get('/test-session', function (Request $request) {
-    
+  
+
     session(['current_url' => $request->fullUrl()]);
     session()->save();
     return 'Session data: ' . session('current_url');
@@ -75,8 +85,10 @@ Route::post('/classadd', [ClassController::class, 'store']);
     return inertia::render('Teacher/teacherForm',[
         'user'=>$user_id
     ]); // This should return the Inertia page
+
 })->name('add-teacher');
 
+Route::get('/student/academic', [StudentController::class, 'academicPage']);
 
 
 
@@ -84,9 +96,9 @@ Route::post('/classadd', [ClassController::class, 'store']);
 
 
 
-Route::get('/teacher_details', function () {
+Route::get('/teacher-info', function () {
     return inertia::render('Admin/techerInfo'); 
-})->name('teacher_details');
+})->name('teacher-info');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
@@ -123,9 +135,9 @@ Route::post('/teacher/request', [TeacherController::class, 'storeRequest'])->nam
 
 
 
-Route::get('/teacher_details', function () {
+Route::get('/teacher-info', function () {
     return inertia::render('Admin/techerInfo'); 
-})->name('teacher_details');
+})->name('teacher-info');
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
@@ -137,19 +149,62 @@ Route::get('admin/calendar', function () {
 
 
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/teacher-attendance', [TeacherAttendanceController::class, 'index'])->name('teacher.attendance.index');
+    Route::post('/admin/teacher-attendance', [TeacherAttendanceController::class, 'store']);
+    Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
+});
+
+Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
 
 
+Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
 
 
+Route::get('/api/teacher-attendance-summary', [TeacherAttendanceController::class, 'summary']);
+Route::get('/teacher_attendance', function () {
+    return inertia::render('Admin\teacherAttendance'); 
+})->name('teacher_attendance');
+Route::get('/Admin/teacherAttendance', function () {
+    return Inertia::render('Admin/teacher');
+});
+Route::get('/teacher-leave-requests', function () {
+    return inertia::render('Admin/LeaveRequests'); 
+})->name('teacher-leave-requests');
+Route::get('/Admin/LeaveRequests', function () {
+    return Inertia::render('Admin/teacher');
+});
+Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
+//D:\schoolProj\School-Management-System\resources\js\pages\Admin\teacherAttendance.tsx
+//Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
+
+    // Your Dashboard route
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    // This is the route that loads your React Subject Management page via Inertia.
+    // It's under the 'web' middleware group (implicitly or explicitly if added).
+   // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
 
 
     
 
     
 
+Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
+Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
 
- 
+
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/teacher-leave-requests', [AdminLeaveRequestController::class, 'index']);
+    Route::post('/admin/teacher-leave-requests/{id}/approve', [AdminLeaveRequestController::class, 'approve']);
+    Route::post('/admin/teacher-leave-requests/{id}/reject', [AdminLeaveRequestController::class, 'reject']);
+});
+ Route::get('/api/teacher/today-leave-count', [AdminLeaveRequestController::class, 'getTodayLeaveCount']);
+
 
 Route::middleware('auth')->group(function () {
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
@@ -164,6 +219,7 @@ Route::get('/students/all', function () {
 })->name('students.all');
 
 
+
 Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
 Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
 
@@ -171,6 +227,10 @@ Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('
 Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
 Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index']);
 
+
+
+Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
+    ->name('admin.overallPerformance');
 
 
 require __DIR__ . '/settings.php';

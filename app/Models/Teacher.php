@@ -41,6 +41,7 @@ class Teacher extends Model
        
         'number_in_sign_sheet',
         'number_in_salary_sheet',
+        'user_id',
     ];
 
     public function user()

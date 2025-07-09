@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-
+use App\Models\TeacherLeaveRequest;
 
 class TeacherController extends Controller
 {
@@ -22,9 +22,10 @@ class TeacherController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $teacherUser = $user->teacher();
+        
+        $teacherUser = $user->teacher;
 
-        if (!($teacherUser->exists())) {
+        if (is_null($teacherUser->exists())) {
             return redirect()->route('add-teacher');
         }
 
@@ -85,7 +86,11 @@ class TeacherController extends Controller
             'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
             'number_in_sign_sheet' => 'required|string|max:20',
             'number_in_salary_sheet' => 'required|string|max:20',
-             'user_id'=>'required|numeric',
+
+             
+
+            'user_id'=>'required|numeric',
+
         ]);
 
         // Create the teacher in teacher_work_infos table
@@ -110,7 +115,8 @@ class TeacherController extends Controller
             'commuting_method_to_school' => $validatedData['commuting_method_to_school'] ?? null, // Use null if not provided
             'number_in_sign_sheet' => $validatedData['number_in_sign_sheet'] ?? null, // Use null if not provided
             'number_in_salary_sheet' => $validatedData['number_in_salary_sheet'] ?? null, // Use null if not provided
-             'user_id'=>$validatedData['user_id'],
+            'user_id'=>$validatedData['user_id'],
+
         ]);
         
         // Store related records in respective tables
@@ -281,6 +287,17 @@ class TeacherController extends Controller
     ]);
  }
 
+public function profile()
+{
+    $user = Auth::user();
+    $teacher = $user->teacher()->with(['personal', 'teachersaddress', 'qualifications', 'teacherotherservice'])->first();
+
+    return Inertia::render('Teacher/Profile', [
+        'teacher' => $teacher,
+    ]);
+}
+//✅ This will send the authenticated teacher’s full details to your React component.
+
 
 
     /**
@@ -436,6 +453,52 @@ class TeacherController extends Controller
         ]);
     
     }
+
+//     public function leavereqstore(Request $request)
+// {
+//     // Validate the form inputs
+//     $validated = $request->validate([
+//         'leave_type' => 'required|string',
+//         'leave_start_date' => 'required|date',
+//         'leave_end_date' => 'required|date|after_or_equal:leave_start_date',
+//         'reason' => 'required|string',
+//         'requires_substitute' => 'boolean',
+//         'substitute_teacher_name' => 'nullable|string',
+//         'substitute_teacher_contact' => 'nullable|string',
+//         'comments' => 'nullable|string',
+//         'supporting_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+//     ]);
+
+//     // Get the authenticated user
+//     $user = auth()->user();
+
+//     // 🔽 PLACE THIS HERE: Find the teacher by user_id
+//     $teacher = Teacher::where('user_id', $user->id)->first();
+
+//     // Handle case where teacher record doesn't exist
+//     if (!$teacher) {
+//         return back()->withErrors(['message' => 'Teacher not found.']);
+//     }
+
+//     // Handle file upload
+//     if ($request->hasFile('supporting_document')) {
+//         $file = $request->file('supporting_document');
+//         $filename = time() . '_' . $file->getClientOriginalName();
+//         $path = $file->storeAs('leave_documents', $filename, 'public');
+//         $validated['supporting_document'] = $path;
+//     }
+
+//     // Attach teacher NIC and default status
+//     $validated['teacher_NIC'] = $teacher->teacher_NIC;
+//     $validated['status'] = 'Pending';
+
+//     // Save leave request
+//     // \App\Models\TeacherLeaveRequest::create($validated);
+//     Teacher::create($validated);
+
+//     return redirect()->back()->with('success', 'Leave request submitted.');
+// }
+
 
 
 }
