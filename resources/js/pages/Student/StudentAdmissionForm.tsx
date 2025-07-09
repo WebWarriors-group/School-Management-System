@@ -312,153 +312,167 @@ fetch('/api/student', {
   });
 
   }
-  return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg z-10 relative space-y-1 transition-all duration-300 ease-in-out left-50 top-20 max-w-3xl p-4 mx-auto max-h-[75vh] overflow-y-auto"
->
-
+   return (
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg z-10 relative max-w-4xl p-6 mx-auto">
       <div className="relative mb-6">
-
-
         <button
           type="button"
-          onClick={() => { resetFormState();
-            setShowForm(false)}}
-          className="absolute top-0 right-0 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all duration-300 ease-in-out"
+          onClick={() => { resetFormState(); setShowForm(false); }}
+          className="absolute top-0 right-0 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           X
         </button>
-        <h2 className="text-3xl font-semibold text-red-700 text-center">Student Admission Form</h2>
-      </div>
-      {currentPage === 1 && (
-        <StudentAcademicForm form={form} handleChange={handleChange} />
-      )}
-      {currentPage === 2 && (
-        <StudentFamilyForm form={form} handleChange={handleChange} />
-      )}
-      {currentPage === 3 && (
-        <StudentPersonalForm form={form} handleChange={handleChange} />
-      )}
-      {currentPage === 4 && (
-        <StudentSiblingForm siblings={siblings} handleSiblingChange={handleSiblingChange} addSibling={addSibling} />
-      )}
-
-
-      {currentPage === 5 && (
-        <div>
-          <h3 className="text-2xl font-semibold text-yellow-900 mb-4 text-center">Review & Submit</h3>
-          <div className="text-gray-800 space-y-2">
-
-
-            <p><strong>Registration No:</strong> {form.reg_no}</p>
-            <p><strong>Class:</strong> {form.class_id}</p>
-            <p><strong>Distance to School:</strong> {form.distance_to_school} km</p>
-            <p><strong>Method of Coming:</strong> {form.method_of_coming_to_school}</p>
-            <p><strong>Aesthetic Subjects (6–9):</strong> {form.grade_6_9_asthectic_subjects}</p>
-            <p><strong>Basket 1:</strong> {form.grade_10_11_basket1_subjects}</p>
-            <p><strong>Basket 2:</strong> {form.grade_10_11_basket2_subjects}</p>
-            <p><strong>Basket 3:</strong> {form.grade_10_11_basket3_subjects}</p>
-
-
-            <p><strong>Grade 5 Scholarship:</strong> {form.receiving_any_grade_5_scholarship ? "Yes" : "No"}</p>
-            <p><strong>Samurdhi/Aswesuma:</strong> {form.receiving_any_samurdhi_aswesuma ? "Yes" : "No"}</p>
-            <p><strong>Other Scholarship:</strong> {form.receiving_any_scholarship ? "Yes" : "No"}</p>
-
-
-            <p><strong>Full Name:</strong> {form.full_name}</p>
-            <p><strong>Full Name with Initial:</strong> {form.full_name_with_initial}</p>
-            <p><strong>Birthday:</strong> {form.birthday}</p>
-            <p><strong>Age:</strong> {form.age}</p>
-            <p><strong>Ethnicity:</strong> {form.ethnicity}</p>
-            <p><strong>Religion:</strong> {form.religion}</p>
-            <p><strong>Gender:</strong> {form.gender}</p>
-            <p><strong>Birth Certificate Number:</strong> {form.birth_certificate_number}</p>
-            <p><strong>NIC Number:</strong> {form.nic_number}</p>
-            <p><strong>Postal IC Number:</strong> {form.postal_ic_number}</p>
-            <p><strong>Address:</strong> {form.address}</p>
-            <p><strong>Special Needs:</strong> {form.special_needs ? "Yes" : "No"}</p>
-            <p><strong>Height:</strong> {form.height} cm</p>
-            <p><strong>Weight:</strong> {form.weight} kg</p>
-           {form.photo && (
-  <div>
-    <strong>Photo:</strong>
-    {typeof form.photo !== "string" && (
-      <img
-        src={URL.createObjectURL(form.photo)}
-        alt="Uploaded"
-        className="mt-1 h-24 w-24 object-cover rounded border"
-      />
-    )}
-  </div>
-)}
-
-
-
-
-            <hr className="my-3" />
-            <h4 className="font-bold text-lg">Mother's Information</h4>
-            <p><strong>Name:</strong> {form.mother_name}</p>
-            <p><strong>Occupation:</strong> {form.mother_occupation}</p>
-            <p><strong>Income:</strong> {form.mother_income}</p>
-            <p><strong>Workplace:</strong> {form.mother_working_place}</p>
-            <p><strong>Contact:</strong> {form.mother_contact}</p>
-            <p><strong>Email:</strong> {form.mother_email}</p>
-            <p><strong>WhatsApp:</strong> {form.mother_whatsapp}</p>
-
-
-            <hr className="my-3" />
-            <h4 className="font-bold text-lg">Father's Information</h4>
-            <p><strong>Name:</strong> {form.father_name}</p>
-            <p><strong>Occupation:</strong> {form.father_occupation}</p>
-            <p><strong>Income:</strong> {form.father_income}</p>
-            <p><strong>Workplace:</strong> {form.father_working_place}</p>
-            <p><strong>Contact:</strong> {form.father_contact}</p>
-            <p><strong>Email:</strong> {form.father_email}</p>
-            <p><strong>WhatsApp:</strong> {form.father_whatsapp}</p>
-            <hr className="my-3" />
-            <h4 className="font-bold text-lg">Sibiling's Information</h4>
-            {siblings.map((s, i) => (
-              <div key={i}>
-                <p><strong>Name:</strong> {s.sibling_name}</p>
-                <p><strong>RelationShip</strong> {s.relationship}</p>
-                <p><strong>Age:</strong> {s.sibling_age}</p>
-                <p><strong>Occupation:</strong> {s.occupation}</p>
-                <p><strong>Contact:</strong> {s.contact}</p>
-                <hr className="my-2" />
-              </div>
-            ))}
+        
+        {/* Header Section */}
+        <div className="text-center mb-6 border-b pb-4">
+          <h1 className="text-2xl font-bold text-gray-800">ADMISSION FORM</h1>
+          <div className="flex justify-between mt-4 text-sm">
+           
+           
           </div>
         </div>
-      )}
-      <div className="flex justify-between items-center mt-6 px-4 gap-4">
-        {currentPage > 1 && (
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition duration-200"
-          >
-            Previous
-          </button>
-        )}
-        {currentPage < totalPages && (
-          <button
-            type="button"
-            onClick={handleNext}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200 ml-auto"
-          >
-            Next
-          </button>
-        )}
-        {currentPage === totalPages && (
-          <button
-            type="submit"
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-200 ml-auto"
-          >
-            Submit
-          </button>
-        )}
+
+        {/* Form Sections */}
+        <div className="border rounded-lg p-4 mb-6">
+          {currentPage === 1 && (
+            <StudentAcademicForm form={form} handleChange={handleChange} />
+          )}
+          {currentPage === 2 && (
+            <StudentFamilyForm form={form} handleChange={handleChange} />
+          )}
+          {currentPage === 3 && (
+            <StudentPersonalForm form={form} handleChange={handleChange} />
+          )}
+          {currentPage === 4 && (
+            <StudentSiblingForm siblings={siblings} handleSiblingChange={handleSiblingChange} addSibling={addSibling} />
+          )}
+          {currentPage === 5 && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-center text-gray-700 mb-4">Review & Submit</h3>
+              
+              {/* Personal Info Section */}
+              <div className="border rounded p-4">
+                <h4 className="font-bold text-lg mb-2">Personal Information</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p><strong>Full Name:</strong> {form.full_name}</p>
+                    <p><strong>Name with Initials:</strong> {form.full_name_with_initial}</p>
+                    <p><strong>Birthday:</strong> {form.birthday}</p>
+                    <p><strong>Age:</strong> {form.age}</p>
+                    <p><strong>Religion:</strong> {form.religion}</p>
+                  </div>
+                  <div>
+                    <p><strong>Gender:</strong> {form.gender}</p>
+                    <p><strong>Ethnicity:</strong> {form.ethnicity}</p>
+                    <p><strong>Birth Certificate:</strong> {form.birth_certificate_number}</p>
+                    <p><strong>Address:</strong> {form.address}</p>
+                    {form.photo && (
+                      <div className="mt-2">
+                        <strong>Photo:</strong>
+                        <img 
+                          src={typeof form.photo === "string" ? form.photo : URL.createObjectURL(form.photo)} 
+                          alt="Student" 
+                          className="mt-1 h-24 w-24 object-cover rounded border"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Academic Info Section */}
+              <div className="border rounded p-4">
+                <h4 className="font-bold text-lg mb-2">Academic Information</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p><strong>Registration No:</strong> {form.reg_no}</p>
+                    <p><strong>Class:</strong> {form.class_id}</p>
+                    <p><strong>Distance to School:</strong> {form.distance_to_school} km</p>
+                  </div>
+                  <div>
+                    <p><strong>Transport Method:</strong> {form.method_of_coming_to_school}</p>
+                    <p><strong>Scholarship:</strong> {form.receiving_any_scholarship ? "Yes" : "No"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Family Info Section */}
+              <div className="border rounded p-4">
+                <h4 className="font-bold text-lg mb-2">Family Information</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h5 className="font-medium">Mother</h5>
+                    <p><strong>Name:</strong> {form.mother_name}</p>
+                    <p><strong>Occupation:</strong> {form.mother_occupation}</p>
+                    <p><strong>Contact:</strong> {form.mother_contact}</p>
+                  </div>
+                  <div>
+                    <h5 className="font-medium">Father</h5>
+                    <p><strong>Name:</strong> {form.father_name}</p>
+                    <p><strong>Occupation:</strong> {form.father_occupation}</p>
+                    <p><strong>Contact:</strong> {form.father_contact}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Siblings Section */}
+              <div className="border rounded p-4">
+                <h4 className="font-bold text-lg mb-2">Siblings</h4>
+                {siblings.map((s, i) => (
+                  <div key={i} className="mb-3 last:mb-0">
+                    <div className="grid grid-cols-2 gap-4">
+                      <p><strong>Name:</strong> {s.sibling_name}</p>
+                      <p><strong>Relationship:</strong> {s.relationship}</p>
+                      <p><strong>Age:</strong> {s.sibling_age}</p>
+                      <p><strong>Contact:</strong> {s.contact}</p>
+                    </div>
+                    {i < siblings.length - 1 && <hr className="my-2" />}
+                  </div>
+                ))}
+              </div>
+
+              {/* Signature Section */}
+              
+            </div>
+          )}
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-6">
+          {currentPage > 1 && (
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+            >
+              Previous
+            </button>
+          )}
+          
+          <div className="flex-1 text-center text-sm text-gray-500">
+            Page {currentPage} of {totalPages}
+          </div>
+          
+          {currentPage < totalPages ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            >
+              Submit
+            </button>
+          )}
+        </div>
       </div>
     </form>
   );
 }
-
-
+   
+        

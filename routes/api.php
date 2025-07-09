@@ -32,6 +32,7 @@ Route::post('/student', [StudentController::class, 'store']);
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 
 Route::get('/students', [StudentController::class, 'index']);
+Route::get('/student-performance', [StudentController::class, 'yearlyPerformance']);
 
 
 Route::delete('/students/{reg_no}', [StudentController::class, 'destroy']);
@@ -41,6 +42,7 @@ Route::put('/students/{reg_no}', [StudentController::class, 'update']);
 Route::put('/student-personal/{reg_no}', [StudentController::class, 'updatePersonal']);
 Route::put('/student-family/{reg_no}', [StudentController::class, 'updateFamily']);
 Route::put('/student-sibling/{reg_no}', [StudentController::class, 'updateSibling']);
+Route::get('/students/{reg_no}/performance', [StudentController::class, 'apiStudentPerformance']);
 
 Route::get('/classes', [ClassController::class, 'index']);
 Route::post('/send-admission-form', function (Illuminate\Http\Request $request) {
@@ -80,12 +82,12 @@ Route::put('study-materials/{id}', [StudyMaterialController::class, 'update']);
 Route::delete('study-materials/{id}', [StudyMaterialController::class, 'destroy']);
 
 Route::post('/students/import', [StudentController::class, 'import']);
-Route::get('/admissions-per-year', [StudentController::class, 'admissionsPerYear']);
+Route::get('/admissions-per-year', [StudentController::class, 'getAdmissionsPerYear']);
 Route::get('/student-family/{reg_no}', [StudentController::class, 'showFamily']);
 Route::get('/student-sibling/{reg_no}', [StudentController::class, 'showSibling']);
 Route::get('/student-personal/{reg_no}', [StudentController::class, 'showPersonal']);
 
-Route::post('/students/import', [StudentImportController::class, 'import']);
+Route::post('/students/import', [StudentController::class, 'import']);
 
 
 
@@ -104,4 +106,3 @@ Route::get('/events', [EventController::class, 'index']);
 Route::post('/events', [EventController::class, 'store']);
 Route::put('/events/{id}', [EventController::class, 'update']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
-

@@ -21,6 +21,7 @@ return new class extends Migration
                 ->onDelete('cascade')->nullable();
             $table->string('class_name', 10)->nullable();
             $table->smallInteger('grade');
+             $table->smallInteger('year');
             $table->integer('number_of_students')->nullable();
             $table->char('section');
           

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AdminController;
@@ -23,6 +24,8 @@ use App\Mail\StudentAdmissionMail;
 use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
+use App\Http\Controllers\MarkController;
+
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
@@ -52,7 +55,8 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
      Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
      Route::get('/test-session', function (Request $request) {
-    
+  
+
     session(['current_url' => $request->fullUrl()]);
     session()->save();
     return 'Session data: ' . session('current_url');
@@ -79,6 +83,7 @@ Route::post('/classadd', [ClassController::class, 'store']);
     ]); 
 })->name('add-teacher');
 
+Route::get('/student/academic', [StudentController::class, 'academicPage']);
 
 
 
@@ -145,6 +150,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
 });
 
+Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
+
+
 Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
 
 Route::get('/api/teacher-attendance-summary', [TeacherAttendanceController::class, 'summary']);
@@ -201,6 +209,10 @@ Route::get('/students/all', function () {
         // You can pass props here
     ]);
 })->name('students.all');
+
+
+Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
+    ->name('admin.overallPerformance');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

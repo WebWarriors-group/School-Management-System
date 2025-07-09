@@ -23,11 +23,12 @@ use SoftDeletes;
         'teacher_NIC',
         'class_name',
         'grade',
+        'year',
         'section',
         'number_of_students'
     ];
    
-    public function teachers()
+    public function teacher()
     {
         return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');
     }
