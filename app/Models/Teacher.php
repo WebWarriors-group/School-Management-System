@@ -12,11 +12,12 @@ class Teacher extends Model
   use SoftDeletes;
     protected $table = 'teacher_work_infos'; // Specify the correct table name
 
-    protected $primaryKey = 'teacher_NIC'; // Define primary key
-
+    // Define primary key
+   
+protected $primaryKey = 'user_id'; 
     public $incrementing = false; // Important because teacher_NIC is a string
 
-    protected $keyType = 'string'; // Ensures teacher_NIC is treated as a string
+    protected $keyType = 'int'; // Ensures teacher_NIC is treated as a string
 
     protected $fillable = [
         'teacher_NIC',
@@ -44,10 +45,11 @@ class Teacher extends Model
         'user_id',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class,'user_id','id');
-    }
+   public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
     
     public function subjects()
     {

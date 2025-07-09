@@ -25,7 +25,7 @@ class TeacherController extends Controller
         
         $teacherUser = $user->teacher;
 
-        if (is_null($teacherUser->exists())) {
+        if (!$teacherUser->exists()) {
             return redirect()->route('add-teacher');
         }
 
