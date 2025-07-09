@@ -20,9 +20,6 @@ export type Student = {
 interface ViewAllStudentsProps {
   students: Student[];
 }
-
-
-
 const ViewAllStudents = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [filterQuery, setFilterQuery] = useState('');
@@ -31,45 +28,40 @@ const ViewAllStudents = () => {
   const [filterSection, setFilterSection] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [showModal, setShowModal] = useState(false);
-
   const [showIDCard, setShowIDCard] = useState(false);
   const [showPerformanceCard, setShowPerformanceCard] = useState(false);
   const [performanceData, setPerformanceData] = useState<StudentPerformance | null>(null);
-
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 8;
 
   useEffect(() => {
     fetchStudents();
   }, []);
-const fetchStudents = async () => {
-  try {
-    const res = await fetch('http://127.0.0.1:8000/api/students');
-    const data = await res.json();
-    console.log("One sample student:", data[0]);
-
-    console.log("Fetched students:", data); 
-    setStudents(data.data);  // ✅ Extract array from pagination
-
-  } catch (error) {
-    console.error('Error fetching students:', error);
-  }
-};
-
-const filteredStudents = students.filter((student) => {
-  const query = filterQuery.toLowerCase();
-  const matchesQuery =
-    !filterQuery ||
-    student.reg_no.toString().includes(query) ||
-    student.personal?.full_name.toLowerCase().includes(query);
 
   const fetchStudents = async () => {
     try {
       const res = await fetch('http://127.0.0.1:8000/api/students');
       const data = await res.json();
-      setStudents(data);
+      setStudents(data.data);
     } catch (error) {
       console.error('Error fetching students:', error);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterQuery, filterClass, filterGrade, filterSection]);
+
+  const handlePerformanceClick = async (student: Student) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/students/${student.reg_no}/performance`);
+      if (!res.ok) throw new Error('Failed to fetch performance');
+      const data = await res.json();
+      setPerformanceData(data);
+      setShowPerformanceCard(true);
+    } catch (error) {
+      console.error("Error fetching performance data:", error);
+      alert("Could not load performance card");
     }
   };
 
@@ -77,13 +69,11 @@ const filteredStudents = students.filter((student) => {
     const query = filterQuery.toLowerCase();
     const matchesQuery =
       !filterQuery ||
-      student.reg_no.toString().includes(query) ||
+      student.reg_no.toLowerCase().includes(query) ||
       student.personal?.full_name.toLowerCase().includes(query);
-
     const matchesClass = !filterClass || student.class?.class_name === filterClass;
     const matchesGrade = !filterGrade || student.class?.grade.trim() === filterGrade.trim();
     const matchesSection = !filterSection || student.class?.section === filterSection;
-
     return matchesQuery && matchesClass && matchesGrade && matchesSection;
   });
 
@@ -99,24 +89,6 @@ const filteredStudents = students.filter((student) => {
   const prevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filterQuery, filterClass, filterGrade, filterSection]);
-
-const handlePerformanceClick = async (student: Student) => {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/api/students/${student.reg_no}/performance`);
-    if (!res.ok) throw new Error('Failed to fetch performance');
-    const data = await res.json();
-    setPerformanceData(data);
-    setShowPerformanceCard(true);
-  } catch (error) {
-    console.error("Error fetching performance data:", error);
-    alert("Could not load performance card");
-  }
-};
-
 
   return (
     <div className="mt-10 p-6 bg-white shadow-md rounded-lg">
@@ -238,8 +210,8 @@ const handlePerformanceClick = async (student: Student) => {
       {showPerformanceCard && performanceData && (
         <StudentPerformanceCard student={performanceData} onClose={() => setShowPerformanceCard(false)} />
       )}
-    </div>
+       </div>
   );
-}
+};
 
 export default ViewAllStudents;
