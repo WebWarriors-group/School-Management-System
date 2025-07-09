@@ -238,10 +238,6 @@ const getSiblingsData = (): SiblingsRecord[] =>
       <div className="flex h-full bg-white">
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
-{/* 
-          <header className="flex justify-end border-b bg-white shadow-sm">
-            <SearchStudent students={students} />
-
 
         {!selectedSection && (
   <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-4 mx-auto max-w-6xl p-6">
