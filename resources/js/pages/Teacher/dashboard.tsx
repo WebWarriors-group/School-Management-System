@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link ,usePage} from '@inertiajs/react';
 import { useState,useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -17,6 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type Teacher = {
     teacher_NIC: string;
+    user_id:number;
   personal:{
   Full_name: string;
   Full_name_with_initial: string;
@@ -90,12 +91,19 @@ type Teacher = {
 
 };
 
+
 type Task = {
   id: number;
   text: string;
   completed: boolean;
 };
-
+type LeaveRequest = {
+  status: string;
+  leave_type: string;
+  leave_start_date: string;
+  leave_end_date: string;
+};
+const COLORS = ['#34d399', '#fbbf24', '#f87171'];
 export default function dashboard({ teacher }: { teacher: Teacher }) {
   const [date, setDate] = useState(new Date());
 const [tasks, setTasks] = useState<Task[]>(() => {
@@ -104,10 +112,19 @@ const [tasks, setTasks] = useState<Task[]>(() => {
   return saved ? JSON.parse(saved) as Task[] : [];
 });
 
+  const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
+
   const [newTask, setNewTask] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isMessagingOpen, setIsMessagingOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState(false);
+   const [leaveStats, setLeaveStats] = useState({ approved: 0, pending: 0, rejected: 0 });
+useEffect(() => {
+  console.log('Logged-in teacher NIC:', teacher.teacher_NIC);
+  console.log('Logged-in user_id:', teacher.user_id);
+  console.log('Logged-in teacher NIC:', teacher.teacher_NIC);
+}, []);
+
 useEffect(() => {
   localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
 }, [tasks]);
@@ -134,6 +151,18 @@ const COLORS = ['#CC7722', '#FFBF00'];
   useEffect(() => {
   localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
 }, [tasks]);
+ useEffect(() => {
+    fetch('/api/teacher/leave-stats')
+      .then(res => res.json())
+      .then(data => setLeaveStats(data));
+  }, []);
+
+  const leaveData = [
+    { name: 'Approved', value: leaveStats.approved },
+    { name: 'Pending', value: leaveStats.pending },
+    { name: 'Rejected', value: leaveStats.rejected },
+  ];
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -191,10 +220,18 @@ const COLORS = ['#CC7722', '#FFBF00'];
         <aside className="lg:col-span-1 space-y-6">
           {/* Profile */}
           <div className="bg-white rounded-lg shadow p-4 text-center">
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">👤 Profile</h2>
-            <div className="w-20 h-20 mx-auto rounded-full bg-gray-200 mb-2"></div>
-            <p className="text-sm text-gray-500">Welcome Teacher</p>
-          </div>
+            {/* Profile Card */}
+<div className="bg-white rounded-xl shadow-md p-6 text-center space-y-4">
+  {/* Title */}
+  <h2 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+    👤 <span>My Profile</span>
+  </h2>
+
+  {/* Profile Picture Placeholder */}
+  <div className="w-24 h-24 mx-auto rounded-full bg-gray-100 border-4 border-blue-500 flex items-center justify-center text-gray-400 text-2xl font-bold">
+    ?
+  </div>
+
 
           {/* Calendar */}
           <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
@@ -203,32 +240,98 @@ const COLORS = ['#CC7722', '#FFBF00'];
     
     className="text-sm border border-gray-300 rounded-lg"
   />
+
+  {/* View Profile Button */}
+  <Link
+    href={route('teacher.profile')}
+    className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2 rounded-full transition duration-300"
+  >
+    View My Profile
+  </Link>
+
 </div>
 
+<div className="p-6">
+      {latestLeaveRequest?.status === 'Approved' && (
+        <div className="bg-green-100 text-green-800 p-4 rounded mb-4">
+          ✅ Your leave from <strong>{latestLeaveRequest.leave_start_date}</strong> to <strong>{latestLeaveRequest.leave_end_date}</strong> has been <strong>Approved</strong>.
+        </div>
+      )}
 
-          {/* Leave Summary */}
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-lg font-semibold text-purple-700 mb-4">🏖️ Leave Summary</h2>
-            <div className="flex justify-around">
-              <div className="text-center">
-                <div className="w-10 h-10 mx-auto rounded-full border-4 border-green-500 flex items-center justify-center">
-                  <span className="text-green-600 font-bold text-sm">5</span>
-                </div>
-                <p className="text-xs mt-1">Taken</p>
-              </div>
-              <div className="text-center">
-                <div className="w-10 h-10 mx-auto rounded-full border-4 border-yellow-500 flex items-center justify-center">
-                  <span className="text-yellow-600 font-bold text-sm">7</span>
-                </div>
-                <p className="text-xs mt-1">Balance</p>
-              </div>
-            </div>
-            <Link href="/leave">
-              <button className="mt-4 w-full bg-purple-700 text-white px-3 py-2 rounded hover:bg-purple-800 text-xs">
-                Leave Request
-              </button>
-            </Link>
+      {latestLeaveRequest?.status === 'Rejected' && (
+        <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
+          ❌ Your leave request from <strong>{latestLeaveRequest.leave_start_date}</strong> to <strong>{latestLeaveRequest.leave_end_date}</strong> was <strong>Rejected</strong>.
+        </div>
+      )}
+
+      {/* Rest of the dashboard content */}
+    </div>
           </div>
+
+          {/* Calendar */}
+          <div className="bg-white rounded-lg shadow p-4">
+            <h2 className="text-lg font-semibold text-indigo-700 mb-4">📅 Calendar</h2>
+            <Calendar value={date} onChange={setDate} className="w-full rounded" />
+          </div>
+
+
+         {/* Leave Summary */}
+<div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto">
+  <h2 className="text-lg font-semibold text-purple-700 mb-6">🏖️ Leave Summary</h2>
+
+  <div className="flex justify-around mb-6">
+    <div className="text-center">
+      <div className="w-14 h-14 mx-auto rounded-full border-4 border-green-500 flex items-center justify-center">
+        <span className="text-green-600 font-bold text-xl">{leaveStats.approved}</span>
+      </div>
+      <p className="text-sm mt-2 font-medium">Approved</p>
+    </div>
+
+    <div className="text-center">
+      <div className="w-14 h-14 mx-auto rounded-full border-4 border-yellow-500 flex items-center justify-center">
+        <span className="text-yellow-600 font-bold text-xl">{leaveStats.pending}</span>
+      </div>
+      <p className="text-sm mt-2 font-medium">Pending</p>
+    </div>
+
+    <div className="text-center">
+      <div className="w-14 h-14 mx-auto rounded-full border-4 border-red-500 flex items-center justify-center">
+        <span className="text-red-600 font-bold text-xl">{leaveStats.rejected}</span>
+      </div>
+      <p className="text-sm mt-2 font-medium">Rejected</p>
+    </div>
+  </div>
+
+  <Link href="/leave">
+    <button className="w-full bg-purple-700 text-white py-3 rounded hover:bg-purple-800 transition-colors text-sm font-semibold">
+      Leave Request
+    </button>
+  </Link>
+</div>
+
+          {/* Leave Pie Chart */}
+          {/* <div className="bg-white rounded-lg shadow p-4">
+            <h2 className="text-lg font-semibold text-pink-700 mb-4">📊 Leave Statistics</h2>
+            <PieChart width={250} height={250}>
+              <Pie
+                data={leaveData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              >
+                {leaveData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </div> */}
+
 
           {/* To-Do List */}
           <div className="bg-white rounded-lg shadow p-4">
@@ -319,6 +422,9 @@ const COLORS = ['#CC7722', '#FFBF00'];
           {/* Banner */}
           <div className="bg-gradient-to-r from-purple-800 to-indigo-800 text-white p-6 rounded-xl shadow">
             <h1 className="text-3xl font-bold">Welcome, Teacher!</h1>
+            <p className="text-sm text-gray-100">NIC: {teacher.teacher_NIC}</p>
+<p className="text-sm text-gray-100">User ID: {teacher.user_id}</p>
+
             <p className="text-sm">Explore your dashboard for insights and actions</p>
           </div>
 

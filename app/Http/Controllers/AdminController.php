@@ -56,7 +56,7 @@ if($request->filled('class_name')){
 
     $classData = $query->withCount('studentacademics')
         ->with([
-            'studentacademics.studentpersonal' // Include nested relationship
+            'studentacademics.personal' 
         ])
         ->get();
 

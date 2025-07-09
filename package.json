@@ -60,6 +60,7 @@
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
         "date-fns": "^4.1.0",
+        "dayjs": "^1.11.13",
         "echarts": "^5.6.0",
         "echarts-for-react": "^3.0.2",
         "firebase": "^11.5.0",
