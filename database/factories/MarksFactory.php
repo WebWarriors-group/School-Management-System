@@ -14,16 +14,6 @@ class MarksFactory extends Factory
 
     public function definition(): array
     {
-        // Step 1: Pick a specific or random class
-        
-
-        
-
-        // Step 2: Get a student from that class
-       
-        
-
-        // Step 3: Get a random subject (not based on grade)
         
        
 
