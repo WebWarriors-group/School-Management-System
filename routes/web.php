@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TimetableController;
+
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -231,6 +233,8 @@ Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index
 
 Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
     ->name('admin.overallPerformance');
+
+    Route::get('/generate-timetable', [TimetableController::class, 'generate']);
 
 
 require __DIR__ . '/settings.php';
