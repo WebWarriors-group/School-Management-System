@@ -55,8 +55,8 @@ export default function StudentPerformanceCard({ student, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl mx-4 relative">
+    <main className="min-h-screen  inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 ">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 py-4 relative">
         {/* Close */}
         <button
           onClick={onClose}
@@ -66,61 +66,113 @@ export default function StudentPerformanceCard({ student, onClose }: Props) {
         </button>
 
         <div className="p-6 max-h-[90vh] overflow-auto" ref={reportRef}>
-          <h1 className="text-3xl font-bold text-indigo-700 text-center mb-6">
-            Student Academic Report
-          </h1>
+           <div className="relative text-center py-10 overflow-hidden">
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            {[
-              ['👤 Full Name', student.full_name],
-              ['🆔 Reg No', student.reg_no],
-              ['🏫 Class', student.class_name],
-              ['🎓 Grade', student.grade],
-              ['📚 Section', student.section],
-              ['👩‍🏫 Teacher', student.class_teacher_name],
-            ].map(([label, value]) => (
-              <div key={label}>
-                <p className="text-sm font-semibold text-gray-500">{label}</p>
-                <p className="text-lg text-gray-900">{value}</p>
+  {/* Background image */}
+  <img
+    src="/images/tag4"
+    alt="Background"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  {/* Gradient overlay */}
+  <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-purple-700/80"></div>
+
+  {/* Text content */}
+  <div className="relative z-10">
+    <h1 className="text-3xl font-bold text-white uppercase">Student Report Card</h1>
+    <p className="text-gray-200 text-lg mt-2">Academic Performance Summary</p>
+  </div>
+</div>
+
+
+
+<section>
+            <h2 className="text-lg font-bold text-purple-800 mb-4 border-b mt-7">📌 PROFILE INFO</h2>
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-36 h-36  overflow-hidden border-4 border-purple-200 shadow">
+                
+                  <img src="/images/tag4" className="object-cover w-full h-full" />
+                
+                  
+               
               </div>
-            ))}
-          </div>
+              <div className="text-center sm:text-left">
+                <h2 className="text-2xl font-bold text-gray-800">{student.full_name}</h2>
+                <p className="text-gray-600 mt-2 text-lg"> Reg No: {student.reg_no}</p>
+              </div>
+            </div>
+          </section>
+         <section>
+            <h2 className="text-lg font-bold text-purple-800 mb-4 border-b mt-8 ">📌 ClASS INFORMATION</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+  {[
+    ['Class Name', student.class_name],
+    ['Grade', student.grade],
+    ['Section', student.section],
+    
+  ].map(([label, value]) => (
+    <div
+      key={label}
+      className="bg-white shadow-xl  overflow-hidden border border-gray-200 text-center w-50 h-30"
+    >
+      <div className="p-6">
+        <p className="text-lg font-bold text-indigo-800">{value}</p>
+      </div>
+      <div className=" py-2 px-4 bg-gradient-to-br from-indigo-900 to-purple-700">
+        <p className="text-sm text-white uppercase tracking-wide font-medium">
+          {label}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div className="bg-indigo-100 p-4 rounded shadow text-center">
-              <p className="text-sm text-indigo-800 font-bold">Total Marks</p>
-              <p className="text-2xl font-extrabold">{student.total_marks}</p>
-            </div>
-            <div className="bg-green-100 p-4 rounded shadow text-center">
-              <p className="text-sm text-green-800 font-bold">Average</p>
-              <p className="text-2xl font-extrabold">{student.average_marks}</p>
-            </div>
-            <div className="bg-yellow-100 p-4 rounded shadow text-center">
-              <p className="text-sm text-yellow-800 font-bold">Rank</p>
-              <p className="text-2xl font-extrabold">{student.rank}</p>
-            </div>
-          </div>
 
-          <table className="w-full border divide-y divide-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2 text-left text-gray-700">Subject ID</th>
-                <th className="px-4 py-2 text-left text-gray-700">Subject Name</th>
-                <th className="px-4 py-2 text-right text-gray-700">Marks</th>
-                <th className="px-4 py-2 text-right text-gray-700">Highest</th>
-              </tr>
-            </thead>
-            <tbody>
-              {student.marks.map((m) => (
-                <tr key={m.subject_id}>
-                  <td className="px-4 py-2">{m.subject_id}</td>
-                  <td className="px-4 py-2">{m.subject_name}</td>
-                  <td className="px-4 py-2 text-right">{m.marks_obtained}</td>
-                  <td className="px-4 py-2 text-right">{m.highest_mark_in_subject}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          </section>
+          <section>
+            <h2 className="text-lg font-bold text-purple-800 mb-4 border-b mt-7">📌 SUMMARY</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-  ml-15">
+              <div className="rounded-full bg-gradient-to-br from-sky-900 to-sky-600 p-6 h-33 w-33 text-white text-center shadow-lg border-15 border-blue-200">
+                <h3 className="text-sm uppercase font-semibold">Total </h3>
+                <p className="text-2xl font-bold mt-2">{student.total_marks}</p>
+              </div>
+              <div className="rounded-full bg-gradient-to-br from-pink-800 h-33 w-33 to-purple-700 p-6 text-white text-center shadow-lg border-15 border-purple-200">
+                <h3 className="text-sm uppercase font-semibold ml-[-6px]">Average</h3>
+                <p className="text-2xl font-bold mt-2 ">{student.average_marks}</p>
+              </div>
+              <div className="rounded-full bg-gradient-to-br from-green-800 to-green-500 p-6 h-33 w-33 text-white text-center shadow-lg border-14 border-green-200">
+                <h3 className="text-sm uppercase font-semibold">Rank</h3>
+                <p className="text-2xl font-bold mt-2">{student.rank}</p>
+              </div>
+            </div>
+          </section>
+
+         <section>
+            <h2 className="text-lg font-bold text-purple-800 mb-4 border-b mt-7">📚 SUBJECT-WISE MARKS</h2>
+            <div className="overflow-x-auto shadow border border-gray-200">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gradient-to-br from-indigo-900 to-purple-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white uppercase tracking-wider">Subject ID</th>
+                    <th className="px-6 py-3 text-left text-sm font-bold text-white uppercase tracking-wider">Subject Name</th>
+                    <th className="px-6 py-3 text-right text-sm font-bold text-white uppercase tracking-wider">Marks Obtained</th>
+                    <th className="px-6 py-3 text-right text-sm font-bold text-white uppercase tracking-wider">Highest Mark</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-100">
+                  {student.marks.map((mark) => (
+                    <tr key={mark.subject_id} className="hover:bg-sky-100">
+                      <td className="px-6 py-4 text-sm text-gray-700">{mark.subject_id}</td>
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{mark.subject_name}</td>
+                      <td className="px-6 py-4 text-sm text-right text-blue-700 font-semibold">{mark.marks_obtained}</td>
+                      <td className="px-6 py-4 text-sm text-right text-gray-600">{mark.highest_mark_in_subject}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
 
         <div className="flex justify-end gap-4 p-4 print:hidden">
@@ -132,6 +184,6 @@ export default function StudentPerformanceCard({ student, onClose }: Props) {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

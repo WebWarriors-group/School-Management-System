@@ -235,20 +235,16 @@ const getSiblingsData = (): SiblingsRecord[] =>
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Student Dashboard" />
-      <div className="flex h-full bg-white">
+      <div className="flex h-full bg-gray-200">
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
-{/* 
-          <header className="flex justify-end border-b bg-white shadow-sm">
-            <SearchStudent students={students} />
-
 
         {!selectedSection && (
-  <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-4 mx-auto max-w-6xl p-6">
+  <div className="grid grid-cols-4 gap-7 sm:grid-cols-2 md:grid-cols-3 mx-auto max-w-6xl p-6">
     {cards.map((card, index) => (
       <div
         key={index}
-        className="relative mt-14 ml-5 h-35 w-78 border bg-white p-6 ml-[-10px] shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md flex items-center justify-center transform scale-90 z-40 cursor-pointer shadow-xl"
+        className="relative mt-14  h-35 w-78 border bg-white p-6  shadow-sm transition-transform duration-900 hover:scale-100 hover:shadow-md flex items-center justify-center transform scale-90 z-40 cursor-pointer shadow-xl"
       >
         <div className={`absolute z-0 -top-10 left-4 flex h-28 w-28 items-center justify-center text-white shadow-lg ${card.color}`}>
           <FontAwesomeIcon icon={card.icon} className="text-5xl" />
@@ -266,7 +262,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
         {!selectedSection && (
   <div className="bg-gray-200 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-6">
             <Card onClick={() => handleCardClick("academic")}
-              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-blue-500 opacity-10 rounded-full"></div>
@@ -281,7 +277,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
             </Card>
 
             <Card onClick={() => handleCardClick("personal")}
-              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-green-500 opacity-10 rounded-full"></div>
@@ -296,7 +292,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
             </Card>
 
            <Card onClick={() => handleCardClick("family")}
-              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-yellow-500 opacity-10 rounded-full"></div>
@@ -312,7 +308,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 
             <Card onClick={() => handleCardClick("siblings")}
-              className="relative overflow-hidden rounded-2xl shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-300 opacity-10 rounded-full"></div>
                 <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-purple-500 opacity-10 rounded-full"></div>

@@ -76,9 +76,9 @@ export default function ReportPage() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={`Report Card - ${student.full_name}`} />
 
-      <main className="min-h-screen bg-gray-200 py-12 px-4 w-full">
+      <main className="min-h-screen bg-gray-200 py-12 px-4 w-10">
         {/* Action Buttons */}
-        <div className="flex justify-between mb-8 print:hidden">
+        <div className="flex justify-between mb-8 print:hidden w-30">
           <button
             onClick={() => router.visit('/admin/studentdashboard')}
             className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 shadow-sm transition font-medium"
@@ -102,7 +102,7 @@ export default function ReportPage() {
         </div>
 
         {/* Report Content */}
-        <div ref={reportRef} className="max-w-3xl mx-auto bg-white shadow-2xl border border-gray-200 p-8 sm:p-10 space-y-10">
+        <div ref={reportRef} className="max-w-2xl mx-auto bg-white shadow-2xl border border-gray-200 p-8 sm:p-10 space-y-10">
           {/* Title */}
          <div className="relative text-center py-10 overflow-hidden">
 

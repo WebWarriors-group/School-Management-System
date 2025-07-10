@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Marks;
 use App\Models\StudentAcademic;
 use App\Models\Subject;
-use App\Models\ClassModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MarksFactory extends Factory
@@ -14,8 +13,8 @@ class MarksFactory extends Factory
 
     public function definition(): array
     {
-        
-       
+        $student = StudentAcademic::inRandomOrder()->first() ?? StudentAcademic::factory()->create();
+        $subject = Subject::inRandomOrder()->first() ?? Subject::factory()->create();
 
         return [
             'reg_no' => $student->reg_no,
