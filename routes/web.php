@@ -233,7 +233,7 @@ Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index
 Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
     ->name('admin.overallPerformance');
 
-    Route::get('/generate-timetable', [TimetableController::class, 'generate']);
+    
 
 
 require __DIR__ . '/settings.php';
