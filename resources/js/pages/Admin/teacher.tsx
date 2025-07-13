@@ -76,12 +76,21 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
   }, []);
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <div className="flex flex-col gap-10 px-8 py-10 bg-gray-50 min-h-screen">
+
+      <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p  className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Teachers' Attendane,Leave requests,Important details can Check
+          </p>
+        </div>
+      </header>
+      <div className="flex flex-col gap-10 px-8 py-10 bg-gray-200 min-h-screen">
   {/* Section: Attendance and Registered Teachers */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
     
     {/* Attendance Summary */}
-    <div className="bg-white border border-blue-100 rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+    <div className="bg-white border border-blue-100  shadow-md p-6 hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-2">📋 Attendance Summary</h3>
       <p className="text-sm text-gray-500 mb-4">
         Date: <span className="font-semibold">{today}</span>
@@ -114,7 +123,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
     </div>
 
     {/* Teacher Requests */}
-   <div className="bg-white border border-indigo-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between">
+   <div className="bg-white border border-indigo-200  shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between">
       <div className="flex items-center mb-4">
         <h3 className="text-xl font-semibold text-gray-800 flex-grow">📥 Teacher Requests</h3>
         {requestCount > 0 && (
@@ -143,7 +152,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
     {/* Registered Teachers */}
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between items-center">
+    <div className="bg-white border border-slate-200  shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between items-center">
   <h3 className="text-xl font-semibold text-gray-800 mb-4 w-full text-left">
     👩‍🏫 Registered Teachers
   </h3>
@@ -162,7 +171,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
 </div>
     
     {/* Leave Records */}
-    <div className="bg-white border border-yellow-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+    <div className="bg-white border border-yellow-200  shadow-md p-6 hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-4">📅 Leave Records</h3>
       <div className="w-24 h-24 mx-auto border-4 border-yellow-400 text-yellow-600 flex items-center justify-center text-4xl font-bold rounded-full">
         {leaveCount}
@@ -180,7 +189,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
   {/* Section: Performance and Salary */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
     {/* Performance */}
-    <div className="bg-white border border-rose-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+    <div className="bg-white border border-rose-200  shadow-md p-6 hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-3">📊 Performance</h3>
       <p className="text-gray-600 mb-4">
         Review and assess teacher performance metrics.
@@ -191,7 +200,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
     </div>
 
     {/* Salary & Compensation */}
-    <div className="bg-white border border-gray-300 rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+    <div className="bg-white border border-gray-300  shadow-md p-6 hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-3">💰 Salary & Compensation</h3>
       <p className="text-gray-600">
         View payroll details and manage compensations.

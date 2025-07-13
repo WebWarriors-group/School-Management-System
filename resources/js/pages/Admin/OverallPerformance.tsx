@@ -71,8 +71,12 @@ const breadcrumbs: BreadcrumbItem[] = [
   // === Total Students Detail View ===
   if (showTotalStudentsDetails) {
     return (
-      <AppLayout user={auth.user}>
+      <AppLayout >
         <Head title="Total Students Details" />
+
+        <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
+        <p>1</p>
+      </header>
         <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
         <div className="py-6 px-8 max-w-4xl mx-auto">
           <button
@@ -128,8 +132,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     const values = avgByClass.map(item => item.avg_marks);
 
     return (
-      <AppLayout user={auth.user}>
+      <AppLayout >
         <Head title="Average Class Scores" />
+
+        <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
+        <p>1</p>
+      </header>
         <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
 
         <div className="py-6 px-8 max-w-10-xl mx-auto">
@@ -168,8 +176,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     const values = avgBySubject.map(item => item.avg_marks);
 
     return (
-      <AppLayout user={auth.user}>
+      <AppLayout >
         <Head title="Average Subject Scores" />
+        <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
+        <p>1</p>
+      </header>
         <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
 
         <div className="py-6 px-8 max-w-4xl mx-auto">
@@ -204,10 +215,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
   // === Dashboard View ===
   return (
-    <AppLayout user={auth.user} breadcrumbs={breadcrumbs}>
-      
+    <AppLayout  breadcrumbs={breadcrumbs}>
+      <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Classes,Students,Subjects Overall performance
+          </p>
+        </div>
+      </header>
+
+     
       <Head title="Overall Performance" />
-      <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center '>
+      <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center z-10 '>
      
         <h1 className="text-2xl font-bold mb-6"></h1>
 

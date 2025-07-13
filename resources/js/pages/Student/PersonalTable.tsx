@@ -81,7 +81,7 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
   }, [search, filterClass]);
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
+    <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">👤 Personal Information</h2>
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
@@ -108,23 +108,23 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
 
       <div className="w-full overflow-x-auto">
         <table className="min-w-full border border-gray-300 text-sm md:text-base">
-          <thead className="bg-green-100 text-green-800">
+          <thead className="bg-blue-100 text-black">
             <tr>
-              <th className="p-2 border font-semibold whitespace-nowrap">Reg. No</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Full Name</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Full Name with Initial</th>
-              <th className="p-2 border">Birthday</th>
-              <th className="p-2 border">Ethnicity</th>
-              <th className="p-2 border">Religion</th>
-              <th className="p-2 border">Gender</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Birth Certificate No</th>
-              <th className="p-2 border">Address</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">NIC Number</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Postal IC Number</th>
-              <th className="p-2 border">Age</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Special Needs</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Height (cm)</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Weight (kg)</th>
+              <th className="py-5 px-12 border font-semibold whitespace-nowrap">Reg. No</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Full Name</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Full Name with Initial</th>
+              <th className="p-2 px-12 border">Birthday</th>
+              <th className="p-2 px-12 border">Ethnicity</th>
+              <th className="p-2 px-12 border">Religion</th>
+              <th className="p-2 px-12 border">Gender</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Birth Certificate No</th>
+              <th className="p-2 px-12 border">Address</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">NIC Number</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Postal IC Number</th>
+              <th className="p-2 px-12 border">Age</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Special Needs</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Height (cm)</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Weight (kg)</th>
               <th className="p-2 border font-semibold whitespace-nowrap">View</th>
             </tr>
           </thead>
@@ -142,7 +142,7 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
                   className="cursor-pointer border-t hover:bg-green-50"
                   onClick={(e) => handleRowClick(e, s)}
                 >
-                  <td className="p-2 border">{s.reg_no}</td>
+                  <td className="py-6 border">{s.reg_no}</td>
                   <td className="p-2 border whitespace-nowrap">{s.full_name}</td>
                   <td className="p-2 border">{s.full_name_with_initial}</td>
                   <td className="p-2 border">{s.birthday}</td>

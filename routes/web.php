@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Services\TypesenseService;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
@@ -235,6 +236,26 @@ Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerfor
     ->name('admin.overallPerformance');
 
     Route::get('/generate-timetable', [TimetableController::class, 'generate']);
+
+
+
+Route::get('/typesense/create', function (TypesenseService $typesense) {
+    return $typesense->createCollection();
+});
+
+Route::get('/typesense/add', function (TypesenseService $typesense) {
+    return $typesense->indexDocument([
+        'id'     => '1',
+        'title'  => 'Harry Potter',
+        'author' => 'J.K. Rowling',
+        'year'   => 1997
+    ]);
+});
+
+Route::get('/typesense/search', function (TypesenseService $typesense) {
+    return $typesense->search('Harry');
+});
+
 
 
 require __DIR__ . '/settings.php';

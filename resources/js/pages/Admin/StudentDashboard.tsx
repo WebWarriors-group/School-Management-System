@@ -239,6 +239,16 @@ const getSiblingsData = (): SiblingsRecord[] =>
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
 
+         <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Classes,Students,Subjects Overall performance
+          </p>
+        </div>
+      </header>
+
+
         {!selectedSection && (
   <div className="grid grid-cols-4 gap-7 sm:grid-cols-2 md:grid-cols-3 mx-auto max-w-6xl p-6">
     {cards.map((card, index) => (
@@ -262,14 +272,13 @@ const getSiblingsData = (): SiblingsRecord[] =>
         {!selectedSection && (
   <div className="bg-gray-200 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-6">
             <Card onClick={() => handleCardClick("academic")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-blue-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-blue-800 tracking-wide">Academic</h3>
-                    <div className="mt-2 w-12 h-1 bg-blue-600 rounded-full"></div>
+                    <div className="mt-2 w-12 h-1 bg-blue-600 "></div>
                   </div>
                   <GraduationCap className="text-blue-500 w-16 h-16 drop-shadow-sm" />
                 </div>
@@ -277,10 +286,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
             </Card>
 
             <Card onClick={() => handleCardClick("personal")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-green-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-green-800 tracking-wide">Personal</h3>
@@ -292,10 +300,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
             </Card>
 
            <Card onClick={() => handleCardClick("family")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-yellow-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-yellow-800 tracking-wide">Family</h3>
@@ -308,10 +315,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 
             <Card onClick={() => handleCardClick("siblings")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-purple-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-purple-800 tracking-wide">Siblings</h3>

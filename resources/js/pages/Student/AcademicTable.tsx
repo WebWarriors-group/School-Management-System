@@ -126,7 +126,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
+    <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
@@ -152,11 +152,11 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm">
-          <thead className="bg-blue-100 text-blue-800">
+      <div className="overflow-x-auto w-290">
+        <table className="min-w-full border border-gray-300 text-md">
+          <thead className="bg-blue-100 text-black">
             <tr>
-              <th className="p-2 border font-semibold whitespace-nowrap">Reg. No</th>
+              <th className="py-4 border font-semibold whitespace-nowrap">Reg. No</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Student ID</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Class</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Distance</th>
@@ -167,8 +167,8 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
               <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket3</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Grade 5 Scholarship</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Aswesuma Scholarship</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Any Other Scholarship</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">View</th>
+              <th className="p-1 border font-semibold whitespace-nowrap">Any Other Scholarship</th>
+              <th className="p-2  w-2 border font-semibold whitespace-nowrap">View</th>
             </tr>
           </thead>
           <tbody>
@@ -185,16 +185,16 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
                   className="border-t hover:bg-blue-50 cursor-pointer"
                   onClick={(e) => handleRowClick(e, student)}
                 >
-                  <td className="p-2 border">{student.reg_no}</td>
-                  <td className="p-2 border">{student.student_id_no}</td>
-                  <td className="p-2 border">{student.class_id}</td>
-                  <td className="p-2 border">{student.distance_to_school ?? '—'}</td>
-                  <td className="p-2 border">{student.method_of_coming_to_school ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap ">{student.grade_10_11_basket1_subjects ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap">{student.grade_10_11_basket2_subjects ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
-                  <td className="p-2 border">
+                  <td className="py-6 px-12 border">{student.reg_no}</td>
+                  <td className="py-3 px-12 border">{student.student_id_no}</td>
+                  <td className="p-2 px-12 border">{student.class_id}</td>
+                  <td className="p-2 px-12 border">{student.distance_to_school ?? '—'}</td>
+                  <td className="p-2 px-12 border">{student.method_of_coming_to_school ?? '—'}</td>
+                  <td className="p-2 px-12 border whitespace-nowrap">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
+                  <td className="p-2 px-12 border whitespace-nowrap ">{student.grade_10_11_basket1_subjects ?? '—'}</td>
+                  <td className="p-2  px-10 border whitespace-nowrap">{student.grade_10_11_basket2_subjects ?? '—'}</td>
+                  <td className="p-2 px-12 border whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
+                  <td className="p-2 px-10 border">
                     {student.receiving_any_grade_5_scholarship ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (

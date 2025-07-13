@@ -30,7 +30,7 @@ class TeacherController extends Controller
 }
 
 
-        $teacher = $teacherUser->with([
+        $teacher = $user->teacher()->with([
             'teachersaddress',
             'personal',
             'qualifications',

@@ -345,10 +345,16 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
-        <p>1</p>
+      
+       <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-gray-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Teacher Assignements  
+          </p>
+        </div>
       </header>
-      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
+      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 z-10">
         {selectedCard && selectedCard.id === 4 ? (
           <>
             <ViewAllStudents />

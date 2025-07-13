@@ -180,6 +180,15 @@ const MarksPage: React.FC = () => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Student Marks" />
+
+       <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Classes,Students,Subjects Overall performance
+          </p>
+        </div>
+      </header>
       <div className="max-w-screen mx-auto my-5 p-10 bg-gray-100 rounded-lg shadow-md">
         <h1 className="text-center text-2xl font-bold text-sky-900 mb-5">Student Marks</h1>
         <Toaster position="top-right" />
