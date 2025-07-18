@@ -239,14 +239,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
 
-         <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
-          
-          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
-            Classes,Students,Subjects Overall performance
-          </p>
-        </div>
-      </header>
+        
 
 
         {!selectedSection && (
@@ -332,7 +325,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "academic" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Academic Information</h2>
+   
    <AcademicTable academicData={{ 
   current_page: 1,
   data: getAcademicData(),
@@ -356,7 +349,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 )}
 {selectedSection === "personal" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Personal Information</h2>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Personal Information</h2> */}
     <PersonalTable personalData={getPersonalData()} />
     <div className="mt-4">
       <Button
@@ -378,7 +371,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "family" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Family Information</h2>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Family Information</h2> */}
    <FamilyTable familyData={getFamilyData()} />
 
 
@@ -395,7 +388,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "siblings" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Siblings Information</h2>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Siblings Information</h2> */}
     <SiblingsTable siblingsData={getSiblingsData()} />
     <div className="mt-4">
       <Button

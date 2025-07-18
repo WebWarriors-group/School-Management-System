@@ -61,7 +61,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
       if (response.ok) {
         setSelectedStudent(data as AcademicRecord);
         setIsViewModalOpen(true);
-        setPreviewStudent(null); // Close preview when modal opens
+        setPreviewStudent(null); 
       } else {
         alert("Failed to load student details.");
       }
@@ -71,7 +71,6 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
     }
   };
 
-  // Close preview when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (previewRef.current && !previewRef.current.contains(e.target as Node)) {
@@ -87,7 +86,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   if (!academicData || !academicData.data) {
     return (
       <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
-        <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
+       
         <p className="text-gray-500">No academic data available.</p>
       </div>
     );
@@ -126,8 +125,10 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   };
 
   return (
+
+    
     <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
+      
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
@@ -152,12 +153,12 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </select>
       </div>
 
-      <div className="overflow-x-auto w-290">
-        <table className="min-w-full border border-gray-300 text-md">
-          <thead className="bg-blue-100 text-black">
+      <div className="overflow-x-auto w-290 ">
+        <table className="min-w-full  text-sm text-gray-700">
+          <thead className="bg-blue-700 text-left text-sm font-semibold uppercase text-white z-10" >
             <tr>
-              <th className="py-4 border font-semibold whitespace-nowrap">Reg. No</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Student ID</th>
+              <th className="py-3 border font-semibold whitespace-nowrap ">Reg. No</th>
+              <th className="z-5 p-2 border font-semibold ">Student ID</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Class</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Distance</th>
               <th className="p-2 border font-semibold whitespace-nowrap">Method</th>
@@ -174,7 +175,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
           <tbody>
             {currentData.length === 0 ? (
               <tr>
-                <td colSpan={13} className="text-center p-4 text-gray-500">
+                <td colSpan={13} className="px-6 py-6 text-center text-gray-500">
                   No records found.
                 </td>
               </tr>
@@ -182,10 +183,10 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
               currentData.map((student) => (
                 <tr 
                   key={student.reg_no} 
-                  className="border-t hover:bg-blue-50 cursor-pointer"
+                  className="border-b hover:bg-blue-50 cursor-pointer"
                   onClick={(e) => handleRowClick(e, student)}
                 >
-                  <td className="py-6 px-12 border">{student.reg_no}</td>
+                  <td className="py-4 px-12 border bg-blue-300 font-semibold text-black ">{student.reg_no}</td>
                   <td className="py-3 px-12 border">{student.student_id_no}</td>
                   <td className="p-2 px-12 border">{student.class_id}</td>
                   <td className="p-2 px-12 border">{student.distance_to_school ?? '—'}</td>

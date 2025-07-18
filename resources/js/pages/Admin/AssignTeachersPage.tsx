@@ -1,4 +1,4 @@
-// AssignTeachersPage.tsx
+
 import React, { useState, useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -16,13 +16,12 @@ interface Props extends PageProps {
   gradeSubjects: GradeSubject[];
 }
 
-
 interface ClassModel {
   class_id: number;
   class_name: string;
   grade: number;
   section: string;
-  teacher_NIC:string;
+  teacher_NIC: string;
 }
 
 interface Subject {
@@ -85,7 +84,10 @@ export default function AssignTeachersPage() {
   const [expandedGrade, setExpandedGrade] = useState<number | null>(null);
   const [expandedSection, setExpandedSection] = useState<number | null>(null);
 
-  // --- Medium Counts ---
+  
+  const [selectedSubjectId, setSelectedSubjectId] = useState<number | null>(null);
+
+  
   const mediumCounts = teachers.reduce(
     (acc, teacher) => {
       const medium = teacher.qualifications?.current_appointment_service_medium?.toLowerCase();
@@ -147,11 +149,35 @@ export default function AssignTeachersPage() {
     return teacher?.personal?.Full_name_with_initial ?? teacher?.teacher_NIC ?? '❌ Not Assigned';
   };
 
+  // Helper: check if a teacher can teach a subject (matching subject_name with qualifications)
+  const canTeacherTeachSubject = (teacher: Teacher, subjectName: string): boolean => {
+    if (!teacher.qualifications) return false;
+
+    const subjectAppointed = teacher.qualifications.subject_appointed?.toLowerCase() || '';
+    const subjectsMostTaught = teacher.qualifications.subjects_taught_most_and_second_most?.toLowerCase() || '';
+
+    const subjectNameLower = subjectName.toLowerCase();
+
+    // Simple substring matching (can be improved if you store IDs instead)
+    if (subjectAppointed.includes(subjectNameLower)) return true;
+    if (subjectsMostTaught.includes(subjectNameLower)) return true;
+
+    return false;
+  };
+
+  // Filter teachers who can teach the selected subject
+  const teachersForSelectedSubject = selectedSubjectId
+    ? teachers.filter((t) => {
+        const subject = subjects.find((s) => s.subject_id === selectedSubjectId);
+        if (!subject) return false;
+        return canTeacherTeachSubject(t, subject.subject_name);
+      })
+    : [];
+
   return (
     <AppLayout>
       <main className="p-6 bg-gray-200 space-y-12">
-        {/* Back Button */}
-        <div className="flex justify-between items-center">
+<div className="flex justify-between items-center">
           <Button
             className="bg-yellow-500 w-40 h-10 text-lg shadow-sm hover:scale-105 transition"
             onClick={() => router.visit('/admin/dashboardoverview')}
@@ -159,20 +185,54 @@ export default function AssignTeachersPage() {
             Back
           </Button>
         </div>
+        {/* New: All Subjects List */}
+        <section className="bg-white p-6 rounded shadow-md mb-8">
+          <h2 className="text-xl font-bold mb-4">📚 All Subjects</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+            {subjects.map((subject) => (
+              <div
+                key={subject.subject_id}
+                onClick={() => setSelectedSubjectId(subject.subject_id === selectedSubjectId ? null : subject.subject_id)}
+                className={`cursor-pointer border rounded px-3 py-2 text-center
+                  ${selectedSubjectId === subject.subject_id ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-blue-200'}`}
+              >
+                {subject.subject_name}
+              </div>
+            ))}
+          </div>
+
+          {/* Show teachers for selected subject */}
+          {selectedSubjectId && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-2">
+                Teachers who can teach:{" "}
+                <span className="text-blue-700">
+                  {subjects.find((s) => s.subject_id === selectedSubjectId)?.subject_name}
+                </span>
+              </h3>
+              {teachersForSelectedSubject.length === 0 && <p>No teachers available for this subject.</p>}
+              <ul className="list-disc pl-5 space-y-1 max-h-64 overflow-y-auto border p-3 rounded bg-gray-50">
+                {teachersForSelectedSubject.map((teacher) => (
+                  <li key={teacher.teacher_NIC}>
+                    {teacher.personal?.Full_name_with_initial || teacher.name || teacher.teacher_NIC}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+
+        {/* Back Button */}
+        
 
         {/* Medium Count Boxes */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-lg">
-          {['tamil', 'english', 'sinhala'].map((lang) => (
-            <div key={lang} className="bg-white p-4 rounded shadow-lg">
-              <p className="font-semibold text-gray-700">{lang.toUpperCase()} Medium</p>
-              <p className="text-2xl font-bold text-indigo-600">{mediumCounts[lang as keyof typeof mediumCounts]}</p>
-            </div>
-          ))}
+         
         </div>
 
         {/* Form to Assign */}
         <div className="bg-white p-8 shadow-md rounded space-y-6">
-          <h1 className="text-2xl font-bold">Assign Teachers to Subjects</h1>
+          <h1 className="text-2xl font-bold text-blue-800">Assign Teachers to Subjects</h1>
           {flash?.success && (
             <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">{flash.success}</div>
           )}
@@ -193,7 +253,7 @@ export default function AssignTeachersPage() {
                 <option value="">-- Select Grade --</option>
                 {grades.map((g) => (
                   <option key={g} value={g}>
-                    Grade {g} 
+                    Grade {g}
                   </option>
                 ))}
               </select>
@@ -253,16 +313,16 @@ export default function AssignTeachersPage() {
         </div>
 
         {/* Grade → Section → Subject Tree with Class Teacher */}
-        <div className="mt-16">
+        <div className="mt-16 bg-white py-5 py">
           <h2 className="text-xl font-bold mb-4">📚 Grade → Section → Subject View</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 py-10 px-4">
             {grades.map((grade) => (
               <div
                 key={grade}
                 className="bg-white rounded shadow-md p-4 cursor-pointer hover:shadow-lg"
                 onClick={() => setExpandedGrade(expandedGrade === grade ? null : grade)}
               >
-                <h3 className="font-semibold text-lg text-blue-700">Grade {grade} Assignemnts</h3>
+                <h3 className="font-semibold text-lg text-green-700">Grade {grade} Assignemnts</h3>
                 {expandedGrade === grade && (
                   <div className="mt-4 space-y-9">
                     {classes
@@ -280,39 +340,38 @@ export default function AssignTeachersPage() {
                               setExpandedSection(expandedSection === cls.class_id ? null : cls.class_id);
                             }}
                           >
-                           <h4 className="text-gray-800 font-medium grid grid-cols-3 gap-4 items-center">
-  <span>Section {cls.section}</span>
-  <span>Class Teacher: <span className="text-green-700 font-semibold ml-10">{cls.teacher_NIC}</span></span>
-  
-</h4>
+                            <h4 className="text-gray-800 font-medium grid grid-cols-3 gap-4 items-center">
+                              <span>Section {cls.section}</span>
+                              <span>
+                                Class Teacher:{" "}
+                                <span className="text-green-700 font-semibold ml-10">{cls.teacher_NIC}</span>
+                              </span>
+                            </h4>
 
                             {expandedSection === cls.class_id && (
                               <div className="mt-3 space-y-7">
-  {gradeSubjects
-    .filter((gs) => gs.grade === grade)
-    .map((gs) => {
-      const subj = subjects.find((s) => s.subject_id === gs.subject_id);
-      const assign = assignments.find(
-        (a) => a.class_id === cls.class_id && a.subject_id === gs.subject_id
-      );
-      const teacherName = getTeacherName(assign?.teacher_NIC);
+                                {gradeSubjects
+                                  .filter((gs) => gs.grade === grade)
+                                  .map((gs) => {
+                                    const subj = subjects.find((s) => s.subject_id === gs.subject_id);
+                                    const assign = assignments.find(
+                                      (a) => a.class_id === cls.class_id && a.subject_id === gs.subject_id
+                                    );
+                                    const teacherName = getTeacherName(assign?.teacher_NIC);
 
-      return (
-        <div
-          key={gs.subject_id}
-          className="flex justify-between items-center bg-white px-4 py-2 border rounded shadow-sm"
-        >
-          <span className="font-semibold text-gray-800">
-            📘 {subj?.subject_name ?? 'Unknown'} <span className="text-blue-700 font-medium ml-10">
-            👤 {teacherName}
-          </span>
-          </span>
-         
-        </div>
-      );
-    })}
-</div>
-
+                                    return (
+                                      <div
+                                        key={gs.subject_id}
+                                        className="flex justify-between items-center bg-white px-4 py-2 border rounded shadow-sm"
+                                      >
+                                        <span className="font-semibold text-gray-800">
+                                          📘 {subj?.subject_name ?? "Unknown"}{" "}
+                                          <span className="text-blue-700 font-medium ml-10">👤 {teacherName}</span>
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                              </div>
                             )}
                           </div>
                         );
@@ -328,7 +387,7 @@ export default function AssignTeachersPage() {
         <div className="mt-16 max-w-9xl mx-auto bg-white rounded shadow-md overflow-x-auto">
           <h2 className="text-xl font-bold p-6 border-b">📋 Teacher Assignment Summary</h2>
           <table className="min-w-300 table-auto text-left text-sm text-gray-700">
-            <thead className="bg-gray-100 border-b">
+            <thead className="bg-blue-200 border-b">
               <tr>
                 <th className="px-6 py-3">Class ID</th>
                 <th className="px-6 py-3">Grade</th>
@@ -350,10 +409,10 @@ export default function AssignTeachersPage() {
                     <td className="px-6 py-3">Grade {cls.grade}</td>
                     <td className="px-6 py-3">{cls.section}</td>
                     <td className="px-6 py-3">
-                      {assignment.subject_id === -1 ? '🎓 Class Teacher' : subject?.subject_name}
+                      {assignment.subject_id === -1 ? "🎓 Class Teacher" : subject?.subject_name}
                     </td>
                     <td className="px-6 py-3">
-                      {teacher?.personal?.Full_name_with_initial || teacher?.teacher_NIC || '❌ Not Assigned'}
+                      {teacher?.personal?.Full_name_with_initial || teacher?.teacher_NIC || "❌ Not Assigned"}
                     </td>
                   </tr>
                 );

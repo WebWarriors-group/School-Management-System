@@ -82,7 +82,7 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">👤 Personal Information</h2>
+     
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
@@ -107,10 +107,10 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm md:text-base">
-          <thead className="bg-blue-100 text-black">
+        <table className="min-w-full  text-sm text-gray-700">
+          <thead className="bg-blue-700 text-left text-sm font-semibold uppercase text-white z-10">
             <tr>
-              <th className="py-5 px-12 border font-semibold whitespace-nowrap">Reg. No</th>
+              <th className="py-3 px-12 border font-semibold whitespace-nowrap">Reg. No</th>
               <th className="p-2 px-12 border font-semibold whitespace-nowrap">Full Name</th>
               <th className="p-2 px-12 border font-semibold whitespace-nowrap">Full Name with Initial</th>
               <th className="p-2 px-12 border">Birthday</th>
@@ -139,10 +139,10 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
               currentData.map((s) => (
                 <tr
                   key={s.reg_no}
-                  className="cursor-pointer border-t hover:bg-green-50"
+                  className="border-t hover:bg-blue-50 cursor-pointer"
                   onClick={(e) => handleRowClick(e, s)}
                 >
-                  <td className="py-6 border">{s.reg_no}</td>
+                  <td className="py-5 px-12 border bg-blue-300 font-semibold text-black">{s.reg_no}</td>
                   <td className="p-2 border whitespace-nowrap">{s.full_name}</td>
                   <td className="p-2 border">{s.full_name_with_initial}</td>
                   <td className="p-2 border">{s.birthday}</td>

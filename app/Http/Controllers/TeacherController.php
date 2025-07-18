@@ -37,7 +37,7 @@ class TeacherController extends Controller
             'teacherotherService',
             'class',
             'class.studentacademics',
-            'class.studentacademics.studentpersonal'
+            'class.studentacademics.personal'
         ])->first();
 
         return Inertia::render('Teacher/dashboard', [
