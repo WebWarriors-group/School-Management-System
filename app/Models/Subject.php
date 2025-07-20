@@ -42,8 +42,8 @@ class Subject extends Model
     }
 
     public function grades ()
-{
-    return $this->belongsTo(Grade::class, 'id', 'id');
-}
+    {
+        return $this->belongsTo(Grade::class, 'id', 'id');
+    }
 
 }

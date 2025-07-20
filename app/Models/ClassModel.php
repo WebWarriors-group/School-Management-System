@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Teacher;
-use App\Models\StudentAcademics;
+use App\Models\StudentAcademic;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClassModel extends Model

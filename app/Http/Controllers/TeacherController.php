@@ -26,19 +26,25 @@ class TeacherController extends Controller
        
         
        if (!$user->teacher()->exists()) {
-    return redirect()->route('add-teacher');
-}
+            return redirect()->route('add-teacher');
+       }
 
 
-        $teacher = $user->teacher()->with([
+        $teacher = $user->teacher()->first();
+
+        $teacher->load([
             'teachersaddress',
             'personal',
             'qualifications',
             'teacherotherService',
-            'class',
             'class.studentacademics',
-            'class.studentacademics.personal'
-        ])->first();
+            'class.studentacademics.personal',
+            'class.studentacademics.studentpersonal',
+            'subjects',
+            'subjects.students',
+            'subjects.students.personal',
+            'subjects.students.class',
+        ]);
 
         return Inertia::render('Teacher/dashboard', [
             'teacher' => $teacher

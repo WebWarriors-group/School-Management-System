@@ -10,6 +10,7 @@ use App\Models\ClassModel;
 use App\Models\Marks;
 use App\Models\Qualification;
 use App\Models\StudentAcademic;
+use App\Models\StudentSubject;
 use App\Models\StudentFamilyInfo;
 use App\Models\StudentPersonal;
 use App\Models\StudentReport;
@@ -17,6 +18,7 @@ use App\Models\StudentSibling;
 use App\Models\StudyMaterial;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\TeachSubject;
 use App\Models\TeacherAddress;
 use App\Models\TeacherOtherServices;
 use App\Models\TeacherPersonal;
@@ -28,12 +30,13 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
         Teacher::factory(10)->create();
-         TeacherPersonal::factory(10)->create();
+        TeacherPersonal::factory(10)->create();
         TeacherOtherServices::factory(10)->create();
         Qualification::factory(10)->create();
         StudyMaterial::factory(10)->create();
         ClassModel::factory(16)->create();
         Subject::factory(10)->create();
+        TeachSubject::factory(10)->create();
 $students = StudentAcademic::factory(200)->create();
 
         Marks::factory(10)->create();
@@ -52,6 +55,9 @@ $students = StudentAcademic::factory(200)->create();
                 'reg_no' => $student->reg_no,
             ]);
         }
+
+        StudentSubject::factory(30)->create();
+
         User::updateOrCreate(
             ['email' => 'admin@sms.lk'], // Unique constraint
             [

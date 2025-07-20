@@ -64,5 +64,13 @@ class StudentAcademic extends Model
         return $this->hasMany(Marks::class, 'reg_no', 'reg_no');
     }
 
+    public function studentpersonal()
+    {
+        return $this->hasOne(StudentPersonal::class, 'reg_no', 'reg_no'); 
+    }
 
+    public function subject()
+    {
+        return $this->hasMany(StudentSubject::class, 'reg_no', 'reg_no');
+    }
 }

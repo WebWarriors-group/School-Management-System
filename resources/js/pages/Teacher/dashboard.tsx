@@ -18,77 +18,110 @@ const breadcrumbs: BreadcrumbItem[] = [
 type Teacher = {
     teacher_NIC: string;
     user_id:number;
-  personal:{
-  Full_name: string;
-  Full_name_with_initial: string;
-  Photo: File | null;
-  Gender: string;
-  Region: string;
-  Ethnicity: string;
-  Birthdate: string;
-  Title: string;
-  Marital_status: string;
-  Details_about_family_members: string;
-  Emergency_telephone_number: string;
-  Email_address: string;
-  Fixed_telephone_number: string;
-  Mobile_number: string;
-  Whatsapp_number: string;
-  };
-  teachersaddress : {
-  permanent_address: string;
-  residential_address: string;
-  grama_niladari_division: string;
-  grama_niladari_division_number: string;
-  election_division: string;
-  election_division_number: string;
-  };
-  appointed_date: string;
-  work_acceptance_date: string;
-  
-  // New Fields
-  appointment_type: string;
-  salary_increment_date: string; // ISO format date (YYYY-MM-DD)
-  current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
-  work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
-  temporary_attachedschool_or_institute_name: string;
-  appointed_subject: string;
-  which_grades_teaching_done: string;
-  current_teaching_subject: string;
-  other_subjects_taught: string;
-  assigned_class: string;
-  other_responsibilities_assigned: string;
-  is_150_hrs_tamil_course_completed: boolean;
-  commuting_from_school: "Home" | "Boarding" | "Hostel" | "Other";
-  distance_from_school: number;
-  commuting_method_to_school: "Bicycle" | "MotorBike" | "Car" | "Bus" | "Threewheeler" | "Walk" | "Other";
-  number_in_sign_sheet: string;
-  number_in_salary_sheet: string;
-  qualifications:{
-  type_of_service_in_school:string;
-  gce_al_subject_stream: string;
-  highest_education_qualification: string;
-  basic_degree_stream: string;
-  highest_professional_qualification: string;
-  present_class: string;
-  present_grade: string;
-  appointment_date_for_current_class: string;
-  appointment_date_for_current_grade: string;
-  current_appointment_service_medium: string;
-  appointed_subject_section: string;
-  subject_appointed: string;
-  currentservice_appointed_date: string;
-  subjects_taught_most_and_second_most: string;
-  position_in_the_school: string;
-  assign_date_for_the_school: string;
-  };
-  teacherotherservice:{
-  other_responsibilities_in_school: string;
-  EDCS_membership: string;
-  WSOP_Number: number | null;
-  Agrahara_insuarence_membership: string;
-  };
 
+    personal:{
+      Full_name: string;
+      Full_name_with_initial: string;
+      Photo: File | null;
+      Gender: string;
+      Region: string;
+      Ethnicity: string;
+      Birthdate: string;
+      Title: string;
+      Marital_status: string;
+      Details_about_family_members: string;
+      Emergency_telephone_number: string;
+      Email_address: string;
+      Fixed_telephone_number: string;
+      Mobile_number: string;
+      Whatsapp_number: string;
+    };
+
+    teachersaddress : {
+      permanent_address: string;
+      residential_address: string;
+      grama_niladari_division: string;
+      grama_niladari_division_number: string;
+      election_division: string;
+      election_division_number: string;
+    };
+
+    appointed_date: string;
+    work_acceptance_date: string;
+  
+    // New Fields
+    appointment_type: string;
+    salary_increment_date: string; // ISO format date (YYYY-MM-DD)
+    current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
+    work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
+    temporary_attachedschool_or_institute_name: string;
+    appointed_subject: string;
+    which_grades_teaching_done: string;
+    current_teaching_subject: string;
+    other_subjects_taught: string;
+    assigned_class: string;
+    other_responsibilities_assigned: string;
+    is_150_hrs_tamil_course_completed: boolean;
+    commuting_from_school: "Home" | "Boarding" | "Hostel" | "Other";
+    distance_from_school: number;
+    commuting_method_to_school: "Bicycle" | "MotorBike" | "Car" | "Bus" | "Threewheeler" | "Walk" | "Other";
+    number_in_sign_sheet: string;
+    number_in_salary_sheet: string;
+
+    qualifications:{
+      type_of_service_in_school:string;
+      gce_al_subject_stream: string;
+      highest_education_qualification: string;
+      basic_degree_stream: string;
+      highest_professional_qualification: string;
+      present_class: string;
+      present_grade: string;
+      appointment_date_for_current_class: string;
+      appointment_date_for_current_grade: string;
+      current_appointment_service_medium: string;
+      appointed_subject_section: string;
+      subject_appointed: string;
+      currentservice_appointed_date: string;
+      subjects_taught_most_and_second_most: string;
+      position_in_the_school: string;
+      assign_date_for_the_school: string;
+    };
+
+    teacherotherservice:{
+      other_responsibilities_in_school: string;
+      EDCS_membership: string;
+      WSOP_Number: number | null;
+      Agrahara_insuarence_membership: string;
+    };
+
+    class: {
+      class_name: string;
+      grade: string;
+      section: string;
+      number_of_students: number;
+      studentacademics: {
+          reg_no: string;
+          studentpersonal: {
+              full_name: string;
+          };
+      }[];
+    };
+
+    subjects: {
+      subject_id: number;
+      subject_name: string;
+      students: {
+        reg_no: number;
+        personal: {
+          full_name: string;
+        }
+        class: {
+          class_name: string;
+          grade: string;
+          section: string;
+        };
+      }[];
+    }[];
 };
 
 
@@ -511,38 +544,59 @@ const COLORS = ['#CC7722', '#FFBF00'];
     </div>
   </div>
 
-  {/* Student Details Table Below */}
+  {/* Class Student Details Table Below */}
   <div className="mt-8">
-    <h3 className="text-xl font-semibold text-gray-800 mb-4">👥 Student Details</h3>
+    <h3 className="text-xl font-semibold text-gray-800 mb-4">👥 My Class students: [ Section: {teacher.class.section} | Class: {teacher.class.grade}-{teacher.class.class_name} ]</h3>
     <div className="overflow-x-auto">
       <table className="min-w-full border text-sm text-left text-gray-600">
         <thead className="bg-gray-100 text-gray-700">
           <tr>
+            <th className="px-4 py-2 border">Registration No.</th>
             <th className="px-4 py-2 border">Name</th>
-            <th className="px-4 py-2 border">Gender</th>
-            <th className="px-4 py-2 border">Class</th>
-            <th className="px-4 py-2 border">Average Marks</th>
-            <th className="px-4 py-2 border">Attendance</th>
           </tr>
         </thead>
-        <tbody>
-          <tr className="hover:bg-gray-50">
-            <td className="px-4 py-2 border">Ayesha Perera</td>
-            <td className="px-4 py-2 border">Girl</td>
-            <td className="px-4 py-2 border">10A</td>
-            <td className="px-4 py-2 border">84%</td>
-            <td className="px-4 py-2 border">95%</td>
-          </tr>
-          <tr className="hover:bg-gray-50">
-            <td className="px-4 py-2 border">Ruwan Silva</td>
-            <td className="px-4 py-2 border">Boy</td>
-            <td className="px-4 py-2 border">10A</td>
-            <td className="px-4 py-2 border">79%</td>
-            <td className="px-4 py-2 border">91%</td>
-          </tr>
+       <tbody>
+          {teacher.class.studentacademics.map((student) => (
+            <tr key={student.reg_no} className="hover:bg-gray-50">
+              <td className="px-4 py-2 border">{student.reg_no}</td>
+              <td className="px-4 py-2 border">{student.studentpersonal.full_name}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
+  </div>
+  {/* Student Details Tables - One per Subject */}
+  <div className="mt-8 space-y-10">
+    {teacher.subjects.map((subject) => (
+      <div key={subject.subject_id}>
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">
+          📘 Students enrolled in: {subject.subject_name}
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border text-sm text-left text-gray-600">
+            <thead className="bg-gray-100 text-gray-700">
+              <tr>
+                <th className="px-4 py-2 border">Registration No.</th>
+                <th className="px-4 py-2 border">Name</th>
+                <th className="px-4 py-2 border">Section & Class</th>
+              </tr>
+            </thead>
+            <tbody>
+              {subject.students.map((student) => (
+                <tr key={student.reg_no} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border">{student.reg_no}</td>
+                  <td className="px-4 py-2 border">{student.personal.full_name}</td>
+                  <td className="px-4 py-2 border">
+                    Section: {student.class.section} | Class: {student.class.grade}-{student.class.class_name}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ))}
   </div>
 </div>
 
