@@ -64,5 +64,5 @@ class StudentAcademic extends Model
         return $this->hasMany(Marks::class, 'reg_no', 'reg_no');
     }
 
-
+    
 }

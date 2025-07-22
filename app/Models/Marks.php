@@ -15,7 +15,10 @@ class Marks extends Model
         'reg_no',
         'subject_id',
         'marks_obtained',
-        'grade'
+        'grade',
+        'term',
+        'year',           // Include if you store it directly, otherwise access via studentAcademic
+        'current_grade',  // Your added column
     ];
 
     // Relationship with StudentAcademicInfo (assuming 'reg_no' is the primary key in student_academic_info)
@@ -29,4 +32,21 @@ class Marks extends Model
     {
         return $this->belongsTo(Subject::class, 'subject_id', 'subject_id');
     }
+
+    public function studentAcademic()
+{
+    return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
 }
+
+public function getClassYearAttribute()
+    {
+        return $this->studentAcademic?->class?->year;
+    }
+
+    public function getClassGradeAttribute()
+    {
+        return $this->studentAcademic?->class?->grade;
+    }
+}
+
+

@@ -13,14 +13,14 @@ class MarkController extends Controller
         return Inertia::render('Marks/MarksPage');
     }
     // Fetch all marks
-    public function create(Request $request)
+public function create(Request $request)
 {
     $user = Auth::user();
-    $query = Marks::query();
+    $query = Marks::with(['studentAcademic.class','subject']);
 
     if ($user->teacher()->exists()) {
         $teacher = $user->teacher()->with('class.studentacademics')->first();
-        if($teacher && $teacher->class && $teacher->class->studentacademics){
+        if ($teacher && $teacher->class && $teacher->class->studentacademics) {
             $studentRegNos = $teacher->class->studentacademics
                 ->pluck('reg_no')
                 ->unique()
@@ -29,14 +29,31 @@ class MarkController extends Controller
         }
     }
 
+    // Apply filters
     if ($request->has('reg_no')) {
         $query->where('reg_no', 'LIKE', '%' . $request->input('reg_no') . '%');
     }
 
+    if ($request->term) {
+        $query->where('term', $request->term);
+    }
+
+    if ($request->has('year')) {
+    $query->whereHas('studentAcademic.class', function ($q) use ($request) {
+        $q->where('year', $request->input('year'));
+    });
+}
 
     if ($request->has('subject_id')) {
-        $query->where('subject_id', 'like', '%' . $request->input('subject_id') . '%');
+        $query->where('subject_id', 'LIKE', '%' . $request->input('subject_id') . '%');
     }
+
+    if ($request->has('subject_name')) {
+    $query->whereHas('subject', function ($q) use ($request) {
+        $q->where('subject_name', 'LIKE', '%' . $request->input('subject_name') . '%');
+    });
+}
+
 
     if ($request->has('marks_obtained')) {
         $query->where('marks_obtained', $request->input('marks_obtained'));
@@ -46,35 +63,61 @@ class MarkController extends Controller
         $query->where('grade', strtoupper($request->input('grade')));
     }
 
-    $marks = $query->get();
+    // ✅ Correct filter for current grade via relationship
+   if ($request->has('current_grade')) {
+    $gradeSection = explode('-', $request->input('current_grade')); // e.g. ['8', 'B']
+    $grade = $gradeSection[0] ?? null;
+    $section = $gradeSection[1] ?? null;
 
-
-    $marks = $query->paginate($request->get('limit', 10)); // You can customize the limit default (10)
-
-    // Get the total number of marks (before pagination)
-    $totalMarksCount = Marks::count();
-
-    // Set the total count header
-    return response()->json($marks)->header('x-total-count', $totalMarksCount);
+    $query->whereHas('studentAcademic.class', function ($q) use ($grade, $section) {
+        if ($grade) {
+            $q->where('grade', $grade);
+        }
+        if ($section) {
+            $q->where('section', $section);
+        }
+    });
 }
+
+
+
+
+    // ✅ Paginate and transform
+    $marks = $query->paginate($request->get('limit', 10));
+    $marks->getCollection()->transform(function ($mark) {
+        $mark->current_grade = optional($mark->studentAcademic?->class)->grade ?? null;
+        $mark->section = optional($mark->studentAcademic?->class)->section ?? null;
+        $mark->combined_grade = $mark->current_grade && $mark->section
+    ? $mark->current_grade . '-' . $mark->section
+    : null;
+        $mark->year = optional($mark->studentAcademic?->class)->year ?? null;
+        $mark->subject_name = optional($mark->subject)->subject_name ?? 'Unknown Subject';
+        return $mark;
+    });
+
+    return response()->json($marks)->header('x-total-count', Marks::count());
+}
+
 
 
     // Store a new mark
     public function store(Request $request)
 {
-    
-    $mark = Marks::create([
-        'reg_no' => $request->reg_no,
-        'subject_id' => $request->subject_id,
-        'marks_obtained' => $request->marks_obtained,
-        'grade' => $request->grade,
+    $validated = $request->validate([
+        'reg_no' => 'required|integer',
+        'subject_id' => 'required|integer',
+        'marks_obtained' => 'required|integer',
+        'grade' => 'required|string|max:1|in:A,B,C,D,E,F',
+        'term' => 'required|string|max:20',
+       
     ]);
 
-    // Return success response
+    $mark = Marks::create($validated);
+
     return response()->json([
         'message' => 'Mark added successfully',
         'mark' => $mark
-    ], 201); // 201 status code for created resource
+    ], 201);
 }
 
     // Fetch a specific mark by ID
@@ -90,32 +133,30 @@ class MarkController extends Controller
     }
 
     // Update an existing mark
-    public function update(Request $request, $id)
-    {
-        // Find mark by ID
-        $mark = Marks::find($id);
-
-        if (!$mark) {
-            return response()->json(['message' => 'Mark not found'], 404);
-        }
-
-        // Validate incoming request
-        $validated = $request->validate([
-            'reg_no' => 'required|integer',
-            'subject_id' => 'required|integer',
-            'marks_obtained' => 'required|integer',
-            'grade' => 'required|string|max:1|in:A,B,C,D,E,F'
-        ]);
-
-        // Update mark details
-        $mark->update($validated);
-
-        // Return success response
-        return response()->json([
-            'message' => 'Mark updated successfully',
-            'mark' => $mark
-        ]);
+   public function update(Request $request, $id)
+{
+    $mark = Marks::find($id);
+    if (!$mark) {
+        return response()->json(['message' => 'Mark not found'], 404);
     }
+
+    $validated = $request->validate([
+        'reg_no' => 'required|integer',
+        'subject_id' => 'required|integer',
+        'marks_obtained' => 'required|integer',
+        'grade' => 'required|string|max:1|in:A,B,C,D,E,F',
+        'term' => 'required|string|max:20',
+        
+    ]);
+
+    $mark->update($validated);
+
+    return response()->json([
+        'message' => 'Mark updated successfully',
+        'mark' => $mark
+    ]);
+}
+
 
     // Delete a specific mark
     public function destroy($id)
