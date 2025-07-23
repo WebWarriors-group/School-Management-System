@@ -6,7 +6,7 @@ import { User } from '@/types';
 interface AppLayoutProps {
     children: ReactNode;
     breadcrumbs?: BreadcrumbItem[];
-    user: User; 
+   
 }
 
 export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (

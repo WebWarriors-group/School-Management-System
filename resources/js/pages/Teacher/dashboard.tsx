@@ -231,6 +231,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
   <div className="w-24 h-24 mx-auto rounded-full bg-gray-100 border-4 border-blue-500 flex items-center justify-center text-gray-400 text-2xl font-bold">
     ?
   </div>
+  </div>
 
 
           {/* Calendar */}
