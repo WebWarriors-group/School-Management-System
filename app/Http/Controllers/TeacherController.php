@@ -30,14 +30,14 @@ class TeacherController extends Controller
 }
 
 
-        $teacher = $teacherUser->with([
+        $teacher = $user->teacher()->with([
             'teachersaddress',
             'personal',
             'qualifications',
             'teacherotherService',
             'class',
             'class.studentacademics',
-            'class.studentacademics.studentpersonal'
+            'class.studentacademics.personal'
         ])->first();
 
         return Inertia::render('Teacher/dashboard', [
