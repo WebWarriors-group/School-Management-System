@@ -315,14 +315,14 @@ export default function AssignTeachersPage() {
         {/* Grade → Section → Subject Tree with Class Teacher */}
         <div className="mt-16 bg-white py-5 py">
           <h2 className="text-xl font-bold mb-4">📚 Grade → Section → Subject View</h2>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 py-10 px-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-1 gap-6 py-10 px-4">
             {grades.map((grade) => (
               <div
                 key={grade}
-                className="bg-white rounded shadow-md p-4 cursor-pointer hover:shadow-lg"
+                className="bg-gradient-to-br from-blue-100/30 to-blue-200/20  border-1 border-blue-700  rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg "
                 onClick={() => setExpandedGrade(expandedGrade === grade ? null : grade)}
               >
-                <h3 className="font-semibold text-lg text-green-700">Grade {grade} Assignemnts</h3>
+                <h3 className="font-semibold text-lg text-blue-700">Grade {grade} Assignemnts</h3>
                 {expandedGrade === grade && (
                   <div className="mt-4 space-y-9">
                     {classes
@@ -386,6 +386,7 @@ export default function AssignTeachersPage() {
         {/* Assignment Summary Table */}
         <div className="mt-16 max-w-9xl mx-auto bg-white rounded shadow-md overflow-x-auto">
           <h2 className="text-xl font-bold p-6 border-b">📋 Teacher Assignment Summary</h2>
+            <button className="text-xl font-bold p-6 border-b text-end">Generate time table</button>
           <table className="min-w-300 table-auto text-left text-sm text-gray-700">
             <thead className="bg-blue-200 border-b">
               <tr>

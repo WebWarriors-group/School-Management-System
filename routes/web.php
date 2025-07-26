@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TimetableController;
-
+use App\Events\TestNotificationEvent;
+use App\Models\StudyMaterial; // ✅ Add this
+use App\Events\StudyMaterialUploaded; // ✅ If using event
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -255,6 +257,27 @@ Route::get('/typesense/add', function (TypesenseService $typesense) {
 Route::get('/typesense/search', function (TypesenseService $typesense) {
     return $typesense->search('Harry');
 });
+
+
+Route::get('/broadcast-test', function () {
+    $material = \App\Models\StudyMaterial::create([
+        'title' => 'Sample Test Notes',
+        'grade' => '10',
+        'subject' => 'Science',
+        'uploaded_by' => auth()->id(),
+        'category' => 'General',
+        'file_url' => 'materials/sample-test-notes.pdf',  // dummy file path
+    ]);
+
+    event(new \App\Events\StudyMaterialUploaded($material));
+
+    return response()->json([
+        'message' => 'Broadcast event triggered!',
+        'material' => $material
+    ]);
+});
+
+
 
 
 

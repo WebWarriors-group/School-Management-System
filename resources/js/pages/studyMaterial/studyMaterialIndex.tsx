@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import AppLayout from "@/layouts/app-layout";
 import { Head, usePage } from "@inertiajs/react";
 import { type BreadcrumbItem } from "@/types";
-
+import NotificationListener from '@/pages/Admin/notify';
 import UploadForm from "./uploadForm";
-
+import { Inertia } from '@inertiajs/inertia';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: "📚 Study Materials",
@@ -52,7 +52,11 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
     const [showForm, setShowForm] = useState(false);
     const handleUploadSuccess = () => {
         setShowForm(false);
+        Inertia.reload({ preserveScroll: true, preserveState: true });
     };
+
+    const [notification, setNotification] = useState<string | null>(null);
+
     
 
     return (
@@ -68,7 +72,10 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
           </p>
         </div>
       </header>
-                
+              {/* <NotificationListener notification={notification} setNotification={setNotification} /> */}
+
+
+ 
 
                 {/* Main Container */}
                 <div className="max-w-4xl mx-auto w-full bg-white rounded-2xl shadow-xl p-8">
@@ -94,7 +101,7 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                             category={category}
                             onClose={() => {
                                 handleUploadSuccess();
-                                window.location.reload();
+                                
                             }}
                         />
                     )}

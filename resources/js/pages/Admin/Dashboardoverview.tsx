@@ -7,7 +7,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { usePage } from '@inertiajs/react';
 import { Pointer } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import AddTeacherForm from '@/pages/Teacher/teacherForm';
+
 import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
 import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
 import StudentPerformanceLineChart from '../Student/StudentPerformanceChart';
@@ -21,6 +21,9 @@ import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
 import ImportStudent from '@/pages/Admin/ImportStudent';
 import { router } from '@inertiajs/react';
+import NotificationListener from '@/pages/Admin/notify';
+
+
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -176,6 +179,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
     // Keep class table visible
   };
+
+   
+
 
 
 
@@ -346,15 +352,22 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       
+      
        <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
-          
+           <NotificationListener/>
           <p className=" text-gray-600 md:text-lg  md:text-left md:text-base md:mt-2">
             Teacher Assignements  
           </p>
         </div>
       </header>
       <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 z-10">
+
+
+
+
+        
+
         {selectedCard && selectedCard.id === 4 ? (
           <>
             <ViewAllStudents />
@@ -596,6 +609,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                     >
                       <Pointer size={50} className="animate-pulse text-xl py-2" />
                       Click here for yearly updates
+
+
+                     
                     </div>
                   </div>
                 </div>
