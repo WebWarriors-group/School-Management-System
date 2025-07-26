@@ -29,6 +29,7 @@ class StudentAcademic extends Model
         'receiving_any_samurdhi_aswesuma',
         'receiving_any_scholarship',
         'admission_date',
+        'leaving_date',
     ];
     protected $autoLoadRelations = true;
     public function subjects()

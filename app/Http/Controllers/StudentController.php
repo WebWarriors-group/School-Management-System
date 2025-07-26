@@ -9,6 +9,7 @@ use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\StudentAcademic;
 use App\Models\StudentPersonal;
@@ -376,4 +377,20 @@ class StudentController extends Controller
             ],
         ]);
     }
+
+    
+    public function pastPupils()
+    {
+        $students = StudentAcademic::with(['personal', 'family', 'siblings'])
+            ->whereNotNull('leaving_date')
+            ->get();
+
+        return Inertia::render('Admin/pastPupils', [
+            'students' => $students,
+            'auth' => [
+                'user' => Auth::user(),
+            ],
+        ]);
+    }
+
 }

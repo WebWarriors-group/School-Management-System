@@ -65,6 +65,9 @@ Route::middleware('auth', 'admin')->group(function () {
 
      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     // Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
+
+    Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
+
 });
 
 

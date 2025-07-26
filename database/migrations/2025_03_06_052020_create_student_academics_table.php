@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->boolean('receiving_any_samurdhi_aswesuma')->default(false);
             $table->boolean('receiving_any_scholarship')->default(false);
             $table->date('admission_date');
+            $table->date('leaving_date')->nullable()->default(null);
 
             $table->timestamps();
         });
