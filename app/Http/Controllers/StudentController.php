@@ -54,6 +54,7 @@ class StudentController extends Controller
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
+            $student->class;
             $student->siblings;
         });
         return response()->json($students);
