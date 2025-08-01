@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
-
+    protected $table='subjects';
     protected $primaryKey = 'subject_id'; // Use subject_id as the primary key
     public $incrementing = false; // Since subject_id is a string
     protected $keyType = 'string'; // Make sure the primary key is treated as a string
@@ -32,7 +32,7 @@ class Subject extends Model
     {
         return $this->belongsToMany(StudentAcademic::class, 'student_subjects', 'subject_id', 'reg_no');
     }
-    public function Marks()
+    public function marks()
     {
         return $this->hasMany(Marks::class, 'subject_id', 'subject_id');
     }

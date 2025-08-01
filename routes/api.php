@@ -27,17 +27,11 @@ Route::get('/teachers', [TeacherController::class, 'index']);
 Route::get('/teachers/{teacher_NIC}', [TeacherController::class, 'show']);
 Route::delete('/teachers/{teacher_NIC}', [TeacherController::class, 'destroy']);
 Route::put('/teachers/{teacher_NIC}', [TeacherController::class, 'update']);
-
-Route::post('/student', [StudentController::class, 'store']);
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 
-Route::get('/students', [StudentController::class, 'index']);
+
 Route::get('/student-performance', [StudentController::class, 'yearlyPerformance']);
 
-
-Route::delete('/students/{reg_no}', [StudentController::class, 'destroy']);
-Route::get('/students/{reg_no}', [StudentController::class, 'show']);
-Route::put('/students/{reg_no}', [StudentController::class, 'update']);
 
 Route::put('/student-personal/{reg_no}', [StudentController::class, 'updatePersonal']);
 Route::put('/student-family/{reg_no}', [StudentController::class, 'updateFamily']);
@@ -81,13 +75,19 @@ Route::get('study-materials/{id}', [StudyMaterialController::class, 'show']);
 Route::put('study-materials/{id}', [StudyMaterialController::class, 'update']);
 Route::delete('study-materials/{id}', [StudyMaterialController::class, 'destroy']);
 
-Route::post('/students/import', [StudentController::class, 'import']);
+Route::resource('students',StudentController::class);
+Route::post('import', [StudentController::class, 'import']);
 Route::get('/admissions-per-year', [StudentController::class, 'getAdmissionsPerYear']);
 Route::get('/student-family/{reg_no}', [StudentController::class, 'showFamily']);
 Route::get('/student-sibling/{reg_no}', [StudentController::class, 'showSibling']);
 Route::get('/student-personal/{reg_no}', [StudentController::class, 'showPersonal']);
 
-Route::post('/students/import', [StudentController::class, 'import']);
+
+
+
+
+Route::get('/student/dashboard', [StudentController::class, 'dashboard']);
+
 
 
 
@@ -106,3 +106,6 @@ Route::get('/events', [EventController::class, 'index']);
 Route::post('/events', [EventController::class, 'store']);
 Route::put('/events/{id}', [EventController::class, 'update']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
+
+// routes/api.php or web.php
+Route::get('/student-marks/{reg_no}', [StudentController::class, 'getMarksBySubject']);
