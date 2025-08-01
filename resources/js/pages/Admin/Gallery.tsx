@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import { type BreadcrumbItem } from '@/types';
+import AppLayout from '@/layouts/app-layout';
+
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: '📊 Image Gallery',
+    href: '/',
+  },
+];
 
 interface Image {
   id: number;
@@ -54,7 +63,9 @@ export default function Gallery({ categories }: PageProps) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
+    <AppLayout breadcrumbs={breadcrumbs}>
+      <main className="bg-gray-100">
+    <div className="max-w-5xl mx-auto p-6 space-y-8 ">
       {/* Category Form */}
       <div className="bg-white p-6 rounded shadow">
         <h2 className="text-2xl font-bold mb-4">🗂️ Add Category</h2>
@@ -147,5 +158,7 @@ export default function Gallery({ categories }: PageProps) {
         ))}
       </div>
     </div>
+    </main>
+    </AppLayout>
   );
 }
