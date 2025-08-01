@@ -3,21 +3,15 @@ import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Inertia } from '@inertiajs/inertia';
-
-import { usePage } from '@inertiajs/react';
 import { Pointer } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import AddTeacherForm from '@/pages/Teacher/teacherForm';
 import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
 import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
 import StudentPerformanceLineChart from '../Student/StudentPerformanceChart';
 import ViewAllStudents from '@/pages/Student/ViewAllStudents';
-import AssignClassTeachers from '@/pages/Admin/Classpage';
 import AssignTeachersPage from '@/pages/Admin/AssignTeachersPage';
 import ClassIndex from '@/pages/Admin/ClassCrud';
 import { Button } from '@headlessui/react';
-import Gallery from '@/pages/Admin/imagegallery';
-import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
 import ImportStudent from '@/pages/Admin/ImportStudent';
 import { router } from '@inertiajs/react';
@@ -594,16 +588,8 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                   </div>
                 </div>
                 <StudentPerformanceLineChart/>
-                <Gallery />
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 bg-white rounded-lg shadow-md">
-                  {img.data.map(image => (
-                    <div key={image.id} className="...">
-                      <img src={`/images/${image.path}`} alt={image.title || 'Gallery image'} />
-                      {image.title && <p>{image.title}</p>}
-                    </div>
-                  ))}
-                </div>
+                
+                
               </>
             )}
 

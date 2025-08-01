@@ -233,5 +233,15 @@ Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerfor
     ->name('admin.overallPerformance');
 
 
+
+    use App\Http\Controllers\GalleryImageController;
+
+Route::get('/gallery1', [GalleryImageController::class, 'index'])->name('gallery.index');
+Route::get('/gallery1/create', [GalleryImageController::class, 'create'])->name('gallery.create');
+Route::post('/image', [GalleryImageController::class, 'store'])->name('gallery.store');
+Route::get('/gallery1/{image}', [GalleryImageController::class, 'destroy'])->name('gallery.destroy');
+Route::post('/category', [GalleryImageController::class, 'storeCategory']);
+
+
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
