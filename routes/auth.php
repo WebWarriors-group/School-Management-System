@@ -63,7 +63,7 @@ Route::middleware('auth', 'admin')->group(function () {
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
 
-     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 
     // Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
@@ -74,7 +74,7 @@ Route::middleware('auth', 'admin')->group(function () {
 
 
 Route::middleware('auth', 'teacher')->group(function () {
-    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
    
@@ -90,13 +90,13 @@ Route::get('/leave', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
-    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
-    Route::post('/marks', [MarkController::class, 'store']);
-    Route::get('/marks', [MarkController::class, 'create']);
-    Route::get('/marks/{id}', [MarkController::class, 'show']);
-    Route::put('/marks/{id}', [MarkController::class, 'update']);
-    Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
+    // Route::post('/marks', [MarkController::class, 'store']);
+    // Route::get('/marks', [MarkController::class, 'create']);
+    // Route::get('/marks/{id}', [MarkController::class, 'show']);
+    // Route::put('/marks/{id}', [MarkController::class, 'update']);
+    // Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
 });
 
 

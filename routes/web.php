@@ -61,7 +61,7 @@ Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
 Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
-     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
      Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
      Route::get('/test-session', function (Request $request) {
   
@@ -160,7 +160,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
 });
 
-Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
+// Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
 
 
 Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
@@ -212,8 +212,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    // Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
@@ -290,6 +290,13 @@ Route::post('/image', [GalleryImageController::class, 'store'])->name('gallery.s
 Route::get('/gallery1/{image}', [GalleryImageController::class, 'destroy'])->name('gallery.destroy');
 Route::post('/category', [GalleryImageController::class, 'storeCategory']);
 
+
+
+
+//  Route::get('/classes/{classId}/students', [MarkController::class, 'index']);
+
+// Route::post('/marks/bulk', [MarkController::class, 'storeBulkMarks']);
+Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
