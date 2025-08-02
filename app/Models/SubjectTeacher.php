@@ -11,22 +11,21 @@ class SubjectTeacher extends Model
 
     protected $fillable = ['class_id', 'subject_id', 'teacher_NIC'];
 
-    public $timestamps = false; // if your table has no timestamps
+    public $timestamps = false; 
 
-    public function class()
+
+    public function classes()
     {
-        return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
+        return $this->belongsTo(ClassModel::class, 'class_id');
     }
 
-    // Relation to Subject model
     public function subject()
     {
-        return $this->belongsTo(Subject::class, 'subject_id', 'subject_id');
+        return $this->belongsTo(Subject::class);
     }
 
-    // Relation to Teacher model (assuming teacher_NIC is primary key)
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');
+        return $this->belongsTo(Teacher::class);
     }
 }

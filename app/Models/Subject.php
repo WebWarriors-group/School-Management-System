@@ -32,7 +32,7 @@ class Subject extends Model
     {
         return $this->belongsToMany(StudentAcademic::class, 'student_subjects', 'subject_id', 'reg_no');
     }
-    public function Marks()
+    public function marks()
     {
         return $this->hasMany(Marks::class, 'subject_id', 'subject_id');
     }

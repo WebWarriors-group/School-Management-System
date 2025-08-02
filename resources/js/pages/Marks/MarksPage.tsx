@@ -16,21 +16,41 @@ interface Mark {
   id: number;
   reg_no: string;
   subject_id: string;
+    subject_name?: string;
   marks_obtained: number;
-  grade: 'A' | 'B' | 'C' | 'S' | 'F';
+  grade: 'A' | 'B' | 'C' | 'S' | 'F'; // grade for marks
+  current_grade?: number;  
+  section?: string;   // grade from classes (e.g., "Grade 10")
+  year?: number;
+   term?: string;
 }
 
 const MarksPage: React.FC = () => {
   const [marks, setMarks] = useState<Mark[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [editingMark, setEditingMark] = useState<Mark | null>(null);
-  const [newMark, setNewMark] = useState({
-    reg_no: '',
-    subject_id: '',
-    marks_obtained: 0,
-    grade: 'A',
-  });
-  const [searchParams, setSearchParams] = useState<{ reg_no?: string; subject_id?: string; marks_obtained?: number; grade?: 'A' | 'B' | 'C' | 'S' | 'F' }>({});
+  const [newMark, setNewMark] = useState<Partial<Mark>>({
+  reg_no: '',
+  subject_id: '',
+  subject_name: '',
+  marks_obtained: 0,
+  grade: 'A',
+  term: 'Term 1',
+  year: new Date().getFullYear(),     // Prevents year being undefined
+  current_grade: 0,
+});
+
+ const [searchParams, setSearchParams] = useState<{
+  reg_no?: string;
+  subject_id?: string;
+  marks_obtained?: number;
+  grade?: 'A' | 'B' | 'C' | 'S' | 'F';
+  current_grade?: string;
+  year?: number; 
+  term?: string;// 🔥 Add this line
+    combined_grade?: string; // e.g. "8-B"
+}>({});
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [marksPerPage] = useState<number>(10);
   const [totalMarks, setTotalMarks] = useState<number>(10);
@@ -38,6 +58,8 @@ const MarksPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+
 
   const fetchMarks = useCallback(async () => {
     setLoading(true);
@@ -75,6 +97,8 @@ const MarksPage: React.FC = () => {
     fetchMarks();
   }, [fetchMarks, searchParams, currentPage]);
 
+
+  
   const allowedGrades = ["A", "B", "C", "S", "F"] as const;
   type Grade = typeof allowedGrades[number];
 
@@ -103,79 +127,123 @@ const MarksPage: React.FC = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDeleteMark = async () => {
-    if (!markToDelete) return;
-    try {
-      await fetch(`/marks/${markToDelete.id}`, { method: 'DELETE' });
-      toast.success("Mark deleted successfully!");
+const confirmDeleteMark = async () => {
+  if (!markToDelete) return;
 
-      const updatedMarks = marks.filter((m) => m.id !== markToDelete.id);
-      const isLastItemOnPage = updatedMarks.length === 0 && currentPage > 1;
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
-      if (isLastItemOnPage) {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-      } else {
-        fetchMarks();
-      }
-    } catch (error) {
-      console.error("Error deleting mark:", error);
-      toast.error("Failed to delete mark.");
-    } finally {
-      setShowDeleteModal(false);
-      setMarkToDelete(null);
+  try {
+    const response = await fetch(`/marks/${markToDelete.id}`, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete mark');
     }
-  };
+
+    toast.success("Mark deleted successfully!");
+
+    const updatedMarks = marks.filter((m) => m.id !== markToDelete.id);
+    const isLastItemOnPage = updatedMarks.length === 0 && currentPage > 1;
+
+    if (isLastItemOnPage) {
+      setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    } else {
+      fetchMarks();
+    }
+  } catch (error) {
+    console.error("Error deleting mark:", error);
+    toast.error("Failed to delete mark.");
+  } finally {
+    setShowDeleteModal(false);
+    setMarkToDelete(null);
+  }
+};
+
 
   const handleEditMark = (mark: Mark) => setEditingMark({ ...mark });
   const handleCancelEdit = () => setEditingMark(null);
 
   const handleSaveEdit = async () => {
-    if (!editingMark) return;
-    const parsedMarks = Number(editingMark.marks_obtained);
-    if (isNaN(parsedMarks)) {
-      toast.error("Please enter a valid number for marks.");
+  if (!editingMark) return;
+
+  const parsedMarks = Number(editingMark.marks_obtained);
+  if (isNaN(parsedMarks)) {
+    toast.error("Please enter a valid number for marks.");
+    return;
+  }
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+  try {
+    const response = await fetch(`/marks/${editingMark.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken,
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ ...editingMark, marks_obtained: parsedMarks }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to update mark');
+    }
+
+    toast.success("Successfully saved!");
+    fetchMarks();
+    setEditingMark(null);
+  } catch (error) {
+    console.error('Error updating mark:', error);
+    toast.error('Failed to update mark.');
+  }
+};
+
+
+ const handleCreateMark = async () => {
+  const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content;
+
+  if (!newMark.reg_no || !newMark.subject_id || !newMark.marks_obtained || !newMark.grade || !newMark.term || !newMark.year) {
+    toast.error("Please fill in all fields");
+    return;
+  }
+
+  try {
+    const response = await fetch('/marks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken, // ✅ Laravel needs this
+      },
+      body: JSON.stringify(newMark),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Server error response:", errorText);
+      toast.error("Error adding mark.");
       return;
     }
 
-    try {
-      await fetch(`/marks/${editingMark.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...editingMark, marks_obtained: parsedMarks }),
-      });
+    const data = await response.json();
+    toast.success("Mark added successfully!");
+    fetchMarks(); // Refresh list
+    setNewMark({ reg_no: '', subject_id: '', marks_obtained: '', grade: '', term: '' });
+  } catch (error) {
+    console.error("Error adding mark:", error);
+    toast.error("Error adding mark.");
+  }
+};
 
-      toast.success("Successfully saved!");
-      fetchMarks();
-      setEditingMark(null);
-    } catch (error) {
-      console.error('Error updating mark:', error);
-      toast.error('Failed to update mark.');
-    }
-  };
-
-  const handleCreateMark = async () => {
-    try {
-      const response = await fetch('/marks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newMark),
-      });
-
-      if (response.ok) {
-        setNewMark({ reg_no: '', subject_id: '', marks_obtained: 0, grade: 'A' });
-        toast.success('Mark added successfully!');
-        fetchMarks();
-      } else {
-        const errorData = await response.json();
-        toast.error(`Failed to add mark: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error('Error adding mark:', error);
-      toast.error('Failed to add mark.');
-    }
-  };
 
   const totalPages = Math.ceil(totalMarks / marksPerPage);
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -193,23 +261,136 @@ const MarksPage: React.FC = () => {
         <h1 className="text-center text-2xl font-bold text-sky-900 mb-5">Student Marks</h1>
         <Toaster position="top-right" />
 
-        {/* Search */}
-        <div className="flex justify-center gap-3 mb-5 p-3 bg-white rounded-lg shadow-sm">
-          <input
-            type="text"
-            placeholder="Search by Reg No, Subject ID, Marks or Grade"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 p-3 border border-yellow-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-          />
-          <button onClick={handleSearch} className="bg-yellow-600 text-white px-6 py-3 text-lg font-bold rounded-md hover:bg-red-600">
-            Search
-          </button>
-          <button onClick={() => { setSearchQuery(''); setSearchParams({}); setCurrentPage(1); }}
-            className="bg-gray-300 text-black px-6 py-3 text-lg font-bold rounded-md hover:bg-gray-400">
-            Reset
-          </button>
-        </div>
+       {/* 🔽 Advanced Filter Toggle Button */}
+<div className="mb-4 text-right">
+  <button
+    onClick={() => setShowFilters(prev => !prev)}
+    className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-red-500 hover:to-yellow-600 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition-all"
+  >
+    {showFilters ? 'Hide ▲' : 'Search ▼'}
+  </button>
+</div>
+
+{/* 🔍 Collapsible Advanced Filters */}
+{showFilters && (
+  <div className="bg-white border border-gray-200 p-6 mb-6 rounded-xl shadow-xl transition-all">
+    <h2 className="text-lg font-bold text-gray-700 mb-4">🎯 Search</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      {/* 1. Reg No */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">🔢 Reg No</label>
+        <input
+          type="text"
+          value={searchParams.reg_no || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, reg_no: e.target.value }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+          placeholder="Enter Reg No"
+        />
+      </div>
+
+      {/* 2. Current Grade */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">🎓 Current Grade</label>
+        <input
+          type="text"
+          value={searchParams.current_grade || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, current_grade: e.target.value }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+          placeholder="e.g. 8-B"
+        />
+      </div>
+
+      {/* 3. Term */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">📘 Term</label>
+        <select
+          value={searchParams.term || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, term: e.target.value }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+        >
+          <option value="">All</option>
+          <option value="Term 1">Term 1</option>
+          <option value="Term 2">Term 2</option>
+          <option value="Term 3">Term 3</option>
+        </select>
+      </div>
+
+      {/* 4. Year */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">📅 Year</label>
+        <input
+          type="number"
+          value={searchParams.year || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, year: Number(e.target.value) }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+          placeholder="e.g. 2024"
+        />
+      </div>
+
+      {/* 5. Subject ID */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">🆔 Subject ID</label>
+        <input
+          type="text"
+          value={searchParams.subject_id || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, subject_id: e.target.value }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+          placeholder="e.g. MAT101"
+        />
+      </div>
+
+      {/* 6. Subject Name */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">📖 Subject Name</label>
+        <input
+          type="text"
+          value={searchParams.subject_name || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, subject_name: e.target.value }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+          placeholder="e.g. Mathematics"
+        />
+      </div>
+
+      {/* 7. Marks Obtained */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">✍️ Marks</label>
+        <input
+          type="number"
+          value={searchParams.marks_obtained || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, marks_obtained: Number(e.target.value) }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+          placeholder="e.g. 85"
+        />
+      </div>
+
+      {/* 8. Grade */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">🏅 Grade</label>
+        <select
+          value={searchParams.grade || ''}
+          onChange={(e) => setSearchParams(prev => ({ ...prev, grade: e.target.value as Mark["grade"] }))}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-500 text-sm"
+        >
+          <option value="">All</option>
+          {allowedGrades.map(g => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    {/* 🔄 Reset Button */}
+    <div className="mt-6 text-right">
+      <button
+        onClick={() => setSearchParams({})}
+        className="bg-blue-800 hover:bg-blue-500 text-white font-medium py-2 px-6 rounded-lg transition-all shadow-sm"
+      >
+        Reset
+      </button>
+    </div>
+  </div>
+)}
 
         {/* Table */}
         {loading ? <p>Loading...</p> : (
@@ -217,7 +398,11 @@ const MarksPage: React.FC = () => {
             <thead>
               <tr className="bg-sky-900 text-white font-bold">
                 <th className="px-5 py-3 text-center">Reg No</th>
+                <th className="px-5 py-3 text-center">Current Grade</th>
+                <th className="px-5 py-3 text-center">Term</th>
+                <th className="px-5 py-3 text-center">Year</th>
                 <th className="px-5 py-3 text-center">Subject ID</th>
+                 <th className="px-5 py-3 text-center">Subject Name</th>
                 <th className="px-5 py-3 text-center">Marks Obtained</th>
                 <th className="px-5 py-3 text-center">Grade</th>
                 <th className="px-5 py-3 text-center">Actions</th>
@@ -231,9 +416,55 @@ const MarksPage: React.FC = () => {
                     onChange={(e) => setNewMark({ ...newMark, reg_no: e.target.value })}
                     className="px-2 py-1 border rounded" />
                 </td>
+              <td className="px-1 py-2 text-center">
+  <select
+    value={newMark.current_grade || ''}
+    onChange={(e) =>
+      setNewMark({ ...newMark, current_grade: e.target.value })
+    }
+    className="px-2 py-1 border rounded"
+  >
+    <option value="">Select Grade</option>
+    {Array.from({ length: 8 }, (_, i) => 6 + i).map((grade) =>
+      ['A', 'B', 'C', 'D', 'E', 'F'].map((section) => {
+        const value = `${grade}-${section}`;
+        return (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        );
+      })
+    )}
+  </select>
+</td>
+
+              <td className="px-1 py-2 text-center">
+  <select
+    value={newMark.term || ''}
+    onChange={(e) => setNewMark({ ...newMark, term: e.target.value })}
+    className="px-2 py-1 border rounded"
+  >
+    <option value="">Select Term</option>
+    <option value="Term 1">Term 1</option>
+    <option value="Term 2">Term 2</option>
+    <option value="Term 3">Term 3</option>
+  </select>
+</td>
+
+ 
                 <td className="px-1 py-2 text-center">
-                  <input type="text" value={newMark.subject_id}
+                  <input type="number" value={newMark.year}
+                    onChange={(e) => setNewMark({ ...newMark, year: parseInt(e.target.value)})}
+                    className="px-2 py-1 border rounded" />
+                </td>
+                <td className="px-1 py-2 text-center">
+                  <input type="number" value={newMark.subject_id}
                     onChange={(e) => setNewMark({ ...newMark, subject_id: e.target.value })}
+                    className="px-2 py-1 border rounded" />
+                </td>
+                   <td className="px-1 py-2 text-center">
+                  <input type="text" value={newMark.subject_name}
+                    onChange={(e) => setNewMark({ ...newMark, subject_name: e.target.value })}
                     className="px-2 py-1 border rounded" />
                 </td>
                 <td className="px-1 py-2 text-center">
@@ -267,7 +498,16 @@ const MarksPage: React.FC = () => {
     {mark.reg_no}
   </Link>
                     </td>
+                    <td className="px-5 py-3 text-center">
+                    {mark.current_grade && mark.section
+                     ? `${mark.current_grade}-${mark.section}`
+                    : mark.current_grade ?? '-'}
+</td>
+
+                    <td className="px-5 py-3 text-center">{mark.term?.trim() || '-'}</td>
+                      <td className="px-5 py-3 text-center">{mark.year}</td>
                     <td className="px-5 py-3 text-center">{mark.subject_id}</td>
+                    <td className="px-5 py-3 text-center">{mark.subject_name ?? '-'}</td>
                     <td className="px-5 py-3 text-center">{mark.marks_obtained}</td>
                     <td className="px-5 py-3 text-center">{mark.grade}</td>
                     <td className="px-5 py-3 text-center">
@@ -288,9 +528,29 @@ const MarksPage: React.FC = () => {
                           onChange={(e) => setEditingMark({ ...editingMark, reg_no: e.target.value })}
                           className="px-2 py-1 border rounded" />
                       </td>
+                       <td className="px-5 py-3 text-center">
+                        <input type="number" value={editingMark.current_grade}
+                          onChange={(e) => setEditingMark({ ...editingMark, current_grade: e.target.value })}
+                          className="px-2 py-1 border rounded" />
+                      </td>
+                      <td className="px-5 py-3 text-center">
+                        <input type="text" value={editingMark.term}
+                          onChange={(e) => setEditingMark({ ...editingMark, term: e.target.value })}
+                          className="px-2 py-1 border rounded" />
+                      </td>
+                      <td className="px-5 py-3 text-center">
+                        <input type="text" value={editingMark.year}
+                          onChange={(e) => setEditingMark({ ...editingMark, year: e.target.value })}
+                          className="px-2 py-1 border rounded" />
+                      </td>
                       <td className="px-5 py-3 text-center">
                         <input type="text" value={editingMark.subject_id}
                           onChange={(e) => setEditingMark({ ...editingMark, subject_id: e.target.value })}
+                          className="px-2 py-1 border rounded" />
+                      </td>
+                        <td className="px-5 py-3 text-center">
+                        <input type="text" value={editingMark.subject_name}
+                          onChange={(e) => setEditingMark({ ...editingMark, subject_name: e.target.value })}
                           className="px-2 py-1 border rounded" />
                       </td>
                       <td className="px-5 py-3 text-center">

@@ -29,6 +29,7 @@ export default function StudentDashboard() {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Navbar */}
 <<<<<<< HEAD
      
@@ -79,6 +80,43 @@ export default function StudentDashboard() {
           </div>
         )}
       </nav>
+=======
+     {/* Navbar */}
+<nav className="bg-[#5D4037] text-white py-3 px-6 shadow-md">
+  <div className="flex justify-between items-center">
+    <div className="flex items-center">
+      <img src="/images/School.jpg" alt="School Logo" className="h-14 w-14 rounded-full" />
+      <span className="ml-3 text-xl font-bold">
+        T/Tn/Mahadivulwewa Maha Vidyalaya (National School)
+      </span>
+    </div>
+    <div className="flex items-center space-x-4">
+      <NavUser />
+      <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
+        {menuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+    </div>
+  </div>
+
+  {menuOpen && (
+    <div className="bg-white text-black px-4 py-3 md:hidden">
+      <a href="https://www.facebook.com/ttnmmv" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+        <Facebook size={20} /> <span>Facebook</span>
+      </a>
+      <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+        <Mail size={20} /> <span>Email</span>
+      </a>
+      <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center space-x-2 py-1 hover:text-blue-600">
+        <MapPin size={20} /> <span>Location</span>
+      </a>
+      <Link href={route('login')} className="block mt-3 bg-brown-800 text-white px-4 py-2 rounded text-center">
+        Login
+      </Link>
+    </div>
+  )}
+</nav>
+
+>>>>>>> 2021_CSC_101_MarksPage
 
       {/* Student Dashboard Layout */}
       <div className="flex min-h-screen bg-gray-100">
