@@ -30,8 +30,12 @@ export default function StudentDashboard() {
       </div>
 
       {/* Navbar */}
+<<<<<<< HEAD
      
 
+=======
+      
+>>>>>>> risani
         <nav className="bg-[#650000] text-white py-3 px-6 shadow-md relative z-10">
           <div className="flex justify-between items-center">
             
@@ -40,7 +44,14 @@ export default function StudentDashboard() {
               <span className="ml-3 font-orbitron text-xl font-bold">
                 T / Tn/ Mahadivulwewa Maha Vidyalaya(National School)
               </span>
+               <div className="flex items-center space-x-4">
+            <NavUser />
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
             </div>
+<<<<<<< HEAD
 
               <div className="flex items-center space-x-4">
             <NavUser />
@@ -48,6 +59,8 @@ export default function StudentDashboard() {
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+=======
+>>>>>>> risani
 </div>
         {menuOpen && (
           <div className="bg-white text-black px-4 py-3 md:hidden">

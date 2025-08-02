@@ -87,7 +87,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
       </header>
       <div className="flex flex-col gap-10 px-8 py-10 bg-gray-200 min-h-screen">
   {/* Section: Attendance and Registered Teachers */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
     
     {/* Attendance Summary */}
     <div className="bg-white border border-blue-100  shadow-md p-6 hover:shadow-lg transition">
@@ -126,6 +126,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
    <div className="bg-white border border-indigo-200  shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between">
       <div className="flex items-center mb-4">
         <h3 className="text-xl font-semibold text-gray-800 flex-grow">📥 Teacher Requests</h3>
+        
         {requestCount > 0 && (
           <span className="ml-3 inline-flex items-center justify-center px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded-full">
             {requestCount}
@@ -133,23 +134,32 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
         )}
       </div>
       <div className="flex flex-col space-y-4 mt-auto">
+        
+        {/* <Link href="/add-teacher">
+          <button className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-all">
+            Add Teacher
+          </button>
+        </Link> */}
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">📅 Teacher Leave</h2>
+      <div className="w-24 h-24 mx-auto border-4 border-yellow-400 text-yellow-600 flex items-center justify-center text-4xl font-bold rounded-full">
+        {leaveCount}
+      </div>
+      <Link href="teacher-leave-requests">
+        <button className="mt-6 w-full bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-all">
+          View Leave Requests
+        </button>
+      </Link>
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">➕ Teacher Add</h2>
         <Link href="/teacher_requests">
           <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-all">
             View Requests
-          </button>
-        </Link>
-        <Link href="/add-teacher">
-          <button className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 transition-all">
-            Add Teacher
           </button>
         </Link>
       </div>
     </div>
 
     
-</div>
-  {/* Section: Leave and Requests */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+
 
     {/* Registered Teachers */}
     <div className="bg-white border border-slate-200  shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between items-center">
@@ -180,14 +190,14 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
         <button className="mt-6 w-full bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-all">
           View Leave Requests
         </button>
-      </Link>
+      </Link> 
     </div>
 
     
   </div>
 
-  {/* Section: Performance and Salary */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+ 
+  {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-10"> */}
     {/* Performance */}
     <div className="bg-white border border-rose-200  shadow-md p-6 hover:shadow-lg transition">
       <h3 className="text-xl font-semibold text-gray-800 mb-3">📊 Performance</h3>
@@ -197,7 +207,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
       <button className="w-full bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 transition-all">
         View Performance
       </button>
-    </div>
+    </div> 
 
     {/* Salary & Compensation */}
     <div className="bg-white border border-gray-300  shadow-md p-6 hover:shadow-lg transition">
@@ -206,8 +216,7 @@ const [leaveCount, setLeaveCount] = useState<number>(0);
         View payroll details and manage compensations.
       </p>
     </div>
-  </div>
-</div>
+  </div> 
 
     </AppLayout>
   );
