@@ -250,7 +250,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
   </Link>
 
 </div>
-
+</div>
 <div className="p-6">
       {latestLeaveRequest?.status === 'Approved' && (
         <div className="bg-green-100 text-green-800 p-4 rounded mb-4">

@@ -3,11 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Services\TypesenseService;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TimetableController;
+use App\Events\TestNotificationEvent;
+use App\Models\StudyMaterial; // ✅ Add this
+use App\Events\StudyMaterialUploaded; // ✅ If using event
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -231,6 +236,49 @@ Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index
 
 Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
     ->name('admin.overallPerformance');
+
+    Route::get('/generate-timetable', [TimetableController::class, 'generate']);
+
+
+
+Route::get('/typesense/create', function (TypesenseService $typesense) {
+    return $typesense->createCollection();
+});
+
+Route::get('/typesense/add', function (TypesenseService $typesense) {
+    return $typesense->indexDocument([
+        'id'     => '1',
+        'title'  => 'Harry Potter',
+        'author' => 'J.K. Rowling',
+        'year'   => 1997
+    ]);
+});
+
+Route::get('/typesense/search', function (TypesenseService $typesense) {
+    return $typesense->search('Harry');
+});
+
+
+Route::get('/broadcast-test', function () {
+    $material = \App\Models\StudyMaterial::create([
+        'title' => 'Sample Test Notes',
+        'grade' => '10',
+        'subject' => 'Science',
+        'uploaded_by' => auth()->id(),
+        'category' => 'General',
+        'file_url' => 'materials/sample-test-notes.pdf',  // dummy file path
+    ]);
+
+    event(new \App\Events\StudyMaterialUploaded($material));
+
+    return response()->json([
+        'message' => 'Broadcast event triggered!',
+        'material' => $material
+    ]);
+});
+
+
+
 
 
 

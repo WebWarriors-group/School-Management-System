@@ -191,8 +191,9 @@ const handleUpdate = async (event: React.FormEvent) => {
 
   return (
     <AppLayout   breadcrumbs={breadcrumbs}>
+      <main className="bg-gray-200 ">
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-9xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">Search Teacher by NIC</h1>
 
       {/* Search Input */}
@@ -212,13 +213,13 @@ const handleUpdate = async (event: React.FormEvent) => {
 
       {/* Display Teacher Details */}
 {teacher && (
-  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-4xl mx-auto shadow-lg">
+  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-10xl mx-auto shadow-lg w-300">
     <h2 className="text-4xl font-extrabold text-blue-900 text-center mb-10 tracking-wide drop-shadow-md">
       Teacher Details
     </h2>
 
     {/* Personal Information */}
-    <section className="bg-white shadow-lg rounded-lg p-8 mb-10 border-l-8 border-blue-700">
+    <section className="bg-blue-100 shadow-lg rounded-lg p-8  border-l-8 border-blue-700  max-w-10xl">
       <h3 className="text-2xl font-bold text-blue-800 mb-6 uppercase tracking-wide border-b-2 border-blue-300 pb-2">
         Personal Information
       </h3>
@@ -235,7 +236,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <span className="text-gray-400 italic">No Photo</span>
           )}
         </div>
-        <div className="flex-1 space-y-2 text-gray-800 text-lg leading-relaxed">
+        <div className="flex-1 space-y-9 text-gray-800 text-lg leading-relaxed w-600">
           <p><strong className="text-blue-700 font-semibold">NIC:</strong> {teacher.teacher_NIC}</p>
           <p><strong className="text-blue-700 font-semibold">Full Name:</strong> {teacher.personal?.Full_name || 'Not provided'}</p>
           <p><strong className="text-blue-700 font-semibold">Full Name with Initial:</strong> {teacher.personal?.Full_name_with_initial || 'Not provided'}</p>
@@ -299,7 +300,7 @@ const handleUpdate = async (event: React.FormEvent) => {
     </section>
 
     {/* Qualifications */}
-    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
+    <section className="mb-19 p-30 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
       <h3 className="text-2xl font-bold text-yellow-900 mb-6 uppercase tracking-wide border-b-2 border-yellow-300 pb-2">
         Qualifications
       </h3>
@@ -1346,8 +1347,8 @@ const handleUpdate = async (event: React.FormEvent) => {
     </div>
     
     </div>
-    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-  <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-300 mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+  <div className="max-w-7xl mx-auto p-4">
     <h1 className="text-2xl font-bold mb-6 text-center">Teacher's Table</h1>
 
     {/* STEP 1 */}
@@ -1356,9 +1357,9 @@ const handleUpdate = async (event: React.FormEvent) => {
         <h3 className="text-xl font-bold mb-4">Step 1: Teacher's Basic Information</h3>
         <div className="overflow-x-auto">
   <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+    <table className=" table-fixed min-w-1000 border border-gray-300 text-sm">
 
-            <thead className="bg-gray-200 text-gray-800">
+            <thead className="bg-blue-200 text-black text-md">
               <tr>
                 {[
                   "No.",
@@ -1380,7 +1381,7 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "Mobile number",
                   "Whatsapp number",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
+                  <th key={i} className=" border py-5 px-10 text-left">
                     {title}
                   </th>
                 ))}
@@ -1389,12 +1390,12 @@ const handleUpdate = async (event: React.FormEvent) => {
            <tbody>
   {teachers.map((teacher, index) => (
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
-      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      <td className="border px-12 py-6">{index + 1}</td>
+      <td className="border px-12 py-1">{teacher.teacher_NIC}</td>
       {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
-      <td className="border px-2 py-1">{teacher.personal?.Full_name ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Full_name_with_initial ?? "-"}</td>
-      <td className="border px-2 py-1">
+      <td className="border px-12 py-1">{teacher.personal?.Full_name ?? "-"}</td>
+      <td className="border px-12 py-1">{teacher.personal?.Full_name_with_initial ?? "-"}</td>
+      <td className="border px-12 py-1">
         {teacher.personal?.Photo ? (
           <img src={`/storage/${teacher.personal.Photo}`} alt="Teacher" className="w-10 h-10 rounded-full" />
         ) : (
@@ -1430,15 +1431,15 @@ const handleUpdate = async (event: React.FormEvent) => {
       </div>
     )}
 
-    {/* STEP 2 */}
+    
     {step === 2 && (
       <div>
         <h3 className="text-xl font-bold mb-4">Step 2: Address Information</h3>
         <div className="overflow-x-auto">
   <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+    <table className="min-w-800 border border-gray-300 text-sm">
 
-            <thead className="bg-gray-200 text-gray-800">
+            <thead className="bg-blue-200 text-black">
               <tr>
                 {[
                   "No.",
@@ -1450,7 +1451,7 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "Election Division",
                   "Election Division No.",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
+                  <th key={i} className="border px-2 py-4 text-left">
                     {title}
                   </th>
                 ))}
@@ -1459,7 +1460,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <tbody>
               {teachers.map((teacher, index) => (
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-6">{index + 1}</td>
       <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
       {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
       <td className="border px-2 py-1">{teacher.teachersaddress?.permanent_address ?? "-"}</td>
@@ -1498,9 +1499,9 @@ const handleUpdate = async (event: React.FormEvent) => {
         <h3 className="text-xl font-bold mb-4">Step 3: Work Information</h3>
         <div className="overflow-x-auto">
   <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+    <table className="min-w-1000  border border-gray-300 text-sm">
 
-            <thead className="bg-gray-200 text-gray-800">
+            <thead className="bg-blue-200 text-black">
               <tr>
                 {[
                   "No.",
@@ -1525,7 +1526,7 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "Sign Sheet No.",
                   "Salary Sheet No.",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
+                  <th key={i} className="border px-2 py-5 text-left">
                     {title}
                   </th>
                 ))}
@@ -1534,7 +1535,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <tbody>
               {teachers.map((teacher, index) => (
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-6">{index + 1}</td>
       <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
       {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
       <td className="border px-2 py-1">{teacher.appointed_date ?? "-"}</td>
@@ -1586,9 +1587,9 @@ const handleUpdate = async (event: React.FormEvent) => {
         <h3 className="text-xl font-bold mb-4">Step 4: Qualification</h3>
         <div className="overflow-x-auto">
   <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+    <table className="min-w-1000 border border-gray-300 text-sm">
 
-            <thead className="bg-gray-200 text-gray-800">
+            <thead className="bg-blue-200 text-black">
               <tr>
                 {[
                   "No.",
@@ -1610,7 +1611,7 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "School Position",
                   "School Join Date",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
+                  <th key={i} className="border px-2 py-5 text-left">
                     {title}
                   </th>
                 ))}
@@ -1619,7 +1620,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <tbody>
               {teachers.map((teacher, index) => (
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-6">{index + 1}</td>
       <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
       {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
       <td className="border px-2 py-1">{teacher.qualifications?.type_of_service_in_school ?? "-"}</td>
@@ -1668,9 +1669,9 @@ const handleUpdate = async (event: React.FormEvent) => {
         <h3 className="text-xl font-bold mb-4">Step 5: Responsibilities & Memberships</h3>
        <div className="overflow-x-auto">
   <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+    <table className="min-w-600 border border-gray-300 text-sm">
 
-            <thead className="bg-gray-200 text-gray-800">
+            <thead className="bg-blue-200 text-black">
               <tr>
                 {[
                   "No.",
@@ -1680,7 +1681,7 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "WSOP No.",
                   "Agrahara Insurance",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
+                  <th key={i} className="border px-2 py-5 text-left">
                     {title}
                   </th>
                 ))}
@@ -1689,7 +1690,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <tbody>
               {teachers.map((teacher, index) => (
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
+      <td className="border px-2 py-6">{index + 1}</td>
       <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
       {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
       <td className="border px-2 py-1">{teacher.teacherotherservice?.other_responsibilities_in_school ?? "-"}</td>
@@ -1717,6 +1718,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   </div>
 </div>
 <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+</main>
 
     </AppLayout>
   );
