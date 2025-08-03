@@ -65,7 +65,7 @@ Route::middleware('auth', 'admin')->group(function () {
 
     //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 
-    // Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
     Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
     Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
     Route::post('/study_material', [StudyMaterialController::class, 'store']);
@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/marks/{id}', [MarkController::class, 'show']);
     // Route::put('/marks/{id}', [MarkController::class, 'update']);
     // Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
+    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
 });
 
 

@@ -128,22 +128,24 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
     }
   };
 
-  return (
-    <AppLayout breadcrumbs={[{ title: '📄 Report Page', href: '#' }]}>
-      <main className='bg-gray-100 max-h-full'>
-    <div className="max-w-5xl mx-auto p-6 bg">
-      <h1 className="text-2xl font-bold mb-6">Enter Student Marks</h1>
+  return(
 
-      {/* Class selector */}
-      <div className="mb-6">
-        <label className="block mb-2 font-medium" htmlFor="classSelect">
-          Select Class:
+  <AppLayout breadcrumbs={[{ title: '📄 Report Page', href: '#' }]}>
+    <main className="bg-gray-100">
+  <div className="max-w-6xl mx-auto mt-10 px-6">
+    <div className="bg-white shadow-md p-8 space-y-8">
+      <h1 className="text-3xl font-semibold text-gray-800">📘 Enter Student Marks</h1>
+
+      {/* Class Selector */}
+      <div className="space-y-2">
+        <label htmlFor="classSelect" className="block text-lg font-medium text-gray-700">
+          Select Class
         </label>
         <select
           id="classSelect"
           value={selectedClassId ?? ''}
           onChange={handleClassChange}
-          className="border p-2 rounded w-full max-w-xs"
+          className="w-full max-w-sm border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="" disabled>
             -- Select Class --
@@ -156,17 +158,14 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
         </select>
       </div>
 
-      {/* Term, Year, Subject ID inputs */}
-      <div className="mb-6 flex flex-wrap gap-4 items-end">
+      {/* Term / Year / Subject Inputs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <label className="block mb-1 font-medium" htmlFor="termSelect">
-            Term
-          </label>
+          <label className="block mb-1 text-lg font-medium text-gray-700">Term</label>
           <select
-            id="termSelect"
             value={term}
             onChange={(e) => setTerm(e.target.value)}
-            className="border p-2 rounded"
+            className="w-full border border-gray-300 rounded-lg p-2"
           >
             <option>Term 1</option>
             <option>Term 2</option>
@@ -175,98 +174,95 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium" htmlFor="yearInput">
-            Year
-          </label>
+          <label className="block mb-1 text-lg font-medium text-gray-700">Year</label>
           <input
-            id="yearInput"
             type="number"
             min={2000}
             max={2100}
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
-            className="border p-2 rounded w-24"
+            className="w-full border border-gray-300 rounded-lg p-2"
           />
         </div>
 
         <div>
-          <label className="block mb-1 font-medium" htmlFor="subjectIdInput">
-            Subject ID
-          </label>
+          <label className="block mb-1 text-lg font-medium text-gray-700">Subject ID</label>
           <input
-            id="subjectIdInput"
             type="text"
             value={subjectId}
             onChange={(e) => setSubjectId(e.target.value)}
-            className="border p-2 rounded"
+            className="w-full border border-gray-300 rounded-lg p-2"
           />
         </div>
       </div>
 
-      {/* Marks table */}
+      {/* Student Marks Table */}
       {marks.length > 0 ? (
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-3 py-1">Reg No</th>
-              <th className="border border-gray-300 px-3 py-1">Name</th>
-              <th className="border border-gray-300 px-3 py-1">Marks Obtained</th>
-              <th className="border border-gray-300 px-3 py-1">Grade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {marks.map((mark, i) => (
-              <tr key={mark.reg_no}>
-                <td className="border border-gray-300 px-3 py-1">{mark.reg_no}</td>
-                <td className="border border-gray-300 px-3 py-1">
-                  {students.find((s) => s.reg_no === mark.reg_no)?.name ?? 'N/A'}
-                </td>
-                <td className="border border-gray-300 px-3 py-1">
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={mark.marks_obtained}
-                    onChange={(e) =>
-                      handleMarkChange(i, 'marks_obtained', e.target.value)
-                    }
-                    className="border rounded px-2 py-1 w-24"
-                  />
-                </td>
-                <td className="border border-gray-300 px-3 py-1">
-                  <select
-                    value={mark.grade}
-                    onChange={(e) => handleMarkChange(i, 'grade', e.target.value)}
-                    className="border rounded px-2 py-1"
-                  >
-                    <option value="">Select Grade</option>
-                    {allowedGrades.map((g) => (
-                      <option key={g} value={g}>
-                        {g}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-md border border-gray-800 rounded-md shadow-sm">
+            <thead className="bg-blue-200 text-gray-700">
+              <tr>
+                <th className="text-left px-4 py-2 border border-gray-900">Reg No</th>
+                <th className="text-left px-4 py-2 border border-gray-900">Name</th>
+                <th className="text-left px-4 py-2 border border-gray-900">Marks</th>
+                <th className="text-left px-4 py-2 border border-gray-900">Grade</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {marks.map((mark, i) => (
+                <tr key={mark.reg_no} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border">{mark.reg_no}</td>
+                  <td className="px-4 py-2 border">
+                    {students.find((s) => s.reg_no === mark.reg_no)?.name ?? 'N/A'}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={mark.marks_obtained}
+                      onChange={(e) => handleMarkChange(i, 'marks_obtained', e.target.value)}
+                      className="w-24 border rounded px-2 py-1"
+                    />
+                  </td>
+                  <td className="px-4 py-2 border">
+                    <select
+                      value={mark.grade}
+                      onChange={(e) => handleMarkChange(i, 'grade', e.target.value)}
+                      className="border rounded px-2 py-1"
+                    >
+                      <option value="">Select Grade</option>
+                      {allowedGrades.map((g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
-        <p>No students found or please select a class and subject.</p>
+        <p className="text-gray-600">No students found. Please select a class and subject.</p>
       )}
 
-      {/* Submit button */}
-      <button
-        onClick={handleSubmit}
-       
-        className="mt-6 bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-      >
-        Submit All Marks
-      </button>
+      {/* Submit Button */}
+      <div className="pt-4">
+        <button
+          onClick={handleSubmit}
+          disabled={marks.length === 0}
+          className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
+        >
+          Submit All Marks
+        </button>
+      </div>
     </div>
-    </main>
-    </AppLayout>
-  );
+  </div>
+  </main>
+</AppLayout>
+  )
 };
 
 export default MarksPage;
