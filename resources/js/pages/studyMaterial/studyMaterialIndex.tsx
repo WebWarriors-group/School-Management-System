@@ -34,11 +34,8 @@ interface Props {
 }
 
 const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
-    const auth = (usePage().props as any).auth as {
-        user: {
-            role: string;
-        } | null;
-    };
+    
+    const user = usePage().props.auth.user;
 
     const [selectedGrade, setSelectedGrade] = useState("");
     const [selectedSubject, setSelectedSubject] = useState("");
@@ -56,7 +53,7 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
     
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={breadcrumbs} user={user}>
             <Head title="Study Materials" />
             <div className="flex flex-col w-full gap-6 bg-gradient-to-b from-gray-100 to-gray-200 min-h-screen pb-10">
 
@@ -77,7 +74,7 @@ const StudyMaterialIndex: React.FC<Props> = ({ category, materials }) => {
                                 category
                             }</span>
                         </h2>
-                        {auth.user?.role === "admin" && (
+                        {user?.role === "admin" && (
                             <button onClick={() => setShowForm(!showForm)} className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
                                 Upload materials
                             </button>

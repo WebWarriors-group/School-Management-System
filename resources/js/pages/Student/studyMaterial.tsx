@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Facebook, Mail, MapPin, Menu, X } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import StudentSidebar from './StudentSidebar';
+import StudyMaterials from '../studyMaterial/studyMaterials';
+import { types } from 'util';
 
 const breadcrumbs = [
   {
@@ -13,9 +15,9 @@ const breadcrumbs = [
 ];
 
 export default function StudentDashboard() {
-  const user = usePage().props.auth.user;
-
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const user = usePage().props.auth.user;
 
   return (
     <AppLayout breadcrumbs={breadcrumbs} user={user}>
@@ -79,51 +81,9 @@ export default function StudentDashboard() {
           <h2 className="text-lg font-bold text-yellow-700 mb-4">🎓 Student Menu</h2>
           <StudentSidebar />
         </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6 space-y-6">
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 rounded-xl shadow">
-            <h1 className="text-3xl font-bold">Welcome, Student!</h1>
-            <p className="text-sm">Explore your student dashboard for academic and personal updates</p>
-          </div>
-
-          {/* Quick Info Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { label: 'Study Materials', value: 'Notes & Past papers', icon: '📅', link: '/student/studyMaterial' },
-              { label: 'Scholarship', value: 'Yes', icon: '🎓' },
-              { label: 'Attendance', value: '96%', icon: '📅' },
-              { label: 'Avg Marks', value: '82%', icon: '📈' },
-            ].map((card, i) => {
-              const content = (
-                <div className="bg-white p-4 rounded shadow flex items-center hover:bg-gray-100 transition cursor-pointer">
-                  <div className="text-3xl mr-4">{card.icon}</div>
-                  <div>
-                    <p className="text-gray-700 font-semibold">{card.label}</p>
-                    <p className="text-sm text-gray-500">{card.value}</p>
-                  </div>
-                </div>
-              );
-
-              return (
-                <div key={i}>
-                  {card.link ? (
-                    <Link href={card.link}>{content}</Link>
-                  ) : (
-                    content
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Academic Updates */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold text-brown-700 mb-2">📚 Academic Updates</h2>
-            <p className="text-gray-600">You have upcoming exams and assignments. Stay tuned!</p>
-          </div>
-        </main>
+            <StudyMaterials />
       </div>
     </AppLayout>
   );
 }
+          
