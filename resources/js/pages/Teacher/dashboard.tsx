@@ -231,22 +231,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
   <div className="w-24 h-24 mx-auto rounded-full bg-gray-100 border-4 border-blue-500 flex items-center justify-center text-gray-400 text-2xl font-bold">
     ?
   </div>
-<<<<<<< HEAD
    {/* View Profile Button */}
-=======
-  </div>
-
-
-          {/* Calendar */}
-          <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
-  <Calendar
-    value={date}
-    
-    className="text-sm border border-gray-300 rounded-lg"
-  />
-
-  {/* View Profile Button */}
->>>>>>> 2021_CSC_101_MarksPage
   <Link
     href={route('teacher.profile')}
     className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2 rounded-full transition duration-300"
@@ -255,23 +240,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
   </Link>
 
 </div>
-<<<<<<< HEAD
 </div>
-=======
-
-          
-
- 
-{/* </div> */}
-{/* Calendar */}
-          <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
-  <Calendar
-    value={date}
-    
-    className="text-sm border border-gray-300 rounded-lg"
-  />
-
->>>>>>> risani
 <div className="p-6">
       {latestLeaveRequest?.status === 'Approved' && (
         <div className="bg-green-100 text-green-800 p-4 rounded mb-4">
