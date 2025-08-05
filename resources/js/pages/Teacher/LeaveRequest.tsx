@@ -63,10 +63,10 @@ Inertia.post('/teacher/leave/request', payload, {
       
 
 <button
-  onClick={() => router.visit('/dashboard')}
+  onClick={() => router.visit('/teacher/dashboard')}
   className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 mb-4"
 >
-  ← Back to Dashboard
+  ← Dashboard
 </button>
 
       <h2 className="text-2xl font-bold mb-6 text-gray-800">📝 Leave Request Form</h2>
@@ -90,31 +90,35 @@ Inertia.post('/teacher/leave/request', payload, {
           </select>
         </div>
 
-        {/* Start & End Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block mb-2 font-medium text-gray-700">Start Date</label>
-            <input
-              type="date"
-              name="leave_start_date"
-              value={formData.leave_start_date}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-md px-4 py-2"
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-medium text-gray-700">End Date</label>
-            <input
-              type="date"
-              name="leave_end_date"
-              value={formData.leave_end_date}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-md px-4 py-2"
-            />
-          </div>
-        </div>
+  {/* Start Date */}
+  <div>
+    <label className="block mb-2 font-medium text-gray-700">Start Date</label>
+    <input
+      type="date"
+      name="leave_start_date"
+      value={formData.leave_start_date}
+      onChange={handleChange}
+      required
+      className="w-full border border-gray-300 rounded-md px-4 py-2"
+    />
+  </div>
+
+  {/* End Date (with min attribute set to start date) */}
+  <div>
+    <label className="block mb-2 font-medium text-gray-700">End Date</label>
+    <input
+      type="date"
+      name="leave_end_date"
+      value={formData.leave_end_date}
+      onChange={handleChange}
+      min={formData.leave_start_date} // 🔐 disables all dates before start date
+      required
+      className="w-full border border-gray-300 rounded-md px-4 py-2"
+    />
+  </div>
+</div>
+
 
         {/* Total Leave Days */}
         {formData.leave_start_date && formData.leave_end_date && (
