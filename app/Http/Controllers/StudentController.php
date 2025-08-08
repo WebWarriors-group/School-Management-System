@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentAdmissionMail;
 use App\Models\Marks;
 use App\Models\Subject;
+use App\Http\Resources\MarksResource;
 
 class StudentController extends Controller
 {
@@ -376,4 +377,35 @@ class StudentController extends Controller
             ],
         ]);
     }
+ public function getMarksBySubject($reg_no)
+{
+   $marks = Marks::with('subject')
+        ->where('reg_no', $reg_no)
+        ->get();
+
+    return response()->json($marks);
+}
+public function calendarData()
+{
+    $student = auth()->user();
+
+    $examEvents = $student->exams()->get(['title', 'exam_date as date']);
+    $feeDue = $student->fees()->where('status', 'pending')->get(['due_date as date', 'amount']);
+    $assignments = $student->assignments()->get(['title', 'due_date as date']);
+    $holidays = Holiday::all(['name as title', 'date']); // public holidays
+
+    return response()->json([
+        'exams' => $examEvents,
+        'fees' => $feeDue,
+        'assignments' => $assignments,
+        'holidays' => $holidays,
+    ]);
+}
+// Export as Excel
+public function exportExcel()
+{
+    return Excel::download(new StudentExport, 'student_profile.xlsx');
+}
+
+
 }

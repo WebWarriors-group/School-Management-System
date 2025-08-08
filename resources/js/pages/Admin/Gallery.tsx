@@ -31,6 +31,7 @@ export default function Gallery({ categories }: PageProps) {
   const [image, setImage] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState<number | ''>('');
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [openCategory, setOpenCategory] = useState<number | null>(null); // 👈 Track open category
 
   const handleCategorySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,103 +63,131 @@ export default function Gallery({ categories }: PageProps) {
     });
   };
 
+  const toggleCategory = (id: number) => {
+    setOpenCategory(openCategory === id ? null : id);
+  };
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <main className="bg-gray-100">
-    <div className="max-w-5xl mx-auto p-6 space-y-8 ">
-      {/* Category Form */}
-      <div className="bg-white p-6 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">🗂️ Add Category</h2>
-        <form onSubmit={handleCategorySubmit} className="flex gap-4">
-          <input
-            type="text"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-            placeholder="Enter category name"
-            className="flex-1 border px-3 py-2 rounded"
-            required
-          />
-          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            Add
-          </button>
-        </form>
-      </div>
+      <main className="bg-gray-100 min-h-screen">
+        <div className="max-w-5xl mx-auto p-6 space-y-8">
 
-      {/* Image Upload Form */}
-      <div className="bg-white p-6 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">📸 Upload Image</h2>
-        <form onSubmit={handleImageSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Category</label>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(Number(e.target.value))}
-              className="w-full border px-3 py-2 rounded"
-              required
-            >
-              <option value="">-- Select Category --</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
-            </select>
+          {/* Category Form */}
+          <div className="bg-white p-6 rounded shadow">
+            <h2 className="text-2xl font-bold mb-4">🗂️ Add Category</h2>
+            <form onSubmit={handleCategorySubmit} className="flex gap-4">
+              <input
+                type="text"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                placeholder="Enter category name"
+                className="flex-1 border px-3 py-2 rounded"
+                required
+              />
+              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Add
+              </button>
+            </form>
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full border px-3 py-2 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Image</label>
-            <input
-              type="file"
-              onChange={(e) => setImage(e.target.files?.[0] || null)}
-              accept="image/*"
-              className="w-full border px-3 py-2 rounded"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Upload
-          </button>
-        </form>
-      </div>
-
-      {/* Render Images Grouped by Category */}
-      <div className="space-y-12">
-        {categories.map((category) => (
-          <div key={category.id}>
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">{category.name}</h3>
-            {category.images.length === 0 ? (
-              <p className="text-gray-500 italic">No images uploaded in this category yet.</p>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {category.images.map((img) => (
-                  <div key={img.id} className="border rounded shadow">
-                    <img src={`/${img.image_path}`} alt={img.title || 'Untitled'} />
-
-                    <div className="p-2 text-center text-sm text-gray-700">
-                      {img.title || 'Untitled'}
-                    </div>
-                  </div>
-                ))}
+          {/* Image Upload Form */}
+          <div className="bg-white p-6 rounded shadow">
+            <h2 className="text-2xl font-bold mb-4">📸 Upload Image</h2>
+            <form onSubmit={handleImageSubmit} className="space-y-4">
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Category</label>
+                <select
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(Number(e.target.value))}
+                  className="w-full border px-3 py-2 rounded"
+                  required
+                >
+                  <option value="">-- Select Category --</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
               </div>
-            )}
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Title</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full border px-3 py-2 rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Image</label>
+                <input
+                  type="file"
+                  onChange={(e) => setImage(e.target.files?.[0] || null)}
+                  accept="image/*"
+                  className="w-full border px-3 py-2 rounded"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Upload
+              </button>
+            </form>
           </div>
-        ))}
-      </div>
-    </div>
-    </main>
+
+          {/* Category Cards */}
+          <div className="space-y-6">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="bg-white rounded shadow border"
+              >
+                {/* Category Card Header */}
+                <div
+                  className="cursor-pointer p-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100"
+                  onClick={() => toggleCategory(category.id)}
+                >
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    📁 {category.name}
+                  </h3>
+                  <span className="text-sm text-blue-600">
+                    {openCategory === category.id ? '▲ Hide Images' : '▼ Show Images'}
+                  </span>
+                </div>
+
+                {/* Image Grid - Only if this category is open */}
+                {openCategory === category.id && (
+                  <div className="p-4">
+                    {category.images.length === 0 ? (
+                      <p className="text-gray-500 italic">No images uploaded in this category yet.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {category.images.map((img) => (
+                          <div key={img.id} className="border rounded shadow-sm">
+                            <img
+                              src={`/${img.image_path}`}
+                              alt={img.title || 'Untitled'}
+                              className="w-full h-40 object-cover rounded-t"
+                            />
+                            <div className="p-2 text-center text-sm text-gray-700">
+                              {img.title || 'Untitled'}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </AppLayout>
   );
 }

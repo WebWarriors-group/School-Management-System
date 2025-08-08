@@ -256,8 +256,12 @@ const COLORS = ['#CC7722', '#FFBF00'];
 
 </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 </div>
 =======
+=======
+</div>
+>>>>>>> student_dashboard
 
           
 

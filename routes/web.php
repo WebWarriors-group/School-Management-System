@@ -20,7 +20,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeacherRequestController;
-use App\Models\Img;
+use App\Models\GalleryImage;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
@@ -33,19 +33,28 @@ use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
+ use App\Models\GalleryCategory;
+ 
 
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
-Route::get('/', function () {
-    $images = Img::all(); 
 
-    return Inertia::render('homepage', [
-        'img' =>[
-            'data'=> $images], 
+
+
+  
+
+Route::get('/', function () {
+    $categories = GalleryCategory::with('images')->get();
+
+    return Inertia::render('homepage', [  // your React page name
+        'categories' => $categories,
     ]);
+
+
 })->name('homepage');
+
 
 
 

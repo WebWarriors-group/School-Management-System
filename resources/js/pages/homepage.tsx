@@ -4,39 +4,52 @@ import { useState, useEffect, useRef } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 import { usePage } from '@inertiajs/react';
 
-export default function Navbar() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const {
-    img
-  } = usePage<{
-    img: {
-      data: {
-        title: string,
-        path: string,
-        id: number
-      }[]
+
+interface Image {
+  id: number;
+  title: string;
+  image_path: string;
+}
+
+interface GalleryCategory {
+  id: number;
+  name: string;
+  images: Image[];
+}
+
+interface Props {
+  categories: GalleryCategory[];
+}
+
+
+export default function Navbar({ categories }: Props) {
+  const [openCategory, setOpenCategory] = useState<GalleryCategory | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const toggleCategory = (category: GalleryCategory) => {
+    setOpenCategory((prev) => (prev?.id === category.id ? null : category));
+  };
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (!carouselRef.current) return;
+
+    const scrollAmount = carouselRef.current.clientWidth / 2;
+
+    if (direction === 'left') {
+      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-  }>().props;
+  };
 
-  interface ModalProps {
-    image: { src: string; alt: string };
-    onClose: () => void;
-  }
+const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const Modal = ({ image, onClose }: ModalProps) => {
-    const modalRef = useRef<HTMLDivElement>(null);
+  
 
-    useEffect(() => {
-      const handleKeydown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
-      };
-      window.addEventListener("keydown", handleKeydown);
-      return () => window.removeEventListener("keydown", handleKeydown);
-    }, [onClose]);
-  };
+    
 
   return (
     <>
@@ -148,44 +161,125 @@ export default function Navbar() {
 
 
        
-        <section className="py-16 px-6 md:px-20 bg-gray-200 ">
-           <h2 className="text-4xl font-bold text-black text-center mb-10">Gallery</h2>
-          <div className="flex overflow-x-auto space-x-4 px-20 py-6 mt-10 bg-gray-800">
-            {img.data.map((image) => (
-              <div
-                key={image.id}
-                className="relative flex-shrink-0 w-[250px] group cursor-pointer overflow-hidden  shadow-md"
-                onClick={() => setSelectedImage(`/images/${image.path}`)}
-              >
-                <img
-                  src={`/images/${image.path}`}
-                  alt={image.title || 'Gallery image'}
-                  className="w-full h-[260px] object-cover transform transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {image.title}
-                </div>
+     
+
+<section className="py-16 px-6 md:px-20 bg-gray-200">
+  {/* Category Cards */}
+  <div className="flex space-x-6 overflow-x-auto pb-4">
+    {categories.map((category) => (
+      <div
+        key={category.id}
+        className={`cursor-pointer min-w-[180px] bg-white rounded shadow border p-4 flex-shrink-0 ${
+          openCategory?.id === category.id
+            ? 'border-blue-600 bg-blue-50'
+            : 'border-gray-300 hover:bg-gray-100'
+        }`}
+        onClick={() => toggleCategory(category)}
+      >
+        <h3 className="text-lg font-semibold text-gray-800 whitespace-nowrap">
+          📁 {category.name}
+        </h3>
+        <p className="text-sm text-gray-600 mt-1">{category.images.length} images</p>
+      </div>
+    ))}
+  </div>
+
+  {/* Selected Category */}
+  {openCategory && (
+    <div className="relative mt-8">
+      <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+        {openCategory.name} Images
+      </h3>
+
+      {/* Scroll Buttons */}
+      <button
+        onClick={() => scrollCarousel('left')}
+        className="absolute left-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => scrollCarousel('right')}
+        className="absolute right-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10"
+      >
+        ›
+      </button>
+
+      {openCategory.images.length === 0 ? (
+        <p className="text-gray-500 italic">No images uploaded in this category yet.</p>
+      ) : (
+        <div
+          ref={carouselRef}
+          className="flex space-x-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
+        >
+          {openCategory.images.map((img, index) => (
+            <div
+              key={img.id}
+              onClick={() => setLightboxIndex(index)}
+              className="snap-start border rounded shadow-sm flex-shrink-0 w-64 cursor-pointer"
+            >
+              <img
+                src={`/${img.image_path}`}
+                alt={img.title || 'Untitled'}
+                className="w-full h-40 object-cover rounded-t"
+              />
+              <div className="p-2 text-center text-sm text-gray-700">
+                {img.title || 'Untitled'}
               </div>
-            ))}
-          </div>
-        </section>
-
-       
-        {selectedImage && (
-          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center" onClick={() => setSelectedImage(null)}>
-            <div className="relative max-w-5xl w-full p-4">
-              <img src={selectedImage} alt="Full View" className="w-full max-h-[80vh] object-contain rounded-lg hover:cursor-pointer" />
-              <button
-                onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-                className="absolute top-2 right-2 bg-black/60 text-white px-3 py-1 rounded hover:bg-black cursor-pointer"
-              >
-                ✕
-              </button>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
+      )}
+    </div>
+  )}
 
-       
+  {/* Lightbox */}
+  {lightboxIndex !== null && (
+    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+      {/* Close Button */}
+      <button
+        className="absolute top-6 right-6 text-white text-3xl"
+        onClick={() => setLightboxIndex(null)}
+      >
+        ✕
+      </button>
+
+      {/* Prev Button */}
+      <button
+        className="absolute left-6 text-white text-4xl"
+        onClick={() =>
+          setLightboxIndex(
+            (prev) =>
+              (prev! - 1 + openCategory.images.length) %
+              openCategory.images.length
+          )
+        }
+      >
+        ‹
+      </button>
+
+      {/* Big Image */}
+      <img
+        src={`/${openCategory.images[lightboxIndex].image_path}`}
+        alt={openCategory.images[lightboxIndex].title || 'Untitled'}
+        className="max-w-[90%] max-h-[80%] rounded shadow-lg"
+      />
+
+      {/* Next Button */}
+      <button
+        className="absolute right-6 text-white text-4xl"
+        onClick={() =>
+          setLightboxIndex(
+            (prev) => (prev! + 1) % openCategory.images.length
+          )
+        }
+      >
+        ›
+      </button>
+    </div>
+  )}
+</section>
+
         <footer className="bg-[#650000] text-white py-7 ">
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0 text-center md:text-left">
