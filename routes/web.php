@@ -306,6 +306,11 @@ Route::post('/category', [GalleryImageController::class, 'storeCategory']);
 
 // Route::post('/marks/bulk', [MarkController::class, 'storeBulkMarks']);
 Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+Route::get('/marks', [MarkController::class, 'getMarks']);
+Route::post('/marks/update', [MarkController::class, 'updateMark']);
+Route::post('/marks/delete', [MarkController::class, 'delete']);
+
+Route::post('/marks/storeBulkMarks', [MarkController::class, 'storeBulkMarks'])->name('marks.storeBulkMarks');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
