@@ -229,17 +229,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
 
   {/* Profile Picture Placeholder */}
   <div className="w-24 h-24 mx-auto rounded-full bg-gray-100 border-4 border-blue-500 flex items-center justify-center text-gray-400 text-2xl font-bold">
-   <div className="flex-shrink-0">
-          {teacher.personal?.Photo ? (
-            <img
-              src={`/storage/${teacher.personal.Photo}`}
-              alt="Teacher"
-              className="w-32 h-32 rounded-full object-cover shadow-xl border-4 border-blue-600 ring-4 ring-blue-200"
-            />
-          ) : (
-            <span className="text-gray-400 italic">No Photo</span>
-          )}
-        </div>
+    ?
   </div>
    {/* View Profile Button */}
   <Link
@@ -250,16 +240,6 @@ const COLORS = ['#CC7722', '#FFBF00'];
   </Link>
 
 </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-</div>
-=======
-=======
-</div>
->>>>>>> student_dashboard
-=======
->>>>>>> 5f46cc427a4edea14a88ccdd35cf41f375244e99
 
           
 
@@ -440,7 +420,8 @@ const COLORS = ['#CC7722', '#FFBF00'];
           {/* Banner */}
           <div className="bg-gradient-to-r from-purple-800 to-indigo-800 text-white p-6 rounded-xl shadow">
             <h1 className="text-3xl font-bold">Welcome, Teacher!</h1>
-            
+            <p className="text-sm text-gray-100">NIC: {teacher.teacher_NIC}</p>
+<p className="text-sm text-gray-100">User ID: {teacher.user_id}</p>
 
             <p className="text-sm">Explore your dashboard for insights and actions</p>
           </div>

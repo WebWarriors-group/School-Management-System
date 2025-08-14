@@ -18,7 +18,6 @@ class Marks extends Model
         'grade',
         'term',
         'year',           // Include if you store it directly, otherwise access via studentAcademic
-        'current_grade',  // Your added column
     ];
 
     // Relationship with StudentAcademicInfo (assuming 'reg_no' is the primary key in student_academic_info)
