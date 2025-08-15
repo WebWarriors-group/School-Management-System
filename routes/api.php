@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Http;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,8 @@ use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Api\EventController;
 use App\Mail\StudentAdmissionMail;
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
         'id' => $request->user()->id,
@@ -53,9 +56,31 @@ Route::post('/send-admission-form', function (Illuminate\Http\Request $request) 
 
     return response()->json(['message' => 'Admission form email sent successfully!']);
 });
+Route::post('/chat', function(Request $request){
+    $message = $request->input('message', '');
 
+    try {
+        $response = Http::timeout(10)->post('http://127.0.0.1:5000/chat', [
+            'message' => $message
+        ]);
 
-
+        // Check if Flask responded with JSON
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json([
+                'error' => 'Flask server returned an error',
+                'status' => $response->status(),
+                'body' => $response->body()
+            ], 500);
+        }
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to connect to Flask server',
+            'details' => $e->getMessage()
+        ], 500);
+    }
+});
 Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
 Route::get('/subjects/{subject_id}', [SubjectController::class, 'show']);
 Route::put('/subjects/{subject_id}', [SubjectController::class, 'update']);
