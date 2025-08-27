@@ -201,12 +201,12 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     const hasFilter = filters.grade || filters.section || filters.class_name;
 
     if (hasFilter) {
-      setClass(true); // Show class table if filter applied
+      setClass(true); 
     } else {
-      setClass(false); // Hide class table if no filter (e.g. after "Back")
+      setClass(false); 
     }
 
-    // Optional: sync local state with filter props
+    
     setGrade(filters.grade || '');
     setSection(filters.section || '');
     setClassName(filters.class_name || '');
@@ -295,9 +295,8 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimate(true);
-      setTimeout(() => setAnimate(false), 2000); // animation duration
-    }, 9000); // repeat every 2 seconds
-
+      setTimeout(() => setAnimate(false), 2000); 
+    }, 9000); 
     return () => clearInterval(interval);
   }, []);
 

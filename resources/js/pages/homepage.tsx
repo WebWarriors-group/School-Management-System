@@ -24,9 +24,11 @@ interface Props {
 
 export default function Navbar({ categories }: Props) {
   const [openCategory, setOpenCategory] = useState<GalleryCategory | null>(null);
+  const [open, setOpen] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const toggleCategory = (category: GalleryCategory) => {
+    setOpen(false);
     setOpenCategory((prev) => (prev?.id === category.id ? null : category));
   };
 
@@ -183,7 +185,8 @@ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     <section className="py-16  md:px-20 bg-gray-200 w-full">
 <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 mt-15 max-[639px]:text-3xl max-[639px]:mt-1">Image Gallery</h2>
       <div className=" bg-white grid flex-wrap grid-cols-4 space-x-2 space-y-6  pb-4 py-9 px-4 item-center justify-center " >
-        {categories.map((category) => (
+        
+        {open && categories.map((category) => (
           <div
   key={category.id}
   className={`relative w-[280px] h-[180px]  overflow-hidden shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer
@@ -207,66 +210,66 @@ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   <div className="absolute inset-0 bg-blue-900 bg-opacity-40"></div>
 
   {/* Text content */}
-  <div className="relative z-10 flex flex-col justify-center items-center h-full text-center text-white">
+  <div className="relative z-10 flex flex-col  flex-wrap justify-center items-center h-full text-center text-white">
     <h1 className="text-lg font-bold">{category.name.toUpperCase()}</h1>
     <p className="text-sm mt-1">{category.images.length} images</p>
   </div>
 </div>
 
         ))}
-      </div>
+     
 
       {/* Show Carousel */}
       {openCategory && (
-        <div className="relative mt-8">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-            {openCategory.name} Images
-          </h3>
+        <div className=" mt-8  relative h-90 w-330 ">
+         
 
           {/* Carousel Buttons */}
           <button
             onClick={() => scrollCarousel("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10 cursor:pointer"
             aria-label="Scroll Left"
           >
             ‹
           </button>
           <button
             onClick={() => scrollCarousel("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10 cursor:[pointer]"
             aria-label="Scroll Right"
           >
             ›
           </button>
 
           {/* Carousel */}
-          {openCategory.images.length === 0 ? (
-            <p className="text-gray-500 italic">
-              No images uploaded in this category yet.
-            </p>
-          ) : (
-            <div
-              ref={carouselRef}
-              className="flex space-x-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
-            >
-              {openCategory.images.map((img, index) => (
-                <div
-                  key={img.id}
-                  className="snap-start border rounded shadow-sm flex-shrink-0 w-64 cursor-pointer"
-                  onClick={() => setLightboxIndex(index)}
-                >
-                  <img
-                    src={`/${img.image_path}`}
-                    alt={img.title || "Untitled"}
-                    className="w-full h-40 object-cover rounded-t"
-                  />
-                  <div className="p-2 text-center text-sm text-gray-700">
-                    {img.title || "Untitled"}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+         {/* Carousel */}
+{openCategory.images.length === 0 ? (
+  <p className="text-gray-500 italic text-center py-10">
+    No images uploaded in this category yet.
+  </p>
+) : (
+  <div
+    ref={carouselRef}
+    className="flex flex-nowrap overflow-x-auto space-x-6 snap-x snap-mandatory scroll-smooth scrollbar-hide py-4"
+  >
+    {openCategory.images.map((img, index) => (
+      <div
+        key={img.id}
+        className="snap-start border rounded shadow-sm flex-shrink-0 w-64 cursor-pointer bg-white"
+        onClick={() => setLightboxIndex(index)}
+      >
+        <img
+          src={`/${img.image_path}`}
+          alt={img.title || "Untitled"}
+          className="w-full h-60 object-cover rounded-t"
+        />
+        <div className="p-2 text-center text-sm text-gray-700">
+          {img.title || "Untitled"}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
         </div>
       )}
 
@@ -286,6 +289,7 @@ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
           />
         </div>
       )}
+       </div>
     </section>
 
         <footer className="bg-[#650000] text-white py-7 ">

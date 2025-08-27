@@ -53,7 +53,7 @@ interface Props {
 export default function AssignClassTeachers({ classes, teachers }: Props) {
   
   const [selectedClassName, setSelectedClassName] = useState<string>('');
-  const [selectedGrade, setSelectedGrade] = useState<string>(''); // keep as string for <select>
+  const [selectedGrade, setSelectedGrade] = useState<string>(''); 
 const [expandedGrade, setExpandedGrade] = useState<string | null>(null);
 const [selectedTeacherNIC, setSelectedTeacherNIC] = useState<string>('');
 const assignedTeacherNICs = new Set<string>();
@@ -65,8 +65,7 @@ const assignedTeacherNICs = new Set<string>();
   const [submitted, setSubmitted] = useState(false);
   const [showForm, setShowForm] = useState(true);
 
-  
-  // Collect all assigned teachers NICs
+
   Object.values(classes).forEach(classGroup => {
     Object.values(classGroup).forEach(sections => {
       sections.forEach(section => {
@@ -148,7 +147,7 @@ const assignedTeacherNICs = new Set<string>();
 
   
 
-// ✅ New useEffect to rehydrate sectionAssignments after navigation or reload
+
 useEffect(() => {
   if (selectedClassName && selectedGrade !== '') {
     const gradeNumLocal = parseInt(selectedGrade);
@@ -217,7 +216,7 @@ useEffect(() => {
   <button
     onClick={handleReset}
     type="button"
-    className="bg-red-700 text-white px-4 py-2 hover:bg-red-700 transition-colors duration-200 "
+    className="bg-red-700 text-white px-4 py-2 hover:bg-red-700 transition-colors duration-200 cursor-pointer transform scale-90 transition-transform duration-900 hover:scale-100 z-40 "
     disabled={!selectedClassName || selectedGrade === ''}
   >
     Reset Assignments
@@ -232,7 +231,7 @@ useEffect(() => {
             <div
               key={grade}
               onClick={() => setExpandedGrade(prev => (prev === grade ? null : grade))}
-              className="border border-gray-200 shadow-xl p-8 bg-white hover:shadow-md transition hover:cursor-pointer"
+              className="border border-gray-200 shadow-xl p-8 bg-white hover:shadow-md transition hover:cursor-pointer   transition-transform duration-700 hover:scale-110 z-40"
             >
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-semibold text-lg">{grade}</h3>
@@ -316,13 +315,13 @@ useEffect(() => {
           <div className="mb-4">
             <label className="block mb-5 font-medium">Select Class Name:</label>
             <select
-              className="w-full border px-3 py-4 rounded"
+              className="w-full border px-3 py-4 rounded hover:cursor-pointer"
               value={selectedClassName}
               onChange={handleClassNameChange}
             >
-              <option value="">-- Select Class Name --</option>
+              <option value="" className='cursor-pointer'>-- Select Class Name --</option>
               {Object.keys(classes).map(className => (
-                <option key={className} value={className}>
+                <option key={className} value={className} className="cursor-pointer">
                   {className}
                 </option>
               ))}
@@ -332,9 +331,9 @@ useEffect(() => {
           {/* Select Grade */}
          {selectedClassName ? (
   <div className="mb-4">
-    <label className="block mb-1 font-medium">Select Grade:</label>
+    <label className="block mb-1 font-medium ">Select Grade:</label>
     <select
-      className="w-full border px-3 py-4 rounded"
+      className="w-full border px-3 py-4 rounded cursor-pointer"
       value={selectedGrade}
       onChange={handleGradeChange}
     >
@@ -360,7 +359,7 @@ useEffect(() => {
                 <div key={sectionClass.section} className="flex items-center gap-4">
                   <label className="w-24 font-medium">Section {sectionClass.section}:</label>
                   <select
-                    className="flex-1 border px-3 py-3 rounded"
+                    className="flex-1 border px-3 py-3 rounded hover: cursor-pointer"
                     value={sectionAssignments[sectionClass.section] || ''}
                     onChange={e => handleTeacherSelect(sectionClass.section, e.target.value)}
                   >
@@ -389,7 +388,7 @@ useEffect(() => {
 
               <button
                 onClick={handleSubmit}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
+                className="mt-4 bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 hover:cursor-pointer transform scale-90 transition-transform duration-300 hover:scale-100 z-40"
               >
                 Submit
               </button>
@@ -400,9 +399,9 @@ useEffect(() => {
         </div>
 
         {/* Teacher Profile Card (right side) */}
-        <div className="w-100 max-w-md mx-auto sticky top-24 self-start">
+        <div className="w-100 max-w-md mx-auto sticky top-24 self-start rounded-xl">
           {selectedTeacher ? (
-            <div className="relative bg-white shadow-xl overflow-hidden border border-gray-200">
+            <div className="relative  shadow-xl overflow-hidden border border-gray-200 rounded-2xl">
               {/* Header section */}
               <div className="relative h-32 bg-gradient-to-r from-pink-800 to-purple-900">
                 <div className="absolute inset-0 backdrop-blur-md"></div>
@@ -418,13 +417,13 @@ useEffect(() => {
               </div>
 
               {/* Content */}
-              <div className="pt-20 pb-6 px-6 text-center">
+              <div className="pt-20 pb-6 px-6 text-center rounded-5xl">
                 <h2 className="text-2xl font-bold text-gray-800">
                   {selectedTeacher.personal?.Full_name_with_initial ?? 'No Name'}
                 </h2>
                 <p className="text-sm text-gray-500 mb-4">NIC: {selectedTeacher.teacher_NIC}</p>
 
-                <div className="text-left mt-4 space-y-3 text-[18px] text-gray-700">
+                <div className="text-left mt-4 space-y-3 text-[18px] text-gray-700 rounded-xl">
                   <div className="flex items-start gap-2">
                     <span className="text-blue-800 font-medium w-40">Gender:</span>
                     <span>{selectedTeacher.personal?.Gender ?? 'N/A'}</span>
