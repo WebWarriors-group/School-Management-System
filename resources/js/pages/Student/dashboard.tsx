@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
-import ChatBot from '@/components/chatbot';
+import RealTimeChatBot from './RealTimeChatBot';
 import {
   Facebook, Mail, MapPin, Menu, X,
   User, Book, Users, Award, CalendarCheck,
@@ -485,7 +485,7 @@ useEffect(() => {
                 </h2>
                 <StudentPerformanceChart marksData={data.monthlyMarks ?? []} />
               </div>
-              <ChatBot />
+              <RealTimeChatBot />
             </div>
           </div>
         </main>
