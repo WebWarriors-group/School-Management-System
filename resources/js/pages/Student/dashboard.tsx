@@ -15,6 +15,7 @@ import StudentPerformanceChart from './OneStudentPerformanceChart';
 import SummaryCard from './SummaryCard';
 import CalendarView from './CalenderView';
 import { Dialog } from '@headlessui/react';
+import DailyQuote from './DailyQuote';
 const breadcrumbs = [
   { title: 'Student Dashboard', href: '/dashboard' },
 ];
@@ -105,7 +106,31 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
     { id: 4, label: 'Avg Marks', value: '82%', icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
   ];
   
+const [currentDateTime,setCurrentDateTime] = useState('');
+useEffect(() => {
+  const updateDateTime = () =>{
+    const now = new Date();
 
+    const formattedDate = now.toLocaleDateString('en-US' , {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const formattedTime = now.toLocaleTimeString('en-US' , {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    setCurrentDateTime(`${formattedDate}  ,  ${formattedTime}`)
+  };
+  updateDateTime();
+
+  const intervalId = setInterval(updateDateTime, 60000);
+
+  return () => clearInterval(intervalId);
+
+},[])
   useEffect(() => {
     fetch(`/api/student-personal/2400`)
       .then((res) => res.json())
@@ -230,11 +255,11 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 inline-flex items-center">
                 <CalendarCheck className="mr-2" size={18} />
-                <span>July 31, 2025</span>
+                <span>{ currentDateTime}</span>
               </div>
             </div>
           </div>
-
+<DailyQuote/>
 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
   {[
     { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
