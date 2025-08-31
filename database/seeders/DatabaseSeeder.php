@@ -52,12 +52,14 @@ $students = StudentAcademic::factory(200)->create();
             StudentSibling::factory(rand(1, 3))->create([
                 'reg_no' => $student->reg_no,
             ]);
+            $studentClass = $student->class_id;
             Marks::factory(rand(3, 6))->create([
         'reg_no' => $student->reg_no,
-        // optionally assign random subject_id if not defaulted in factory
+        'class' => $studentClass,
+        
     ]);
 
-    // Create related reports for the student
+
     StudentReport::factory(rand(1, 3))->create([
         'reg_no' => $student->reg_no,
     ]);
