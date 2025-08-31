@@ -528,7 +528,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                       console.log("Import Clicked");
                       setImportForm(true);
                     }}
-                    className="bg-green-700 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
+                    className="bg-green-700 w-40 h-10 text-lg mb-18 shadow-sm cursor-pointer transform scale-90 z-40"
                   >
                     Import Students
                   </Button>
