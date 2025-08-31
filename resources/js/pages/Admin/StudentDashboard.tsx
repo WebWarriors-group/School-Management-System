@@ -239,6 +239,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
 
+        
+
+
         {!selectedSection && (
   <div className="grid grid-cols-4 gap-7 sm:grid-cols-2 md:grid-cols-3 mx-auto max-w-6xl p-6">
     {cards.map((card, index) => (
@@ -262,14 +265,13 @@ const getSiblingsData = (): SiblingsRecord[] =>
         {!selectedSection && (
   <div className="bg-gray-200 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-6">
             <Card onClick={() => handleCardClick("academic")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-blue-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-blue-800 tracking-wide">Academic</h3>
-                    <div className="mt-2 w-12 h-1 bg-blue-600 rounded-full"></div>
+                    <div className="mt-2 w-12 h-1 bg-blue-600 "></div>
                   </div>
                   <GraduationCap className="text-blue-500 w-16 h-16 drop-shadow-sm" />
                 </div>
@@ -277,10 +279,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
             </Card>
 
             <Card onClick={() => handleCardClick("personal")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-green-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-green-800 tracking-wide">Personal</h3>
@@ -292,10 +293,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
             </Card>
 
            <Card onClick={() => handleCardClick("family")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-yellow-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-yellow-800 tracking-wide">Family</h3>
@@ -308,10 +308,9 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 
             <Card onClick={() => handleCardClick("siblings")}
-              className="relative overflow-hidden  shadow-xl border-none bg-gradient-to-br from-blue-100 via-white to-blue-50 transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
+              className="relative overflow-hidden  shadow-xl border-none bg-white transition-transform transform hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
               <CardContent className="p-6 backdrop-blur-md">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-300 opacity-10 rounded-full"></div>
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-purple-500 opacity-10 rounded-full"></div>
+               
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold text-xl text-purple-800 tracking-wide">Siblings</h3>
@@ -326,7 +325,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "academic" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Academic Information</h2>
+   
    <AcademicTable academicData={{ 
   current_page: 1,
   data: getAcademicData(),
@@ -350,7 +349,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 )}
 {selectedSection === "personal" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Personal Information</h2>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Personal Information</h2> */}
     <PersonalTable personalData={getPersonalData()} />
     <div className="mt-4">
       <Button
@@ -372,7 +371,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "family" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Family Information</h2>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Family Information</h2> */}
    <FamilyTable familyData={getFamilyData()} />
 
 
@@ -389,7 +388,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "siblings" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Siblings Information</h2>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Siblings Information</h2> */}
     <SiblingsTable siblingsData={getSiblingsData()} />
     <div className="mt-4">
       <Button

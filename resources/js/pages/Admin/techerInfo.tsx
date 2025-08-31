@@ -93,12 +93,33 @@ export default function TeachersTable() {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
   const [error, setError] = useState("");
+const [selectedStep, setSelectedStep] = useState<number | null>(null);
+const [currentPage, setCurrentPage] = useState(1); // Pagination state
+
+const handleStepClick = (stepNumber: number) => {
+  setCurrentPage(1); // Reset to page 1 whenever a card is clicked
+  setSelectedStep(prevStep => (prevStep === stepNumber ? null : stepNumber));
+};
 
 
-  const [step, setStep] = useState(1);
-      
-        const handleNextStep = () => setStep(step + 1);
-        const handlePrevStep = () => setStep(step - 1);
+
+
+const rowsPerPage = 10;
+
+const paginatedTeachers = teachers.slice(
+  (currentPage - 1) * rowsPerPage,
+  currentPage * rowsPerPage
+);
+
+const totalPages = Math.ceil(teachers.length / rowsPerPage);
+
+const goToNextPage = () => {
+  if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+};
+
+const goToPreviousPage = () => {
+  if (currentPage > 1) setCurrentPage(currentPage - 1);
+};
 
   // Fetch teachers from API
   useEffect(() => {
@@ -191,8 +212,9 @@ const handleUpdate = async (event: React.FormEvent) => {
 
   return (
     <AppLayout   breadcrumbs={breadcrumbs}>
+      <main className="bg-gray-200 ">
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-9xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">Search Teacher by NIC</h1>
 
       {/* Search Input */}
@@ -212,13 +234,13 @@ const handleUpdate = async (event: React.FormEvent) => {
 
       {/* Display Teacher Details */}
 {teacher && (
-  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-4xl mx-auto shadow-lg">
+  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-10xl mx-auto shadow-lg w-300">
     <h2 className="text-4xl font-extrabold text-blue-900 text-center mb-10 tracking-wide drop-shadow-md">
       Teacher Details
     </h2>
 
     {/* Personal Information */}
-    <section className="bg-white shadow-lg rounded-lg p-8 mb-10 border-l-8 border-blue-700">
+    <section className="bg-blue-100 shadow-lg rounded-lg p-8  border-l-8 border-blue-700  max-w-10xl">
       <h3 className="text-2xl font-bold text-blue-800 mb-6 uppercase tracking-wide border-b-2 border-blue-300 pb-2">
         Personal Information
       </h3>
@@ -235,7 +257,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <span className="text-gray-400 italic">No Photo</span>
           )}
         </div>
-        <div className="flex-1 space-y-2 text-gray-800 text-lg leading-relaxed">
+        <div className="flex-1 space-y-9 text-gray-800 text-lg leading-relaxed w-600">
           <p><strong className="text-blue-700 font-semibold">NIC:</strong> {teacher.teacher_NIC}</p>
           <p><strong className="text-blue-700 font-semibold">Full Name:</strong> {teacher.personal?.Full_name || 'Not provided'}</p>
           <p><strong className="text-blue-700 font-semibold">Full Name with Initial:</strong> {teacher.personal?.Full_name_with_initial || 'Not provided'}</p>
@@ -299,7 +321,7 @@ const handleUpdate = async (event: React.FormEvent) => {
     </section>
 
     {/* Qualifications */}
-    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
+    <section className="mb-19 p-30 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
       <h3 className="text-2xl font-bold text-yellow-900 mb-6 uppercase tracking-wide border-b-2 border-yellow-300 pb-2">
         Qualifications
       </h3>
@@ -419,17 +441,29 @@ const handleUpdate = async (event: React.FormEvent) => {
 
 
         <div className="mb-2">
-          <label className="block text-sm font-bold">Birthdate:</label>
-          <input
-            type="date"
-            value={editingTeacher.personal?.Birthdate || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              personal: { ...editingTeacher.personal, Birthdate: e.target.value }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Birthdate:</label>
+  <input
+    type="date"
+    value={editingTeacher.personal?.Birthdate || ""}
+    max={new Date().toISOString().split("T")[0]} // ✅ Set max date to today
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Birthdate cannot be in the future.");
+        return; // prevent update
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        personal: { ...editingTeacher.personal, Birthdate: selectedDate }
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
+
 
         {/* Contact Information */}
         <h4 className="font-bold text-lg mt-4 mb-2">Contact Information</h4>
@@ -703,23 +737,46 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.appointed_date || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      appointed_date: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // Limit to today
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Appointed date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        appointed_date: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
+
 
 <div className="mb-2">
   <label className="block text-sm font-bold">Work Acceptance Date:</label>
   <input
     type="date"
     value={editingTeacher.work_acceptance_date || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      work_acceptance_date: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // Disables future date selection
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Work acceptance date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        work_acceptance_date: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
@@ -742,13 +799,25 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.salary_increment_date || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      salary_increment_date: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // UI restriction
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Salary Increment Date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        salary_increment_date: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
+
 
 <div className="mb-2">
   <label className="block text-sm font-bold">Current Grade of Teaching Service:</label>
@@ -776,13 +845,25 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.work_acceptance_date_school || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      work_acceptance_date_school: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // restrict future dates in UI
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Work Acceptance Date in School cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        work_acceptance_date_school: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
+
 
 <div className="mb-2">
   <label className="block text-sm font-bold">Temporary Attached School / Institute:</label>
@@ -1110,36 +1191,59 @@ const handleUpdate = async (event: React.FormEvent) => {
 </div>
 
          <div className="mb-2">
-          <label className="block text-sm font-bold">Appointment date for current class:</label>
-          <input
-            type="text"
-            value={editingTeacher.qualifications?.appointment_date_for_current_class || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              qualifications: { 
-                ...editingTeacher.qualifications, 
-                appointment_date_for_current_class: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Appointment Date for Current Class:</label>
+  <input
+    type="date"
+    value={editingTeacher.qualifications?.appointment_date_for_current_class || ""}
+    max={new Date().toISOString().split("T")[0]} // disable future dates in picker
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Appointment date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          appointment_date_for_current_class: selectedDate,
+        },
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
+
 
          <div className="mb-2">
-          <label className="block text-sm font-bold">appointment date for current grade:</label>
-          <input
-            type="text"
-            value={editingTeacher.qualifications?.appointment_date_for_current_grade || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              qualifications: { 
-                ...editingTeacher.qualifications, 
-                appointment_date_for_current_grade: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Appointment Date for Current Grade:</label>
+  <input
+    type="date"
+    value={editingTeacher.qualifications?.appointment_date_for_current_grade || ""}
+    max={new Date().toISOString().split("T")[0]} // prevents future dates
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Appointment date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          appointment_date_for_current_grade: selectedDate,
+        },
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
 
          <div className="mb-2">
           <label className="block text-sm font-bold">Current appointment service medium:</label>
@@ -1238,20 +1342,32 @@ const handleUpdate = async (event: React.FormEvent) => {
         </div>
 
         <div className="mb-2">
-          <label className="block text-sm font-bold">Assign date for the school:</label>
-          <input
-            type="text"
-            value={editingTeacher.qualifications?.assign_date_for_the_school || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              qualifications: { 
-                ...editingTeacher.qualifications, 
-                assign_date_for_the_school: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Assign Date for the School:</label>
+  <input
+    type="date"
+    value={editingTeacher.qualifications?.assign_date_for_the_school || ""}
+    max={new Date().toISOString().split("T")[0]} // Prevent future date selection
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Assign date for the school cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          assign_date_for_the_school: selectedDate
+        }
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
+
 
         
 
@@ -1346,19 +1462,68 @@ const handleUpdate = async (event: React.FormEvent) => {
     </div>
     
     </div>
-    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-  <div className="max-w-4xl mx-auto p-4">
-    <h1 className="text-2xl font-bold mb-6 text-center">Teacher's Table</h1>
+     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+  <div className="max-w-6xl mx-auto p-4">
+    <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">📋 Teacher's Information Overview</h1>
 
-    {/* STEP 1 */}
-    {step === 1 && (
-      <div>
-        <h3 className="text-xl font-bold mb-4">Step 1: Teacher's Basic Information</h3>
-        <div className="overflow-x-auto">
-  <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+    {/* Card Row */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+      <button
+        onClick={() => handleStepClick(1)}
+        className="bg-blue-100 hover:bg-blue-200 transition-all duration-200 p-6 rounded-xl shadow-lg text-left border border-blue-300"
+      >
+        <h3 className="text-lg font-semibold text-blue-800 mb-1">👤 Step 1</h3>
+        <p className="text-sm text-gray-700">Basic Information</p>
+      </button>
 
-            <thead className="bg-gray-200 text-gray-800">
+      <button
+        onClick={() => handleStepClick(2)}
+        className="bg-green-100 hover:bg-green-200 transition-all duration-200 p-6 rounded-xl shadow-lg text-left border border-green-300"
+      >
+        <h3 className="text-lg font-semibold text-green-800 mb-1">🏡 Step 2</h3>
+        <p className="text-sm text-gray-700">Address Info</p>
+      </button>
+
+      <button
+        onClick={() => handleStepClick(3)}
+        className="bg-yellow-100 hover:bg-yellow-200 transition-all duration-200 p-6 rounded-xl shadow-lg text-left border border-yellow-300"
+      >
+        <h3 className="text-lg font-semibold text-yellow-800 mb-1">🛠️ Step 3</h3>
+        <p className="text-sm text-gray-700">Work Info</p>
+      </button>
+
+      <button
+        onClick={() => handleStepClick(4)}
+        className="bg-purple-100 hover:bg-purple-200 transition-all duration-200 p-6 rounded-xl shadow-lg text-left border border-purple-300"
+      >
+        <h3 className="text-lg font-semibold text-purple-800 mb-1">🎓 Step 4</h3>
+        <p className="text-sm text-gray-700">Qualification</p>
+      </button>
+
+      <button
+        onClick={() => handleStepClick(5)}
+        className="bg-pink-100 hover:bg-pink-200 transition-all duration-200 p-6 rounded-xl shadow-lg text-left border border-pink-300"
+      >
+        <h3 className="text-lg font-semibold text-pink-800 mb-1">🧾 Step 5</h3>
+        <p className="text-sm text-gray-700">Other Info</p>
+      </button>
+    </div>
+  </div>
+</div>
+
+{selectedStep === 1 && (
+<div className="bg-white p-6 shadow-md rounded-lg mb-6 max-w-full">
+    <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 1: Teacher's Basic Information</h3>
+
+      <div className="w-[1100px] border rounded overflow-x-auto">
+    {/* Outer scroll container handles horizontal scrolling */}
+
+    <div className="max-h-[500px] overflow-y-auto">
+      {/* Inner container handles vertical scrolling only */}
+
+      <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
+        {/* Your table head + body */}
+         <thead className="bg-gray-100 text-gray-900">
               <tr>
                 {[
                   "No.",
@@ -1380,65 +1545,103 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "Mobile number",
                   "Whatsapp number",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
-                    {title}
-                  </th>
+                <th
+  key={i}
+  className={`border px-3 py-2 min-w-[150px] font-medium ${
+    title === "NIC Number" ? "sticky left-0 z-10 bg-gray-100" : ""
+  }`}
+>
+  {title}
+</th>
+
                 ))}
               </tr>
             </thead>
            <tbody>
-  {teachers.map((teacher, index) => (
+  {paginatedTeachers.map((teacher, index) => (
+
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
-      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
+      <td className="border px-3 py-1">{index + 1}</td>
+      
+
+<td className="border px-3 py-1 sticky left-0 z-10 bg-white">
+  {teacher.teacher_NIC}
+</td>
       {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
-      <td className="border px-2 py-1">{teacher.personal?.Full_name ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Full_name_with_initial ?? "-"}</td>
-      <td className="border px-2 py-1">
+      <td className="border px-3 py-1">{teacher.personal?.Full_name ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Full_name_with_initial ?? "-"}</td>
+      <td className="border px-3 py-1">
         {teacher.personal?.Photo ? (
-          <img src={`/storage/${teacher.personal.Photo}`} alt="Teacher" className="w-10 h-10 rounded-full" />
+          <img src={`/storage/${teacher.personal.Photo}`} alt="Teacher" className="w-10 h-10 rounded-full object-cover" />
         ) : (
           "No Photo"
         )}
       </td>
-      <td className="border px-2 py-1">{teacher.personal?.Birthdate ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Gender ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Ethnicity ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Region ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Title ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Marital_status ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Details_about_family_members ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Emergency_telephone_number ?? "-"}</td>
-      <td className="border px-2 py-1">{(teacher.personal?.Email_address)}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Fixed_telephone_number ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Mobile_number ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.personal?.Whatsapp_number ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Birthdate ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Gender ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Ethnicity ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Region ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Title ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Marital_status ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Details_about_family_members ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Emergency_telephone_number ?? "-"}</td>
+      <td className="border px-3 py-1">{(teacher.personal?.Email_address)}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Fixed_telephone_number ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Mobile_number ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.personal?.Whatsapp_number ?? "-"}</td>
+      <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
     </tr>
   ))}
 </tbody>
           </table>
         </div>
 </div>
-        <div className="flex justify-end mt-4">
+        {/* <div className="flex justify-end mt-4">
           <button
             onClick={handleNextStep}
             className="bg-blue-600 text-white px-4 py-2 rounded-md"
           >
             Next
           </button>
-        </div>
-      </div>
-    )}
+        </div> */}
+        <div className="flex justify-between items-center mt-4">
+  <button
+    onClick={goToPreviousPage}
+    disabled={currentPage === 1}
+    className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+  <span className="text-gray-700 font-medium">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={goToNextPage}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>
 
-    {/* STEP 2 */}
-    {step === 2 && (
-      <div>
-        <h3 className="text-xl font-bold mb-4">Step 2: Address Information</h3>
-        <div className="overflow-x-auto">
-  <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+      
+  </div>
+)}
 
-            <thead className="bg-gray-200 text-gray-800">
+{selectedStep === 2 && (
+    <div className="bg-white p-6 shadow-md rounded-lg mb-6">
+
+    <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 2: Address Information</h3>
+    
+          <div className="w-[1100px] border rounded overflow-x-auto">
+    {/* Outer scroll container handles horizontal scrolling */}
+
+    <div className="max-h-[500px] overflow-y-auto">
+      {/* Inner container handles vertical scrolling only */}
+
+      <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
+          <thead className="bg-gray-100 text-gray-900">
+            
               <tr>
                 {[
                   "No.",
@@ -1450,32 +1653,44 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "Election Division",
                   "Election Division No.",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
-                    {title}
-                  </th>
+                  <th
+  key={i}
+  className={`border px-3 py-2 min-w-[150px] font-medium ${
+    title === "NIC Number" ? "sticky left-0 z-10 bg-gray-100" : ""
+  }`}
+>
+  {title}
+</th>
+
                 ))}
               </tr>
             </thead>
             <tbody>
-              {teachers.map((teacher, index) => (
+              {paginatedTeachers.map((teacher, index) => (
+
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
-      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
-      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
-      <td className="border px-2 py-1">{teacher.teachersaddress?.permanent_address ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.teachersaddress?.permanent_residential_address ?? "-"}</td>
+      <td className="border px-3 py-1">{index + 1}</td>
+
+      <td className="border px-3 py-1 sticky left-0 z-10 bg-white">
+  {teacher.teacher_NIC}
+</td>
+
+      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-3 py-1">{teacher.teachersaddress?.permanent_address ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.teachersaddress?.permanent_residential_address ?? "-"}</td>
       
-      <td className="border px-2 py-1">{teacher.teachersaddress?.grama_niladari_division ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.teachersaddress?.grama_niladari_division_number ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.teachersaddress?.election_division ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.teachersaddress?.election_division_number ?? "-"}</td>
-          </tr>
+      <td className="border px-3 py-1">{teacher.teachersaddress?.grama_niladari_division ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.teachersaddress?.grama_niladari_division_number ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.teachersaddress?.election_division ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.teachersaddress?.election_division_number ?? "-"}</td>
+               <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
+ </tr>
   ))}
             </tbody>
           </table>
         </div>
 </div>
-        <div className="flex justify-between mt-4">
+        {/* <div className="flex justify-between mt-4">
           <button
             onClick={handlePrevStep}
             className="bg-gray-600 text-white px-4 py-2 rounded-md"
@@ -1489,18 +1704,42 @@ const handleUpdate = async (event: React.FormEvent) => {
             Next
           </button>
         </div>
-      </div>
-    )}
+       */}
+       <div className="flex justify-between items-center mt-4">
+  <button
+    onClick={goToPreviousPage}
+    disabled={currentPage === 1}
+    className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+  <span className="text-gray-700 font-medium">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={goToNextPage}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>
 
-    {/* STEP 3 */}
-    {step === 3 && (
-      <div>
-        <h3 className="text-xl font-bold mb-4">Step 3: Work Information</h3>
-        <div className="overflow-x-auto">
-  <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+   
+  </div>
+)}
+{selectedStep === 3 && (
+    <div className="bg-white p-6 shadow-md rounded-lg mb-6">
 
-            <thead className="bg-gray-200 text-gray-800">
+    <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 3: Work Information</h3>
+             <div className="w-[1100px] border rounded overflow-x-auto">
+    {/* Outer scroll container handles horizontal scrolling */}
+
+    <div className="max-h-[500px] overflow-y-auto">
+      {/* Inner container handles vertical scrolling only */}
+
+      <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
+         <thead className="bg-gray-100 text-gray-900">
               <tr>
                 {[
                   "No.",
@@ -1525,45 +1764,57 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "Sign Sheet No.",
                   "Salary Sheet No.",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
-                    {title}
-                  </th>
+                  <th
+  key={i}
+  className={`border px-3 py-2 min-w-[150px] font-medium ${
+    title === "NIC Number" ? "sticky left-0 z-10 bg-gray-100" : ""
+  }`}
+>
+  {title}
+</th>
+
                 ))}
               </tr>
             </thead>
             <tbody>
-              {teachers.map((teacher, index) => (
+              {paginatedTeachers.map((teacher, index) => (
+
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
-      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
-      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
-      <td className="border px-2 py-1">{teacher.appointed_date ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
+      <td className="border px-3 py-1">{index + 1}</td>
+
+      <td className="border px-3 py-1 sticky left-0 z-10 bg-white">
+  {teacher.teacher_NIC}
+</td>
+
+      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-3 py-1">{teacher.appointed_date ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
       
-      <td className="border px-2 py-1">{teacher.appointment_type ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.salary_increment_date ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.current_grade_of_teaching_service ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.temporary_attachedschool_or_institute_name ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.appointed_subject ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.which_grades_teaching_done ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.current_teaching_subject ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.other_subjects_taught ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.assigned_class ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.other_responsibilities_assigned ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.is_150_hrs_tamil_course_completed ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.commuting_from_school ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.distance_from_school ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.commuting_method_to_school?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.number_in_sign_sheet ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.number_in_salary_sheet ?? "-"}</td>
-        </tr>
+      <td className="border px-3 py-1">{teacher.appointment_type ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.salary_increment_date ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.current_grade_of_teaching_service ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.temporary_attachedschool_or_institute_name ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.appointed_subject ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.which_grades_teaching_done ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.current_teaching_subject ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.other_subjects_taught ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.assigned_class ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.other_responsibilities_assigned ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.is_150_hrs_tamil_course_completed ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.commuting_from_school ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.distance_from_school ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.commuting_method_to_school?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.number_in_sign_sheet ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.number_in_salary_sheet ?? "-"}</td>
+             <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
+ </tr>
   ))}
             </tbody>
           </table>
         </div>
 </div>
-        <div className="flex justify-between mt-4">
+        {/* <div className="flex justify-between mt-4">
           <button
             onClick={handlePrevStep}
             className="bg-gray-600 text-white px-4 py-2 rounded-md"
@@ -1576,19 +1827,43 @@ const handleUpdate = async (event: React.FormEvent) => {
           >
             Next
           </button>
-        </div>
-      </div>
-    )}
+        </div> */}
+        <div className="flex justify-between items-center mt-4">
+  <button
+    onClick={goToPreviousPage}
+    disabled={currentPage === 1}
+    className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+  <span className="text-gray-700 font-medium">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={goToNextPage}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>
 
-    {/* STEP 4 */}
-    {step === 4 && (
-      <div>
-        <h3 className="text-xl font-bold mb-4">Step 4: Qualification</h3>
-        <div className="overflow-x-auto">
-  <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+      
+  </div>
+)}
+{selectedStep === 4 && (
+    <div className="bg-white p-6 shadow-md rounded-lg mb-6">
 
-            <thead className="bg-gray-200 text-gray-800">
+    <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 4: Qualification</h3>
+            <div className="w-[1100px] border rounded overflow-x-auto">
+    {/* Outer scroll container handles horizontal scrolling */}
+
+    <div className="max-h-[500px] overflow-y-auto">
+      {/* Inner container handles vertical scrolling only */}
+
+      <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
+           <thead className="bg-gray-100 text-gray-900">
+           
               <tr>
                 {[
                   "No.",
@@ -1610,42 +1885,53 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "School Position",
                   "School Join Date",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
-                    {title}
-                  </th>
+                  <th
+  key={i}
+  className={`border px-3 py-2 min-w-[150px] font-medium ${
+    title === "NIC Number" ? "sticky left-0 z-10 bg-gray-100" : ""
+  }`}
+>
+  {title}
+</th>
+
                 ))}
               </tr>
             </thead>
             <tbody>
-              {teachers.map((teacher, index) => (
+              {paginatedTeachers.map((teacher, index) => (
+
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
-      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
-      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
-      <td className="border px-2 py-1">{teacher.qualifications?.type_of_service_in_school ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.gce_al_subject_stream ?? "-"}</td>
+      <td className="border px-3 py-1">{index + 1}</td>
+
+<td className="border px-3 py-1 sticky left-0 z-10 bg-white">
+  {teacher.teacher_NIC}
+</td>
+      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-3 py-1">{teacher.qualifications?.type_of_service_in_school ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.gce_al_subject_stream ?? "-"}</td>
       
-      <td className="border px-2 py-1">{teacher.qualifications?.highest_education_qualification ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.basic_degree_stream ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.highest_professional_qualification ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.present_class ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.present_grade ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.appointment_date_for_current_class ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.appointment_date_for_current_grade ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.current_appointment_service_medium ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.appointed_subject_section ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.subject_appointed ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.currentservice_appointed_date ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.subjects_taught_most_and_second_most ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.position_in_the_school ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.qualifications?.assign_date_for_the_school ?? "-"}</td>
-      </tr>
+      <td className="border px-3 py-1">{teacher.qualifications?.highest_education_qualification ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.basic_degree_stream ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.highest_professional_qualification ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.present_class ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.present_grade ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.appointment_date_for_current_class ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.appointment_date_for_current_grade ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.current_appointment_service_medium ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.appointed_subject_section ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.subject_appointed ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.currentservice_appointed_date ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.subjects_taught_most_and_second_most ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.position_in_the_school ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.qualifications?.assign_date_for_the_school ?? "-"}</td>
+            <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
+</tr>
   ))}
             </tbody>
           </table>
         </div>
 </div>
-        <div className="flex justify-between mt-4">
+        {/* <div className="flex justify-between mt-4">
           <button
             onClick={handlePrevStep}
             className="bg-gray-600 text-white px-4 py-2 rounded-md"
@@ -1658,19 +1944,42 @@ const handleUpdate = async (event: React.FormEvent) => {
           >
             Next
           </button>
-        </div>
-      </div>
-    )}
+        </div> */}
+        <div className="flex justify-between items-center mt-4">
+  <button
+    onClick={goToPreviousPage}
+    disabled={currentPage === 1}
+    className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+  <span className="text-gray-700 font-medium">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={goToNextPage}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>
 
-    {/* STEP 5 */}
-    {step === 5 && (
-      <div>
-        <h3 className="text-xl font-bold mb-4">Step 5: Responsibilities & Memberships</h3>
-       <div className="overflow-x-auto">
-  <div className="max-h-[500px] overflow-y-auto">
-    <table className="min-w-full border border-gray-300 text-sm">
+      
+  </div>
+)}
+{selectedStep === 5 && (
+    <div className="bg-white p-6 shadow-md rounded-lg mb-6">
 
-            <thead className="bg-gray-200 text-gray-800">
+    <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 5: Responsibilities & Memberships</h3>
+          <div className="w-[1100px] border rounded overflow-x-auto">
+    {/* Outer scroll container handles horizontal scrolling */}
+
+    <div className="max-h-[500px] overflow-y-auto">
+      {/* Inner container handles vertical scrolling only */}
+
+      <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
+           <thead className="bg-gray-100 text-gray-900">
               <tr>
                 {[
                   "No.",
@@ -1680,30 +1989,42 @@ const handleUpdate = async (event: React.FormEvent) => {
                   "WSOP No.",
                   "Agrahara Insurance",
                 ].map((title, i) => (
-                  <th key={i} className="border px-2 py-1 text-left">
-                    {title}
-                  </th>
+                  <th
+  key={i}
+  className={`border px-3 py-2 min-w-[150px] font-medium ${
+    title === "NIC Number" ? "sticky left-0 z-10 bg-gray-100" : ""
+  }`}
+>
+  {title}
+</th>
+
                 ))}
               </tr>
             </thead>
             <tbody>
-              {teachers.map((teacher, index) => (
+              {paginatedTeachers.map((teacher, index) => (
+
     <tr key={teacher.teacher_NIC} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-      <td className="border px-2 py-1">{index + 1}</td>
-      <td className="border px-2 py-1">{teacher.teacher_NIC}</td>
-      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
-      <td className="border px-2 py-1">{teacher.teacherotherservice?.other_responsibilities_in_school ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.teacherotherservice?.EDCS_membership ?? "-"}</td>
+      <td className="border px-3 py-1">{index + 1}</td>
       
-      <td className="border px-2 py-1">{teacher.teacherotherservice?.WSOP_Number ?? "-"}</td>
-      <td className="border px-2 py-1">{teacher.teacherotherservice?.Agrahara_insuarence_membership ?? "-"}</td>
-      </tr>
+
+<td className="border px-3 py-1 sticky left-0 z-10 bg-white">
+  {teacher.teacher_NIC}
+</td>
+      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      <td className="border px-3 py-1">{teacher.teacherotherservice?.other_responsibilities_in_school ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.teacherotherservice?.EDCS_membership ?? "-"}</td>
+      
+      <td className="border px-3 py-1">{teacher.teacherotherservice?.WSOP_Number ?? "-"}</td>
+      <td className="border px-3 py-1">{teacher.teacherotherservice?.Agrahara_insuarence_membership ?? "-"}</td>
+     
+     <td>{(currentPage - 1) * rowsPerPage + index + 1}</td> </tr>
   ))}
             </tbody>
           </table>
         </div>
 </div>
-        <div className="flex justify-between mt-4">
+        {/* <div className="flex justify-between mt-4">
           <button
             onClick={handlePrevStep}
             className="bg-gray-600 text-white px-4 py-2 rounded-md"
@@ -1711,12 +2032,36 @@ const handleUpdate = async (event: React.FormEvent) => {
             Back
           </button>
           
-        </div>
-      </div>
-    )}
-  </div>
+        </div> */}
+        <div className="flex justify-between items-center mt-4">
+  <button
+    onClick={goToPreviousPage}
+    disabled={currentPage === 1}
+    className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+  <span className="text-gray-700 font-medium">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={goToNextPage}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+  >
+    Next
+  </button>
 </div>
+
+      
+  </div>
+)}
+
+
+
+   
 <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+</main>
 
     </AppLayout>
   );

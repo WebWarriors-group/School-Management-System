@@ -1,359 +1,329 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Toaster, toast } from "sonner";
-import AppLayout from "@/layouts/app-layout";
-import { Head, Link } from '@inertiajs/react';
-import { type BreadcrumbItem } from '@/types';
-import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import React, { useState, useEffect } from 'react';
+import { Inertia } from '@inertiajs/inertia';
+import AppLayout from '@/layouts/app-layout';
 
-const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: '📈 Student Marks',
-    href: '/student',
-  },
-];
-
-interface Mark {
-  id: number;
-  reg_no: string;
-  subject_id: string;
-  marks_obtained: number;
-  grade: 'A' | 'B' | 'C' | 'S' | 'F';
+interface Class {
+  class_id: number;
+  section: string;
+  year: number;
 }
 
-const MarksPage: React.FC = () => {
-  const [marks, setMarks] = useState<Mark[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [editingMark, setEditingMark] = useState<Mark | null>(null);
-  const [newMark, setNewMark] = useState({
-    reg_no: '',
-    subject_id: '',
-    marks_obtained: 0,
-    grade: 'A',
-  });
-  const [searchParams, setSearchParams] = useState<{ reg_no?: string; subject_id?: string; marks_obtained?: number; grade?: 'A' | 'B' | 'C' | 'S' | 'F' }>({});
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [marksPerPage] = useState<number>(10);
-  const [totalMarks, setTotalMarks] = useState<number>(10);
-  const [results, setResults] = useState<Mark[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [markToDelete, setMarkToDelete] = useState<Mark | null>(null);
+interface Student {
+  reg_no: string;
+  name: string | null;
+}
 
-  const fetchMarks = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        ...Object.entries(searchParams).reduce((acc, [key, value]) => {
-          if (value !== undefined && value !== null) {
-            acc[key] = String(value);
-          }
-          return acc;
-        }, {} as Record<string, string>),
-        page: String(currentPage),
-        limit: String(marksPerPage),
-      });
+interface MarkInput {
+  reg_no: string;
+  marks_obtained: number | '';
+  grade: string;
+  term: string;
+  year: number;
+  subject_id: string;
+  isNew?: boolean; // ✅ New flag to track if mark is new
+}
 
-      const response = await fetch(`/marks/?${params}`);
-      const data = await response.json();
-      setMarks(data.data);
-      setResults(data.data);
-      setTotalMarks(Number(response.headers.get('x-total-count')) || 0);
+interface Props {
+  classes: Class[];
+  selectedClassId: number | null;
+  students: Student[];
+}
 
-      if ((searchParams.reg_no || searchParams.subject_id) && data.data.length === 0) {
-        toast.warning("No matching records found.");
-      }
+const allowedGrades = ['A', 'B', 'C', 'S', 'F'];
 
-    } catch (error) {
-      console.error('Error fetching marks:', error);
-      toast.error('Error fetching marks');
-    } finally {
-      setLoading(false);
-    }
-  }, [currentPage, searchParams, marksPerPage]);
+const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
+  const [term, setTerm] = useState('Term 1');
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [subjectId, setSubjectId] = useState('');
+  const [marks, setMarks] = useState<MarkInput[]>([]);
+  const [editingRows, setEditingRows] = useState<{ [reg_no: string]: boolean }>({});
 
   useEffect(() => {
-    fetchMarks();
-  }, [fetchMarks, searchParams, currentPage]);
-
-  const allowedGrades = ["A", "B", "C", "S", "F"] as const;
-  type Grade = typeof allowedGrades[number];
-
-  const handleSearch = () => {
-    const trimmedQuery = searchQuery.trim();
-    const newSearchParams: typeof searchParams = {};
-    const upperQuery = trimmedQuery.toUpperCase();
-
-    if (allowedGrades.includes(upperQuery as Grade)) {
-      newSearchParams.grade = upperQuery as Grade;
-    } else if (/^\d+$/.test(trimmedQuery)) {
-      newSearchParams.marks_obtained = Number(trimmedQuery);
-    } else if (trimmedQuery.length > 0 && trimmedQuery.length <= 10) {
-      newSearchParams.subject_id = trimmedQuery;
+    if (students.length > 0 && subjectId) {
+      fetch(`/marks?subject_id=${subjectId}&term=${term}&year=${year}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length > 0) {
+            // ✅ Existing marks
+            setMarks(data.map((m: any) => ({
+              reg_no: m.reg_no,
+              marks_obtained: m.marks_obtained,
+              grade: m.grade,
+              term: m.term,
+              year: m.year,
+              subject_id: m.subject_id.toString(),
+              isNew: false
+            })));
+          } else {
+            // ✅ New marks entry
+            setMarks(students.map(student => ({
+              reg_no: student.reg_no,
+              marks_obtained: '',
+              grade: '',
+              term,
+              year,
+              subject_id: subjectId,
+              isNew: true
+            })));
+          }
+        })
+        .catch(err => console.error('Failed to fetch marks', err));
     } else {
-      newSearchParams.reg_no = trimmedQuery;
+      setMarks([]);
     }
+  }, [students, term, year, subjectId]);
 
-    setSearchParams(newSearchParams);
+  const handleMarkChange = (index: number, field: 'marks_obtained' | 'grade', value: string) => {
+    setMarks(prev => {
+      const updated = [...prev];
+      updated[index][field] = field === 'marks_obtained' ? (value === '' ? '' : Number(value)) : value;
+      return updated;
+    });
   };
 
-  const handlePageChange = (page: number) => setCurrentPage(page);
-
-  const requestDeleteMark = (mark: Mark) => {
-    setMarkToDelete(mark);
-    setShowDeleteModal(true);
+  const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const classId = e.target.value;
+    Inertia.get('/mark/MarksPage', { class_id: classId }, { preserveState: true, preserveScroll: true });
   };
 
-  const confirmDeleteMark = async () => {
-    if (!markToDelete) return;
-    try {
-      await fetch(`/marks/${markToDelete.id}`, { method: 'DELETE' });
-      toast.success("Mark deleted successfully!");
-
-      const updatedMarks = marks.filter((m) => m.id !== markToDelete.id);
-      const isLastItemOnPage = updatedMarks.length === 0 && currentPage > 1;
-
-      if (isLastItemOnPage) {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-      } else {
-        fetchMarks();
+  const handleSubmit = async () => {
+    for (const mark of marks) {
+      if (
+        mark.marks_obtained === '' ||
+        mark.marks_obtained < 0 ||
+        mark.marks_obtained > 100 ||
+        !allowedGrades.includes(mark.grade)
+      ) {
+        alert('Please enter valid marks (0-100) and select a grade for all students.');
+        return;
       }
-    } catch (error) {
-      console.error("Error deleting mark:", error);
-      toast.error("Failed to delete mark.");
-    } finally {
-      setShowDeleteModal(false);
-      setMarkToDelete(null);
+    }
+
+    try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+      const res = await fetch('/marks/storeBulkMarks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify({ marks }),
+        credentials: 'same-origin',
+      });
+
+      if (!res.ok) {
+        let message = 'Failed to submit marks';
+        try {
+          const errorData = await res.json();
+          message = errorData.message || message;
+        } catch {}
+        alert('Error: ' + message);
+        return;
+      }
+
+      alert('Marks submitted successfully!');
+      setMarks([]);
+      setSubjectId('');
+    } catch (error: any) {
+      alert('Submission failed: ' + error.message);
     }
   };
 
-  const handleEditMark = (mark: Mark) => setEditingMark({ ...mark });
-  const handleCancelEdit = () => setEditingMark(null);
+  const toggleEdit = (reg_no: string) => {
+    setEditingRows(prev => ({ ...prev, [reg_no]: !prev[reg_no] }));
+  };
 
-  const handleSaveEdit = async () => {
-    if (!editingMark) return;
-    const parsedMarks = Number(editingMark.marks_obtained);
-    if (isNaN(parsedMarks)) {
-      toast.error("Please enter a valid number for marks.");
+  const handleEdit = async (mark: MarkInput) => {
+    if (
+      mark.marks_obtained === '' ||
+      mark.marks_obtained < 0 ||
+      mark.marks_obtained > 100 ||
+      !allowedGrades.includes(mark.grade)
+    ) {
+      alert('Invalid mark or grade.');
       return;
     }
 
     try {
-      await fetch(`/marks/${editingMark.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...editingMark, marks_obtained: parsedMarks }),
-      });
-
-      toast.success("Successfully saved!");
-      fetchMarks();
-      setEditingMark(null);
-    } catch (error) {
-      console.error('Error updating mark:', error);
-      toast.error('Failed to update mark.');
-    }
-  };
-
-  const handleCreateMark = async () => {
-    try {
-      const response = await fetch('/marks', {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+      const res = await fetch('/marks/update', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newMark),
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify(mark),
+        credentials: 'same-origin',
       });
 
-      if (response.ok) {
-        setNewMark({ reg_no: '', subject_id: '', marks_obtained: 0, grade: 'A' });
-        toast.success('Mark added successfully!');
-        fetchMarks();
-      } else {
-        const errorData = await response.json();
-        toast.error(`Failed to add mark: ${errorData.message}`);
+      if (!res.ok) {
+        let message = 'Unknown error';
+        try {
+          const errorData = await res.json();
+          message = errorData.message || message;
+        } catch {}
+        alert('Update failed: ' + message);
+        return;
       }
-    } catch (error) {
-      console.error('Error adding mark:', error);
-      toast.error('Failed to add mark.');
+
+      alert('Mark updated successfully!');
+      toggleEdit(mark.reg_no);
+    } catch (err: any) {
+      alert('Update error: ' + err.message);
     }
   };
 
-  const totalPages = Math.ceil(totalMarks / marksPerPage);
+  const handleDelete = async (mark: MarkInput) => {
+    if (!confirm('Are you sure you want to delete this mark?')) return;
+
+    try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+      const res = await fetch('/marks/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify(mark),
+        credentials: 'same-origin',
+      });
+
+      if (!res.ok) {
+        let message = 'Unknown error';
+        try {
+          const errorData = await res.json();
+          message = errorData.message || message;
+        } catch {}
+        alert('Delete failed: ' + message);
+        return;
+      }
+
+      setMarks(prev => prev.filter(m =>
+        !(m.reg_no === mark.reg_no && m.subject_id === mark.subject_id && m.term === mark.term && m.year === mark.year)
+      ));
+      alert('Mark deleted successfully!');
+    } catch (err: any) {
+      alert('Delete error: ' + err.message);
+    }
+  };
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Student Marks" />
-      <div className="max-w-screen mx-auto my-5 p-10 bg-gray-100 rounded-lg shadow-md">
-        <h1 className="text-center text-2xl font-bold text-sky-900 mb-5">Student Marks</h1>
-        <Toaster position="top-right" />
+    <AppLayout breadcrumbs={[{ title: '📄 Marks Page', href: '#' }]}>
+      <main className="bg-gray-100">
+        <div className="max-w-6xl mx-auto mt-10 px-6">
+          <div className="bg-white shadow-md p-8 space-y-8">
+            <h1 className="text-3xl font-semibold text-gray-800">📘 Student Marks</h1>
 
-        {/* Search */}
-        <div className="flex justify-center gap-3 mb-5 p-3 bg-white rounded-lg shadow-sm">
-          <input
-            type="text"
-            placeholder="Search by Reg No, Subject ID, Marks or Grade"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 p-3 border border-yellow-700 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-          />
-          <button onClick={handleSearch} className="bg-yellow-600 text-white px-6 py-3 text-lg font-bold rounded-md hover:bg-red-600">
-            Search
-          </button>
-          <button onClick={() => { setSearchQuery(''); setSearchParams({}); setCurrentPage(1); }}
-            className="bg-gray-300 text-black px-6 py-3 text-lg font-bold rounded-md hover:bg-gray-400">
-            Reset
-          </button>
-        </div>
+            {/* Class Selector */}
+            <div className="space-y-2">
+              <label htmlFor="classSelect" className="block text-lg font-medium text-gray-700">Select Class</label>
+              <select
+                id="classSelect"
+                value={selectedClassId ?? ''}
+                onChange={handleClassChange}
+                className="w-full max-w-sm border border-gray-300 rounded-lg p-2"
+              >
+                <option value="" disabled>-- Select Class --</option>
+                {classes.map(cls => (
+                  <option key={cls.class_id} value={cls.class_id}>{cls.section} ({cls.year})</option>
+                ))}
+              </select>
+            </div>
 
-        {/* Table */}
-        {loading ? <p>Loading...</p> : (
-          <table className="w-full table-auto bg-white rounded-lg overflow-hidden shadow-md">
-            <thead>
-              <tr className="bg-sky-900 text-white font-bold">
-                <th className="px-5 py-3 text-center">Reg No</th>
-                <th className="px-5 py-3 text-center">Subject ID</th>
-                <th className="px-5 py-3 text-center">Marks Obtained</th>
-                <th className="px-5 py-3 text-center">Grade</th>
-                <th className="px-5 py-3 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Add New Mark Row */}
-              <tr>
-                <td className="px-1 py-2 text-center">
-                  <input type="text" value={newMark.reg_no}
-                    onChange={(e) => setNewMark({ ...newMark, reg_no: e.target.value })}
-                    className="px-2 py-1 border rounded" />
-                </td>
-                <td className="px-1 py-2 text-center">
-                  <input type="text" value={newMark.subject_id}
-                    onChange={(e) => setNewMark({ ...newMark, subject_id: e.target.value })}
-                    className="px-2 py-1 border rounded" />
-                </td>
-                <td className="px-1 py-2 text-center">
-                  <input type="number" value={newMark.marks_obtained}
-                    onChange={(e) => setNewMark({ ...newMark, marks_obtained: parseInt(e.target.value) || 0 })}
-                    className="px-2 py-1 border rounded" />
-                </td>
-                <td className="px-1 py-2 text-center">
-                  <select value={newMark.grade}
-                    onChange={(e) => setNewMark({ ...newMark, grade: e.target.value as Mark["grade"] })}
-                    className="px-2 py-1 border rounded">
-                    {allowedGrades.map(g => <option key={g} value={g}>{g}</option>)}
-                  </select>
-                </td>
-                <td className="px-1 py-2 text-center">
-                  <button onClick={handleCreateMark} className="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-500">
-                    Add
-                  </button>
-                </td>
-              </tr>
+            {/* Term / Year / Subject */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block mb-1 text-lg font-medium">Term</label>
+                <select value={term} onChange={e => setTerm(e.target.value)} className="w-full border rounded-lg p-2">
+                  <option>Term 1</option>
+                  <option>Term 2</option>
+                  <option>Term 3</option>
+                </select>
+              </div>
+              <div>
+                <label className="block mb-1 text-lg font-medium">Year</label>
+                <input type="number" min={2000} max={2100} value={year} onChange={e => setYear(Number(e.target.value))}
+                  className="w-full border rounded-lg p-2" />
+              </div>
+              <div>
+                <label className="block mb-1 text-lg font-medium">Subject ID</label>
+                <input type="text" value={subjectId} onChange={e => setSubjectId(e.target.value)}
+                  className="w-full border rounded-lg p-2" />
+              </div>
+            </div>
 
-              {/* Existing Marks */}
-              {results.map((mark) => (
-                <React.Fragment key={mark.id}>
-                  <tr className="hover:bg-gray-200">
-                    <td className="px-5 py-3 text-center">
-                      <Link
-    href={`/mark/ReportPage/${mark.reg_no}?from=mark`}
-    className="text-black hover:text-blue-600 font-semibold underline-offset-2 hover:underline transition duration-200"
-  >
-    {mark.reg_no}
-  </Link>
-                    </td>
-                    <td className="px-5 py-3 text-center">{mark.subject_id}</td>
-                    <td className="px-5 py-3 text-center">{mark.marks_obtained}</td>
-                    <td className="px-5 py-3 text-center">{mark.grade}</td>
-                    <td className="px-5 py-3 text-center">
-                      <button onClick={() => requestDeleteMark(mark)}
-                        className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-300 transition duration-300">
-                        Delete
-                      </button>
-                      <button onClick={() => handleEditMark(mark)}
-                        className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-300 transition duration-300 ml-2">
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                  {editingMark && editingMark.id === mark.id && (
+            {/* Marks Table */}
+            {marks.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-md border rounded-md">
+                  <thead className="bg-blue-200">
                     <tr>
-                      <td className="px-5 py-3 text-center">
-                        <input type="text" value={editingMark.reg_no}
-                          onChange={(e) => setEditingMark({ ...editingMark, reg_no: e.target.value })}
-                          className="px-2 py-1 border rounded" />
-                      </td>
-                      <td className="px-5 py-3 text-center">
-                        <input type="text" value={editingMark.subject_id}
-                          onChange={(e) => setEditingMark({ ...editingMark, subject_id: e.target.value })}
-                          className="px-2 py-1 border rounded" />
-                      </td>
-                      <td className="px-5 py-3 text-center">
-                        <input type="number" value={editingMark.marks_obtained}
-                          onChange={(e) => setEditingMark({ ...editingMark, marks_obtained: Number(e.target.value) })}
-                          className="px-2 py-1 border rounded" />
-                      </td>
-                      <td className="px-5 py-3 text-center">
-                        <select value={editingMark.grade}
-                          onChange={(e) => setEditingMark({ ...editingMark, grade: e.target.value as Grade })}
-                          className="px-2 py-1 border rounded">
-                          {allowedGrades.map(g => <option key={g} value={g}>{g}</option>)}
-                        </select>
-                      </td>
-                      <td className="px-5 py-3 text-center">
-                        <button onClick={handleSaveEdit}
-                          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-400">
-                          Save
-                        </button>
-                        <button onClick={handleCancelEdit}
-                          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 ml-2">
-                          Cancel
-                        </button>
-                      </td>
+                      <th className="px-4 py-2 border">Reg No</th>
+                      <th className="px-4 py-2 border">Name</th>
+                      <th className="px-4 py-2 border">Marks</th>
+                      <th className="px-4 py-2 border">Grade</th>
+                      <th className="px-4 py-2 border">Actions</th>
                     </tr>
-                  )}
-                </React.Fragment>
-              ))}
+                  </thead>
+                  <tbody>
+                    {marks.map((mark, i) => (
+                      <tr key={mark.reg_no}>
+                        <td className="px-4 py-2 border">{mark.reg_no}</td>
+                        <td className="px-4 py-2 border">{students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}</td>
+                        <td className="px-4 py-2 border">
+                          <input
+                            type="number" min={0} max={100}
+                            value={mark.marks_obtained}
+                            readOnly={!editingRows[mark.reg_no]}
+                            onChange={e => handleMarkChange(i, 'marks_obtained', e.target.value)}
+                            className={`w-24 border rounded px-2 py-1 ${editingRows[mark.reg_no] ? '' : 'bg-gray-200'}`}
+                          />
+                        </td>
+                        <td className="px-4 py-2 border">
+                          <select
+                            value={mark.grade}
+                            disabled={!editingRows[mark.reg_no]}
+                            onChange={e => handleMarkChange(i, 'grade', e.target.value)}
+                            className={`border rounded px-2 py-1 ${editingRows[mark.reg_no] ? '' : 'bg-gray-200'}`}
+                          >
+                            <option value="">Select Grade</option>
+                            {allowedGrades.map(g => <option key={g} value={g}>{g}</option>)}
+                          </select>
+                        </td>
+                        <td className="px-4 py-2 border flex gap-2">
+                          <button
+                            onClick={() => {
+                              if (editingRows[mark.reg_no]) {
+                                handleEdit(mark);
+                              } else {
+                                toggleEdit(mark.reg_no);
+                              }
+                            }}
+                            className={`px-2 py-1 rounded text-white ${editingRows[mark.reg_no] ? 'bg-green-500' : 'bg-blue-500'}`}
+                          >
+                            {editingRows[mark.reg_no] ? 'Save' : 'Edit'}
+                          </button>
+                          <button
+                            onClick={() => handleDelete(mark)}
+                            className="bg-red-500 text-white px-2 py-1 rounded"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-gray-600">No students found. Please select a class and subject.</p>
+            )}
 
-              {!loading && marks.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="text-center py-4 text-gray-500">No data to display.</td>
-                </tr>
-              )}
-              <ConfirmDeleteModal
-                isOpen={showDeleteModal}
-                onClose={() => {
-                  setShowDeleteModal(false);
-                  setMarkToDelete(null);
-                }}
-                onConfirm={confirmDeleteMark}
-              />
-            </tbody>
-          </table>
-        )}
-
-        {/* Pagination */}
-        <div className="mt-5">
-          <div className="flex justify-between items-center px-4">
-            <button
-              onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-md font-semibold ${currentPage === 1 ? 'bg-gray-300 text-gray-500' : 'bg-gray-200 text-black hover:bg-gray-300'}`}>
-              Previous
-            </button>
-            <button
-              onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-md font-semibold ${currentPage === totalPages ? 'bg-gray-300 text-gray-500' : 'bg-gray-200 text-black hover:bg-gray-300'}`}>
-              Next
-            </button>
-          </div>
-          <div className="flex justify-center mt-3 space-x-2">
-            {[...Array(totalPages)].map((_, index) => (
-              <button key={index} onClick={() => handlePageChange(index + 1)}
-                className={`px-4 py-2 rounded-md font-semibold ${currentPage === index + 1 ? 'bg-red-700 text-white' : 'bg-gray-200 text-black hover:bg-gray-300'}`}>
-                {index + 1}
-              </button>
-            ))}
+            {/* Bulk Submit — only show if there are NEW marks */}
+            {marks.some(m => m.isNew) && (
+              <div className="pt-4">
+                <button
+                  onClick={handleSubmit}
+                  className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg"
+                >
+                  Submit All Marks
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </main>
     </AppLayout>
   );
 };
