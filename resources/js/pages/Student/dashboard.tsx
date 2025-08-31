@@ -1,18 +1,21 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import ChatBot from '@/components/chatbot';
 import {
   Facebook, Mail, MapPin, Menu, X,
   User, Book, Users, Award, CalendarCheck,
   FileText, Home, ClipboardList, BarChart2,
-  Bell, MessageSquare, Settings, LogOut
+  Bell, MessageSquare, Settings, LogOut,Search
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import StudentSidebar from './StudentSidebar';
 import StudentOverallPerformanceChart from "./StudentOverallPerformanceChart";
 import StudentPerformanceChart from './OneStudentPerformanceChart';
 import SummaryCard from './SummaryCard';
-
+import CalendarView from './CalenderView';
+import { Dialog } from '@headlessui/react';
+import DailyQuote from './DailyQuote';
 const breadcrumbs = [
   { title: 'Student Dashboard', href: '/dashboard' },
 ];
@@ -30,6 +33,7 @@ export default function StudentDashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
   const [marksData, setMarksData] = useState<{ marks_obtained: number }[]>([]);
+const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
 
   const [data, setData] = useState<DashboardData | null>({
     classes: [{ name: "10A" }],
@@ -43,9 +47,27 @@ export default function StudentDashboard() {
       { month: 3, avg_marks: 82 }
     ]
   });
+  
+  const [studentPersonal, setStudentPersonal] = useState<{ full_name_with_initial?: string } | null>(null);
 
+   const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  // Filters for performance chart
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedExamType, setSelectedExamType] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const subjects = ['Math', 'Science', 'English', 'History'];
+
+  const notifications = [
+    { id: 1, title: 'Science Assignment', description: 'Due tomorrow at 9:00 AM', time: '2 hours ago' },
+    { id: 2, title: 'Parent Meeting', description: 'Scheduled for Friday 10 AM', time: '1 day ago' },
+    { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
+  ];
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/student-marks/7381')
+    fetch('http://127.0.0.1:8000/api/student-marks/2400')
       .then(async (res) => {
         if (!res.ok) {
           const text = await res.text();
@@ -62,6 +84,19 @@ export default function StudentDashboard() {
       });
   }, []);
 
+ const handleSearch = (query: string) => {
+    setSearchTerm(query);
+    if (!query) return setSearchResults([]);
+
+    // Mock search (replace with API fetch)
+    const data = [
+      { label: "Math Class - Grade 10", link: "/classes/10" },
+      { label: "English Assignment 2", link: "/assignments/2" },
+      { label: "Teacher: Mr. Perera", link: "/teachers/5" },
+    ];
+    setSearchResults(data.filter(item => item.label.toLowerCase().includes(query.toLowerCase())));
+  };
+
   if (!data) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   const infoCards = [
@@ -70,14 +105,16 @@ export default function StudentDashboard() {
     { id: 3, label: 'Attendance', value: '96%', icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
     { id: 4, label: 'Avg Marks', value: '82%', icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
   ];
-const [studentPersonal, setStudentPersonal] = useState<{ full_name_with_initial?: string } | null>(null);
-
-  const notifications = [
-    { id: 1, title: 'Science Assignment', description: 'Due tomorrow at 9:00 AM', time: '2 hours ago' },
-    { id: 2, title: 'Parent Meeting', description: 'Scheduled for Friday 10 AM', time: '1 day ago' },
-    { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
-  ];
+  
+const [currentDateTime,setCurrentDateTime] = useState('');
 useEffect(() => {
+  const updateDateTime = () =>{
+    const now = new Date();
+
+    const formattedDate = now.toLocaleDateString('en-US' , {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
   fetch(`/api/student-personal/7381`)
     .then((res) => res.json())
     .then((data) => setStudentPersonal(data))
@@ -85,14 +122,37 @@ useEffect(() => {
       console.error('Student Personal fetch error:', err);
       setStudentPersonal(null); // or display error
     });
-}, []);
+
+    const formattedTime = now.toLocaleTimeString('en-US' , {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    setCurrentDateTime(`${formattedDate}  ,  ${formattedTime}`)
+  };
+  updateDateTime();
+
+  const intervalId = setInterval(updateDateTime, 60000);
+
+  return () => clearInterval(intervalId);
+
+},[])
+  useEffect(() => {
+    fetch(`/api/student-personal/2400`)
+      .then((res) => res.json())
+      .then((data) => setStudentPersonal(data))
+      .catch((err) => {
+        console.error('Student Personal fetch error:', err);
+        setStudentPersonal(null); // or display error
+      });
+  }, []);
 
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Student Dashboard" />
 
-      {/* Top Banner */}
+
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
         <div className="font-medium text-center md:text-left">
           <span className="hidden sm:inline">Welcome to</span> Mahadivulwewa National School
@@ -113,7 +173,6 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Navigation Bar */}
       <nav className="bg-gradient-to-r from-[#7a0000] to-[#650000] text-white py-3 px-6 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
@@ -135,7 +194,7 @@ useEffect(() => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+
       {menuOpen && (
         <div className="bg-white text-black px-4 py-3 md:hidden shadow-lg">
           <div className="grid grid-cols-3 gap-2 mb-3">
@@ -155,9 +214,9 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Main Content */}
+
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
-        {/* Sidebar */}
+
         <div className="w-full lg:w-64 p-4 bg-white shadow-lg lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <h2 className="text-lg font-bold text-amber-700 mb-4 flex items-center">
             <User className="mr-2" size={20} /> Student Menu
@@ -188,26 +247,60 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* Dashboard Content */}
+
         <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
-          {/* Welcome Banner */}
+
           <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-white p-6 rounded-xl shadow-md mb-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div className="mb-4 md:mb-0">
                 <h1 className="text-2xl md:text-3xl font-bold mb-2">Good Morning,  {studentPersonal?.full_name_with_initial}
- !</h1>
+                  !</h1>
                 <p className="opacity-90 max-w-2xl">
                   You have 3 assignments to complete this week. Your next class is Mathematics at 10:30 AM.
                 </p>
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 inline-flex items-center">
                 <CalendarCheck className="mr-2" size={18} />
-                <span>July 31, 2025</span>
+                <span>{ currentDateTime}</span>
               </div>
             </div>
           </div>
+<DailyQuote/>
+<div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+  {[
+    { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
+    { name: 'Submit Assignment', icon: <ClipboardList size={20} />, link: '/assignments' },
+    { name: 'View Grades', icon: <BarChart2 size={20} />, link: '/grades' },
+    { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, link: '/messages' },
+  ].map((action, idx) => (
+    <Link key={idx} href={action.link} 
+      className="p-4 bg-white rounded-lg shadow hover:bg-amber-50 flex flex-col items-center text-center transition">
+      {action.icon}
+      <span className="mt-2 text-sm font-medium">{action.name}</span>
+    </Link>
+  ))}
+</div>   {/* Quick Access Search */}
+          <div className="mb-6 mt-8">
+            <h2 className="text-lg font-bold text-gray-800 flex items-center">
+                    <Search className="mr-2 text-amber-600" size={20} />
+                   Quick Search
+                  </h2>
+            <input
+              type="text"
+              placeholder="Search classes, grades, assignments, teachers, or events..."
+              className="mb-3 mt-2 w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+            {searchResults.length > 0 && (
+              <div className="bg-white border border-gray-200 mt-2 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                {searchResults.map((item, idx) => (
+                  <Link key={idx} href={item.link} className="block px-4 py-2 hover:bg-amber-50">{item.label}</Link>
+                ))}
+              </div>
+            )}
+          </div>
 
-          {/* Navigation Tabs */}
           <div className="flex space-x-4 border-b border-gray-200 mb-6 pb-2">
             {['Profile', 'Attendance', 'Marks', 'Fees'].map((tab, idx) => (
               <button
@@ -219,7 +312,7 @@ useEffect(() => {
             ))}
           </div>
 
-          {/* Info Cards */}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {infoCards.map((card) => (
               <div
@@ -240,11 +333,36 @@ useEffect(() => {
             ))}
           </div>
 
-          {/* Main Content Grid */}
+{/* Modals */}
+<Dialog open={attendanceModalOpen} onClose={() => setAttendanceModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
+  <div className="fixed inset-0 bg-black opacity-50" aria-hidden="true"></div> {/* Overlay */}
+  <Dialog.Panel className="bg-white p-6 rounded-lg max-w-lg w-full z-50">
+    <Dialog.Title className="text-xl font-bold mb-4">Attendance History</Dialog.Title>
+              <div className="overflow-y-auto max-h-64">
+                <table className="w-full text-left border">
+                  <thead className="bg-amber-50">
+                    <tr>
+                      <th className="p-2 border">Date</th>
+                      <th className="p-2 border">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {['2025-07-01', '2025-07-02', '2025-07-03'].map((d, i) => (
+                      <tr key={i} className="hover:bg-amber-50">
+                        <td className="p-2 border">{d}</td>
+                        <td className="p-2 border">Present</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+             <button onClick={() => setAttendanceModalOpen(false)} className="mt-4 px-4 py-2 bg-amber-500 text-white rounded-lg">Close</button>
+  </Dialog.Panel>
+</Dialog>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column */}
+
             <div className="lg:col-span-2 space-y-6">
-              {/* Academic Updates */}
+
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-bold text-gray-800 flex items-center">
@@ -267,17 +385,29 @@ useEffect(() => {
                   ))}
                 </div>
               </div>
+ <div className="flex items-center space-x-4 mb-4">
+            <select className="px-3 py-2 border border-gray-300 rounded-lg" value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+              <option value="">All Subjects</option>
+              {subjects.map(sub => <option key={sub} value={sub}>{sub}</option>)}
+            </select>
+            <select className="px-3 py-2 border border-gray-300 rounded-lg" value={selectedExamType} onChange={(e) => setSelectedExamType(e.target.value)}>
+              <option value="">All Exams</option>
+              <option value="midterm">Midterm</option>
+              <option value="final">Final</option>
+            </select>
+            <input type="date" className="px-3 py-2 border border-gray-300 rounded-lg" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <input type="date" className="px-3 py-2 border border-gray-300 rounded-lg" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </div>
 
-              {/* Performance Charts */}
+
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Academic Performance
                 </h2>
-                <StudentOverallPerformanceChart regNo="7381" />
+                <StudentOverallPerformanceChart regNo="2400" />
               </div>
 
-              {/* Today's Schedule */}
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                   <CalendarCheck className="mr-2 text-amber-600" size={20} />
@@ -313,9 +443,19 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* Right Column */}
+
+
+
             <div className="space-y-6">
-              {/* Attendance Overview */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                  <CalendarCheck className="mr-2 text-amber-600" size={20} />
+                  Academic Calendar
+                </h2>
+                <CalendarView />
+              </div>
+
+
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                   <CalendarCheck className="mr-2 text-amber-600" size={20} />
@@ -329,7 +469,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              {/* Summary Cards */}
+
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                   <FileText className="mr-2 text-amber-600" size={20} />
@@ -343,7 +483,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              {/* Monthly Performance */}
+
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
@@ -351,6 +491,7 @@ useEffect(() => {
                 </h2>
                 <StudentPerformanceChart marksData={data.monthlyMarks ?? []} />
               </div>
+              <ChatBot />
             </div>
           </div>
         </main>

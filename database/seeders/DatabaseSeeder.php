@@ -38,6 +38,7 @@ $students = StudentAcademic::factory(200)->create();
 
         // Marks::factory(10)->create();
         StudentPerformance::factory(10)->create();
+   
 
 
         // Create related info for each student
@@ -51,6 +52,15 @@ $students = StudentAcademic::factory(200)->create();
             StudentSibling::factory(rand(1, 3))->create([
                 'reg_no' => $student->reg_no,
             ]);
+            Marks::factory(rand(3, 6))->create([
+        'reg_no' => $student->reg_no,
+        // optionally assign random subject_id if not defaulted in factory
+    ]);
+
+    // Create related reports for the student
+    StudentReport::factory(rand(1, 3))->create([
+        'reg_no' => $student->reg_no,
+    ]);
         }
         User::updateOrCreate(
             ['email' => 'admin@sms.lk'], // Unique constraint
