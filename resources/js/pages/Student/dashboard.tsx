@@ -45,7 +45,7 @@ export default function StudentDashboard() {
   });
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/student-marks/1428')
+    fetch('http://127.0.0.1:8000/api/student-marks/7381')
       .then(async (res) => {
         if (!res.ok) {
           const text = await res.text();
@@ -78,7 +78,7 @@ const [studentPersonal, setStudentPersonal] = useState<{ full_name_with_initial?
     { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
   ];
 useEffect(() => {
-  fetch(`/api/student-personal/1428`)
+  fetch(`/api/student-personal/7381`)
     .then((res) => res.json())
     .then((data) => setStudentPersonal(data))
     .catch((err) => {
@@ -274,7 +274,7 @@ useEffect(() => {
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Academic Performance
                 </h2>
-                <StudentOverallPerformanceChart regNo="1428" />
+                <StudentOverallPerformanceChart regNo="7381" />
               </div>
 
               {/* Today's Schedule */}

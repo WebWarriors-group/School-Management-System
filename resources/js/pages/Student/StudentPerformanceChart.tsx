@@ -114,14 +114,15 @@ useEffect(() => {
     scales: {
       y: {
         beginAtZero: true,
-        ticks: { stepSize: 10 }
+        ticks: { stepSize: 30 }
       }
     }
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow-xl w-full max-w-5xl">
-      <Line data={data} options={options} />
+    <div className="p-9 bg-white rounded shadow-xl w-full max-w-7xl">
+     <Line data={data} options={options} width={600}  />
+
     </div>
   );
 }

@@ -174,16 +174,12 @@ public function reset(Request $request)
     $className = $request->input('class_name');
     $grade = $request->input('grade');
 
-    // Assuming you have a Class model with class_name and grade columns
-    // and SubjectTeacher model with teacher_NIC that you want to nullify
-
-    // Get the relevant classes/sections matching class_name and grade
+    
     $classIds = ClassModel::where('class_name', $className)
         ->where('grade', $grade)
         ->pluck('class_id');
 
-    // Update all assignments for those classes to set teacher_NIC to null
-    // SubjectTeacher::query()->update(['teacher_NIC' => null]);
+   
     ClassModel::query()->update(['teacher_NIC' => null]);
 
     return redirect()->back();

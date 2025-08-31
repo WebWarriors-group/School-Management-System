@@ -21,6 +21,9 @@ class MarksFactory extends Factory
             'subject_id' => $subject->subject_id,
             'marks_obtained' => $this->faker->numberBetween(0, 100),
             'grade' => $this->faker->randomElement(['A', 'B', 'C', 'S', 'F']),
+                  'term' => $this->faker->randomElement(['Term 1', 'Term 2', 'Term 3']),
+            'year' => $this->faker->numberBetween(2020, now()->year),
+
             'created_at' => now(),
             'updated_at' => now(),
         ];

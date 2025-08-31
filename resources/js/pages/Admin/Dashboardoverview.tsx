@@ -3,24 +3,23 @@ import { faUsers, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Inertia } from '@inertiajs/inertia';
-
-import { usePage } from '@inertiajs/react';
 import { Pointer } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import AddTeacherForm from '@/pages/Teacher/teacherForm';
+
+
 import StudentAdmissionForm from '@/pages/Student/StudentAdmissionForm';
 import StudentAdmissionChart from '@/pages/Student/StudentAdmissionChart';
 import StudentPerformanceLineChart from '../Student/StudentPerformanceChart';
 import ViewAllStudents from '@/pages/Student/ViewAllStudents';
-import AssignClassTeachers from '@/pages/Admin/Classpage';
 import AssignTeachersPage from '@/pages/Admin/AssignTeachersPage';
 import ClassIndex from '@/pages/Admin/ClassCrud';
 import { Button } from '@headlessui/react';
-import Gallery from '@/pages/Admin/imagegallery';
-import CalendarPage from '@/pages/Admin/CalendarPage';
 import SubjectIndex from '@/pages/Admin/subject';
 import ImportStudent from '@/pages/Admin/ImportStudent';
 import { router } from '@inertiajs/react';
+import NotificationListener from '@/pages/Admin/notify';
+
+
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -176,6 +175,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
     // Keep class table visible
   };
+
+   
+
 
 
 
@@ -345,10 +347,23 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm">
-        <p>1</p>
+      
+      
+       <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+           <NotificationListener/>
+          <p className=" text-gray-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Teacher Assignements  
+          </p>
+        </div>
       </header>
-      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
+      <main className="flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 z-10">
+
+
+
+
+        
+
         {selectedCard && selectedCard.id === 4 ? (
           <>
             <ViewAllStudents />
@@ -590,20 +605,15 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                     >
                       <Pointer size={50} className="animate-pulse text-xl py-2" />
                       Click here for yearly updates
+
+
+                     
                     </div>
                   </div>
                 </div>
                 <StudentPerformanceLineChart/>
-                <Gallery />
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 bg-white rounded-lg shadow-md">
-                  {img.data.map(image => (
-                    <div key={image.id} className="...">
-                      <img src={`/images/${image.path}`} alt={image.title || 'Gallery image'} />
-                      {image.title && <p>{image.title}</p>}
-                    </div>
-                  ))}
-                </div>
+                
+                
               </>
             )}
 
