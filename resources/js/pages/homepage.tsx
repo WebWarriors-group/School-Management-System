@@ -1,42 +1,69 @@
 import { Head, Link } from '@inertiajs/react';
 import { Facebook, Mail, MapPin, Menu, X } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState,  useRef } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
-import { usePage } from '@inertiajs/react';
 
-export default function Navbar() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const {
-    img
-  } = usePage<{
-    img: {
-      data: {
-        title: string,
-        path: string,
-        id: number
-      }[]
+
+interface Image {
+  id: number;
+  title: string;
+  image_path: string;
+}
+
+interface GalleryCategory {
+  id: number;
+  name: string;
+  images: Image[];
+}
+
+interface Props {
+  categories: GalleryCategory[];
+}
+
+
+export default function Navbar({ categories }: Props) {
+  const [openCategory, setOpenCategory] = useState<GalleryCategory | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const toggleCategory = (category: GalleryCategory) => {
+    setOpenCategory((prev) => (prev?.id === category.id ? null : category));
+  };
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (!carouselRef.current) return;
+
+    const scrollAmount = carouselRef.current.clientWidth / 2;
+
+    if (direction === 'left') {
+      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-  }>().props;
+  };
 
-  interface ModalProps {
-    image: { src: string; alt: string };
-    onClose: () => void;
-  }
+const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const Modal = ({ image, onClose }: ModalProps) => {
-    const modalRef = useRef<HTMLDivElement>(null);
+  
 
-    useEffect(() => {
-      const handleKeydown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
-      };
-      window.addEventListener("keydown", handleKeydown);
-      return () => window.removeEventListener("keydown", handleKeydown);
-    }, [onClose]);
-  };
+    
+   const [title, setTitle] = useState('');
+    const [image, setImage] = useState<File | null>(null);
+    const [categoryId, setCategoryId] = useState<number | ''>('');
+    const [newCategoryName, setNewCategoryName] = useState('');
+    
+    
+   const closeLightbox = () => setLightboxIndex(null);
+    
+  
+    
+     
+      
+  
+   
+      
 
   return (
     <>
@@ -131,7 +158,7 @@ export default function Navbar() {
             <div className="w-full md:w-1/2 flex justify-center bg-gray-200 ">
               <img src="/images/tag4" alt="Mission" className="bg-gray-200  w-[460px] h-[350px] object-cover max-[639px]:w-[300px] max-[639px]:h-[200px]" />
             </div>
-            <div className="w-full md:w-250 bg-white p-10 shadow-md ml-[-84px] max-[639px]:w- ">
+            <div className="w-full md:w-250 bg-white p-13  shadow-md ml-[-84px] max-[639px]:w- ">
               <h3 className="text-2xl font-semibold text-red-800 mb-4">Mission / භාරකාරකම</h3>
               <p className="text-gray-800 mb-4">
                 "Our mission is to contribute to the nation a wise, virtuous, and courageous generation of students by building a noble life philosophy drawn from all religious perspectives, fostering unity among all ethnic groups, and promoting mental and educational development."
@@ -140,7 +167,7 @@ export default function Navbar() {
                 "අපගේ මෙහෙවර වනුයේ සියලු ආගමික දර්ශන වලින් ලබා ගත් උතුම් ජීවන දර්ශනයකින්, සියලු ජාතික කණ්ඩායම් අතර එකතාවය ප්‍රවර්ධනය කරමින්, මනෝබල සහ අධ්‍යාපනික සංවර්ධනය උස්සමින්, ශ්‍රී ලංකාවට බුද්ධිමත්, සුගතික සහ සාරධර්මී ශිෂ්‍ය පරපුරක් පිහිටුවීමයි."
               </p>
               <p className="text-sky-800">---- Mahadivulwewa Maha Vidyalaya -----</p>
-              <p className="text-sky-900">******************************************************</p>
+              <p className="text-sky-900"></p>
             </div>
           </div>
         </section>
@@ -148,44 +175,119 @@ export default function Navbar() {
 
 
        
-        <section className="py-16 px-6 md:px-20 bg-gray-200 ">
-           <h2 className="text-4xl font-bold text-black text-center mb-10">Gallery</h2>
-          <div className="flex overflow-x-auto space-x-4 px-20 py-6 mt-10 bg-gray-800">
-            {img.data.map((image) => (
-              <div
-                key={image.id}
-                className="relative flex-shrink-0 w-[250px] group cursor-pointer overflow-hidden  shadow-md"
-                onClick={() => setSelectedImage(`/images/${image.path}`)}
-              >
-                <img
-                  src={`/images/${image.path}`}
-                  alt={image.title || 'Gallery image'}
-                  className="w-full h-[260px] object-cover transform transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {image.title}
+     
+
+
+
+
+    <section className="py-16  md:px-20 bg-gray-200 w-full">
+<h2 className="text-4xl font-bold text-center text-gray-800 mb-12 mt-15 max-[639px]:text-3xl max-[639px]:mt-1">Image Gallery</h2>
+      <div className=" bg-white grid flex-wrap grid-cols-4 space-x-2 space-y-6  pb-4 py-9 px-4 item-center justify-center " >
+        {categories.map((category) => (
+          <div
+  key={category.id}
+  className={`relative w-[280px] h-[180px]  overflow-hidden shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer
+    ${
+      openCategory?.id === category.id
+        ? "ring-2 ring-blue-500"
+        : "border border-gray-200"
+    }`}
+  onClick={() => toggleCategory(category)}
+>
+  {/* Background image if exists */}
+  {category.images.length > 0 && (
+    <img
+      src={category.images[0].image_path}
+      alt={category.name}
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+  )}
+
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-blue-900 bg-opacity-40"></div>
+
+  {/* Text content */}
+  <div className="relative z-10 flex flex-col justify-center items-center h-full text-center text-white">
+    <h1 className="text-lg font-bold">{category.name.toUpperCase()}</h1>
+    <p className="text-sm mt-1">{category.images.length} images</p>
+  </div>
+</div>
+
+        ))}
+      </div>
+
+      {/* Show Carousel */}
+      {openCategory && (
+        <div className="relative mt-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            {openCategory.name} Images
+          </h3>
+
+          {/* Carousel Buttons */}
+          <button
+            onClick={() => scrollCarousel("left")}
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10"
+            aria-label="Scroll Left"
+          >
+            ‹
+          </button>
+          <button
+            onClick={() => scrollCarousel("right")}
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10"
+            aria-label="Scroll Right"
+          >
+            ›
+          </button>
+
+          {/* Carousel */}
+          {openCategory.images.length === 0 ? (
+            <p className="text-gray-500 italic">
+              No images uploaded in this category yet.
+            </p>
+          ) : (
+            <div
+              ref={carouselRef}
+              className="flex space-x-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
+            >
+              {openCategory.images.map((img, index) => (
+                <div
+                  key={img.id}
+                  className="snap-start border rounded shadow-sm flex-shrink-0 w-64 cursor-pointer"
+                  onClick={() => setLightboxIndex(index)}
+                >
+                  <img
+                    src={`/${img.image_path}`}
+                    alt={img.title || "Untitled"}
+                    className="w-full h-40 object-cover rounded-t"
+                  />
+                  <div className="p-2 text-center text-sm text-gray-700">
+                    {img.title || "Untitled"}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-       
-        {selectedImage && (
-          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center" onClick={() => setSelectedImage(null)}>
-            <div className="relative max-w-5xl w-full p-4">
-              <img src={selectedImage} alt="Full View" className="w-full max-h-[80vh] object-contain rounded-lg hover:cursor-pointer" />
-              <button
-                onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-                className="absolute top-2 right-2 bg-black/60 text-white px-3 py-1 rounded hover:bg-black cursor-pointer"
-              >
-                ✕
-              </button>
+              ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      )}
 
-       
+      {/* Lightbox */}
+      {openCategory && lightboxIndex !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 text-white text-2xl"
+          >
+            ✕
+          </button>
+          <img
+            src={`/${openCategory.images[lightboxIndex].image_path}`}
+            alt={openCategory.images[lightboxIndex].title || "Untitled"}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+          />
+        </div>
+      )}
+    </section>
+
         <footer className="bg-[#650000] text-white py-7 ">
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0 text-center md:text-left">
