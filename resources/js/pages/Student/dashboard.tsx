@@ -294,7 +294,7 @@ useEffect(() => {
     { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, link: '/messages' },
   ].map((action, idx) => (
     <Link key={idx} href={action.link} 
-      className="p-4 bg-white rounded-lg shadow hover:bg-amber-50 flex flex-col items-center text-center transition">
+      className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
       {action.icon}
       <span className="mt-2 text-sm font-medium">{action.name}</span>
     </Link>
@@ -308,14 +308,14 @@ useEffect(() => {
             <input
               type="text"
               placeholder="Search classes, grades, assignments, teachers, or events..."
-              className="mb-3 mt-2 w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="mb-3 mt-2 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-400"
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
             />
             {searchResults.length > 0 && (
-              <div className="bg-white border border-gray-200 mt-2 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 mt-2 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {searchResults.map((item, idx) => (
-                  <Link key={idx} href={item.link} className="block px-4 py-2 hover:bg-amber-50">{item.label}</Link>
+                  <Link key={idx} href={item.link} className="block px-4 py-2 hover:bg-amber-50 dark:hover:bg-gray-600">{item.label}</Link>
                 ))}
               </div>
             )}
@@ -356,7 +356,7 @@ useEffect(() => {
 {/* Modals */}
 <Dialog open={attendanceModalOpen} onClose={() => setAttendanceModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
   <div className="fixed inset-0 bg-black opacity-50" aria-hidden="true"></div> {/* Overlay */}
-  <Dialog.Panel className="bg-white p-6 rounded-lg max-w-lg w-full z-50">
+  <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-lg w-full z-50">
     <Dialog.Title className="text-xl font-bold mb-4">Attendance History</Dialog.Title>
               <div className="overflow-y-auto max-h-64">
                 <table className="w-full text-left border">
@@ -407,7 +407,7 @@ useEffect(() => {
                 </div>
               </div>
  <div className="flex items-center space-x-4 mb-4">
-            <select className="px-3 py-2 border border-gray-300 rounded-lg" value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg" value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
               <option value="">All Subjects</option>
               {subjects.map(sub => <option key={sub} value={sub}>{sub}</option>)}
             </select>
@@ -480,17 +480,23 @@ useEffect(() => {
               </div>
 
 
-              <div className="bg-white p-5 rounded-xl shadow-sm">
-                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+              <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm">
+                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
                   <CalendarCheck className="mr-2 text-amber-600" size={20} />
                   Attendance Overview
                 </h2>
                 <div className="mb-2">
                   <span className="text-sm text-gray-700 dark:text-gray-300">Current Attendance: 96%</span>
-                  <div className="w-full bg-gray-200 h-2 rounded-full mt-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full mt-2">
                     <div className="bg-emerald-500 h-2 rounded-full transition-all duration-300 ease-in-out" style={{ width: '96%' }}></div>
                   </div>
                 </div>
+                <button 
+  onClick={() => setAttendanceModalOpen(true)}
+  className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
+>
+  View Attendance History
+</button>
               </div>
 
               {/* Summary Cards */}
