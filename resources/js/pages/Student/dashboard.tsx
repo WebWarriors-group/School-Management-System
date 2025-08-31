@@ -6,7 +6,7 @@ import {
   Facebook, Mail, MapPin, Menu, X,
   User, Book, Users, Award, CalendarCheck,
   FileText, Home, ClipboardList, BarChart2,
-  Bell, MessageSquare, Settings, LogOut, Sun, Moon
+  Bell, MessageSquare, Settings, LogOut, Sun, Moon, Search
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import StudentSidebar from './StudentSidebar';
@@ -64,7 +64,7 @@ export default function StudentDashboard() {
 
    const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-
+const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
   // Filters for performance chart
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedExamType, setSelectedExamType] = useState("");
