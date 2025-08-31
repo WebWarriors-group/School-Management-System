@@ -455,6 +455,19 @@ public function profile()
     
     }
 
+    // TeacherController.php
+public function studentDetails()
+{
+    $teacher = auth()->user()->teacher;
+
+    $students = $teacher->classes()
+        ->with(['studentacademics.personal'])
+        ->get();
+
+    return response()->json($students);
+}
+
+
 //     public function leavereqstore(Request $request)
 // {
 //     // Validate the form inputs

@@ -188,6 +188,10 @@ Route::get('/teacher-leave-requests', function () {
 Route::get('/Admin/LeaveRequests', function () {
     return Inertia::render('Admin/teacher');
 });
+Route::get('/api/teacher/leave-stats', [TeacherLeaveRequestController::class, 'leaveStats'])
+    ->middleware('auth')
+    ->name('teacher.leave-stats');
+
 Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
 //D:\schoolProj\School-Management-System\resources\js\pages\Admin\teacherAttendance.tsx
 //Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);

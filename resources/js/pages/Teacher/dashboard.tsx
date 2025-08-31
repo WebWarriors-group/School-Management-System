@@ -18,6 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 type Teacher = {
     teacher_NIC: string;
     user_id:number;
+    classes?: any[];
   personal:{
   Full_name: string;
   Full_name_with_initial: string;
@@ -431,13 +432,13 @@ const COLORS = ['#CC7722', '#FFBF00'];
             <h2 className="text-2xl font-bold text-blue-700 mb-4">🎓 Teaching Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[{
-                label: 'Appointed Subject', value: 'Maths', icon: '📘', color: 'blue'
+                label: 'Appointed Subject', value: teacher.appointed_subject ?? 'Not Assigned', icon: '📘', color: 'blue'
               }, {
-                label: 'Current Subject', value: 'Maths', icon: '📗', color: 'green'
+                label: 'Current Subject', value: teacher.current_teaching_subject ?? 'Not Assigned', icon: '📗', color: 'green'
               }, {
-                label: 'Other Subjects', value: 'Science', icon: '📙', color: 'yellow'
+                label: 'Other Subjects', value: teacher.other_subjects_taught ?? 'None', icon: '📙', color: 'yellow'
               }, {
-                label: 'Class Assigned', value: '10A', icon: '🏫', color: 'purple'
+                label: 'Class Assigned', value:  teacher.assigned_class ?? 'Not Assigned', icon: '🏫', color: 'purple'
               }].map(({ label, value, icon, color }) => (
                 <div key={label} className={`flex items-center bg-${color}-50 border-l-4 border-${color}-600 p-4 rounded shadow-md`}>
                   <div className={`text-${color}-600 text-2xl mr-4`}>{icon}</div>
@@ -524,20 +525,23 @@ const COLORS = ['#CC7722', '#FFBF00'];
           </tr>
         </thead>
         <tbody>
-          <tr className="hover:bg-gray-50">
-            <td className="px-4 py-2 border">Ayesha Perera</td>
-            <td className="px-4 py-2 border">Girl</td>
-            <td className="px-4 py-2 border">10A</td>
-            <td className="px-4 py-2 border">84%</td>
-            <td className="px-4 py-2 border">95%</td>
-          </tr>
-          <tr className="hover:bg-gray-50">
-            <td className="px-4 py-2 border">Ruwan Silva</td>
-            <td className="px-4 py-2 border">Boy</td>
-            <td className="px-4 py-2 border">10A</td>
-            <td className="px-4 py-2 border">79%</td>
-            <td className="px-4 py-2 border">91%</td>
-          </tr>
+   <tbody>
+                    {teacher.classes?.map((cls: any) =>
+                      cls.studentacademics?.map((student: any) => (
+                        <tr key={student.reg_no} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 border">{student.personal?.full_name}</td>
+                          <td className="px-4 py-2 border">{student.personal?.gender}</td>
+                          <td className="px-4 py-2 border">{cls.name}</td>
+                          <td className="px-4 py-2 border">—</td>
+                          <td className="px-4 py-2 border">—</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+
+
+
+
         </tbody>
       </table>
     </div>
