@@ -100,7 +100,7 @@ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
            
             <div className="flex items-center space-x-4">
               <Link href={route('loginCheckout')} className="hidden md:inline-block bg-white rounded-full text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Login</Link>
-              <Link href={route('login')} className="hidden md:inline-block rounded-full bg-white text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Forms</Link>
+              <Link href={route('loginCheckout')} className="hidden md:inline-block rounded-full bg-white text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Forms</Link>
               <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -112,7 +112,7 @@ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
               <a href="https://www.facebook.com/ttnmmv" className="flex items-center gap-2 py-2 hover:text-blue-600"><Facebook size={20} /> Facebook</a>
               <a href="mailto:ttnmahadivulwewamv@gmail.com" className="flex items-center gap-2 py-2 hover:text-blue-600"><Mail size={20} /> Email</a>
               <a href="https://maps.google.com?q=Mahadivulwewa School" className="flex items-center gap-2 py-2 hover:text-blue-600"><MapPin size={20} /> Location</a>
-              <Link href={route('login')} className="block mt-3 bg-[#650000] text-white rounded px-4 py-2 text-center">Login</Link>
+              <Link href={route('loginCheckout')} className="block mt-3 bg-[#650000] text-white rounded px-4 py-2 text-center">Login</Link>
             </div>
           )}
         </nav>
@@ -139,7 +139,7 @@ const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     <div className="flex justify-center gap-4 flex-wrap">
       <Link
-        href={route('login')}
+        href={route('loginCheckout')}
         className="bg-yellow-500 text-black px-6 py-3 rounded-full hover:bg-purple-700 transition max-[639px]:px-4 max-[639px]:py-2"
       >
          ▶ Watch Video
