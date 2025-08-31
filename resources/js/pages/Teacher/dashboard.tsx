@@ -219,7 +219,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
         {/* Sidebar */}
         <aside className="lg:col-span-1 space-y-6">
           {/* Profile */}
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          {/* <div className="bg-white rounded-lg shadow p-4 text-center"> */}
             {/* Profile Card */}
 <div className="bg-white rounded-xl shadow-md p-6 text-center space-y-4">
   {/* Title */}
@@ -231,17 +231,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
   <div className="w-24 h-24 mx-auto rounded-full bg-gray-100 border-4 border-blue-500 flex items-center justify-center text-gray-400 text-2xl font-bold">
     ?
   </div>
-
-
-          {/* Calendar */}
-          <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
-  <Calendar
-    value={date}
-    
-    className="text-sm border border-gray-300 rounded-lg"
-  />
-
-  {/* View Profile Button */}
+   {/* View Profile Button */}
   <Link
     href={route('teacher.profile')}
     className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2 rounded-full transition duration-300"
@@ -250,7 +240,18 @@ const COLORS = ['#CC7722', '#FFBF00'];
   </Link>
 
 </div>
-</div>
+
+          
+
+ 
+{/* </div> */}
+{/* Calendar */}
+          <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
+  <Calendar
+    value={date}
+    
+    className="text-sm border border-gray-300 rounded-lg"
+  />
 
 <div className="p-6">
       {latestLeaveRequest?.status === 'Approved' && (
@@ -269,11 +270,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
     </div>
           </div>
 
-          {/* Calendar */}
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-lg font-semibold text-indigo-700 mb-4">📅 Calendar</h2>
-            <Calendar value={date} onChange={setDate} className="w-full rounded" />
-          </div>
+         
 
 
          {/* Leave Summary */}

@@ -46,17 +46,17 @@ function groupByYear(data: PerformanceData[]) {
 
 export default function StudentPerformanceLineChart() {
   const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
-useEffect(() => {
-  fetch('http://127.0.0.1:8000/api/student-performance')
-    .then(res => res.json())
-    .then(data => {
-      const groupedData = groupByYear(data);
-      setPerformanceData(groupedData);
-    })
-    .catch(err => {
-      console.error('Failed to fetch performance data:', err);
-    });
-}, []);
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/student-performance')
+      .then(res => res.json())
+      .then(data => {
+        const groupedData = groupByYear(data);
+        setPerformanceData(groupedData);
+      })
+      .catch(err => {
+        console.error('Failed to fetch performance data:', err);
+      });
+  }, []);
 
 
   const data = {
@@ -77,7 +77,6 @@ useEffect(() => {
         data: performanceData.map(item => item.ol_expected),
         borderColor: '#4ade80',
         backgroundColor: '#4ade80',
-        borderDash: [10, 5],
         borderWidth: 3,
         pointRadius: 5,
         pointHoverRadius: 7
@@ -97,7 +96,6 @@ useEffect(() => {
         data: performanceData.map(item => item.al_expected),
         borderColor: '#60a5fa',
         backgroundColor: '#60a5fa',
-        borderDash: [10, 5],
         borderWidth: 3,
         pointRadius: 5,
         pointHoverRadius: 7
@@ -114,14 +112,15 @@ useEffect(() => {
     scales: {
       y: {
         beginAtZero: true,
-        ticks: { stepSize: 10 }
+        ticks: { stepSize: 30 }
       }
     }
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow-xl w-full max-w-5xl">
-      <Line data={data} options={options} />
+    <div className="p-9 bg-white rounded shadow-xl w-full max-w-7xl">
+     <Line data={data} options={options} width={600}  />
+
     </div>
   );
 }

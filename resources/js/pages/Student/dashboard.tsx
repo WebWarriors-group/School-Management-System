@@ -115,6 +115,12 @@ useEffect(() => {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
+  fetch(`/api/student-personal/7381`)
+    .then((res) => res.json())
+    .then((data) => setStudentPersonal(data))
+    .catch((err) => {
+      console.error('Student Personal fetch error:', err);
+      setStudentPersonal(null); // or display error
     });
 
     const formattedTime = now.toLocaleTimeString('en-US' , {

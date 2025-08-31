@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         Subject::factory(10)->create();
 $students = StudentAcademic::factory(200)->create();
 
-    
+        // Marks::factory(10)->create();
         StudentPerformance::factory(10)->create();
    
 
