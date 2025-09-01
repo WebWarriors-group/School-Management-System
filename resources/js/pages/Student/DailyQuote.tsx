@@ -8,7 +8,7 @@ const DailyQuote = () => {
 useEffect(() => {
     const fetchQuote = async () => {
         try{
-            const response = await fetch('https://api.quotable.io/random?tags=inspirational');
+            const response = await fetch('/api/quotable/random?tags=inspirational');
             const data = await response.json();
             setDailyQuote({text:data.content,author:data.author});
         

@@ -143,15 +143,21 @@ useEffect(() => {
 
 },[]);
 
-  useEffect(() => {
-    fetch(`/api/student-personal/2400`)
-      .then((res) => res.json())
-      .then((data) => setStudentPersonal(data))
-      .catch((err) => {
-        console.error('Student Personal fetch error:', err);
-        setStudentPersonal(null); // or display error
-      });
-  }, []);
+ useEffect(() => {
+  fetch(`/api/student-personal/2400`)
+    .then(async (res) => {
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`❌ ${res.status}: ${text}`);
+      }
+      return res.json();
+    })
+    .then((data) => setStudentPersonal(data))
+    .catch((err) => {
+      console.error('Student Personal fetch error:', err);
+      setStudentPersonal(null);
+    });
+}, []);
 
 
   return (
