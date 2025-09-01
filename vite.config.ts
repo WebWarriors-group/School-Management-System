@@ -5,6 +5,15 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  server:{
+    proxy: {
+      '/api':{
+        target: 'https://api.quotoble.io',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/,'')
+      }
+    }
+  },
   plugins: [
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.tsx'],
