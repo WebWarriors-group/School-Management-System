@@ -28,17 +28,27 @@ type MarksItem = {
   };
 };
 
-interface StudentPerformanceChartProps {
-  regNo: string; // student reg_no passed as prop
+interface StudentOverallPerformanceChartProps {
+  regNo: string;
+  subjectFilter?: string;
+  examFilter?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
-export default function StudentPerformanceChart({ regNo }: {regNo:string}) {
+export default function StudentOverallPerformanceChart({
+  regNo,
+  subjectFilter,
+  examFilter,
+  startDate,
+  endDate
+}: StudentOverallPerformanceChartProps) {
 const [marksData, setMarksData] = useState<MarksItem[]>([]);
   const [loading, setLoading] = useState(true);
 useEffect(() => {
   if (!regNo) return;
 
-  setLoading(true); // fetch தொடங்கும்போது loading true ஆக்கலாம்
+  setLoading(true); 
 
   fetch(`/api/student-marks/${regNo}`)
     .then(res => res.json())
@@ -50,7 +60,7 @@ useEffect(() => {
       } else {
         setMarksData([]);
       }
-      setLoading(false); // data வந்து விட்டால் loading false ஆக்கும்
+      setLoading(false); 
     })
     .catch(error => {
       console.error(error);
@@ -118,7 +128,12 @@ const options = {
 };
 
 
-return <div style={{ height: '300px' }}><Line data={data} options={options} /></div>;
+return <div style={{ height: '300px' }}><Line data={data} options={options} />
+
+
+
+
+</div>;
 
 
 }
