@@ -15,12 +15,12 @@ interface Student {
 
 interface MarkInput {
   reg_no: string;
-  marks_obtained: number | '';
+  marks_obtained: number | ''; // keep '' for new inputs
   grade: string;
   term: string;
   year: number;
   subject_id: string;
-  isNew?: boolean; // ✅ New flag to track if mark is new
+  isNew?: boolean; // flag for new marks
 }
 
 interface Props {
@@ -36,35 +36,38 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [subjectId, setSubjectId] = useState('');
   const [marks, setMarks] = useState<MarkInput[]>([]);
-  const [editingRows, setEditingRows] = useState<{ [reg_no: string]: boolean }>({});
+  const [editingRows, setEditingRows] = useState<Record<string, boolean>>({});
 
+  // ✅ Fetch marks when students/subject change
   useEffect(() => {
     if (students.length > 0 && subjectId) {
       fetch(`/marks?subject_id=${subjectId}&term=${term}&year=${year}`)
         .then(res => res.json())
-        .then(data => {
-          if (data.length > 0) {
-            // ✅ Existing marks
-            setMarks(data.map((m: any) => ({
-              reg_no: m.reg_no,
-              marks_obtained: m.marks_obtained,
-              grade: m.grade,
-              term: m.term,
-              year: m.year,
-              subject_id: m.subject_id.toString(),
-              isNew: false
-            })));
+        .then((data: any[]) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setMarks(
+              data.map(m => ({
+                reg_no: m.reg_no,
+                marks_obtained: m.marks_obtained,
+                grade: m.grade,
+                term: m.term,
+                year: m.year,
+                subject_id: String(m.subject_id),
+                isNew: false,
+              }))
+            );
           } else {
-            // ✅ New marks entry
-            setMarks(students.map(student => ({
-              reg_no: student.reg_no,
-              marks_obtained: '',
-              grade: '',
-              term,
-              year,
-              subject_id: subjectId,
-              isNew: true
-            })));
+            setMarks(
+              students.map(student => ({
+                reg_no: student.reg_no,
+                marks_obtained: '',
+                grade: '',
+                term,
+                year,
+                subject_id: subjectId,
+                isNew: true,
+              }))
+            );
           }
         })
         .catch(err => console.error('Failed to fetch marks', err));
@@ -73,10 +76,19 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
     }
   }, [students, term, year, subjectId]);
 
-  const handleMarkChange = (index: number, field: 'marks_obtained' | 'grade', value: string) => {
+  // ✅ Handle changes for marks/grades
+  const handleMarkChange = (
+    index: number,
+    field: 'marks_obtained' | 'grade',
+    value: string
+  ) => {
     setMarks(prev => {
       const updated = [...prev];
-      updated[index][field] = field === 'marks_obtained' ? (value === '' ? '' : Number(value)) : value;
+      if (field === 'marks_obtained') {
+        updated[index][field] = value === '' ? '' : Math.min(100, Math.max(0, Number(value))); // clamp 0-100
+      } else {
+        updated[index][field] = value;
+      }
       return updated;
     });
   };
@@ -86,24 +98,29 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
     Inertia.get('/mark/MarksPage', { class_id: classId }, { preserveState: true, preserveScroll: true });
   };
 
+  // ✅ Bulk submit
   const handleSubmit = async () => {
     for (const mark of marks) {
       if (
         mark.marks_obtained === '' ||
-        mark.marks_obtained < 0 ||
-        mark.marks_obtained > 100 ||
+        Number(mark.marks_obtained) < 0 ||
+        Number(mark.marks_obtained) > 100 ||
         !allowedGrades.includes(mark.grade)
       ) {
-        alert('Please enter valid marks (0-100) and select a grade for all students.');
+        alert('Please enter valid marks (0–100) and select a grade for all students.');
         return;
       }
     }
 
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+      const csrfToken =
+        document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
       const res = await fetch('/marks/storeBulkMarks', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ marks }),
         credentials: 'same-origin',
       });
@@ -133,8 +150,8 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
   const handleEdit = async (mark: MarkInput) => {
     if (
       mark.marks_obtained === '' ||
-      mark.marks_obtained < 0 ||
-      mark.marks_obtained > 100 ||
+      Number(mark.marks_obtained) < 0 ||
+      Number(mark.marks_obtained) > 100 ||
       !allowedGrades.includes(mark.grade)
     ) {
       alert('Invalid mark or grade.');
@@ -142,7 +159,8 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
     }
 
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+      const csrfToken =
+        document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
       const res = await fetch('/marks/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
@@ -171,7 +189,8 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
     if (!confirm('Are you sure you want to delete this mark?')) return;
 
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+      const csrfToken =
+        document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
       const res = await fetch('/marks/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
@@ -189,9 +208,17 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
         return;
       }
 
-      setMarks(prev => prev.filter(m =>
-        !(m.reg_no === mark.reg_no && m.subject_id === mark.subject_id && m.term === mark.term && m.year === mark.year)
-      ));
+      setMarks(prev =>
+        prev.filter(
+          m =>
+            !(
+              m.reg_no === mark.reg_no &&
+              m.subject_id === mark.subject_id &&
+              m.term === mark.term &&
+              m.year === mark.year
+            )
+        )
+      );
       alert('Mark deleted successfully!');
     } catch (err: any) {
       alert('Delete error: ' + err.message);
@@ -207,16 +234,22 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
 
             {/* Class Selector */}
             <div className="space-y-2">
-              <label htmlFor="classSelect" className="block text-lg font-medium text-gray-700">Select Class</label>
+              <label htmlFor="classSelect" className="block text-lg font-medium text-gray-700">
+                Select Class
+              </label>
               <select
                 id="classSelect"
                 value={selectedClassId ?? ''}
                 onChange={handleClassChange}
                 className="w-full max-w-sm border border-gray-300 rounded-lg p-2"
               >
-                <option value="" disabled>-- Select Class --</option>
+                <option value="" disabled>
+                  -- Select Class --
+                </option>
                 {classes.map(cls => (
-                  <option key={cls.class_id} value={cls.class_id}>{cls.section} ({cls.year})</option>
+                  <option key={cls.class_id} value={cls.class_id}>
+                    {cls.section} ({cls.year})
+                  </option>
                 ))}
               </select>
             </div>
@@ -225,7 +258,11 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block mb-1 text-lg font-medium">Term</label>
-                <select value={term} onChange={e => setTerm(e.target.value)} className="w-full border rounded-lg p-2">
+                <select
+                  value={term}
+                  onChange={e => setTerm(e.target.value)}
+                  className="w-full border rounded-lg p-2"
+                >
                   <option>Term 1</option>
                   <option>Term 2</option>
                   <option>Term 3</option>
@@ -233,13 +270,23 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
               </div>
               <div>
                 <label className="block mb-1 text-lg font-medium">Year</label>
-                <input type="number" min={2000} max={2100} value={year} onChange={e => setYear(Number(e.target.value))}
-                  className="w-full border rounded-lg p-2" />
+                <input
+                  type="number"
+                  min={2000}
+                  max={2100}
+                  value={year}
+                  onChange={e => setYear(Number(e.target.value))}
+                  className="w-full border rounded-lg p-2"
+                />
               </div>
               <div>
                 <label className="block mb-1 text-lg font-medium">Subject ID</label>
-                <input type="text" value={subjectId} onChange={e => setSubjectId(e.target.value)}
-                  className="w-full border rounded-lg p-2" />
+                <input
+                  type="text"
+                  value={subjectId}
+                  onChange={e => setSubjectId(e.target.value)}
+                  className="w-full border rounded-lg p-2"
+                />
               </div>
             </div>
 
@@ -258,16 +305,22 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                   </thead>
                   <tbody>
                     {marks.map((mark, i) => (
-                      <tr key={mark.reg_no}>
+                      <tr key={`${mark.reg_no}-${mark.subject_id}`}>
                         <td className="px-4 py-2 border">{mark.reg_no}</td>
-                        <td className="px-4 py-2 border">{students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}</td>
+                        <td className="px-4 py-2 border">
+                          {students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}
+                        </td>
                         <td className="px-4 py-2 border">
                           <input
-                            type="number" min={0} max={100}
+                            type="number"
+                            min={0}
+                            max={100}
                             value={mark.marks_obtained}
                             readOnly={!editingRows[mark.reg_no]}
                             onChange={e => handleMarkChange(i, 'marks_obtained', e.target.value)}
-                            className={`w-24 border rounded px-2 py-1 ${editingRows[mark.reg_no] ? '' : 'bg-gray-200'}`}
+                            className={`w-24 border rounded px-2 py-1 ${
+                              editingRows[mark.reg_no] ? '' : 'bg-gray-200'
+                            }`}
                           />
                         </td>
                         <td className="px-4 py-2 border">
@@ -275,10 +328,16 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                             value={mark.grade}
                             disabled={!editingRows[mark.reg_no]}
                             onChange={e => handleMarkChange(i, 'grade', e.target.value)}
-                            className={`border rounded px-2 py-1 ${editingRows[mark.reg_no] ? '' : 'bg-gray-200'}`}
+                            className={`border rounded px-2 py-1 ${
+                              editingRows[mark.reg_no] ? '' : 'bg-gray-200'
+                            }`}
                           >
                             <option value="">Select Grade</option>
-                            {allowedGrades.map(g => <option key={g} value={g}>{g}</option>)}
+                            {allowedGrades.map(g => (
+                              <option key={g} value={g}>
+                                {g}
+                              </option>
+                            ))}
                           </select>
                         </td>
                         <td className="px-4 py-2 border flex gap-2">
@@ -290,7 +349,9 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                                 toggleEdit(mark.reg_no);
                               }
                             }}
-                            className={`px-2 py-1 rounded text-white ${editingRows[mark.reg_no] ? 'bg-green-500' : 'bg-blue-500'}`}
+                            className={`px-2 py-1 rounded text-white ${
+                              editingRows[mark.reg_no] ? 'bg-green-500' : 'bg-blue-500'
+                            }`}
                           >
                             {editingRows[mark.reg_no] ? 'Save' : 'Edit'}
                           </button>
@@ -310,7 +371,7 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
               <p className="text-gray-600">No students found. Please select a class and subject.</p>
             )}
 
-            {/* Bulk Submit — only show if there are NEW marks */}
+            {/* Bulk Submit Button */}
             {marks.some(m => m.isNew) && (
               <div className="pt-4">
                 <button
