@@ -212,8 +212,9 @@ const handleUpdate = async (event: React.FormEvent) => {
 
   return (
     <AppLayout   breadcrumbs={breadcrumbs}>
+      <main className="bg-gray-200 ">
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-9xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">Search Teacher by NIC</h1>
 
       {/* Search Input */}
@@ -233,13 +234,13 @@ const handleUpdate = async (event: React.FormEvent) => {
 
       {/* Display Teacher Details */}
 {teacher && (
-  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-4xl mx-auto shadow-lg">
+  <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-10xl mx-auto shadow-lg w-300">
     <h2 className="text-4xl font-extrabold text-blue-900 text-center mb-10 tracking-wide drop-shadow-md">
       Teacher Details
     </h2>
 
     {/* Personal Information */}
-    <section className="bg-white shadow-lg rounded-lg p-8 mb-10 border-l-8 border-blue-700">
+    <section className="bg-blue-100 shadow-lg rounded-lg p-8  border-l-8 border-blue-700  max-w-10xl">
       <h3 className="text-2xl font-bold text-blue-800 mb-6 uppercase tracking-wide border-b-2 border-blue-300 pb-2">
         Personal Information
       </h3>
@@ -256,7 +257,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             <span className="text-gray-400 italic">No Photo</span>
           )}
         </div>
-        <div className="flex-1 space-y-2 text-gray-800 text-lg leading-relaxed">
+        <div className="flex-1 space-y-9 text-gray-800 text-lg leading-relaxed w-600">
           <p><strong className="text-blue-700 font-semibold">NIC:</strong> {teacher.teacher_NIC}</p>
           <p><strong className="text-blue-700 font-semibold">Full Name:</strong> {teacher.personal?.Full_name || 'Not provided'}</p>
           <p><strong className="text-blue-700 font-semibold">Full Name with Initial:</strong> {teacher.personal?.Full_name_with_initial || 'Not provided'}</p>
@@ -320,7 +321,7 @@ const handleUpdate = async (event: React.FormEvent) => {
     </section>
 
     {/* Qualifications */}
-    <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
+    <section className="mb-19 p-30 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
       <h3 className="text-2xl font-bold text-yellow-900 mb-6 uppercase tracking-wide border-b-2 border-yellow-300 pb-2">
         Qualifications
       </h3>
@@ -440,17 +441,29 @@ const handleUpdate = async (event: React.FormEvent) => {
 
 
         <div className="mb-2">
-          <label className="block text-sm font-bold">Birthdate:</label>
-          <input
-            type="date"
-            value={editingTeacher.personal?.Birthdate || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              personal: { ...editingTeacher.personal, Birthdate: e.target.value }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Birthdate:</label>
+  <input
+    type="date"
+    value={editingTeacher.personal?.Birthdate || ""}
+    max={new Date().toISOString().split("T")[0]} // ✅ Set max date to today
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Birthdate cannot be in the future.");
+        return; // prevent update
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        personal: { ...editingTeacher.personal, Birthdate: selectedDate }
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
+
 
         {/* Contact Information */}
         <h4 className="font-bold text-lg mt-4 mb-2">Contact Information</h4>
@@ -724,23 +737,46 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.appointed_date || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      appointed_date: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // Limit to today
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Appointed date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        appointed_date: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
+
 
 <div className="mb-2">
   <label className="block text-sm font-bold">Work Acceptance Date:</label>
   <input
     type="date"
     value={editingTeacher.work_acceptance_date || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      work_acceptance_date: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // Disables future date selection
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Work acceptance date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        work_acceptance_date: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
@@ -763,13 +799,25 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.salary_increment_date || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      salary_increment_date: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // UI restriction
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Salary Increment Date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        salary_increment_date: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
+
 
 <div className="mb-2">
   <label className="block text-sm font-bold">Current Grade of Teaching Service:</label>
@@ -797,13 +845,25 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.work_acceptance_date_school || ""}
-    onChange={(e) => setEditingTeacher({
-      ...editingTeacher,
-      work_acceptance_date_school: e.target.value
-    })}
+    max={new Date().toISOString().split("T")[0]} // restrict future dates in UI
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Work Acceptance Date in School cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        work_acceptance_date_school: selectedDate
+      });
+    }}
     className="border p-2 w-full"
   />
 </div>
+
 
 <div className="mb-2">
   <label className="block text-sm font-bold">Temporary Attached School / Institute:</label>
@@ -1131,36 +1191,59 @@ const handleUpdate = async (event: React.FormEvent) => {
 </div>
 
          <div className="mb-2">
-          <label className="block text-sm font-bold">Appointment date for current class:</label>
-          <input
-            type="text"
-            value={editingTeacher.qualifications?.appointment_date_for_current_class || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              qualifications: { 
-                ...editingTeacher.qualifications, 
-                appointment_date_for_current_class: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Appointment Date for Current Class:</label>
+  <input
+    type="date"
+    value={editingTeacher.qualifications?.appointment_date_for_current_class || ""}
+    max={new Date().toISOString().split("T")[0]} // disable future dates in picker
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Appointment date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          appointment_date_for_current_class: selectedDate,
+        },
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
+
 
          <div className="mb-2">
-          <label className="block text-sm font-bold">appointment date for current grade:</label>
-          <input
-            type="text"
-            value={editingTeacher.qualifications?.appointment_date_for_current_grade || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              qualifications: { 
-                ...editingTeacher.qualifications, 
-                appointment_date_for_current_grade: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Appointment Date for Current Grade:</label>
+  <input
+    type="date"
+    value={editingTeacher.qualifications?.appointment_date_for_current_grade || ""}
+    max={new Date().toISOString().split("T")[0]} // prevents future dates
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Appointment date cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          appointment_date_for_current_grade: selectedDate,
+        },
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
 
          <div className="mb-2">
           <label className="block text-sm font-bold">Current appointment service medium:</label>
@@ -1259,20 +1342,32 @@ const handleUpdate = async (event: React.FormEvent) => {
         </div>
 
         <div className="mb-2">
-          <label className="block text-sm font-bold">Assign date for the school:</label>
-          <input
-            type="text"
-            value={editingTeacher.qualifications?.assign_date_for_the_school || ""}
-            onChange={(e) => setEditingTeacher({
-              ...editingTeacher,
-              qualifications: { 
-                ...editingTeacher.qualifications, 
-                assign_date_for_the_school: e.target.value 
-              }
-            })}
-            className="border p-2 w-full"
-          />
-        </div>
+  <label className="block text-sm font-bold">Assign Date for the School:</label>
+  <input
+    type="date"
+    value={editingTeacher.qualifications?.assign_date_for_the_school || ""}
+    max={new Date().toISOString().split("T")[0]} // Prevent future date selection
+    onChange={(e) => {
+      const selectedDate = e.target.value;
+      const today = new Date().toISOString().split("T")[0];
+
+      if (selectedDate > today) {
+        alert("Assign date for the school cannot be in the future.");
+        return;
+      }
+
+      setEditingTeacher({
+        ...editingTeacher,
+        qualifications: {
+          ...editingTeacher.qualifications,
+          assign_date_for_the_school: selectedDate
+        }
+      });
+    }}
+    className="border p-2 w-full"
+  />
+</div>
+
 
         
 
@@ -1966,8 +2061,10 @@ const handleUpdate = async (event: React.FormEvent) => {
 
    
 <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+</main>
 
     </AppLayout>
   );
   
 }
+
