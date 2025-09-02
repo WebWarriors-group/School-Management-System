@@ -21,7 +21,7 @@ type Teacher = {
   personal:{
   Full_name: string;
   Full_name_with_initial: string;
-  Photo: File | null;
+  Photo: string | null;
   Gender: string;
   Region: string;
   Ethnicity: string;
@@ -111,6 +111,24 @@ const [tasks, setTasks] = useState<Task[]>(() => {
   
   return saved ? JSON.parse(saved) as Task[] : [];
 });
+
+const students = teacher.class?.studentacademics ?? [];
+
+const genderCounts = students.reduce(
+  (acc, student) => {
+    const gender = student.personal?.gender?.toLowerCase(); // lowercase for safety
+    if (gender === 'male' || gender === 'm') acc.males += 1;
+    else if (gender === 'female' || gender === 'f') acc.females += 1;
+    return acc;
+  },
+  { males: 0, females: 0 }
+);
+
+const genderData = [
+  { name: 'Boys', value: genderCounts.males },
+  { name: 'Girls', value: genderCounts.females },
+];
+
 
   const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
 
@@ -228,9 +246,20 @@ const COLORS = ['#CC7722', '#FFBF00'];
   </h2>
 
   {/* Profile Picture Placeholder */}
-  <div className="w-24 h-24 mx-auto rounded-full bg-gray-100 border-4 border-blue-500 flex items-center justify-center text-gray-400 text-2xl font-bold">
-    ?
-  </div>
+ <div className="w-24 h-24 mx-auto rounded-full border-4 border-blue-500 overflow-hidden">
+  {teacher.personal?.Photo ? (
+   <img
+      src={`/images/${teacher.personal.Photo}`} // <-- dynamically load each teacher's photo
+      alt="Profile"
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-2xl font-bold">
+      ?
+    </div>
+  )}
+</div>
+
    {/* View Profile Button */}
   <Link
     href={route('teacher.profile')}
@@ -419,25 +448,25 @@ const COLORS = ['#CC7722', '#FFBF00'];
         <main className="lg:col-span-3 space-y-6">
           {/* Banner */}
           <div className="bg-gradient-to-r from-purple-800 to-indigo-800 text-white p-6 rounded-xl shadow">
-            <h1 className="text-3xl font-bold">Welcome, Teacher!</h1>
+            <h1 className="text-3xl font-bold">    Welcome, {teacher.personal?.Full_name ?? "Teacher"}!</h1>
             <p className="text-sm text-gray-100">NIC: {teacher.teacher_NIC}</p>
 <p className="text-sm text-gray-100">User ID: {teacher.user_id}</p>
 
             <p className="text-sm">Explore your dashboard for insights and actions</p>
           </div>
 
-          {/* Teaching Info */}
+       {/* Teaching Info */}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-bold text-blue-700 mb-4">🎓 Teaching Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[{
-                label: 'Appointed Subject', value: 'Maths', icon: '📘', color: 'blue'
+                label: 'Appointed Subject', value: teacher.appointed_subject ?? 'Not Assigned', icon: '📘', color: 'blue'
               }, {
-                label: 'Current Subject', value: 'Maths', icon: '📗', color: 'green'
+                label: 'Current Subject', value: teacher.current_teaching_subject ?? 'Not Assigned', icon: '📗', color: 'green'
               }, {
-                label: 'Other Subjects', value: 'Science', icon: '📙', color: 'yellow'
+                label: 'Other Subjects', value: teacher.other_subjects_taught ?? 'None', icon: '📙', color: 'yellow'
               }, {
-                label: 'Class Assigned', value: '10A', icon: '🏫', color: 'purple'
+                label: 'Class Assigned', value:  teacher.assigned_class ?? 'Not Assigned', icon: '🏫', color: 'purple'
               }].map(({ label, value, icon, color }) => (
                 <div key={label} className={`flex items-center bg-${color}-50 border-l-4 border-${color}-600 p-4 rounded shadow-md`}>
                   <div className={`text-${color}-600 text-2xl mr-4`}>{icon}</div>
@@ -461,7 +490,7 @@ const COLORS = ['#CC7722', '#FFBF00'];
     <div className="bg-gray-50 rounded-lg shadow p-4 flex justify-center items-center">
       <PieChart width={200} height={200}>
         <Pie
-          data={data}
+          data={genderData}
           cx="50%"
           cy="50%"
           outerRadius={80}
@@ -524,21 +553,26 @@ const COLORS = ['#CC7722', '#FFBF00'];
           </tr>
         </thead>
         <tbody>
-          <tr className="hover:bg-gray-50">
-            <td className="px-4 py-2 border">Ayesha Perera</td>
-            <td className="px-4 py-2 border">Girl</td>
-            <td className="px-4 py-2 border">10A</td>
-            <td className="px-4 py-2 border">84%</td>
-            <td className="px-4 py-2 border">95%</td>
-          </tr>
-          <tr className="hover:bg-gray-50">
-            <td className="px-4 py-2 border">Ruwan Silva</td>
-            <td className="px-4 py-2 border">Boy</td>
-            <td className="px-4 py-2 border">10A</td>
-            <td className="px-4 py-2 border">79%</td>
-            <td className="px-4 py-2 border">91%</td>
-          </tr>
-        </tbody>
+  {students.map((student, index) => (
+    <tr key={index} className="hover:bg-gray-50">
+      <td className="px-4 py-2 border">{student.personal?.full_name ?? "N/A"}</td>
+      <td className="px-4 py-2 border">{student.personal?.gender ?? "N/A"}</td>
+      <td className="px-4 py-2 border">{student.class?.grade ?? teacher.assigned_class ?? "N/A"}</td>
+      <td className="px-4 py-2 border">
+        {/* Example: average marks — adjust if you have marks model */}
+        {student.marks?.length
+          ? (
+            student.marks.reduce((acc, m) => acc + m.score, 0) / student.marks.length
+          ).toFixed(2) + "%"
+          : "N/A"}
+      </td>
+      <td className="px-4 py-2 border">
+        {student.attendance_percentage ?? "N/A"}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
     </div>
   </div>

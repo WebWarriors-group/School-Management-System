@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\models\Img;
+use App\Models\Img;
 
 class ImageController extends Controller
 {
     public function index(){
         $img=Img::all();
+        return view('images.index', ['images' => $images]); // or use Inertia
+
     }
 
 
