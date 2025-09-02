@@ -56,14 +56,12 @@ export default function AdminTeacherDashboard() {
 
       <div className="flex flex-col gap-10 px-8 py-10 bg-gray-200 min-h-screen">
         
-        {/* ===== Top Section: Quick Stats ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          
-          {/* Attendance */}
-          <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold mb-2">📋 Attendance Summary</h3>
-            <p className="text-sm text-gray-500 mb-4">Date: <span className="font-semibold">{today}</span></p>
-            <div className="w-full h-60">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+  {/* Example Card Template */}
+  <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition flex flex-col h-full">
+    <h3 className="text-xl font-semibold mb-2">📋 Attendance Summary</h3>
+    <p className="text-sm text-gray-500 mb-4">Date: <span className="font-semibold">{today}</span></p>
+    <div className="w-full h-60 mb-4">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={attendanceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80}>
@@ -82,78 +80,68 @@ export default function AdminTeacherDashboard() {
             </Link>
           </div>
 
-          {/* Requests */}
-          <div className="bg-white border border-indigo-200 shadow-md p-6 hover:shadow-lg transition flex flex-col justify-between">
-            <h3 className="text-xl font-semibold flex justify-between">
-              📥 Teacher Requests
-              {requestCount > 0 && (
-                <span className="px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded-full">
-                  {requestCount}
-                </span>
-              )}
-            </h3>
-            <Link href="/teacher_requests" className="mt-6">
-              <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-                View Requests
-              </button>
-            </Link>
-          </div>
+         
 
-          {/* Registered Teachers */}
-          <div className="bg-white border border-slate-200 shadow-md p-6 hover:shadow-lg transition flex flex-col items-center">
-            <h3 className="text-xl font-semibold mb-4">👩‍🏫 Registered Teachers</h3>
-            <div className="w-24 h-24 border-4 border-blue-500 text-blue-700 flex items-center justify-center text-4xl font-bold rounded-full">
-              {teacherCount}
-            </div>
-            <Link href="/teacher-info" className="w-full mt-6">
-              <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                View Details
-              </button>
-            </Link>
-          </div>
+{/* Registered Teachers & Requests */}
+<div className="bg-white border border-slate-200 shadow-md p-6 hover:shadow-lg transition flex flex-col gap-8">
+  
+  {/* Registered Teachers */}
+  <div className="flex flex-col items-center text-center">
+    <h3 className="text-xl font-semibold mb-4">👩‍🏫 Registered Teachers</h3>
+    <div className="w-24 h-24 border-4 border-blue-500 text-blue-700 flex items-center justify-center text-4xl font-bold rounded-full">
+      {teacherCount}
+    </div>
+    <Link href="/teacher-info" className="w-full mt-4">
+      <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+        View Details
+      </button>
+    </Link>
+  </div>
 
-          {/* Leave Records */}
-          <div className="bg-white border border-yellow-200 shadow-md p-6 hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold mb-4">📅 Leave Records</h3>
-            <div className="w-24 h-24 mx-auto border-4 border-yellow-400 text-yellow-600 flex items-center justify-center text-4xl font-bold rounded-full">
-              {leaveCount}
-            </div>
-            <Link href="teacher-leave-requests">
-              <button className="mt-6 w-full bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700">
-                View Leave Requests
-              </button>
-            </Link>
-          </div>
-        </div>
+  <hr className="border-gray-200" />
+
+  {/* Teacher Requests */}
+  <div>
+    <h3 className="text-xl font-semibold flex justify-between items-center mb-4">
+      📥 Teacher Requests
+      {requestCount > 0 && (
+        <span className="px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded-full">
+          {requestCount}
+        </span>
+      )}
+    </h3>
+
+    <div className="flex gap-4">
+      <Link href="/teacher_requests" className="flex-1">
+        <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+          Add Requests
+        </button>
+      </Link>
+      <Link href="teacher-leave-requests" className="flex-1">
+        <button className="w-full bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700">
+          Leave Requests
+        </button>
+      </Link>
+    </div>
+  </div>
+
+</div>
+</div>
 
         {/* ===== Management Section ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           
-          {/* Training */}
-          <div className="bg-white border border-rose-200 shadow-md p-6 hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold mb-3">📚 Training & Development</h3>
-            <p className="text-gray-600 mb-4">Plan workshops and track teacher training progress.</p>
-            <button className="w-full bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-              Schedule Training
-            </button>
-          </div>
-
-          {/* Salary */}
-          <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold mb-3">💰 Salary & Compensation</h3>
-            <p className="text-gray-600 mb-4">View payroll details and manage compensations.</p>
-            <button className="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-              Manage Salary
-            </button>
-          </div>
-
+          
           {/* Direct Communication */}
           <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
             <h3 className="text-xl font-semibold mb-3">📧 Direct Communication</h3>
             <p className="text-gray-600 mb-4">Send announcements or personal messages to teachers.</p>
-            <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+            
+            <Link href="/messages" className="flex-1">
+        <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
               Send Message
             </button>
+      </Link>
           </div>
 
           {/* Announcements */}

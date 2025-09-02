@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link ,usePage} from '@inertiajs/react';
+import { Head, Link ,usePage,router} from '@inertiajs/react';
 import { useState,useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -14,6 +14,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/dashboard',
   },
 ];
+type Message = {
+  sender_id: string;
+  sender_type: string;
+  receiver_id: string;
+  receiver_type: string;
+  subject?: string;
+  message: string;
+  created_at: string;
+};
 
 type Teacher = {
     teacher_NIC: string;
@@ -132,7 +141,27 @@ const data = [
   { name: 'Boys', value: 55 },
   { name: 'Girls', value: 45 },
 ];
+const [messages, setMessages] = useState<Message[]>([]);
+  const [subject, setSubject] = useState('');
+  const [text, setText] = useState('');
 
+  useEffect(() => {
+    fetch('/teacher/messages')
+      .then(res => res.json())
+      .then(data => setMessages(data));
+  }, []);
+
+  const sendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.post('/teacher/messages/send', { subject, message: text }, {
+      onSuccess: () => {
+        setText('');
+        setSubject('');
+        // Refresh messages
+        fetch('/teacher/messages').then(res => res.json()).then(data => setMessages(data));
+      }
+    });
+  };
 const COLORS = ['#CC7722', '#FFBF00'];
 
   const addTask = () => {
@@ -389,38 +418,34 @@ const COLORS = ['#CC7722', '#FFBF00'];
             </button>
 
             {isMessagingOpen && (
-              <form className="p-4 space-y-3 border-t border-gray-200">
-                <select
-                  className="w-full border border-gray-300 rounded p-2 text-sm"
-                  defaultValue=""
-                  aria-label="Select recipient"
-                >
-                  <option value="" disabled>
-                    Select recipient
-                  </option>
-                  <option value="teacher">Teacher</option>
-                  <option value="principal">Principal</option>
-                </select>
+              <div className="bg-white p-4 shadow-md rounded">
+      <div className="h-64 overflow-y-auto border p-2 mb-4">
+        {messages.map((msg, idx) => (
+          <div key={idx} className={`mb-2 ${msg.sender_type === 'teacher' ? 'text-right' : 'text-left'}`}>
+            <span className={`inline-block px-3 py-2 rounded ${msg.sender_type === 'teacher' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
+              {msg.message}
+            </span>
+          </div>
+        ))}
+      </div>
 
-                <input
-                  type="text"
-                  placeholder="Subject"
-                  className="w-full border border-gray-300 rounded p-2 text-sm"
-                />
-
-                <textarea
-                  rows={3}
-                  placeholder="Message"
-                  className="w-full border border-gray-300 rounded p-2 text-sm"
-                />
-
-                <button
-                  type="submit"
-                  className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
-                >
-                  Send
-                </button>
-              </form>
+      <form onSubmit={sendMessage} className="space-y-2">
+        <input
+          placeholder="Subject"
+          value={subject}
+          onChange={e => setSubject(e.target.value)}
+          className="w-full border rounded p-2"
+        />
+        <textarea
+          placeholder="Message"
+          value={text}
+          onChange={e => setText(e.target.value)}
+          className="w-full border rounded p-2"
+          required
+        />
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+      </form>
+    </div>
             )}
           </div>
         </aside>

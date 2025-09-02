@@ -48,6 +48,16 @@ Route::get('/', function () {
 })->name('homepage');
 
 
+Route::middleware('auth')->group(function() {
+    // Teacher
+    Route::post('/teacher/messages/send', [MessageController::class, 'sendTeacherMessage']);
+    Route::get('/teacher/messages', [MessageController::class, 'fetchTeacherMessages']);
+
+    // Admin
+    Route::post('/admin/messages/send', [MessageController::class, 'sendAdminMessage']);
+    Route::get('/admin/messages', [MessageController::class, 'fetchAdminMessages']);
+    Route::get('/admin/teachers', [MessageController::class, 'fetchTeachers']);
+});
 
 
 Route::middleware('auth', 'admin')->group(function () {
@@ -107,7 +117,12 @@ Route::get('/teacher-info', function () {
 Route::get('/Admin/techerInfo', function () {
     return Inertia::render('Admin/teacher');
 });
-
+Route::get('/messages', function () {
+    return inertia::render('Admin/messages'); 
+})->name('teacher-info');
+Route::get('/Admin/messages', function () {
+    return Inertia::render('Admin/teacher');
+});
 
 Route::get('/teacher_requests', function () {
     return inertia::render('Admin/TeacherRequests'); // This should return the Inertia page
