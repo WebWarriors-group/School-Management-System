@@ -26,6 +26,9 @@ return new class extends Migration {
             $table->boolean('receiving_any_scholarship')->default(false);
             $table->date('admission_date');
 
+            $table->unsignedBigInteger('user_id')->nullable()->unique();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

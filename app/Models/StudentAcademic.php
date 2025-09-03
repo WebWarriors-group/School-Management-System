@@ -17,6 +17,7 @@ class StudentAcademic extends Model
     protected $keyType = 'integer';
     protected $casts = ['admission_date' => 'date'];
     protected $fillable = [
+        'user_id',
         'reg_no',
         'class_id',
         'distance_to_school',
@@ -62,6 +63,10 @@ class StudentAcademic extends Model
     public function marks()
     {
         return $this->hasMany(Marks::class, 'reg_no', 'reg_no');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
     }
 
 

@@ -144,19 +144,26 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
-                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
+           
 
-                <button className="cursor-pointer text-[18px]" onClick={handleClick}>
+            <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Classes,Students,Subjects Overall performance
+          </p>
+
+          <button className="cursor-pointer text-[18px]" onClick={handleClick}>
                     <p>
                         {' '}
                         <i className="fa fa-user"></i> User
                     </p>
                 </button>
-            </header>
+        </div>
+      </header>
             {!isVisible ? (
                 <>
-                    <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-100">
+                    <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-200">
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
                             {cards.map((card, index) => (
                                 <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-lg transition hover:shadow-md">

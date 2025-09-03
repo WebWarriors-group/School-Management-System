@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -53,7 +53,10 @@ interface Props {
 export default function AssignClassTeachers({ classes, teachers }: Props) {
   
   const [selectedClassName, setSelectedClassName] = useState<string>('');
-  const [selectedGrade, setSelectedGrade] = useState<string>(''); // keep as string for <select>
+  const [selectedGrade, setSelectedGrade] = useState<string>(''); 
+const [expandedGrade, setExpandedGrade] = useState<string | null>(null);
+const [selectedTeacherNIC, setSelectedTeacherNIC] = useState<string>('');
+const assignedTeacherNICs = new Set<string>();
 
   // Convert selectedGrade to number safely
   const gradeNum = selectedGrade === '' ? null : parseInt(selectedGrade);
@@ -62,10 +65,7 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [showForm, setShowForm] = useState(true);
 
-  const [selectedTeacherNIC, setSelectedTeacherNIC] = useState<string>('');
-  const assignedTeacherNICs = new Set<string>();
 
-  // Collect all assigned teachers NICs
   Object.values(classes).forEach(classGroup => {
     Object.values(classGroup).forEach(sections => {
       sections.forEach(section => {
@@ -145,38 +145,57 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
 
   const selectedTeacher = teachers.find(t => t.teacher_NIC === selectedTeacherNIC);
 
+  
+
+
+useEffect(() => {
+  if (selectedClassName && selectedGrade !== '') {
+    const gradeNumLocal = parseInt(selectedGrade);
+    const gradeSections = classes[selectedClassName]?.[gradeNumLocal] || [];
+
+    const initialAssignments: Record<string, string> = {};
+    gradeSections.forEach(cls => {
+      initialAssignments[cls.section] = cls.teacher_NIC || '';
+    });
+
+    setSectionAssignments(initialAssignments);
+  }
+}, [selectedClassName, selectedGrade, classes]);
+
+
   const handleReset = () => {
-    if (!selectedClassName || selectedGrade === '') {
-      alert('Please select a class and grade first');
-      return;
-    }
+  if (!selectedClassName || selectedGrade === '') {
+    alert('Please select both a class and a grade before resetting.');
+    return;
+  }
 
-    if (!window.confirm('Are you sure you want to reset all teacher assignments for this class and grade?')) {
-      return;
-    }
+  const confirmed = window.confirm(
+    'Are you sure you want to reset all teacher assignments for this class and grade?'
+  );
+  if (!confirmed) return;
 
-    router.post(
-      '/reset-class-teachers',
-      {
-        class_name: selectedClassName,
-        grade: parseInt(selectedGrade),
+  router.post(
+    '/reset-class-teachers',
+    {
+      class_name: selectedClassName,
+      grade: parseInt(selectedGrade),
+    },
+    {
+      onSuccess: () => {
+        const updatedAssignments: Record<string, string> = {};
+        const gradeNumLocal = parseInt(selectedGrade);
+        (classes[selectedClassName][gradeNumLocal] || []).forEach(sectionClass => {
+          updatedAssignments[sectionClass.section] = '';
+        });
+        setSectionAssignments(updatedAssignments);
+    
       },
-      {
-        onSuccess: () => {
-          // Clear the local state assignments for the current class and grade
-          const updatedAssignments: Record<string, string> = {};
-          const gradeNumLocal = parseInt(selectedGrade);
-          (classes[selectedClassName][gradeNumLocal] || []).forEach(sectionClass => {
-            updatedAssignments[sectionClass.section] = '';
-          });
-          setSectionAssignments(updatedAssignments);
-        },
-        onError: () => {
-          alert('Failed to reset assignments. Please try again.');
-        },
-      }
-    );
-  };
+      onError: () => {
+        alert('Failed to reset assignments. Please try again.');
+      },
+    }
+  );
+};
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -186,7 +205,7 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
     <>
      <main className="flex h-full flex-2 flex-col gap-6 p-5 mt-[-20px] bg-gray-200">
 
-      <div className="flex justify-between items-center mt-20">
+      <div className="flex justify-between items-center mt-4">
   <Button
     className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 transition-transform duration-300 hover:scale-100 z-40"
     onClick={() => router.visit('/admin/dashboardoverview')}
@@ -197,7 +216,7 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
   <button
     onClick={handleReset}
     type="button"
-    className="bg-red-700 text-white px-4 py-2 hover:bg-red-700 transition-colors duration-200 "
+    className="bg-red-700 text-white px-4 py-2 hover:bg-red-700 transition-colors duration-200 cursor-pointer transform scale-90 transition-transform duration-900 hover:scale-100 z-40 "
     disabled={!selectedClassName || selectedGrade === ''}
   >
     Reset Assignments
@@ -206,12 +225,13 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
 
       
       {/* Grade Progress Cards */}
-      <div className="  mt-10">
+      <div className="  mt-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {Object.entries(gradeProgress).map(([grade, percent]) => (
             <div
               key={grade}
-              className="border border-gray-200 shadow-xl p-8 bg-white hover:shadow-md transition"
+              onClick={() => setExpandedGrade(prev => (prev === grade ? null : grade))}
+              className="border border-gray-200 shadow-xl p-8 bg-white hover:shadow-md transition hover:cursor-pointer   transition-transform duration-700 hover:scale-110 z-40"
             >
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-semibold text-lg">{grade}</h3>
@@ -237,6 +257,42 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
                   ? '❌ No assignments yet'
                   : '⚠️ Partially assigned'}
               </p>
+
+
+
+              {expandedGrade === grade && (
+  <div className="mt-4 text-base divide-y divide-gray-300 bg-gray-50 rounded-md overflow-hidden">
+    {Object.entries(classes).map(([className, grades]) =>
+      Object.entries(grades).map(([g, sections]) => {
+        if (`Grade ${g}` !== grade) return null;
+
+        return sections.map((section, index) => {
+          const teacher = teachers.find(t => t.teacher_NIC === section.teacher_NIC);
+          return (
+            <div
+              key={`${className}-${g}-${section.section}`}
+              className="flex justify-between items-center px-4 py-3 bg-white"
+            >
+              <span className="text-gray-800">
+               <strong></strong> Section {section.section}
+              </span>
+              <span
+                className={`font-medium ${
+                  section.teacher_NIC ? 'text-green-600' : 'text-red-500'
+                }`}
+              >
+                {section.teacher_NIC
+                  ? `👤 ${teacher?.personal?.Full_name_with_initial ?? teacher?.teacher_NIC}`
+                  : '❌ Not Assigned'}
+              </span>
+            </div>
+          );
+        });
+      })
+    )}
+  </div>
+)}
+
             </div>
           ))}
         </div>
@@ -259,13 +315,13 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
           <div className="mb-4">
             <label className="block mb-5 font-medium">Select Class Name:</label>
             <select
-              className="w-full border px-3 py-4 rounded"
+              className="w-full border px-3 py-4 rounded hover:cursor-pointer"
               value={selectedClassName}
               onChange={handleClassNameChange}
             >
-              <option value="">-- Select Class Name --</option>
+              <option value="" className='cursor-pointer'>-- Select Class Name --</option>
               {Object.keys(classes).map(className => (
-                <option key={className} value={className}>
+                <option key={className} value={className} className="cursor-pointer">
                   {className}
                 </option>
               ))}
@@ -273,23 +329,26 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
           </div>
 
           {/* Select Grade */}
-          {selectedClassName && (
-            <div className="mb-4">
-              <label className="block mb-1 font-medium">Select Grade:</label>
-              <select
-                className="w-full border px-3 py-4 rounded"
-                value={selectedGrade}
-                onChange={handleGradeChange}
-              >
-                <option value="">-- Select Grade --</option>
-                {Object.keys(classes[selectedClassName] || {}).map(grade => (
-                  <option key={grade} value={grade}>
-                    Grade {grade}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+         {selectedClassName ? (
+  <div className="mb-4">
+    <label className="block mb-1 font-medium ">Select Grade:</label>
+    <select
+      className="w-full border px-3 py-4 rounded cursor-pointer"
+      value={selectedGrade}
+      onChange={handleGradeChange}
+    >
+      <option value="">-- Select Grade --</option>
+      {Object.keys(classes[selectedClassName] || {}).map(grade => (
+        <option key={grade} value={grade}>
+          Grade {grade}
+        </option>
+      ))}
+    </select>
+  </div>
+) : (
+  <p className="text-red-600">Please select a class name first.</p>
+)}
+
 
           {/* Assign Teachers to Sections */}
           {selectedClassName && selectedGrade !== '' && gradeNum !== null && (
@@ -300,7 +359,7 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
                 <div key={sectionClass.section} className="flex items-center gap-4">
                   <label className="w-24 font-medium">Section {sectionClass.section}:</label>
                   <select
-                    className="flex-1 border px-3 py-3 rounded"
+                    className="flex-1 border px-3 py-3 rounded hover: cursor-pointer"
                     value={sectionAssignments[sectionClass.section] || ''}
                     onChange={e => handleTeacherSelect(sectionClass.section, e.target.value)}
                   >
@@ -329,7 +388,7 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
 
               <button
                 onClick={handleSubmit}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
+                className="mt-4 bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 hover:cursor-pointer transform scale-90 transition-transform duration-300 hover:scale-100 z-40"
               >
                 Submit
               </button>
@@ -340,9 +399,9 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
         </div>
 
         {/* Teacher Profile Card (right side) */}
-        <div className="w-100 max-w-md mx-auto sticky top-24 self-start">
+        <div className="w-100 max-w-md mx-auto sticky top-24 self-start rounded-xl">
           {selectedTeacher ? (
-            <div className="relative bg-white shadow-xl overflow-hidden border border-gray-200">
+            <div className="relative  shadow-xl overflow-hidden border border-gray-200 rounded-2xl">
               {/* Header section */}
               <div className="relative h-32 bg-gradient-to-r from-pink-800 to-purple-900">
                 <div className="absolute inset-0 backdrop-blur-md"></div>
@@ -358,13 +417,13 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
               </div>
 
               {/* Content */}
-              <div className="pt-20 pb-6 px-6 text-center">
+              <div className="pt-20 pb-6 px-6 text-center rounded-5xl">
                 <h2 className="text-2xl font-bold text-gray-800">
                   {selectedTeacher.personal?.Full_name_with_initial ?? 'No Name'}
                 </h2>
                 <p className="text-sm text-gray-500 mb-4">NIC: {selectedTeacher.teacher_NIC}</p>
 
-                <div className="text-left mt-4 space-y-3 text-[18px] text-gray-700">
+                <div className="text-left mt-4 space-y-3 text-[18px] text-gray-700 rounded-xl">
                   <div className="flex items-start gap-2">
                     <span className="text-blue-800 font-medium w-40">Gender:</span>
                     <span>{selectedTeacher.personal?.Gender ?? 'N/A'}</span>
@@ -397,6 +456,51 @@ export default function AssignClassTeachers({ classes, teachers }: Props) {
           )}
         </div>
       </div>
+
+
+
+      {/* === Full Class Teacher Assignment Table === */}
+<div className="mt-16 bg-white py-10 px-10 shadow-2xl">
+  <h2 className="text-lg font-bold mb-4 text-gray-700">📋 CLASS TEACHER ASSIGNMENT SUMMARRY</h2>
+  <div className="overflow-x-auto rounded-md shadow border border-gray-300 bg-white">
+    <table className="min-w-full bg-white text-sm text-left text-gray-700 shadow-xl">
+      <thead className="bg-blue-200 text-black uppercase text-md border-b border-gray-300">
+        <tr>
+          <th className="px-4 py-3 t">Class Name</th>
+          <th className="px-4 py-3">Grade</th>
+          <th className="px-4 py-3">Section</th>
+          <th className="px-4 py-3">Assigned Teacher</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(classes).map(([className, grades]) =>
+          Object.entries(grades).map(([grade, sections]) =>
+            sections.map((section) => {
+              const teacher = teachers.find(t => t.teacher_NIC === section.teacher_NIC);
+              return (
+                <tr key={`${className}-${grade}-${section.section}`} className="border-t hover:bg-gray-50 text-md">
+                  <td className="px-4 py-3  text-[16px]">{className}</td>
+                  <td className="px-4 py-3 text-[16px]">{grade}</td>
+                  <td className="px-4 py-3 text-[16px]">{section.section}</td>
+                  <td className="px-4 py-3 text-[16px]">
+                    {section.teacher_NIC ? (
+                      <span className="text-green-700 font-medium">
+                        👤 {teacher?.personal?.Full_name_with_initial ?? teacher?.teacher_NIC}
+                      </span>
+                    ) : (
+                      <span className="text-red-500">❌ Not Assigned</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })
+          )
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+
       </main>
     </>
     </AppLayout>
