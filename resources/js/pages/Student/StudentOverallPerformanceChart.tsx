@@ -22,10 +22,10 @@ import { Line } from 'react-chartjs-2';
 
 
 type MarksItem = {
+  subject_id: string;
+  subject_name: string;
   marks_obtained: number;
-  subject?: {
-    subject_name: string;
-  };
+  highest_mark_in_subject: number ;
 };
 
 interface StudentOverallPerformanceChartProps {
@@ -45,28 +45,48 @@ export default function StudentOverallPerformanceChart({
 }: StudentOverallPerformanceChartProps) {
 const [marksData, setMarksData] = useState<MarksItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 useEffect(() => {
   if (!regNo) return;
 
   setLoading(true); 
 
-  fetch(`/api/student-marks/${regNo}`)
-    .then(res => res.json())
-    .then(data => {
-      if (Array.isArray(data)) {
-        setMarksData(data);
-      } else if (Array.isArray(data.data)) {
-        setMarksData(data.data);
+  fetch(`http://localhost:8000/api/student/${regNo}/performance`)
+
+    .then(async(res) => {
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to fetch data');
+      }
+      const contentType = res.headers.get('Content-Type');
+      if (contentType && contentType.includes('application/json')) {
+        return res.json();
       } else {
+        throw new Error('Invalid response format');
+      }
+
+      
+    })
+    .then(data => {
+      console.log("Fetched data:", data);
+      if (data && Array.isArray(data.marks)) {
+          setMarksData(data.marks);
+      }
+      else {
+        console.warn("Unexpected data format:", data);
         setMarksData([]);
       }
-      setLoading(false); 
+      
     })
     .catch(error => {
       console.error(error);
-      setMarksData([]);
-      setLoading(false);
-    });
+   
+     setMarksData([
+          
+        ]);
+  })
+  .finally(() => {setLoading(false );
+});
 }, [regNo]);
 
 
@@ -74,17 +94,18 @@ console.log("Current marksData state:", marksData);
 
 
  if (loading) return <p>Loading...</p>;
+ if (error) return <p>Error: {error}</p>;
 if (!marksData || marksData.length === 0) return <p>No data found.</p>;
 
 
 const scores = marksData.map(item => item.marks_obtained);
-const labels = marksData.map(item => item.subject?.subject_name || 'Unknown');
+const labels = marksData.map(item => item.subject_name || 'Unknown');
 
  const data = {
   labels,
   datasets: [
     {
-      label: '', // Remove label to avoid legend
+      label: 'Marks Obtained',
       data: scores,
       borderColor: 'rgba(75,192,192,1)',
       borderWidth: 2,

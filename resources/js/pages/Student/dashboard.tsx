@@ -79,7 +79,7 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
     { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
   ];
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/student-marks/2400')
+    fetch('http://127.0.0.1:8000/api/student/marks/1001')
       .then(async (res) => {
         if (!res.ok) {
           const text = await res.text();
@@ -90,6 +90,23 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
       .then((data) => {
         console.log('✅ Fetched Marks Data:', data);
         setMarksData(data.marks);
+      })
+      .catch((err) => {
+        console.error('❌ Dashboard fetch error:', err);
+      });
+  }, []);
+ useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/student/personal/1001')
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`❌ ${res.status}: ${text}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log('✅ Fetched Marks Data:', data);
+        setStudentPersonal(data.marks);
       })
       .catch((err) => {
         console.error('❌ Dashboard fetch error:', err);
@@ -143,21 +160,7 @@ useEffect(() => {
 
 },[]);
 
- useEffect(() => {
-  fetch(`/api/student-personal/2400`)
-    .then(async (res) => {
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`❌ ${res.status}: ${text}`);
-      }
-      return res.json();
-    })
-    .then((data) => setStudentPersonal(data))
-    .catch((err) => {
-      console.error('Student Personal fetch error:', err);
-      setStudentPersonal(null);
-    });
-}, []);
+
 
 
   return (
@@ -433,7 +436,7 @@ useEffect(() => {
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Academic Performance
                 </h2>
-                <StudentOverallPerformanceChart regNo="2400" />
+                <StudentOverallPerformanceChart regNo="1001" />
               </div>
 
               {/* Today's Schedule */}
