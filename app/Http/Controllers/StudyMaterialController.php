@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StudyMaterial;
+use Illuminate\Support\Facades\Auth;
 use App\Events\StudyMaterialUploaded;
 use Illuminate\Validation\ValidationException;
 use Exception;
@@ -23,14 +24,22 @@ class StudyMaterialController extends Controller
      */
     public function index($category)
     {
+        $user = Auth::user();
+
         $materials = StudyMaterial::with('uploaded_by:id,name,role')
             ->where('category', $category)
             ->get();
-
-        return Inertia::render('studyMaterial/studyMaterialIndex', [
-            'category' => $category,
-            'materials' => $materials,
-        ]);
+        if ($user->role == 'student'){
+            return Inertia::render('Student/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        } else {
+             return Inertia::render('studyMaterial/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        }
     }
 
     /**

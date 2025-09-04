@@ -30,6 +30,8 @@ interface DashboardData {
 }
 
 export default function StudentDashboard() {
+  const user = usePage().props.auth.user;
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
   const [marksData, setMarksData] = useState<{ marks_obtained: number }[]>([]);
@@ -161,9 +163,8 @@ useEffect(() => {
 
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
+    <AppLayout breadcrumbs={breadcrumbs} user={user}>
       <Head title="Student Dashboard" />
-
 
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
         <div className="font-medium text-center md:text-left">
@@ -338,6 +339,17 @@ useEffect(() => {
             ))}
           </div>
 
+              return (
+                <div key={i}>
+                  {card.link ? (
+                    <Link href={card.link}>{content}</Link>
+                  ) : (
+                    content
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {infoCards.map((card) => (

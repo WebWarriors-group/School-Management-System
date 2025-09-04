@@ -9,6 +9,7 @@ use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\StudentAcademic;
 use App\Models\StudentPersonal;
@@ -54,6 +55,7 @@ class StudentController extends Controller
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
+            $student->class;
             $student->siblings;
         });
         return response()->json($students);
@@ -381,6 +383,7 @@ class StudentController extends Controller
             ],
         ]);
     }
+
  public function getMarksBySubject($reg_no)
 {
     try{
@@ -445,6 +448,5 @@ public function exportExcel()
 {
     return Excel::download(new StudentExport, 'student_profile.xlsx');
 }
-
 
 }
