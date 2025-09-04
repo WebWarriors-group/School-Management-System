@@ -49,9 +49,14 @@ const studyMaterials = () => {
             <div className="flex flex-col w-full gap-6 bg-gradient-to-b from-gray-100 to-gray-200 min-h-screen pb-12">
 
                 {/* Header */}
-                <header className="bg-white sticky top-0 z-10 w-full flex items-center justify-between border-b px-6 py-4 shadow-md">
-                    {/* <h2 className="text-xl md:text-2xl font-bold text-red-800 tracking-tight">📚 Study Materials</h2> */}
-                </header>
+                <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Classes,Students,Subjects Overall performance
+          </p>
+        </div>
+      </header>
 
                 {/* Categories Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-4 sm:px-8 max-w-6xl mx-auto mt-6">

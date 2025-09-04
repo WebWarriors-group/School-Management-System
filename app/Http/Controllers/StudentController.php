@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentAdmissionMail;
 use App\Models\Marks;
 use App\Models\Subject;
+use App\Http\Resources\MarksResource;
 
 class StudentController extends Controller
 {
@@ -253,6 +254,7 @@ class StudentController extends Controller
 
     public function yearlyPerformance()
     {
+        try{
         $performance = Cache::remember('yearly_performance', 3600, function () {
             return DB::table('student_performances')
                 ->selectRaw('year, ROUND(AVG(ol_passed)) as ol_passed, ROUND(AVG(ol_expected)) as ol_expected, ROUND(AVG(al_passed)) as al_passed, ROUND(AVG(al_expected)) as al_expected')
@@ -261,7 +263,10 @@ class StudentController extends Controller
                 ->get();
         });
         return response()->json($performance);
+    }catch(\Exception $e){
+        return response()->json(['error' => 'Failed to fetch performance data'], 500);
     }
+}
 
     public function apiStudentPerformance(string $reg_no): JsonResponse
     {
@@ -379,19 +384,69 @@ class StudentController extends Controller
         ]);
     }
 
-    
-    public function pastPupils()
-    {
-        $students = StudentAcademic::with(['personal', 'family', 'siblings'])
-            ->whereNotNull('leaving_date')
-            ->get();
+ public function getMarksBySubject($reg_no)
+{
+    try{
+        $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
 
-        return Inertia::render('Admin/pastPupils', [
-            'students' => $students,
-            'auth' => [
-                'user' => Auth::user(),
-            ],
-        ]);
+        if(!$student){
+            return response()->json(['error' => 'Student not found'], 404);
+        }
+
+        $marks = Marks::with('subject')
+        ->where('reg_no', $reg_no)
+        ->get();
+
+    return response()->json($marks);
+
+    }catch(\Exception $e){
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+ 
+
+}
+public function calendarData()
+{
+    try{
+        $student = auth()->user();
+
+        if(!$student){
+            return response()->json(['error' => 'Student not authenticated'], 401);
+        }
+
+    
+    
+    $examEvents =collect();
+    $feeDue =collect(); 
+    $assignments =collect(); 
+    $holidays = collect();
+
+    if(method_exists($student, 'exams')){
+        $examEvents = $student->exams()->get(['title', 'exam_date as date']);
+    }
+    if(method_exists($student, 'fees')){
+        $feeDue = $student->fees()->where('status', 'pending')->get(['due_date as date', 'amount']);
+    }
+    if(method_exists($student, 'assignments')){
+        $assignments = $student->assignments()->get(['title', 'due_date as date']);
+    }
+    if(class_exists('App\Models\Holiday')){
+        $holidays = \App\Models\Holiday::all(['name as title', 'date']);
+    }
+    return response()->json([
+        'exams' => $examEvents,
+        'fees' => $feeDue,
+        'assignments' => $assignments,
+        'holidays' => $holidays,
+    ]);
+}catch(\Exception $e){
+    return response()->json(['error' => $e->getMessage()], 500);
+}
+}
+// Export as Excel
+public function exportExcel()
+{
+    return Excel::download(new StudentExport, 'student_profile.xlsx');
+}
 
 }

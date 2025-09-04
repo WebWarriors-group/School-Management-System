@@ -27,6 +27,9 @@ return new class extends Migration {
             $table->date('admission_date');
             $table->date('leaving_date')->nullable()->default(null);
 
+            $table->unsignedBigInteger('user_id')->nullable()->unique();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

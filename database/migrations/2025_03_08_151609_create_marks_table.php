@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->id();
+             $table->integer('class');
+              $table->integer('year');
+               $table->string('term', 20);
             $table->integer('reg_no');
             $table->integer('subject_id');
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');

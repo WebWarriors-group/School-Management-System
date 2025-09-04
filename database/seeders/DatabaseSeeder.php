@@ -36,8 +36,9 @@ class DatabaseSeeder extends Seeder
         Subject::factory(10)->create();
 $students = StudentAcademic::factory(200)->create();
 
-        Marks::factory(10)->create();
+        // Marks::factory(10)->create();
         StudentPerformance::factory(10)->create();
+   
 
 
         // Create related info for each student
@@ -51,6 +52,17 @@ $students = StudentAcademic::factory(200)->create();
             StudentSibling::factory(rand(1, 3))->create([
                 'reg_no' => $student->reg_no,
             ]);
+            $studentClass = $student->class_id;
+            Marks::factory(rand(3, 6))->create([
+        'reg_no' => $student->reg_no,
+        'class' => $studentClass,
+        
+    ]);
+
+
+    StudentReport::factory(rand(1, 3))->create([
+        'reg_no' => $student->reg_no,
+    ]);
         }
         User::updateOrCreate(
             ['email' => 'admin@sms.lk'], // Unique constraint

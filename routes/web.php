@@ -3,11 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Services\TypesenseService;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TimetableController;
+use App\Events\TestNotificationEvent;
+use App\Models\StudyMaterial; // ✅ Add this
+use App\Events\StudyMaterialUploaded; // ✅ If using event
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -15,7 +20,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeacherRequestController;
-use App\Models\Img;
+use App\Models\GalleryImage;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
@@ -28,19 +33,28 @@ use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
+ use App\Models\GalleryCategory;
+ 
 
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
-Route::get('/', function () {
-    $images = Img::all(); 
 
-    return Inertia::render('homepage', [
-        'img' =>[
-            'data'=> $images], 
+
+
+  
+
+Route::get('/', function () {
+    $categories = GalleryCategory::with('images')->get();
+
+    return Inertia::render('homepage', [  // your React page name
+        'categories' => $categories,
     ]);
+
+
 })->name('homepage');
+
 
 
 
@@ -157,7 +171,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
 });
 
-Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
+// Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
 
 
 Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
@@ -209,8 +223,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+      Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    // Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
@@ -234,6 +248,71 @@ Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index
 Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
     ->name('admin.overallPerformance');
 
+    Route::get('/generate-timetable', [TimetableController::class, 'generate']);
+
+
+
+Route::get('/typesense/create', function (TypesenseService $typesense) {
+    return $typesense->createCollection();
+});
+
+Route::get('/typesense/add', function (TypesenseService $typesense) {
+    return $typesense->indexDocument([
+        'id'     => '1',
+        'title'  => 'Harry Potter',
+        'author' => 'J.K. Rowling',
+        'year'   => 1997
+    ]);
+});
+
+Route::get('/typesense/search', function (TypesenseService $typesense) {
+    return $typesense->search('Harry');
+});
+
+
+Route::get('/broadcast-test', function () {
+    $material = \App\Models\StudyMaterial::create([
+        'title' => 'Sample Test Notes',
+        'grade' => '10',
+        'subject' => 'Science',
+        'uploaded_by' => auth()->id(),
+        'category' => 'General',
+        'file_url' => 'materials/sample-test-notes.pdf',  // dummy file path
+    ]);
+
+    event(new \App\Events\StudyMaterialUploaded($material));
+
+    return response()->json([
+        'message' => 'Broadcast event triggered!',
+        'material' => $material
+    ]);
+});
+
+
+
+
+
+
+    use App\Http\Controllers\GalleryImageController;
+
+Route::get('/gallery1', [GalleryImageController::class, 'index'])->name('gallery.index');
+Route::get('/gallery1/create', [GalleryImageController::class, 'create'])->name('gallery.create');
+Route::post('/image', [GalleryImageController::class, 'store'])->name('gallery.store');
+Route::get('/gallery1/{image}', [GalleryImageController::class, 'destroy'])->name('gallery.destroy');
+Route::post('/category', [GalleryImageController::class, 'storeCategory']);
+
+
+
+
+//  Route::get('/classes/{classId}/students', [MarkController::class, 'index']);
+
+// Route::post('/marks/bulk', [MarkController::class, 'storeBulkMarks']);
+Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+Route::get('/marks', [MarkController::class, 'getMarks']);
+Route::post('/marks/update', [MarkController::class, 'updateMark']);
+Route::post('/marks/delete', [MarkController::class, 'delete']);
+
+Route::post('/marks/storeBulkMarks', [MarkController::class, 'storeBulkMarks'])->name('marks.storeBulkMarks');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
