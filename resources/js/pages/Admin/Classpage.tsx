@@ -118,30 +118,59 @@ const assignedTeacherNICs = new Set<string>();
     }
   };
 
-  const getGradeProgressSummary = (): Record<string, number> => {
-    const progress: Record<string, { assigned: number; total: number }> = {};
+  const getGradeProgressSummary = (): Record<string, { percent: number; conflicted: boolean }> => {
+  const progress: Record<string, { assigned: number; total: number; teachers: Set<string> }> = {};
 
-    Object.values(classes).forEach(classGroup => {
-      Object.entries(classGroup).forEach(([gradeStr, sections]) => {
-        const grade = `Grade ${gradeStr}`;
-        if (!progress[grade]) progress[grade] = { assigned: 0, total: 0 };
+  // First, calculate assigned sections and collect teacher NICs per grade
+  Object.values(classes).forEach(classGroup => {
+    Object.entries(classGroup).forEach(([gradeStr, sections]) => {
+      const grade = `Grade ${gradeStr}`;
+      if (!progress[grade]) progress[grade] = { assigned: 0, total: 0, teachers: new Set() };
 
-        sections.forEach(cls => {
-          progress[grade].total += 1;
-          if (cls.teacher_NIC) progress[grade].assigned += 1;
-        });
+      sections.forEach(cls => {
+        progress[grade].total += 1;
+        if (cls.teacher_NIC) {
+          progress[grade].assigned += 1;
+          progress[grade].teachers.add(cls.teacher_NIC);
+        }
       });
     });
+  });
 
-    const progressPercent: Record<string, number> = {};
-    Object.entries(progress).forEach(([grade, data]) => {
-      progressPercent[grade] = Math.round((data.assigned / data.total) * 100);
-    });
+  // Detect cross-grade conflicts
+  const conflictingGrades = new Set<string>();
+  const gradeEntries = Object.entries(progress);
+  for (let i = 0; i < gradeEntries.length; i++) {
+    for (let j = i + 1; j < gradeEntries.length; j++) {
+      const [gradeA, dataA] = gradeEntries[i];
+      const [gradeB, dataB] = gradeEntries[j];
 
-    return progressPercent;
-  };
+      dataA.teachers.forEach(t => {
+        if (dataB.teachers.has(t)) {
+          conflictingGrades.add(gradeA);
+          conflictingGrades.add(gradeB);
+        }
+      });
+    }
+  }
 
-  const gradeProgress = getGradeProgressSummary();
+  // Build final progress info
+  const progressPercent: Record<string, { percent: number; conflicted: boolean }> = {};
+  Object.entries(progress).forEach(([grade, data]) => {
+    const percent = Math.round((data.assigned / data.total) * 100);
+    progressPercent[grade] = {
+      percent,
+      conflicted: conflictingGrades.has(grade),
+    };
+  });
+
+  return progressPercent;
+};
+
+const gradeProgress = getGradeProgressSummary();
+
+
+ 
 
   const selectedTeacher = teachers.find(t => t.teacher_NIC === selectedTeacherNIC);
 
@@ -223,80 +252,95 @@ useEffect(() => {
   </button>
 </div>
 
-      
       {/* Grade Progress Cards */}
-      <div className="  mt-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {Object.entries(gradeProgress).map(([grade, percent]) => (
+<div className="mt-5">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {Object.entries(gradeProgress).map(([grade, data]) => {
+      const { percent, conflicted } = data; // percent + conflicted flag
+
+      return (
+        <div
+          key={grade}
+          onClick={() => setExpandedGrade(prev => (prev === grade ? null : grade))}
+          className="border border-gray-200 shadow-xl p-8 bg-white hover:shadow-md transition hover:cursor-pointer transition-transform duration-700 hover:scale-110 z-40"
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold text-lg">{grade}</h3>
+            <span className="text-sm text-gray-500">{percent}%</span>
+          </div>
+          <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
             <div
-              key={grade}
-              onClick={() => setExpandedGrade(prev => (prev === grade ? null : grade))}
-              className="border border-gray-200 shadow-xl p-8 bg-white hover:shadow-md transition hover:cursor-pointer   transition-transform duration-700 hover:scale-110 z-40"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold text-lg">{grade}</h3>
-                <span className="text-sm text-gray-500">{percent}%</span>
-              </div>
-              <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${percent}%`,
-                    backgroundColor: percent === 100 ? '#22c55e' : percent === 0 ? '#e5e7eb' : '#facc15',
-                  }}
-                ></div>
-              </div>
-              <p
-                className={`mt-2 text-sm ${
-                  percent === 100 ? 'text-green-600' : percent === 0 ? 'text-gray-400' : 'text-yellow-600'
-                }`}
-              >
-                {percent === 100
-                  ? '✅ All sections assigned'
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${percent}%`,
+                backgroundColor: conflicted
+                  ? '#dc2626' // red for conflict
+                  : percent === 100
+                  ? '#22c55e'
                   : percent === 0
-                  ? '❌ No assignments yet'
-                  : '⚠️ Partially assigned'}
-              </p>
+                  ? '#e5e7eb'
+                  : '#facc15',
+              }}
+            ></div>
+          </div>
+          <p
+            className={`mt-2 text-sm ${
+              conflicted
+                ? 'text-red-700'
+                : percent === 100
+                ? 'text-green-600'
+                : percent === 0
+                ? 'text-gray-400'
+                : 'text-yellow-600'
+            }`}
+          >
+            {conflicted
+              ? '⚠️ Duplicate teacher assigned!'
+              : percent === 100
+              ? '✅ All sections assigned'
+              : percent === 0
+              ? '❌ No assignments yet'
+              : '⚠️ Partially assigned'}
+          </p>
 
+          {expandedGrade === grade && (
+            <div className="mt-4 text-base divide-y divide-gray-300 bg-gray-50 rounded-md overflow-hidden">
+              {Object.entries(classes).map(([className, grades]) =>
+                Object.entries(grades).map(([g, sections]) => {
+                  if (`Grade ${g}` !== grade) return null;
 
-
-              {expandedGrade === grade && (
-  <div className="mt-4 text-base divide-y divide-gray-300 bg-gray-50 rounded-md overflow-hidden">
-    {Object.entries(classes).map(([className, grades]) =>
-      Object.entries(grades).map(([g, sections]) => {
-        if (`Grade ${g}` !== grade) return null;
-
-        return sections.map((section, index) => {
-          const teacher = teachers.find(t => t.teacher_NIC === section.teacher_NIC);
-          return (
-            <div
-              key={`${className}-${g}-${section.section}`}
-              className="flex justify-between items-center px-4 py-3 bg-white"
-            >
-              <span className="text-gray-800">
-               <strong></strong> Section {section.section}
-              </span>
-              <span
-                className={`font-medium ${
-                  section.teacher_NIC ? 'text-green-600' : 'text-red-500'
-                }`}
-              >
-                {section.teacher_NIC
-                  ? `👤 ${teacher?.personal?.Full_name_with_initial ?? teacher?.teacher_NIC}`
-                  : '❌ Not Assigned'}
-              </span>
+                  return sections.map((section, index) => {
+                    const teacher = teachers.find(t => t.teacher_NIC === section.teacher_NIC);
+                    return (
+                      <div
+                        key={`${className}-${g}-${section.section}`}
+                        className="flex justify-between items-center px-4 py-3 bg-white"
+                      >
+                        <span className="text-gray-800">
+                          <strong></strong> Section {section.section}
+                        </span>
+                        <span
+                          className={`font-medium ${
+                            section.teacher_NIC ? 'text-green-600' : 'text-red-500'
+                          }`}
+                        >
+                          {section.teacher_NIC
+                            ? `👤 ${teacher?.personal?.Full_name_with_initial ?? teacher?.teacher_NIC}`
+                            : '❌ Not Assigned'}
+                        </span>
+                      </div>
+                    );
+                  });
+                })
+              )}
             </div>
-          );
-        });
-      })
-    )}
-  </div>
-)}
-
-            </div>
-          ))}
+          )}
         </div>
-      </div>
+      );
+    })}
+  </div>
+</div>
+
 
       {/* Success Message */}
       {submitted && (
@@ -366,6 +410,7 @@ useEffect(() => {
                     <option value="" className="hover:cursor-pointer">
                       -- Select Teacher --
                     </option>
+                    
                     {teachers.map(teacher => {
                       const isAlreadyAssigned = assignedTeacherNICs.has(teacher.teacher_NIC);
                       return (
@@ -377,7 +422,7 @@ useEffect(() => {
                             fontWeight: isAlreadyAssigned ? 'bold' : 'normal',
                           }}
                         >
-                          {teacher.teacher_NIC}
+                          {teacher.personal?.Full_name_with_initial  }
                           {isAlreadyAssigned ? ' (Already Assigned)' : ''}
                         </option>
                       );

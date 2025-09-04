@@ -202,24 +202,50 @@ export default function AssignTeachersPage() {
           </div>
 
           {/* Show teachers for selected subject */}
-          {selectedSubjectId && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-2">
-                Teachers who can teach:{" "}
-                <span className="text-blue-700">
-                  {subjects.find((s) => s.subject_id === selectedSubjectId)?.subject_name}
-                </span>
-              </h3>
-              {teachersForSelectedSubject.length === 0 && <p>No teachers available for this subject.</p>}
-              <ul className="list-disc pl-5 space-y-1 max-h-64 overflow-y-auto border p-3 rounded bg-gray-50">
-                {teachersForSelectedSubject.map((teacher) => (
-                  <li key={teacher.teacher_NIC}>
-                    {teacher.personal?.Full_name_with_initial || teacher.name || teacher.teacher_NIC}
-                  </li>
-                ))}
-              </ul>
+         {selectedSubjectId && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-4">
+      Teachers who can teach:{" "}
+      <span className="text-blue-700">
+        {subjects.find((s) => s.subject_id === selectedSubjectId)?.subject_name}
+      </span>
+    </h3>
+
+    {teachersForSelectedSubject.length === 0 ? (
+      <p>No teachers available for this subject.</p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-80 overflow-y-auto">
+        {teachersForSelectedSubject.map((teacher) => (
+          <div
+            key={teacher.teacher_NIC}
+            className="flex items-center gap-3 p-3 border rounded shadow hover:shadow-md transition cursor-pointer bg-white"
+          >
+            {/* Profile Picture */}
+            <img
+              src={teacher.personal?.Photo || '/default-profile.png'}
+              alt={teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+              className="w-12 h-12 rounded-full object-cover border"
+            />
+
+            {/* Teacher Info */}
+            <div className="flex flex-col">
+              <span className="font-semibold text-gray-800">
+                {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+              </span>
+              <span className="text-sm text-gray-500">
+                Subject: {teacher.qualifications?.subject_appointed || 'N/A'}
+              </span>
+              <span className="text-sm text-gray-500">
+                Medium: {teacher.qualifications?.current_appointment_service_medium || 'N/A'}
+              </span>
             </div>
-          )}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
         </section>
 
         {/* Back Button */}
@@ -282,25 +308,40 @@ export default function AssignTeachersPage() {
                 </select>
               </div>
 
-              {filteredSubjects.map((subject) => (
-                <div key={subject.subject_id} className="flex justify-between items-center border rounded px-4 py-2">
-                  <span className="font-medium text-gray-700">{subject.subject_name}</span>
-                  <select
-                    className="border rounded px-3 py-1"
-                    value={localAssignments[subject.subject_id] ?? ''}
-                    onChange={(e) => handleTeacherChange(subject.subject_id, e.target.value)}
-                    disabled={!selectedClassId}
-                  >
-                    <option value="">-- Select Teacher --</option>
-                    {teachers.map((teacher) => (
-                      <option key={teacher.teacher_NIC} value={teacher.teacher_NIC}>
-                        {teacher.teacher_NIC}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ))}
+              {filteredSubjects.map((subject) => {
+  // Get only teachers who can teach this subject
+  const eligibleTeachers = teachers.filter((t) =>
+    canTeacherTeachSubject(t, subject.subject_name)
+  );
 
+  return (
+    <div
+      key={subject.subject_id}
+      className="flex justify-between items-center border rounded px-4 py-2"
+    >
+      <span className="font-medium text-gray-700">{subject.subject_name}</span>
+      <select
+        className="border rounded px-3 py-1"
+        value={localAssignments[subject.subject_id] ?? ''}
+        onChange={(e) => handleTeacherChange(subject.subject_id, e.target.value)}
+        disabled={!selectedClassId}
+      >
+        <option value="">-- Select Teacher --</option>
+        {eligibleTeachers.length > 0 ? (
+          eligibleTeachers.map((teacher) => (
+            <option key={teacher.teacher_NIC} value={teacher.teacher_NIC}>
+              {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+            </option>
+          ))
+        ) : (
+          <option disabled>No eligible teachers</option>
+        )}
+      </select>
+    </div>
+  );
+})}
+
+             
               <button
                 type="submit"
                 disabled={!selectedClassId}
@@ -340,13 +381,46 @@ export default function AssignTeachersPage() {
                               setExpandedSection(expandedSection === cls.class_id ? null : cls.class_id);
                             }}
                           >
-                            <h4 className="text-gray-800 font-medium grid grid-cols-3 gap-4 items-center">
-                              <span>Section {cls.section}</span>
-                              <span>
-                                Class Teacher:{" "}
-                                <span className="text-green-700 font-semibold ml-10">{cls.teacher_NIC}</span>
-                              </span>
-                            </h4>
+                            {/* Section & Class Teacher */}
+<div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
+  <span className="font-semibold text-gray-800 text-lg">Section {cls.section}</span>
+
+  {cls.teacher_NIC ? (
+    (() => {
+      const classTeacher = teachers.find(t => t.teacher_NIC === cls.teacher_NIC);
+      return classTeacher ? (
+        <div className="flex items-center gap-3 bg-blue-50 rounded-lg p-3 shadow-sm w-full md:w-auto">
+          {classTeacher.personal?.Photo && (
+            <img
+              src={classTeacher.personal.Photo}
+              alt={classTeacher.personal.Full_name_with_initial}
+              className="w-16 h-16 rounded-full object-cover border-2 border-blue-300"
+            />
+          )}
+          <div className="text-sm">
+            <p className="font-semibold text-gray-900">
+              {classTeacher.personal?.Full_name_with_initial || classTeacher.teacher_NIC}
+            </p>
+            <p className="text-gray-600 text-xs">
+              Medium: <span className="font-medium">{classTeacher.qualifications?.current_appointment_service_medium || 'N/A'}</span>
+            </p>
+            <p className="text-gray-600 text-xs">
+              Subject: <span className="font-medium">{classTeacher.qualifications?.subject_appointed || 'N/A'}</span>
+            </p>
+            <p className="text-gray-500 text-xs">
+              Qualification: <span className="font-medium">{classTeacher.qualifications?.highest_education_qualification || 'N/A'}</span>
+            </p>
+          </div>
+        </div>
+      ) : (
+        <p className="text-red-500 font-semibold">❌ Class Teacher Not Found</p>
+      );
+    })()
+  ) : (
+    <p className="text-red-500 font-semibold">❌ Class Teacher Not Assigned</p>
+  )}
+</div>
+
 
                             {expandedSection === cls.class_id && (
                               <div className="mt-3 space-y-7">
