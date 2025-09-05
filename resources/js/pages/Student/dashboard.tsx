@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link,usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import RealTimeChatBot from './RealTimeChatBot';
 import {
@@ -81,7 +81,7 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
     { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
   ];
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/student-marks/2400')
+    fetch(`http://127.0.0.1:8000/api/student-marks/${user.id}`)
       .then(async (res) => {
         if (!res.ok) {
           const text = await res.text();
@@ -96,7 +96,7 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
       .catch((err) => {
         console.error('❌ Dashboard fetch error:', err);
       });
-  }, []);
+  }, [user.id]);
 
  const handleSearch = (query: string) => {
     setSearchTerm(query);
@@ -146,7 +146,7 @@ useEffect(() => {
 },[]);
 
  useEffect(() => {
-  fetch(`/api/student-personal/2400`)
+  fetch(`/api/student/personal/${user.id}`)
     .then(async (res) => {
       if (!res.ok) {
         const text = await res.text();
@@ -159,11 +159,11 @@ useEffect(() => {
       console.error('Student Personal fetch error:', err);
       setStudentPersonal(null);
     });
-}, []);
+}, [user.id]);
 
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs} user={user}>
+    <AppLayout breadcrumbs={breadcrumbs} auth={usePage().props.auth}>
       <Head title="Student Dashboard" />
 
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
@@ -339,17 +339,7 @@ useEffect(() => {
             ))}
           </div>
 
-              return (
-                <div key={i}>
-                  {card.link ? (
-                    <Link href={card.link}>{content}</Link>
-                  ) : (
-                    content
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {infoCards.map((card) => (
