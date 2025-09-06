@@ -31,7 +31,7 @@ interface DashboardData {
 
 export default function StudentDashboard() {
   const user = usePage().props.auth.user;
-
+const { student} = usePage().props as { student:any};
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
   const [marksData, setMarksData] = useState<{ marks_obtained: number }[]>([]);
@@ -62,7 +62,7 @@ export default function StudentDashboard() {
     ]
   });
   
-  const [studentPersonal, setStudentPersonal] = useState<{ full_name_with_initial?: string } | null>(null);
+
 
    const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -110,14 +110,31 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
     ];
     setSearchResults(data.filter(item => item.label.toLowerCase().includes(query.toLowerCase())));
   };
+  const getAverageGrade =(marks:any[]) => {
+    if(!marks?.length) return 'N/A';
+    const gradeToPoints: Record<string,number> = {
+      A:4,B:3,C:2,D:1,F:0,
+    };
+    const points = marks.map(m => gradeToPoints[m.grade] ?? null ).filter(p => p !==null);
+
+    if(!points.length ) return 'N/A';
+    const avg = points.reduce((a,b) => a+b , 0) / points.length;
+
+    if(avg >= 3.5) return 'A';
+    if(avg >= 2.5) return 'B';
+    if(avg >= 1.5) return 'C';
+    if(avg >= 0.5) return 'D';
+    return 'F';
+
+  }
 
   if (!data) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   const infoCards = [
-    { id: 1, label: 'Class Enrolled', value: '10A', icon: <Users size={24} />, color: 'bg-blue-100 text-blue-600' },
-    { id: 2, label: 'Scholarship', value: 'Eligible', icon: <Award size={24} />, color: 'bg-amber-100 text-amber-600' },
+    { id: 1, label: 'Class Enrolled', value: student.class?.class_name ??'N/A', icon: <Users size={24} />, color: 'bg-blue-100 text-blue-600' },
+    { id: 2, label: 'Scholarship', value: student?.scholarship_status ?? 'N/A', icon: <Award size={24} />, color: 'bg-amber-100 text-amber-600' },
     { id: 3, label: 'Attendance', value: '96%', icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
-    { id: 4, label: 'Avg Marks', value: '82%', icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
+    { id: 4, label: 'Avg Grade', value: getAverageGrade(student.marks), icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
   ];
   
 const [currentDateTime,setCurrentDateTime] = useState('');
@@ -145,21 +162,21 @@ useEffect(() => {
 
 },[]);
 
- useEffect(() => {
-  fetch(`/api/student/personal/${user.id}`)
-    .then(async (res) => {
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`❌ ${res.status}: ${text}`);
-      }
-      return res.json();
-    })
-    .then((data) => setStudentPersonal(data))
-    .catch((err) => {
-      console.error('Student Personal fetch error:', err);
-      setStudentPersonal(null);
-    });
-}, [user.id]);
+//  useEffect(() => {
+//   fetch(`/api/student/personal/${user.id}`)
+//     .then(async (res) => {
+//       if (!res.ok) {
+//         const text = await res.text();
+//         throw new Error(`❌ ${res.status}: ${text}`);
+//       }
+//       return res.json();
+//     })
+//     .then((data) => setStudentPersonal(data))
+//     .catch((err) => {
+//       console.error('Student Personal fetch error:', err);
+//       setStudentPersonal(null);
+//     });
+// }, [user.id]);
 
 
   return (
@@ -280,7 +297,7 @@ useEffect(() => {
           ">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div className="mb-4 md:mb-0">
-                <h1 className="text-2xl md:text-3xl font-bold mb-2">Good Morning,  {studentPersonal?.full_name_with_initial}
+                <h1 className="text-2xl md:text-3xl font-bold mb-2">Good Morning,  {student.personal?.full_name_with_initial}
                   !</h1>
                 <p className="opacity-90 max-w-2xl">
                   You have 3 assignments to complete this week. Your next class is Mathematics at 10:30 AM.

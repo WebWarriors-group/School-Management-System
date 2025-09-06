@@ -27,7 +27,25 @@ class StudentController extends Controller
 {
     public function dashboard()
     {
-        return Inertia::render('Student/dashboard');
+        $user = Auth::user();
+        
+         
+        $student = $user->student()->with([
+        'personal',
+        
+        'family',
+        'siblings',
+        'class',
+        'class.teacher',
+        'marks',
+        'subjects',
+        
+    ])->first();
+    
+    if(!$student){
+        return redirect()->route('student-register');
+    }
+        return Inertia::render('Student/dashboard',['student'=>$student]);
     }
 
     public function sendAdmissionForm(Request $request)
