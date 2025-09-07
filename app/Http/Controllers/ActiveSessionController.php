@@ -27,4 +27,7 @@ class ActiveSessionController extends Controller
 
         return Inertia::location($route);
     }
+    public function admissionFormOpen(){
+            return Inertia::render('Student/FormType');
+    }
 }
