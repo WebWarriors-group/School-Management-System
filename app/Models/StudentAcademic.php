@@ -33,6 +33,23 @@ class StudentAcademic extends Model
         'leaving_date',
     ];
     protected $autoLoadRelations = true;
+
+    protected $appends = ['scholarship_status'];
+
+    public function getScholarshipStatusAttribute(){
+        $statuses=[];
+
+        if($this->receiving_any_grade_5_scholarship){
+            $statuses[] = "Grade 5 Scholarship";
+        }
+        if($this->receiving_any_samurdhi_aswesuma){
+            $statuses[] = "Samurdhi/Aswesuma";
+        }
+        if($this->receiving_any_scholarship){
+            $statuses[] = "Other Scholarship";
+        }
+        return $statuses ? implode(', ', $statuses): 'No Scholarships';
+    }
     public function subjects()
     {
 
