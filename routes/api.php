@@ -1,4 +1,5 @@
 <?php
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController; 
 use App\Http\Controllers\TeacherController; 
@@ -29,7 +30,9 @@ Route::prefix('student')->group(function () {
     Route::get('/calendar', [StudentController::class, 'calendarData']);
     Route::get('/dashboard', [StudentController::class, 'dashboard']);
     Route::get('/performance', [StudentController::class, 'yearlyPerformance']);
-
+    Route::get('admission-form',function(){
+        return Inertia::render('Student/StudentAdmissionForm');
+    })->name('student.admission.form');
     Route::prefix('{reg_no}')->group(function () {
         Route::get('/performance', [StudentController::class, 'apiStudentPerformance']);
         Route::get('/family', [StudentController::class, 'showFamily']);
@@ -51,7 +54,9 @@ Route::prefix('teachers')->group(function () {
     Route::get('/{teacher_NIC}', [TeacherController::class, 'show']);
     Route::put('/{teacher_NIC}', [TeacherController::class, 'update']);
     Route::delete('/{teacher_NIC}', [TeacherController::class, 'destroy']);
-
+     Route::get('admission-form',function(){
+        return Inertia::render('Teachet/teacherForm');
+    })->name('teacher.admission.form');
 });
 
 Route::prefix('classes')->group(function () {
@@ -111,7 +116,7 @@ Route::post('/send-admission-form', function (Illuminate\Http\Request $request) 
 });
 
 Route::resources([
-    'students' => StudentController::class,
+    'student' => StudentController::class,
 ]);
 
 Route::post('import', [StudentController::class, 'import']);

@@ -39,6 +39,7 @@ use App\Http\Controllers\MarkController;
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
+Route::get('admissionForms', [ActiveSessionController::class, 'admissionFormOpen'])->name('admissionForms');
 
 
 
