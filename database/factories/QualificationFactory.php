@@ -27,9 +27,9 @@ class QualificationFactory extends Factory
             'appointment_date_for_current_grade' => $this->faker->date(),
             'current_appointment_service_medium' => $this->faker->randomElement(['English', 'Tamil', 'Sinhala']),
             'appointed_subject_section' => $this->faker->randomElement(['Mathematics', 'Science', 'English']),
-            'subject_appointed' => $this->faker->randomElement(['Math', 'Physics', 'Chemistry', 'History', 'English']),
+            'subject_appointed' => $this->faker->randomElement(['Maths', 'Physics', 'Chemistry', 'History', 'English']),
             'currentservice_appointed_date' => $this->faker->date(),
-            'subjects_taught_most_and_second_most' => $this->faker->randomElement(['Math and Physics', 'English and History']),
+            'subjects_taught_most_and_second_most' => $this->faker->randomElement(['Maths and Physics', 'English and History']),
             'position_in_the_school' => $this->faker->randomElement(['Teacher', 'Head of Department', 'Principal']),
             'assign_date_for_the_school' => $this->faker->date(),
         ];

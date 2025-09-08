@@ -53,12 +53,7 @@ $students = StudentAcademic::factory(200)->create();
                 'reg_no' => $student->reg_no,
             ]);
             $studentClass = $student->class_id;
-            Marks::factory(rand(3, 6))->create([
-        'reg_no' => $student->reg_no,
-        'class' => $studentClass,
-        
-    ]);
-
+    //         
 
     StudentReport::factory(rand(1, 3))->create([
         'reg_no' => $student->reg_no,

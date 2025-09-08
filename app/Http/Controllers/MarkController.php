@@ -10,12 +10,9 @@ use Illuminate\Support\Facades\Validator;
 
 class MarkController extends Controller
 {
-    /**
-     * Fetch all students inside a given class by class ID
-     */
     public function index(Request $request)
     {
-        $classes = ClassModel::select('class_id', 'section', 'year')->get();
+        $classes = ClassModel::select('class_id', 'section', 'year','grade')->get();
 
         $selectedClassId = $request->query('class_id') ?? ($classes->first()->class_id ?? null);
 
@@ -41,35 +38,16 @@ class MarkController extends Controller
         ]);
     }
 
-    public function getStudentsByClass(Request $request, $classId)
+    public function getMarks(Request $request)
     {
-        $class = ClassModel::with('studentacademics')->find($classId);
+        $marks = Marks::where('subject_id', $request->subject_id)
+            ->where('term', $request->term)
+            ->where('year', $request->year)
+            ->get();
 
-        if (!$class) {
-            return response()->json(['message' => 'Class not found'], 404);
-        }
-
-        $students = $class->studentacademics->map(function ($student) {
-            return [
-                'reg_no' => $student->reg_no,
-                'name' => $student->name ?? null,
-            ];
-        });
-
-        return response()->json([
-            'class' => [
-                'id' => $class->class_id,
-                'grade' => $class->grade ?? null,
-                'section' => $class->section ?? null,
-                'year' => $class->year ?? null,
-            ],
-            'students' => $students,
-        ]);
+        return response()->json($marks);
     }
 
-    /**
-     * Store bulk marks for students
-     */
     public function storeBulkMarks(Request $request)
     {
         $marksData = $request->input('marks');
@@ -89,6 +67,7 @@ class MarkController extends Controller
                 'year' => 'required|integer',
                 'marks_obtained' => 'required|integer|min:0|max:100',
                 'grade' => 'required|string|in:A,B,C,S,F',
+                'class_id' => 'required|integer', // ✅ validate class
             ]);
 
             if ($validator->fails()) {
@@ -102,6 +81,7 @@ class MarkController extends Controller
                     'subject_id' => $mark['subject_id'],
                     'term' => $mark['term'],
                     'year' => $mark['year'],
+                    'class_id' => $mark['class_id'], // ✅ include class
                 ],
                 [
                     'marks_obtained' => $mark['marks_obtained'],
@@ -123,22 +103,6 @@ class MarkController extends Controller
         ]);
     }
 
-    /**
-     * Get marks by term, year, and subject
-     */
-    public function getMarks(Request $request)
-    {
-        $marks = Marks::where('subject_id', $request->subject_id)
-            ->where('term', $request->term)
-            ->where('year', $request->year)
-            ->get();
-
-        return response()->json($marks);
-    }
-
-    /**
-     * Update a single mark
-     */
     public function updateMark(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -148,6 +112,7 @@ class MarkController extends Controller
             'year' => 'required|integer',
             'marks_obtained' => 'required|integer|min:0|max:100',
             'grade' => 'required|string|in:A,B,C,S,F',
+            'class_id' => 'required|integer', // ✅ validate class
         ]);
 
         if ($validator->fails()) {
@@ -158,6 +123,7 @@ class MarkController extends Controller
             ->where('subject_id', $request->subject_id)
             ->where('term', $request->term)
             ->where('year', $request->year)
+            ->where('class', $request->class) // ✅ include class
             ->first();
 
         if (!$mark) {
@@ -172,9 +138,6 @@ class MarkController extends Controller
         return response()->json(['message' => 'Mark updated successfully', 'mark' => $mark]);
     }
 
-    /**
-     * Delete a single mark
-     */
     public function delete(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -182,6 +145,7 @@ class MarkController extends Controller
             'subject_id' => 'required|string',
             'term' => 'required|string',
             'year' => 'required|integer',
+            'class' => 'required|integer', // ✅ validate class
         ]);
 
         if ($validator->fails()) {
@@ -192,6 +156,7 @@ class MarkController extends Controller
             ->where('subject_id', $request->subject_id)
             ->where('term', $request->term)
             ->where('year', $request->year)
+            ->where('class', $request->class)
             ->first();
 
         if (!$mark) {

@@ -122,33 +122,33 @@ const ViewAllStudents = () => {
 
         {/* Student Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full border text-sm">
-            <thead className="bg-sky-800 text-white">
+           <table className="min-w-full table-auto text-sm text-gray-700">
+             <thead className="bg-blue-200 text-left text-sm font-semibold uppercase text-black text-center">
               <tr>
-                <th className="px-4 py-2 border">Reg. No</th>
-                <th className="px-4 py-2 border">Name</th>
-                <th className="px-4 py-2 border">Class</th>
-                <th className="px-4 py-2 border">Grade</th>
-                <th className="px-4 py-2 border">Section</th>
-                <th className="px-4 py-2 border">Admission</th>
+                <th className="px-6 py-3  text-center">Reg. No</th>
+                <th className="px-6 py-3  text-center">Name</th>
+                <th className="px-6 py-3  text-center">Class</th>
+                <th className="px-6 py-3  text-center">Grade</th>
+                <th className="px-6 py-3  text-center">Section</th>
+                <th className="px-6 py-3 text-center">Admission</th>
               </tr>
             </thead>
             <tbody>
               {currentStudents.map((student) => (
                 <tr
                   key={student.reg_no}
-                  className="hover:bg-yellow-100 cursor-pointer"
+                  className="hover:bg-blue-100 cursor-pointer border-b hover:bg-gray-50"
                   onClick={() => {
                     setSelectedStudent(student);
                     setShowModal(true);
                   }}
                 >
-                  <td className="px-4 py-2 border">{student.reg_no}</td>
-                  <td className="px-4 py-2 border">{student.personal?.full_name}</td>
-                  <td className="px-4 py-2 border">{student.class?.class_name}</td>
-                  <td className="px-4 py-2 border">{student.class?.grade}</td>
-                  <td className="px-4 py-2 border">{student.class?.section}</td>
-                  <td className="px-4 py-2 border">{new Date(student.admission_date).toLocaleDateString()}</td>
+                  <td  className="px-6 py-5 text-center text-gray-500">{student.reg_no}</td>
+                  <td  className="px-6 py-5 text-center text-gray-500">{student.personal?.full_name}</td>
+                  <td  className="px-6 py-5 text-center text-gray-500">{student.class?.class_name}</td>
+                  <td  className="px-6 py-5 text-center text-gray-500">{student.class?.grade}</td>
+                  <td  className="px-6 py-5 text-center text-gray-500">{student.class?.section}</td>
+                  <td  className="px-6 py-5 text-center text-gray-500">{new Date(student.admission_date).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

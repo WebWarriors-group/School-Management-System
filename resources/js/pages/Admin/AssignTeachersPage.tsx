@@ -174,10 +174,23 @@ export default function AssignTeachersPage() {
       })
     : [];
 
+
+    const teacherSummary = teachers.map((teacher) => {
+const teacherAssignments = assignments.filter((a) => a.teacher_NIC === teacher.teacher_NIC);
+return {
+...teacher,
+assignments: teacherAssignments.map((a) => {
+const cls = classes.find((c) => c.class_id === a.class_id);
+const subj = subjects.find((s) => s.subject_id === a.subject_id);
+return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})`;
+}),
+};
+});
+
   return (
     <AppLayout>
-      <main className="p-6 bg-gray-200 space-y-12">
-<div className="flex justify-between items-center">
+      <main className="p-6 bg-gray-200">
+ <div className="flex flex-col lg:flex-row gap-8">
           <Button
             className="bg-yellow-500 w-40 h-10 text-lg shadow-sm hover:scale-105 transition"
             onClick={() => router.visit('/admin/dashboardoverview')}
@@ -236,8 +249,13 @@ export default function AssignTeachersPage() {
                 Subject: {teacher.qualifications?.subject_appointed || 'N/A'}
               </span>
               <span className="text-sm text-gray-500">
+                Subject Most Teaching: {teacher.qualifications?.subjects_taught_most_and_second_most  || 'N/A'}
+              </span>
+              <span className="text-sm text-gray-500">
                 Medium: {teacher.qualifications?.current_appointment_service_medium || 'N/A'}
               </span>
+
+            
             </div>
           </div>
         ))}
@@ -256,102 +274,140 @@ export default function AssignTeachersPage() {
          
         </div>
 
-        {/* Form to Assign */}
-        <div className="bg-white p-8 shadow-md rounded space-y-6">
-          <h1 className="text-2xl font-bold text-blue-800">Assign Teachers to Subjects</h1>
-          {flash?.success && (
-            <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">{flash.success}</div>
-          )}
+        {/* Form to Assign */}<div className="flex flex-col lg:flex-row gap-8 items-start">
 
-          <div className="flex gap-4">
-            <div className="w-1/2">
-              <label className="block font-medium mb-1">Select Grade</label>
+  {/* Left Side: Form */}
+  <div className="flex-1 bg-white p-6 rounded shadow-md space-y-6 max-h-[80vh] overflow-y-auto">
+    {flash?.success && (
+      <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+        {flash.success}
+      </div>
+    )}
+
+    <h1 className="text-2xl font-bold text-blue-800">Assign Teachers to Subjects</h1>
+
+    {/* Select Grade */}
+    <div className="w-1/2">
+      <label className="block font-medium mb-1">Select Grade</label>
+      <select
+        className="w-full border rounded px-3 py-2"
+        value={selectedGrade ?? ''}
+        onChange={(e) => {
+          const val = e.target.value ? Number(e.target.value) : null;
+          setSelectedGrade(val);
+          setSelectedClassId(null);
+          setLocalAssignments({});
+        }}
+      >
+        <option value="">-- Select Grade --</option>
+        {grades.map((g) => (
+          <option key={g} value={g}>
+            Grade {g}
+          </option>
+        ))}
+      </select>
+      {errors?.grade && <p className="text-red-600 text-sm mt-1">{errors.grade.join(', ')}</p>}
+    </div>
+
+    {selectedGrade && filteredSubjects.length > 0 && (
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        {/* Select Section */}
+        <div className="w-1/2">
+          <label className="block font-medium mb-1">Select Section</label>
+          <select
+            className="w-full border rounded px-3 py-2"
+            value={selectedClassId ?? ''}
+            onChange={(e) => setSelectedClassId(e.target.value ? Number(e.target.value) : null)}
+          >
+            <option value="">-- Select Section --</option>
+            {filteredClasses.map((cls) => (
+              <option key={cls.class_id} value={cls.class_id}>
+                {cls.section}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subject → Teacher Assignment */}
+        {filteredSubjects.map((subject) => {
+          const eligibleTeachers = teachers.filter((t) =>
+            canTeacherTeachSubject(t, subject.subject_name)
+          );
+
+          return (
+            <div
+              key={subject.subject_id}
+              className="flex justify-between items-center border rounded px-4 py-2"
+            >
+              <span className="font-medium text-gray-700">{subject.subject_name}</span>
               <select
-                className="w-full border rounded px-3 py-2"
-                value={selectedGrade ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value ? Number(e.target.value) : null;
-                  setSelectedGrade(val);
-                  setSelectedClassId(null);
-                  setLocalAssignments({});
-                }}
+                className="border rounded px-3 py-1"
+                value={localAssignments[subject.subject_id] ?? ''}
+                onChange={(e) => handleTeacherChange(subject.subject_id, e.target.value)}
+                disabled={!selectedClassId}
               >
-                <option value="">-- Select Grade --</option>
-                {grades.map((g) => (
-                  <option key={g} value={g}>
-                    Grade {g}
-                  </option>
-                ))}
+                <option value="">-- Select Teacher --</option>
+                {eligibleTeachers.length > 0 ? (
+                  eligibleTeachers.map((teacher) => (
+                    <option key={teacher.teacher_NIC} value={teacher.teacher_NIC}>
+                      {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No eligible teachers</option>
+                )}
               </select>
-              {errors?.grade && <p className="text-red-600 text-sm mt-1">{errors.grade.join(', ')}</p>}
+            </div>
+          );
+        })}
+
+        <button
+          type="submit"
+          disabled={!selectedClassId}
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+        >
+          Save Assignments
+        </button>
+      </form>
+    )}
+  </div>
+
+  {/* Right Side: Teacher Summary */}
+  <aside className="w-full lg:w-1/3 bg-white p-6 rounded shadow-md h-[80vh] lg:sticky top-6 overflow-y-auto">
+    <h2 className="text-xl font-bold mb-4">👩‍🏫 Teacher Assignment Summary</h2>
+    <div className="space-y-4">
+      {teacherSummary.map((teacher) => (
+        <div key={teacher.teacher_NIC} className="p-4 border rounded shadow-sm hover:shadow-md transition">
+          <div className="flex items-center gap-3">
+            <img
+              src={teacher.personal?.Photo || '/default-profile.png'}
+              alt={teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+              className="w-12 h-12 rounded-full object-cover border"
+            />
+            <div>
+              <p className="font-semibold">{teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}</p>
+              <p className="text-sm text-gray-500">{teacher.assignments.length} classes</p>
             </div>
           </div>
-
-          {selectedGrade && filteredSubjects.length > 0 && (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="w-1/2">
-                <label className="block font-medium mb-1">Select Section</label>
-                <select
-                  className="w-full border rounded px-3 py-2"
-                  value={selectedClassId ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value ? Number(e.target.value) : null;
-                    setSelectedClassId(val);
-                  }}
-                >
-                  <option value="">-- Select Section--</option>
-                  {filteredClasses.map((cls) => (
-                    <option key={cls.class_id} value={cls.class_id}>
-                      {cls.section}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {filteredSubjects.map((subject) => {
-  // Get only teachers who can teach this subject
-  const eligibleTeachers = teachers.filter((t) =>
-    canTeacherTeachSubject(t, subject.subject_name)
-  );
-
-  return (
-    <div
-      key={subject.subject_id}
-      className="flex justify-between items-center border rounded px-4 py-2"
-    >
-      <span className="font-medium text-gray-700">{subject.subject_name}</span>
-      <select
-        className="border rounded px-3 py-1"
-        value={localAssignments[subject.subject_id] ?? ''}
-        onChange={(e) => handleTeacherChange(subject.subject_id, e.target.value)}
-        disabled={!selectedClassId}
-      >
-        <option value="">-- Select Teacher --</option>
-        {eligibleTeachers.length > 0 ? (
-          eligibleTeachers.map((teacher) => (
-            <option key={teacher.teacher_NIC} value={teacher.teacher_NIC}>
-              {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
-            </option>
-          ))
-        ) : (
-          <option disabled>No eligible teachers</option>
-        )}
-      </select>
-    </div>
-  );
-})}
-
-             
-              <button
-                type="submit"
-                disabled={!selectedClassId}
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                Save Assignments
-              </button>
-            </form>
+          {teacher.assignments.length > 0 ? (
+            <ul className="mt-2 text-sm list-disc list-inside text-gray-600">
+              {teacher.assignments.map((a, idx) => (
+                <li key={idx}>{a}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-red-500 mt-2">❌ No Assignments</p>
           )}
         </div>
+      ))}
+    </div>
+  </aside>
+
+</div>
+
+
+        
 
         {/* Grade → Section → Subject Tree with Class Teacher */}
         <div className="mt-16 bg-white py-5 py">
@@ -455,6 +511,12 @@ export default function AssignTeachersPage() {
               </div>
             ))}
           </div>
+
+
+
+
+
+          
         </div>
 
         {/* Assignment Summary Table */}
@@ -495,6 +557,12 @@ export default function AssignTeachersPage() {
             </tbody>
           </table>
         </div>
+
+
+
+
+
+
       </main>
     </AppLayout>
   );
