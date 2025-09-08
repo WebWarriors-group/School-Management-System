@@ -27,6 +27,8 @@ Route::get('/teachers', [TeacherController::class, 'index']);
 Route::get('/teachers/{teacher_NIC}', [TeacherController::class, 'show']);
 Route::delete('/teachers/{teacher_NIC}', [TeacherController::class, 'destroy']);
 Route::put('/teachers/{teacher_NIC}', [TeacherController::class, 'update']);
+Route::get('/teacher/{id}/students', [TeacherController::class, 'studentDetails']);
+    
 
 Route::post('/student', [StudentController::class, 'store']);
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);

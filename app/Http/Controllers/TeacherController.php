@@ -20,30 +20,30 @@ class TeacherController extends Controller
 {
 
     public function dashboard()
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-       
-        
-       if (!$user->teacher()->exists()) {
-    return redirect()->route('add-teacher');
-}
-
-
-        $teacher = $user->teacher()->with([
-            'teachersaddress',
-            'personal',
-            'qualifications',
-            'teacherotherService',
-            'class',
-            'class.studentacademics',
-            'class.studentacademics.personal'
-        ])->first();
-
-        return Inertia::render('Teacher/dashboard', [
-            'teacher' => $teacher
-        ]);
+    if (!$user->teacher()->exists()) {
+        return redirect()->route('add-teacher');
     }
+
+    $teacher = $user->teacher()->with([
+        'teachersaddress',
+        'personal',
+        'qualifications',
+        'teacherotherservice', // ✅ fix typo
+        'class',
+        'class.studentacademics',
+        'class.studentacademics.personal',
+        'class.studentacademics.marks',       // ✅ add marks
+        'class.studentacademics.attendance',
+      // ✅ add attendance
+    ])->first();
+
+    return Inertia::render('Teacher/dashboard', [
+        'teacher' => $teacher
+    ]);
+}
 
     /**
      * Display a listing of teachers.
@@ -454,6 +454,35 @@ public function profile()
         ]);
     
     }
+
+    public function studentDetails()
+{
+    $teacher = auth()->user()->teacher;
+
+    if (!$teacher) {
+        return response()->json(['error' => 'Teacher not found'], 404);
+    }
+
+    $students = $teacher->class()
+        ->with(['studentacademics.personal', 'studentacademics.marks', 'studentacademics.attendance'])
+        ->get()
+        ->map(function ($class) {
+            return [
+                'class' => $class->name ?? $class->id,
+                'students' => $class->studentacademics->map(function ($studentAcademic) {
+                    return [
+                        'reg_no' => $studentAcademic->reg_no,
+                        'personal' => $studentAcademic->personal,
+                        'marks' => $studentAcademic->marks,
+                        'attendance' => $studentAcademic->attendance,
+                    ];
+                })
+            ];
+        });
+
+    return response()->json($students);
+}
+
 
 //     public function leavereqstore(Request $request)
 // {

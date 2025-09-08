@@ -191,7 +191,6 @@ Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('tea
 
     
 
-    
 
 Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
 Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
