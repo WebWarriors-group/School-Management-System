@@ -116,7 +116,7 @@ Route::post('/send-admission-form', function (Illuminate\Http\Request $request) 
 });
 
 Route::resources([
-    'student' => StudentController::class,
+    'students' => StudentController::class,
 ]);
 
 Route::post('import', [StudentController::class, 'import']);
