@@ -48,25 +48,37 @@ const [marksData, setMarksData] = useState<MarksItem[]>([]);
 useEffect(() => {
   if (!regNo) return;
 
-  setLoading(true); 
+  setLoading(true);
+  const controller = new AbortController();
 
-  fetch(`/api/student-marks/${regNo}`)
-    .then(res => res.json())
-    .then(data => {
-      if (Array.isArray(data)) {
-        setMarksData(data);
-      } else if (Array.isArray(data.data)) {
-        setMarksData(data.data);
-      } else {
-        setMarksData([]);
+  fetch(`/api/student/${regNo}/marks`, { signal: controller.signal })
+    .then(async (res) => {
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`HTTP ${res.status}: ${text?.slice(0, 200)}`);
       }
-      setLoading(false); 
+      return res.json();
     })
-    .catch(error => {
-      console.error(error);
+    .then((data) => {
+      // Accept several possible shapes
+      const possible = Array.isArray(data)
+        ? data
+        : Array.isArray((data as any)?.marks)
+        ? (data as any).marks
+        : Array.isArray((data as any)?.data)
+        ? (data as any).data
+        : [];
+      setMarksData(possible as MarksItem[]);
+      setLoading(false);
+    })
+    .catch((error) => {
+      if ((error as any)?.name === 'AbortError') return;
+      console.error('StudentOverallPerformanceChart fetch error:', error);
       setMarksData([]);
       setLoading(false);
     });
+
+  return () => controller.abort();
 }, [regNo]);
 
 
