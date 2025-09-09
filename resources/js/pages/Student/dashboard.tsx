@@ -656,7 +656,7 @@ useEffect(() => {
                 </h2>
                 <StudentPerformanceChart marksData={data.monthlyMarks ?? []} darkMode={darkMode} />
               </div>
-              <RealTimeChatBot />
+              <RealTimeChatBot darkMode={darkMode}/>
             </div>
           </div>
         </main>

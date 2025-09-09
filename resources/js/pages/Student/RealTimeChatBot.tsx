@@ -13,7 +13,7 @@ interface ChannelInstance {
 }
 
 interface PusherConnection {
-  bind: (event: string, callback: () => void) => void;
+  bind: (event: string, callback: (...args:any[]) => void) => void;
 }
 
 interface PusherWithConnection {
@@ -22,7 +22,10 @@ interface PusherWithConnection {
   disconnect: () => void;
 }
 
-const RealTimeChatBot = () => {
+interface RealTimeChatBotProps{
+    darkMode?:boolean;
+}
+const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
     const [messages, setMessages] = useState([
         {
             id:1,
@@ -101,6 +104,15 @@ const RealTimeChatBot = () => {
 
         };
         initPusher();
+        return () =>{
+            if(channelRef.current){
+                channelRef.current.unbind_all();
+                channelRef.current.unsubscribe();
+            }
+            if(pusherRef.current){
+                pusherRef.current.disconnect();
+            }
+        };
     } , []);
 
     useEffect(() => {
@@ -161,42 +173,43 @@ const RealTimeChatBot = () => {
  };
 
  return (
-<div className="bg-white p-5 rounded-xl shadow-sm">
+<div className={`p-5 rounded-xl shadow-sm ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
     <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800 flex items-center">
-            <MessageSquare className="mr-2 text-amber-600" size={20}/>AI Assistant
+       <h2 className={`text-lg font-bold flex items-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+            <MessageSquare className={`mr-2 ${darkMode ? 'text-amber-400' : 'text-amber-600'}`} size={20} />AI Assistant
         </h2>
         <div className="flex items-center">
             <div className={`w-2 h-2 rounded-full mr-2 ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}>
 
             </div>
-            <span className="text-xs text-gray-500">{isConnected ? 'Online': 'Offline'} </span>
+            <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{isConnected ? 'Online': 'Offline'} </span>
         </div>
     </div>
-<div className="h-64 overflow-y-auto mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+ <div className={`h-64 overflow-y-auto mb-4 p-3 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
     {messages.map((message) => (
         <div key = {message.id} className={`mb-3 flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-xs md:max-w-md rounded-xl px-4 py-2 ${message.sender === 'user' ? 'bg-amber-500 text-white rounded-br-none' : 'bg-white border border-gray-200 rounded-bl-none'}`}>
-                <div className="flex items-start"> {message.sender == 'bot' && <Bot className="mr-2 mt-0.5 text-amber-500"/>}
+            <div className={`max-w-xs md:max-w-md rounded-xl px-4 py-2 ${message.sender === 'user' ?  `${darkMode ? 'bg-amber-600 text-white rounded-br-none' : 'bg-amber-500 text-white rounded-br-none'}` : `${darkMode ? 'bg-gray-600 border-gray-500 rounded-bl-none' : 'bg-white border-gray-200 rounded-bl-none'}`}`}>
+                <div className="flex items-start"> {message.sender == 'bot' && <Bot className={`mr-2 mt-0.5 ${darkMode ? 'text-amber-400' : 'text-amber-500'}`} />}
                 <div>
-                <p>{message.text}</p>
-                <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-amber-100' : 'text-gray-500'}`}>{formatTime(message.timestamp)}</p>
+                 <p className={darkMode && message.sender === 'bot' ? 'text-gray-100' : ''}>{message.text}</p>
+                <p className={`text-xs mt-1 ${message.sender === 'user' ? `${darkMode ? 'text-amber-200' : 'text-amber-100'}` 
+                    : `${darkMode ? 'text-gray-400' : 'text-gray-500'}`}`}>{formatTime(message.timestamp)}</p>
             </div>
-            {message.sender === 'user' && <User size={16} className="ml-2 mt-0.5 text-amber-100"/>}
+      {message.sender === 'user' && <User size={16} className={`ml-2 mt-0.5 ${darkMode ? 'text-amber-200' : 'text-amber-100'}`} />}
                 </div>
             </div>
         </div>
     ))}
     {isLoading && (
     <div className="flex justify-start mb-3">
-        <div className="bg-white border border-gray-200 rounded-xl px-4 py-2 rounded-bl-none max-w-xs">
+       <div className={`rounded-xl px-4 py-2 rounded-bl-none max-w-xs ${darkMode ? 'bg-gray-600 border-gray-500' : 'bg-white border-gray-200'}`}>
             <div className="flex items-center">
-<Bot size={16} className="mr-2 text-amber-500"/>
+<Bot size={16} className={`mr-2 ${darkMode ? 'text-amber-400' : 'text-amber-500'}`} />
 <div className="flex space-x-1">
-    <div className='w-2 h-2 bg-gray-400 rounded-full animate-bounce'></div>
+                  <div className={`w-2 h-2 rounded-full animate-bounce ${darkMode ? 'bg-gray-400' : 'bg-gray-400'}`}></div>
     
-        <div className='w-2 h-2 bg-gray-400 rounded-full animate-bounce' style={{ animationDelay: '0.2s' }}></div>
-        <div className='w-2 h-2 bg-gray-400 rounded-full animate-bounce' style={{ animationDelay: '0.4s' }}></div>
+        <div className={`w-2 h-2 rounded-full animate-bounce ${darkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '0.2s' }}></div>
+         <div className={`w-2 h-2 rounded-full animate-bounce ${darkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '0.4s' }}></div>
     
 </div>
         </div>
@@ -210,13 +223,17 @@ const RealTimeChatBot = () => {
 <input
 type='text'
 value={inputText}
-className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+className={`flex-1 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 ${darkMode 
+            ? 'bg-gray-700 border-gray-600 text-white focus:ring-amber-500' 
+            : 'border-gray-300 focus:ring-amber-400'}`}
 onChange={(e) => setInputText(e.target.value)}
 placeholder="Type...." 
 disabled={!isConnected}/>
 
 <button type='submit'
-className="bg-amber-500 text-white px-4 py-2 rounded-r-lg hover:bg-amber-600 transition-colors disabled:bg-amber-300"
+className={`flex-1 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 ${darkMode 
+            ? 'bg-gray-700 border-gray-600 text-white focus:ring-amber-500' 
+            : 'border-gray-300 focus:ring-amber-400'}`}
 disabled={!inputText.trim() || isLoading || !isConnected}>
     <Send size={18}/>
 
