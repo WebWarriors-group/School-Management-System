@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
         'id' => $request->user()->id,
         'name' => $request->user()->name,
-        'role' => $request->user()->role,
+        'role' => $request->user()->role,        
     ]);
 });
 
@@ -119,7 +119,7 @@ Route::resources([
     'students' => StudentController::class,
 ]);
 
-Route::post('import', [StudentController::class, 'import']);
+Route::post('students/import', [StudentController::class, 'import']);
 
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 

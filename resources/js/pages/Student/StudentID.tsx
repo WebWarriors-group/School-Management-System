@@ -55,7 +55,7 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
     };
 
     return (
-        <div className="fixed inset-0 bg-gray-200  flex items-center justify-center z-50 ">
+        <div className="min-h-screen flex items-center justify-center mt-10">
           
           
       <div

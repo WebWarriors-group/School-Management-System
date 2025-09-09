@@ -14,8 +14,11 @@ class StudentAcademic extends Model
     protected $table = 'student_academic_info';
     protected $primaryKey = 'reg_no';
     public $incrementing = false;
-    protected $keyType = 'integer';
-    protected $casts = ['admission_date' => 'date'];
+    protected $keyType = 'string';
+    protected $casts = [
+        'admission_date' => 'date',
+        'reg_no' => 'int',
+    ];
     protected $fillable = [
         'user_id',
         'reg_no',

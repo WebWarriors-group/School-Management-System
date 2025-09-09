@@ -60,7 +60,7 @@ class StudentController extends Controller
 
     public function academicPage()
     {
-        $academicData = StudentAcademic::paginate(10);
+        $academicData = StudentAcademic::paginate(200);
         return Inertia::render('Student/AcademicTable', [
             'academicData' => $academicData,
             'filters' => ['search' => '']
@@ -69,7 +69,7 @@ class StudentController extends Controller
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::paginate(10);
+        $students = StudentAcademic::paginate(205);
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
@@ -164,12 +164,27 @@ class StudentController extends Controller
     public function import(Request $request)
     {
         $request->validate(['file' => 'required|file|mimes:xlsx,xls,csv']);
+
         try {
-            Excel::import(new StudentsImport, $request->file('file'));
-            return response()->json(['message' => 'Students imported successfully!']);
+            $import = new StudentsImport();
+            Excel::import($import, $request->file('file'));
+
+            $failures = method_exists($import, 'failures') ? $import->failures() : collect();
+
+            return response()->json([
+                'message' => 'Students imported successfully!',
+                'failures' => $failures->map(function($f){
+                    return [
+                        'row' => $f->row(),
+                        'attribute' => $f->attribute(),
+                        'errors' => $f->errors(),
+                        'values' => $f->values(),
+                    ];
+                }),
+            ]);
         } catch (\Throwable $e) {
             \Log::error('Student import failed', ['error' => $e->getMessage()]);
-            return response()->json(['message' => 'Import failed.'], 500);
+            return response()->json(['message' => 'Import failed.', 'error' => $e->getMessage()], 500);
         }
     }
 

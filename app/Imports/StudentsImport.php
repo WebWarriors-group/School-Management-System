@@ -14,8 +14,10 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
 
     public function model(array $row)
     {
+        $regNo = is_numeric($row['reg_no'] ?? null) ? (int) $row['reg_no'] : null;
+
         return StudentAcademic::updateOrCreate(
-            ['reg_no' => $row['reg_no']],
+            ['reg_no' => $regNo],
             [
                 'class_id' => $row['class_id'],
                 'distance_to_school' => $row['distance_to_school'],
@@ -30,9 +32,8 @@ class StudentsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            'reg_no' => 'required|integer',
+            'reg_no' => ['required', 'digits:4'],
             'class_id' => 'required|integer',
-           
         ];
     }
 }
