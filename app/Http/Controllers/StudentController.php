@@ -482,4 +482,5 @@ public function exportExcel()
     return Excel::download(new StudentExport, 'student_profile.xlsx');
 }
 
+
 }

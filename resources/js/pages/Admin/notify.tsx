@@ -44,6 +44,7 @@ const NotificationListener: React.FC = () => {
       console.log('No userId, exiting listener setup');
       return;
     }
+
    const  key=import.meta.env.VITE_REVERB_APP_KEY;
    const    host= import.meta.env.VITE_REVERB_HOST;
    const    port=import.meta.env.VITE_REVERB_PORT;
@@ -55,6 +56,15 @@ console.log('Environment variables:', {
     console.error('Reverb app key is missing in environment variables');
     return;
   }
+
+console.log('Environment variables:', {
+      key: import.meta.env.VITE_REVERB_APP_KEY,
+      host: import.meta.env.VITE_REVERB_HOST,
+      port: import.meta.env.VITE_REVERB_PORT,
+      scheme: import.meta.env.VITE_REVERB_SCHEME
+    });
+
+
     if (!window.Echo) {
       console.log('Initializing Pusher & Echo with key:', import.meta.env.VITE_PUSHER_APP_KEY);
       window.Pusher = Pusher;

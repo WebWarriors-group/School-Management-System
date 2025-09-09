@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StudyMaterial;
 use Illuminate\Support\Facades\Auth;
+
 use App\Events\StudyMaterialUploaded;
 use Illuminate\Validation\ValidationException;
 use Exception;
@@ -29,6 +30,7 @@ class StudyMaterialController extends Controller
         $materials = StudyMaterial::with('uploaded_by:id,name,role')
             ->where('category', $category)
             ->get();
+
         if ($user->role == 'student'){
             return Inertia::render('Student/studyMaterialIndex', [
                 'category' => $category,
@@ -40,6 +42,7 @@ class StudyMaterialController extends Controller
                 'materials' => $materials,
             ]);
         }
+
     }
 
     /**

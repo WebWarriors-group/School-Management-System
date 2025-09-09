@@ -11,6 +11,7 @@ interface AppLayoutProps {
   auth?: {
         user: any; 
 }
+
 }
 export default ({ children, breadcrumbs, auth, ...props }: AppLayoutProps) => {
   const { auth:authFromPage } = usePage().props;
@@ -23,3 +24,4 @@ return(
     </AppLayoutTemplate>
   </>
 );}
+
