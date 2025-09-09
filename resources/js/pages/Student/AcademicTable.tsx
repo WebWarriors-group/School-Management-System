@@ -53,8 +53,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   };
 
   const handleViewIconClick = async (e: React.MouseEvent, reg_no: number) => {
-    e.stopPropagation(); // Prevent row click from triggering
-    
+    e.stopPropagation(); 
     try {
       const response = await fetch(`/api/students/${reg_no}`);
       const data = await response.json();

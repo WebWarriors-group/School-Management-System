@@ -119,7 +119,7 @@ Route::resources([
     'students' => StudentController::class,
 ]);
 
-Route::post('import', [StudentController::class, 'import']);
+Route::post('students/import', [StudentController::class, 'import']);
 
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 

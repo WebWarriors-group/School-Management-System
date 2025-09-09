@@ -60,7 +60,7 @@ class StudentController extends Controller
 
     public function academicPage()
     {
-        $academicData = StudentAcademic::paginate(10);
+        $academicData = StudentAcademic::paginate(200);
         return Inertia::render('Student/AcademicTable', [
             'academicData' => $academicData,
             'filters' => ['search' => '']
@@ -69,7 +69,7 @@ class StudentController extends Controller
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::paginate(10);
+        $students = StudentAcademic::paginate(200);
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
