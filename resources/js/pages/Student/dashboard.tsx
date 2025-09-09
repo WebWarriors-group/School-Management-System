@@ -654,7 +654,7 @@ useEffect(() => {
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Monthly Performance
                 </h2>
-                <StudentPerformanceChart marksData={data.monthlyMarks ?? []} />
+                <StudentPerformanceChart marksData={data.monthlyMarks ?? []} darkMode={darkMode} />
               </div>
               <RealTimeChatBot />
             </div>
