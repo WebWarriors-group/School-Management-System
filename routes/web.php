@@ -70,6 +70,8 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
     });
 });
 
+// routes/api.php
+Route::get('/student-gender-stats', [TeacherController::class, 'studentGenderStats']);
 
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 

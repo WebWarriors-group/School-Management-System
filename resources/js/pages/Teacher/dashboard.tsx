@@ -15,20 +15,33 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
+type StudentAcademic = {
+  reg_no: string;
+  class_name: string;
+  personal?: { Full_name: string; Gender: string; Photo?: string };
+  marks?: { subject: string; marks_obtained: number }[];
+  attendance?: { date: string; status: string }[];
+};
+
+type ClassModel = {
+  class_id: string;
+  class_name: string;
+  grade: number;
+  section:string;
+  studentacademics?: StudentAcademic[];
+};
+
 type Teacher = {
   teacher_NIC: string;
   user_id: number;
-  class?: any[]; // each class contains students
-  personal: {
-    Full_name: string;
-    Photo: string | null;
-    Gender: string;
-  };
+  class?: ClassModel[]; // <--- updated type
+  personal: { Full_name: string; Photo: string | null; Gender: string };
   appointed_subject: string;
   current_teaching_subject: string;
   other_subjects_taught: string;
   assigned_class: string;
 };
+
 
 type Task = { id: number; text: string; completed: boolean };
 type LeaveRequest = { status: string; leave_type: string; leave_start_date: string; leave_end_date: string };
@@ -51,39 +64,52 @@ export default function Dashboard({ teacher }: { teacher: Teacher }) {
   const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
 
   // Keep students as actual student objects
-  const students = teacher.class?.flatMap((cls: any) => cls.students || []) ?? [];
+// Fixed: works whether teacher.class is an object or array
+const students = Array.isArray(teacher.class)
+  ? teacher.class.flatMap(cls => cls.studentacademics ?? [])
+  : teacher.class?.studentacademics ?? [];
 
-  // Gender distribution for Pie Chart
-  const genderCounts = students.reduce(
-    (acc, student) => {
-      const gender = student.personal?.Gender?.toLowerCase(); 
-      if (gender === 'male' || gender === 'm') acc.males += 1;
-      else if (gender === 'female' || gender === 'f') acc.females += 1;
-      return acc;
-    },
-    { males: 0, females: 0 }
-  );
+const [genderData, setGenderData] = useState<any[]>([]);
 
-  const genderData = [
-    { name: 'Boys', value: genderCounts.males },
-    { name: 'Girls', value: genderCounts.females },
-  ];
+
+console.log('teacher:', teacher);
+  console.log('students:', students);
+  console.log('genderData:', genderData);
+  console.log('teacher.class:', teacher.class);
+
+
+
+
+useEffect(() => {
+  const stats = students.reduce((acc: Record<string, number>, s: StudentAcademic) => {
+    const gender = s.personal?.gender ?? 'Unknown'; // lowercase 'gender'
+    acc[gender] = (acc[gender] || 0) + 1;
+    return acc;
+  }, {});
+
+  const formatted = Object.entries(stats).map(([name, value]) => ({ name, value }));
+  setGenderData(formatted);
+}, [students]);
+
+
 
   const COLORS = ['#CC7722', '#FFBF00', '#34d399'];
 
   // Calculate Average Marks for Teacher's Assigned Class
-  const assignedClassStudents = students.filter(
-    (s: any) => s.class_name === teacher.assigned_class
-  );
+  
+const assignedClassStudents = students.filter(
+  (s: StudentAcademic) => s.class_name === teacher.assigned_class
+);
+
 
 const assignedClassAvg =
   assignedClassStudents.length > 0
-    ? assignedClassStudents.reduce((sum, student: any) => {
-        const totalMarks = student.studentacademics?.reduce(
+    ? assignedClassStudents.reduce((sum: number, student: any) => {
+        const totalMarks = student.marks?.reduce(
           (acc: number, m: any) => acc + (m.marks_obtained ?? 0),
           0
         ) ?? 0;
-        const marksCount = student.studentacademics?.length || 1;
+        const marksCount = student.marks?.length || 1;
         return sum + totalMarks / marksCount;
       }, 0) / assignedClassStudents.length
     : 0;
@@ -346,7 +372,7 @@ const assignedClassAvg =
               }, {
                 label: 'Other Subjects', value: teacher.other_subjects_taught ?? 'None', icon: '📙', color: 'yellow'
               }, {
-                label: 'Class Assigned', value:  teacher.assigned_class ?? 'Not Assigned', icon: '🏫', color: 'purple'
+                label: 'Class Assigned', value:  [teacher.class?.grade ?? 'Not Assigned',teacher.class?.section ?? 'Not Assigned'], icon: '🏫', color: 'purple'
               }].map(({ label, value, icon, color }) => (
                 <div key={label} className={`flex items-center bg-${color}-50 border-l-4 border-${color}-600 p-4 rounded shadow-md`}>
                   <div className={`text-${color}-600 text-2xl mr-4`}>{icon}</div>
@@ -364,25 +390,30 @@ const assignedClassAvg =
             <h2 className="text-2xl font-bold text-red-700 mb-4">📚 Student Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-              {/* Gender Pie Chart */}
               <div className="bg-gray-50 rounded-lg shadow p-4 flex justify-center items-center">
-                <PieChart width={200} height={200}>
-                  <Pie
-                    data={genderData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {genderData.map((_entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </div>
+  {genderData.length > 0 ? (
+  <PieChart width={250} height={250}>
+    <Pie
+      data={genderData}
+      cx="50%"
+      cy="50%"
+      outerRadius={90}
+      dataKey="value"
+      label={({ name, value }) => `${name}: ${value}`}
+    >
+      {genderData.map((_entry, index) => (
+        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+      ))}
+    </Pie>
+    <Tooltip formatter={(value) => `${value} Students`} />
+    <Legend />
+  </PieChart>
+) : (
+  <p className="text-gray-400">No data to display</p>
+)}
+
+</div>
+
 
               {/* Marks Box */}
               <div className="bg-gray-50 rounded-lg shadow p-4">
@@ -398,7 +429,7 @@ const assignedClassAvg =
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📈 Performance</h3>
                 <p className="text-sm text-gray-700">
-                  Class Average for {teacher.assigned_class}: <strong>{assignedClassAvg.toFixed(2)}</strong>
+                  Class Average for {teacher.class?.grade ?? 'Not Assigned'}: <strong>{assignedClassAvg.toFixed(2)}</strong>
                 </p>
               </div>
 
@@ -423,22 +454,31 @@ const assignedClassAvg =
                     <tr>
                       <th className="px-4 py-2 border">Name</th>
                       <th className="px-4 py-2 border">Gender</th>
-                      <th className="px-4 py-2 border">Class</th>
+                      {/* <th className="px-4 py-2 border">Class</th> */}
                       <th className="px-4 py-2 border">Average Marks</th>
                       <th className="px-4 py-2 border">Attendance</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {students.map((student: any) => (
-                      <tr key={student.reg_no}>
-                        <td>{student.personal?.Full_name}</td>
-                        <td>{student.personal?.Gender}</td>
-                        <td>{student.class_name ?? '—'}</td>
-                        <td>—</td>
-                        <td>—</td>
-                      </tr>
-                    ))}
-                  </tbody>
+<tbody>
+  {students.map((student: any) => (
+    <tr key={student.reg_no}>
+      <td>{student.personal?.full_name ?? 'Not Assigned'}</td>
+      <td>{student.personal?.gender ?? '—'}</td>
+      {/* <td>{teacher.class.class_name ?? '—'}</td> */}
+      <td>
+        {student.marks?.length
+          ? (student.marks.reduce((sum: number, m: any) => sum + (m.marks_obtained ?? 0), 0) / student.marks.length).toFixed(2)
+          : '—'}
+      </td>
+      <td>
+        {student.attendance?.length > 0
+          ? `${student.attendance.length} days`
+          : 'No records'}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
                 </table>
               </div>
             </div>

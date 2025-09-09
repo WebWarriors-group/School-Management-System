@@ -13,37 +13,55 @@ use App\Models\TeacherRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\TeacherLeaveRequest;
 
 class TeacherController extends Controller
 {
 
-    public function dashboard()
+public function dashboard()
 {
-    $user = Auth::user();
+    try {
+        $user = Auth::user();
 
-    if (!$user->teacher()->exists()) {
-        return redirect()->route('add-teacher');
-    }
+        if (!$user->teacher()->exists()) {
+            return redirect()->route('add-teacher');
+        }
 
-    $teacher = $user->teacher()->with([
-        'teachersaddress',
-        'personal',
-        'qualifications',
-        'teacherotherservice', // ✅ fix typo
-        'class',
-        'class.studentacademics',
-        'class.studentacademics.personal',
-        'class.studentacademics.marks',       // ✅ add marks
-        'class.studentacademics.attendance',
-      // ✅ add attendance
-    ])->first();
+        $teacher = $user->teacher()->with([
+            'teachersaddress',
+            'personal',
+            'qualifications',
+            'teacherotherservice',
+            'class',
+            'class.studentacademics',
+            'class.studentacademics.personal',
+            'class.studentacademics.marks',
+            'class.studentacademics.attendance',
+        ])->first();
+//  dd($teacher->toArray());
 
-    return Inertia::render('Teacher/dashboard', [
-        'teacher' => $teacher
-    ]);
+        return Inertia::render('Teacher/dashboard', [
+    'teacher' => $teacher,
+]);
+
+    } catch (\Exception $e) {
+    dd($e->getMessage(), $e->getTraceAsString());
 }
+
+    
+}
+
+
+public function getGenderStats(): JsonResponse
+    {
+        $stats = DB::table('students_personal_info')
+            ->select('gender', DB::raw('count(*) as count'))
+            ->groupBy('gender')
+            ->get();
+
+        return response()->json($stats);
+    }
 
     /**
      * Display a listing of teachers.
@@ -444,6 +462,7 @@ public function profile()
             'teacher_NIC' => $teacher_NIC
         ]);
     }
+    
     
     public function getTeacherCount():JsonResponse
     {

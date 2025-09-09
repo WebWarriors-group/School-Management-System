@@ -177,7 +177,7 @@ const handleReject = (id: number) => {
                   onClick={() => setExpanded(!expanded)}
                   className="flex items-center gap-2 text-blue-600 hover:underline"
                 >
-                  <span>{expanded ? "▼" : "▶"}</span>
+                  <span>{expanded ? "▼" : "->"}</span>
                   View Teacher Details
                 </button>
 
