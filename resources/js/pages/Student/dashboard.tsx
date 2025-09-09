@@ -562,7 +562,7 @@ useEffect(() => {
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Academic Performance
                 </h2>
-                <StudentOverallPerformanceChart regNo={student?.reg_no ?? String(user.id)} />
+                <StudentOverallPerformanceChart regNo={student?.reg_no ?? String(user.id)} darkMode={darkMode}/>
               </div>
 
            
