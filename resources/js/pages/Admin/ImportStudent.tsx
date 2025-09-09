@@ -1,4 +1,3 @@
-
 import { useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { Toaster, toast } from "sonner";
@@ -54,6 +53,8 @@ const REQUIRED_COLUMNS = [
                           try {
                     if (!event.target?.result) throw new Error("Failed to read file");                  
                             const arrayBuffer = event.target.result;
+                            const arrayBuffer1 = event.target.result;
+                            
                             const workbook = XLSX.read(arrayBuffer, { type: 'array' });
                             const sheetName = workbook.SheetNames[0];
                             const sheet = workbook.Sheets[sheetName];
@@ -127,10 +128,19 @@ const missingColumns = REQUIRED_COLUMNS.filter(col => !headers.includes(col.toLo
             }
 
             if (response.ok) {
-                toast.success("🎉 Students imported Successfully!");
-                fetchStudents();
-                resetFileInput();
-                onClose();
+                const failures = Array.isArray(data?.failures) ? data.failures : [];
+                if (failures.length > 0) {
+                    toast.warning(`Imported with ${failures.length} row errors. Check details below.`);
+                    setValidationErrors(
+                        failures.map((f: any) => `Row ${f.row} [${f.attribute}]: ${f.errors.join(', ')}`)
+                    );
+                    // Keep the dialog open to show errors
+                } else {
+                    toast.success("🎉 Students imported successfully!");
+                    fetchStudents();
+                    resetFileInput();
+                    onClose();
+                }
             } else {
                 const message = data?.message || "Import Failed!";
                 const errorDetails = data?.error || data?.details;
@@ -151,8 +161,8 @@ const downloadSampleFile = () => {
         const wb = XLSX.utils.book_new();
         const sampleData = [
             REQUIRED_COLUMNS,
-            ["STU001", "CLASS-A", "2.5", "Bus", "Yes", "No", "Yes"],
-            ["STU002", "CLASS-B", "1.2", "Walking", "No", "Yes", "No"]
+            ["STU001", 101, 2.5, "Bus", "Yes", "No", "Yes"],
+            ["STU002", 102, 1.2, "Walking", "No", "Yes", "No"]
         ];
         const ws = XLSX.utils.aoa_to_sheet(sampleData);
         XLSX.utils.book_append_sheet(wb, ws, "Students");

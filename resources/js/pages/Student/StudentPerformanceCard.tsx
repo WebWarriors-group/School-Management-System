@@ -161,8 +161,8 @@ export default function StudentPerformanceCard({ student, onClose }: Props) {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-100">
-                  {student.marks.map((mark) => (
-                    <tr key={mark.subject_id} className="hover:bg-sky-100">
+                  {student.marks.map((mark, idx) => (
+                    <tr key={`${mark.subject_id}-${idx}`} className="hover:bg-sky-100">
                       <td className="px-6 py-4 text-sm text-gray-700">{mark.subject_id}</td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">{mark.subject_name}</td>
                       <td className="px-6 py-4 text-sm text-right text-blue-700 font-semibold">{mark.marks_obtained}</td>
