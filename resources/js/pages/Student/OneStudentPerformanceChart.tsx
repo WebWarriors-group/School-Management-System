@@ -13,16 +13,19 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip,
 
 type Props = {
   marksData: { month: number; avg_marks: number }[];
+
   darkMode?:boolean;
 };
 
 export default function StudentPerformanceChart({ marksData , darkMode = false}: Props) {
+
   const chartData = {
     labels: marksData.map((d) => `Month ${d.month}`),
     datasets: [
       {
         label: 'Average Marks',
         data: marksData.map((d) => d.avg_marks),
+
         borderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgb(59, 130, 246)',
         backgroundColor: darkMode ? 'rgba(251, 191, 36, 0.2)' : 'rgba(59, 130, 246, 0.5)',
         fill: true,
@@ -77,6 +80,7 @@ export default function StudentPerformanceChart({ marksData , darkMode = false}:
     <div className={`p-4 shadow-md rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
 <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Performance Over Months</h3>
       <div style={{ height: '300px' }}><Line data={chartData} options={options} /></div>
+
     </div>
   );
 }

@@ -1,7 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
+
 import { Head, Link,usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { PageProps as InertiaPageProps} from '@inertiajs/core';
+
 import RealTimeChatBot from './RealTimeChatBot';
 import {
   Facebook, Mail, MapPin, Menu, X,
@@ -10,6 +12,7 @@ import {
   Bell, MessageSquare, Settings, LogOut, Sun, Moon, Search
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
+
 import StudentOverallPerformanceChart from "./StudentOverallPerformanceChart";
 import StudentPerformanceChart from './OneStudentPerformanceChart';
 import SummaryCard from './SummaryCard';
@@ -36,13 +39,23 @@ interface DashboardData {
   monthlyMarks: { month: number; avg_marks: number }[];
 }
 
+interface DashboardData {
+  classes: any[];
+  upcomingExams: any[];
+  latestGrades: { marks_obtained: number }[];
+  feeStatus?: { status: string };
+  scholarship?: { status: string };
+  monthlyMarks: { month: number; avg_marks: number }[];
+}
+
 export default function StudentDashboard() {
   const user = usePage().props.auth.user;
 const { student} = usePage().props as DashboardPageProps;
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [darkMode, setDarkMode] = useState(false);
 
-  // Initialize theme from localStorage on mount to avoid hydration issues
+  
   useEffect(() => {
     try {
       const stored = localStorage.getItem("theme");
@@ -51,6 +64,7 @@ const { student} = usePage().props as DashboardPageProps;
       }
     } catch {}
   }, []);
+
 
   useEffect(() => {
     if (darkMode) {
@@ -74,7 +88,6 @@ const { student} = usePage().props as DashboardPageProps;
       { month: 3, avg_marks: 82 }
     ]
   });
-  
 
 
    const [searchTerm, setSearchTerm] = useState("");
@@ -86,7 +99,7 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // Courses modal state
+
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [subjects, setSubjects] = useState<any[]>([]);
   const [subjectsLoading, setSubjectsLoading] = useState(false);
@@ -94,12 +107,13 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
   const [subjectsQuery, setSubjectsQuery] = useState("");
 
 
+
   const notifications = [
     { id: 1, title: 'Science Assignment', description: 'Due tomorrow at 9:00 AM', time: '2 hours ago' },
     { id: 2, title: 'Parent Meeting', description: 'Scheduled for Friday 10 AM', time: '1 day ago' },
     { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
   ];
-  
+
  const handleSearch = (query: string) => {
     setSearchTerm(query);
     if (!query) return setSearchResults([]);
@@ -112,6 +126,7 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
     ];
     setSearchResults(data.filter(item => item.label.toLowerCase().includes(query.toLowerCase())));
   };
+
   const getAverageGrade =(marks:any[]) => {
     if(!marks?.length) return 'N/A';
     const gradeToPoints: Record<string,number> = {
@@ -130,13 +145,16 @@ const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
 
   }
 
+
   if (!data) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   const infoCards = [
+
     { id: 1, label: 'Class Enrolled', value: student.class?.class_name ??'N/A', icon: <Users size={24} />, color: 'bg-blue-100 text-blue-600' },
     { id: 2, label: 'Scholarship', value: student?.scholarship_status ?? 'N/A', icon: <Award size={24} />, color: 'bg-amber-100 text-amber-600' },
     { id: 3, label: 'Attendance', value: '96%', icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
     { id: 4, label: 'Avg Grade', value: getAverageGrade(student.marks), icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
+
   ];
   
 const [currentDateTime,setCurrentDateTime] = useState('');
@@ -164,6 +182,7 @@ useEffect(() => {
 
 },[]);
 
+
 //  useEffect(() => {
 //   fetch(`/api/student/personal/${user.id}`)
 //     .then(async (res) => {
@@ -181,9 +200,11 @@ useEffect(() => {
 // }, [user.id]);
 
 
+
   return (
     <AppLayout breadcrumbs={breadcrumbs} auth={usePage().props.auth}>
       <Head title="Student Dashboard" />
+
 
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
         <div className="font-medium text-center md:text-left">
@@ -220,9 +241,11 @@ useEffect(() => {
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="p-2 rounded-full hover:bg-amber-600 dark:hover:bg-gray-700 transition"
+
               aria-label="Toggle dark mode"
               aria-pressed={darkMode}
               title="Toggle theme"
+
             >
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
@@ -230,15 +253,16 @@ useEffect(() => {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden text-amber-300 bg-[#7a0000] p-2 rounded-lg hover:bg-[#5a0000] transition-colors"
+
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
+
             >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </nav>
-
 
       {menuOpen && (
         <div className="bg-white dark:bg-gray-800 text-black px-4 py-3 md:hidden shadow-lg">
@@ -259,18 +283,22 @@ useEffect(() => {
         </div>
       )}
 
+
   
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
    
+
         <div className="w-full lg:w-64 p-4 bg-white dark:bg-gray-800 shadow-lg lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <h2 className="text-lg font-bold text-amber-700 mb-4 flex items-center">
             <User className="mr-2" size={20} /> Student Menu
           </h2>
           <div className="space-y-1">
             {[
+
               { name: 'Dashboard', icon: <Home size={18} />, onClick: () => {} },
               { name: 'Courses', icon: <Book size={18} />, onClick: () => setCoursesOpen(true) },
               { name: 'Assignments', icon: <ClipboardList size={18} />, onClick: () => {} },
+
               { name: 'Grades', icon: <BarChart2 size={18} /> },
               { name: 'Attendance', icon: <CalendarCheck size={18} /> },
               { name: 'Messages', icon: <MessageSquare size={18} /> },
@@ -284,9 +312,10 @@ useEffect(() => {
                   ? 'bg-amber-100 text-amber-700 font-medium'
                   : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
                   }`}
+
                 onClick={item.onClick}
                 type="button"
-              >
+>
                 <span className="mr-3">{item.icon}</span>
                 {item.name}
               </button>
@@ -355,6 +384,7 @@ useEffect(() => {
             )}
           </div>
 
+
           <div className="flex space-x-4 border-b border-gray-200 mb-6 pb-2">
             {['Profile', 'Attendance', 'Marks', 'Fees'].map((tab, idx) => (
               <button
@@ -366,13 +396,13 @@ useEffect(() => {
             ))}
           </div>
 
-        
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {infoCards.map((card) => (
               <div
                 key={card.id}
                 className={`p-5 rounded-xl shadow-sm transition-all hover:shadow-md cursor-pointer ${card.color}`}
+
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -386,6 +416,7 @@ useEffect(() => {
               </div>
             ))}
           </div>
+
 
 
 <Dialog open={attendanceModalOpen} onClose={() => setAttendanceModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
@@ -634,7 +665,7 @@ useEffect(() => {
 </button>
               </div>
 
-          
+
               <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
                   <FileText className="mr-2 text-amber-600" size={20} />
@@ -648,15 +679,17 @@ useEffect(() => {
                 </div>
               </div>
 
-          
+
               <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm">
                 <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Monthly Performance
                 </h2>
+
                 <StudentPerformanceChart marksData={data.monthlyMarks ?? []} darkMode={darkMode} />
               </div>
               <RealTimeChatBot darkMode={darkMode}/>
+
             </div>
           </div>
         </main>

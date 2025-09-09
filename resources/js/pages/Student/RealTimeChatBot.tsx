@@ -13,7 +13,9 @@ interface ChannelInstance {
 }
 
 interface PusherConnection {
+
   bind: (event: string, callback: (...args:any[]) => void) => void;
+
 }
 
 interface PusherWithConnection {
@@ -22,10 +24,12 @@ interface PusherWithConnection {
   disconnect: () => void;
 }
 
+
 interface RealTimeChatBotProps{
     darkMode?:boolean;
 }
 const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
+
     const [messages, setMessages] = useState([
         {
             id:1,
@@ -104,6 +108,7 @@ const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
 
         };
         initPusher();
+
         return () =>{
             if(channelRef.current){
                 channelRef.current.unbind_all();
@@ -113,6 +118,7 @@ const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
                 pusherRef.current.disconnect();
             }
         };
+
     } , []);
 
     useEffect(() => {
@@ -173,15 +179,18 @@ const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
  };
 
  return (
+
 <div className={`p-5 rounded-xl shadow-sm ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
     <div className="flex justify-between items-center mb-4">
        <h2 className={`text-lg font-bold flex items-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             <MessageSquare className={`mr-2 ${darkMode ? 'text-amber-400' : 'text-amber-600'}`} size={20} />AI Assistant
+
         </h2>
         <div className="flex items-center">
             <div className={`w-2 h-2 rounded-full mr-2 ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}>
 
             </div>
+
             <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{isConnected ? 'Online': 'Offline'} </span>
         </div>
     </div>
@@ -196,12 +205,14 @@ const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
                     : `${darkMode ? 'text-gray-400' : 'text-gray-500'}`}`}>{formatTime(message.timestamp)}</p>
             </div>
       {message.sender === 'user' && <User size={16} className={`ml-2 mt-0.5 ${darkMode ? 'text-amber-200' : 'text-amber-100'}`} />}
+
                 </div>
             </div>
         </div>
     ))}
     {isLoading && (
     <div className="flex justify-start mb-3">
+
        <div className={`rounded-xl px-4 py-2 rounded-bl-none max-w-xs ${darkMode ? 'bg-gray-600 border-gray-500' : 'bg-white border-gray-200'}`}>
             <div className="flex items-center">
 <Bot size={16} className={`mr-2 ${darkMode ? 'text-amber-400' : 'text-amber-500'}`} />
@@ -210,6 +221,7 @@ const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
     
         <div className={`w-2 h-2 rounded-full animate-bounce ${darkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '0.2s' }}></div>
          <div className={`w-2 h-2 rounded-full animate-bounce ${darkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '0.4s' }}></div>
+
     
 </div>
         </div>
@@ -223,9 +235,11 @@ const RealTimeChatBot = ({darkMode = false}:RealTimeChatBotProps) => {
 <input
 type='text'
 value={inputText}
+
 className={`flex-1 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 ${darkMode 
             ? 'bg-gray-700 border-gray-600 text-white focus:ring-amber-500' 
             : 'border-gray-300 focus:ring-amber-400'}`}
+
 onChange={(e) => setInputText(e.target.value)}
 placeholder="Type...." 
 disabled={!isConnected}/>
@@ -234,6 +248,7 @@ disabled={!isConnected}/>
 className={`flex-1 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 ${darkMode 
             ? 'bg-gray-700 border-gray-600 text-white focus:ring-amber-500' 
             : 'border-gray-300 focus:ring-amber-400'}`}
+
 disabled={!inputText.trim() || isLoading || !isConnected}>
     <Send size={18}/>
 

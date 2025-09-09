@@ -18,6 +18,7 @@ const eventColors: Record<EventType, string> = {
   'Assignment': 'bg-blue-100 text-blue-700',
   'Holiday': 'bg-green-100 text-green-700'
 };
+
 const eventColorsDark: Record<EventType, string> = {
   'Exam': 'bg-red-900/30 text-red-300',
   'Fee Due': 'bg-yellow-900/30 text-yellow-300',
@@ -25,6 +26,7 @@ const eventColorsDark: Record<EventType, string> = {
   'Holiday': 'bg-green-900/30 text-green-300'
 };
 export default function CalendarView({darkMode = false}) {
+
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedEvents, setSelectedEvents] = useState<CalendarEvent[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -39,6 +41,7 @@ useEffect(() => {
   ]);
 }, []);
   useEffect(() => {
+
     const controller = new AbortController();
     fetch('/api/student/calendar', { signal: controller.signal })
       .then(async (res) => {
@@ -88,12 +91,15 @@ useEffect(() => {
       });
 
     return () => controller.abort();
+
   }, []);
 
   const tileContent = ({ date }: { date: Date }) => {
     const event = events.find(e => new Date(e.date).toDateString() === date.toDateString());
     return event ? (
+
       <span className={`block w-full text-center rounded text-xs font-semibold ${darkMode ? eventColorsDark[event.type] : eventColors[event.type]}`}>
+
         {event.type}
       </span>
     ) : null;
@@ -108,6 +114,7 @@ useEffect(() => {
   };
 
   return (
+
     <div className={`p-4 shadow-md rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
       <h2 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Academic Calendar</h2>
       <div className={darkMode ? "dark-calendar" : ""}>
@@ -131,13 +138,17 @@ useEffect(() => {
                   </span>
                   {event.title && <p className={`mt-2 font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>{event.title}</p>}
                  {event.description && <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>{event.description}</p>}
+  {event.description && <p className="text-gray-500 text-sm">{event.description}</p>}
+
                 </div>
               ))}
             </div>
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowModal(false)}
+
                  className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-amber-600 hover:bg-amber-700' : 'bg-amber-500 hover:bg-amber-600'} text-white`}
+
               >
                 Close
               </button>
@@ -145,6 +156,7 @@ useEffect(() => {
           </div>
         </div>
       )}
+
       {darkMode && (
        <style>
           {`
@@ -186,6 +198,7 @@ useEffect(() => {
           `}
         </style>
       )}
+
     </div>
   );
 }
