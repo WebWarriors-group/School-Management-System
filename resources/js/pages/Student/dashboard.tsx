@@ -181,8 +181,71 @@ useEffect(() => {
   return () => clearInterval(intervalId);
 
 },[]);
+// Add to your existing state declarations
+const [teachers, setTeachers] = useState<any[]>([]);
+const [teachersModalOpen, setTeachersModalOpen] = useState(false);
+const [teachersLoading, setTeachersLoading] = useState(false);
+const [teachersError, setTeachersError] = useState<string | null>(null);
 
+const fetchTeachers = async () => {
+  setTeachersLoading(true);
+  setTeachersError(null);
+  try {
+    const response = await fetch('/api/teachers', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch teachers: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log('Teachers data structure:', data);
+    setTeachers(data);
+  } catch (error) {
+    // Check if error is an Error object
+    if (error instanceof Error) {
+      setTeachersError(error.message);
+    } else {
+      // Handle unknown error types
+      setTeachersError('An unknown error occurred while fetching teachers');
+    }
+  } finally {
+    setTeachersLoading(false);
+  }
+};
+// Add this effect to fetch teachers when modal opens
+useEffect(() => {
+  if (teachersModalOpen && teachers.length === 0) {
+    fetchTeachers();
+  }
+}, [teachersModalOpen]);
+// Helper function to format phone numbers for WhatsApp
+const formatPhoneNumberForWhatsApp = (phoneNumber: string): string => {
+  // Remove all non-digit characters
+  let cleaned = phoneNumber.replace(/\D/g, '');
+  
+  // If the number starts with 0, replace with country code (e.g., Sri Lanka: +94)
+  if (cleaned.startsWith('0')) {
+    cleaned = `94${cleaned.substring(1)}`;
+  }
+  
+  // If the number doesn't start with +, add it
+  if (!cleaned.startsWith('+')) {
+    cleaned = `+${cleaned}`;
+  }
+  
+  return cleaned;
+};
+const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
+// Add this function
+const copyToClipboard = (text: string, type: string) => {
+  navigator.clipboard.writeText(text);
+  setCopiedItem(type);
+  setTimeout(() => setCopiedItem(null), 2000);
+};
 //  useEffect(() => {
 //   fetch(`/api/student/personal/${user.id}`)
 //     .then(async (res) => {
@@ -353,13 +416,21 @@ useEffect(() => {
     { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
     { name: 'Submit Assignment', icon: <ClipboardList size={20} />, link: '/assignments' },
     { name: 'View Grades', icon: <BarChart2 size={20} />, link: '/grades' },
-    { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, link: '/messages' },
+    { name: 'Ask a Teacher', icon: <MessageSquare size={20} />,onClick: () => setTeachersModalOpen(true) },
   ].map((action, idx) => (
+    action.link? (
     <Link key={idx} href={action.link} 
       className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
       {action.icon}
       <span className="mt-2 text-sm font-medium">{action.name}</span>
     </Link>
+  ):(
+    <button key={idx} onClick={action.onClick}
+        className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
+        {action.icon}
+        <span className="mt-2 text-sm font-medium">{action.name}</span>
+      </button>
+    )
   ))}
 </div>  
           <div className="mb-6 mt-8">
@@ -416,7 +487,120 @@ useEffect(() => {
               </div>
             ))}
           </div>
-
+{/* Teachers Modal */}
+<Dialog open={teachersModalOpen} onClose={() => setTeachersModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
+  <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
+  <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-2xl w-full relative z-10">
+    <Dialog.Title className="text-xl font-bold mb-4 flex items-center">
+      <MessageSquare className="mr-2 text-amber-600" size={20} />
+      Teacher Contacts
+    </Dialog.Title>
+    
+    {teachersError && (
+      <div className="mb-3 p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-800">
+        {teachersError}
+      </div>
+    )}
+    
+    {teachersLoading ? (
+      <div className="py-8 text-center text-gray-500">Loading teachers...</div>
+    ) : (
+      <div className="max-h-96 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
+        {teachers.map((teacher, idx) => (
+          <div key={idx} className="py-3 px-2 hover:bg-amber-50 dark:hover:bg-gray-700 rounded">
+            <div className="font-medium text-gray-900 dark:text-gray-100">{teacher.personal?.Full_name_with_initial || teacher.personal?.Full_name || 'Unknown Teacher'}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              ID: {teacher.teacher_NIC}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+               {teacher.personal?.Email_address && (
+                <div className="flex items-center mt-1">
+                  <Mail size={14} className="mr-2" />
+                  <a 
+                    href={`mailto:${teacher.personal.Email_address}`}
+                    className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
+                    onClick={(e) => e.stopPropagation()}
+                    target="_blank"
+                    rel='noopener noreferrer'
+                  >
+                    {teacher.personal.Email_address}
+                  </a>
+                  <button 
+      onClick={(e) => {
+        e.stopPropagation();
+        copyToClipboard(teacher.personal.Email_address, 'email');
+      }}
+      className="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+      title="Copy email"
+    >
+      {copiedItem === 'email' ? '✓ Copied!' : '📋'}
+    </button>
+                </div>
+              )}
+              
+              {teacher.personal?.Mobile_number && (
+                <div className="flex items-center mt-1">
+                  <span className="mr-2">📱</span><div className="flex flex-wrap gap-2">
+                  <a 
+                    href={`https://wa.me/${formatPhoneNumberForWhatsApp(teacher.personal.Mobile_number)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                 WhatsApp
+      </a>
+      <a 
+        href={`tel:${teacher.personal.Mobile_number}`}
+        className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
+        onClick={(e) => e.stopPropagation()}
+      >
+        Call
+      </a>
+                  <button 
+      onClick={(e) => {
+        e.stopPropagation();
+        copyToClipboard(teacher.personal.Mobile_number, 'mobile');
+      }}
+      className="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+      title="Copy phone number"
+    >
+      {copiedItem === 'mobile' ? '✓ Copied!' : '📋'}
+    </button>
+                </div>
+                </div>
+              )}
+               {teacher.personal?.Fixed_telephone_number && (
+                <div className="flex items-center mt-1">
+                  <span className="mr-2">📞</span>
+                  <a 
+                    href={`tel:${teacher.personal.Fixed_telephone_number}`}
+                    className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {teacher.personal.Fixed_telephone_number} (Call)
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+        {teachers.length === 0 && (
+          <div className="py-8 text-center text-gray-500">No teachers found.</div>
+        )}
+      </div>
+    )}
+    
+    <div className="mt-4 text-right">
+      <button 
+        onClick={() => setTeachersModalOpen(false)} 
+        className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600"
+      >
+        Close
+      </button>
+    </div>
+  </Dialog.Panel>
+</Dialog>
 
 
 <Dialog open={attendanceModalOpen} onClose={() => setAttendanceModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
