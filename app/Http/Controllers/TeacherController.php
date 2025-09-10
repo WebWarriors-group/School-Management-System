@@ -23,11 +23,9 @@ class TeacherController extends Controller
     {
         $user = Auth::user();
 
-       
-        
        if (!$user->teacher()->exists()) {
-    return redirect()->route('add-teacher');
-}
+            return Inertia::render('loginToRegRedirect');
+        }
 
 
         $teacher = $user->teacher()->with([
