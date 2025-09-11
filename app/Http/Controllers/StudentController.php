@@ -9,6 +9,7 @@ use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\StudentAcademic;
 use App\Models\StudentPersonal;
@@ -26,7 +27,25 @@ class StudentController extends Controller
 {
     public function dashboard()
     {
-        return Inertia::render('Student/dashboard');
+        $user = Auth::user();
+        
+         
+        $student = $user->student()->with([
+        'personal',
+        
+        'family',
+        'siblings',
+        'class',
+        'class.teacher',
+        'marks',
+        'subjects',
+        
+    ])->first();
+    
+    if(!$student){
+        return redirect()->route('student-register');
+    }
+        return Inertia::render('Student/dashboard',['student'=>$student]);
     }
 
     public function sendAdmissionForm(Request $request)
@@ -54,6 +73,7 @@ class StudentController extends Controller
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
+            $student->class;
             $student->siblings;
         });
         return response()->json($students);
@@ -381,6 +401,7 @@ class StudentController extends Controller
             ],
         ]);
     }
+
  public function getMarksBySubject($reg_no)
 {
     try{

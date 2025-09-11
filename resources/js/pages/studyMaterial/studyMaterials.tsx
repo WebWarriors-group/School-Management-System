@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import AppLayout from "@/layouts/app-layout";
 import { Head } from "@inertiajs/react";
@@ -12,29 +12,39 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const studyMaterials = () => {
-    const categories = [
+
+    const user = usePage().props.auth.user;
+    
+    const baseCategories = [
         {
             title: "Past Papers",
             description: "Access previous years' exam papers to help with your studies.",
             image: "/images/pastpapers.jpg",
             link: route("studMatCat", { category: "pastpapers" }),
+            visibleTo: ["student", "teacher", "admin"],
         },
         {
             title: "Teachers' Handbooks",
             description: "Guides and reference materials for teachers.",
             image: "/images/handbook.jpg",
             link: route("studMatCat", { category: "teachersHandbooks" }),
+            visibleTo: ["teacher", "admin"],
         },
         {
             title: "Notes",
             description: "Summarized notes and study guides for various subjects.",
             image: "/images/notebook.png",
             link: route("studMatCat", { category: "notes" }),
+            visibleTo: ["student", "teacher", "admin"],
         },
     ];
 
+    const categories = baseCategories.filter(category =>
+        category.visibleTo.includes(user.role)
+    );
+
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={breadcrumbs} user={user}>
             <Head title="Study Materials" />
             <div className="flex flex-col w-full gap-6 bg-gradient-to-b from-gray-100 to-gray-200 min-h-screen pb-12">
 

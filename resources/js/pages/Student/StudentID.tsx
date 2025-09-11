@@ -1,21 +1,19 @@
 import React, { useState, useRef } from 'react';
 
-type Student = {
+
+
+interface StudentIDProps {
+    student :{
     reg_no: string;
-    personal: {
+   
         full_name: string;
         address?: string;
         photo?: string; // Make sure this is populated from DB
+    
+        class_name?: string;
+        grade?: string;
+        section?: string;
     };
-    class: {
-        class_name: string;
-        grade: string;
-        section: string;
-    };
-};
-
-interface StudentIDProps {
-    student: Student;
     onClose: () => void;
 }
 
@@ -115,7 +113,7 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
    <div className="ml-14 mt-3 flex flex-col justify-center space-y-3 text-[16px] flex-1">
   <p className="flex gap-x-4">
     <span className="font-semibold text-gray-700">NAME:</span>
-    <span className="text-blue-900 font-semibold">{student.personal.full_name}</span>
+    <span className="text-blue-900 font-semibold">{student.full_name}</span>
   </p>
   <p className="flex gap-x-4">
     <span className="font-semibold text-gray-700">ID:</span>
@@ -127,15 +125,15 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
   </p>
   <p className="flex gap-x-4 text-blue-800">
     <span className="font-semibold text-gray-700">GRADE:</span>
-    {student.class.grade}
+    {student.grade}
   </p>
   <p className="flex gap-x-4 text-blue-800">
     <span className="font-semibold text-gray-700">SECTION:</span>
-    {student.class.section}
+    {student.section}
   </p>
   <p className="flex gap-x-4 text-blue-800">
     <span className="font-semibold text-gray-700">CLASS:</span>
-    {student.class.class_name}
+    {student.class_name}
   </p>
 </div>
 
