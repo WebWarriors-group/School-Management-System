@@ -41,7 +41,7 @@ export default function LoginPage() {
 
             <div className="flex flex-col gap-6">
               <Link
-                href={route('homepage')}
+                href={route('student.admission.form')}
                 className="flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-yellow-500 to-yellow-600 text-gray-900 font-bold py-8 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300"
               >
                 <GraduationCap className="w-12 h-12" />
