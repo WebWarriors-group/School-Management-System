@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
+use App\Http\Controllers\RegistrationFormController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TimetableController;
 use App\Events\TestNotificationEvent;
@@ -39,8 +40,8 @@ use App\Http\Controllers\MarkController;
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
+Route::get('registrationForms', [RegistrationFormController::class, 'registrationType'])->name('regForms');
 Route::get('admissionForms', [ActiveSessionController::class, 'admissionFormOpen'])->name('admissionForms');
-
 
 
 
