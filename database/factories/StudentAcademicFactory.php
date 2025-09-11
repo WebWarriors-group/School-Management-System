@@ -31,8 +31,9 @@ class StudentAcademicFactory extends Factory
             'receiving_any_samurdhi_aswesuma' => $this->faker->boolean(),
             'receiving_any_scholarship' => $this->faker->boolean(),
             'admission_date' => $this->faker->dateTimeBetween('2001-01-01', 'now')->format('Y-m-d'),
-
-
+            'leaving_date' => $this->faker->boolean(20)
+                ? $this->faker->dateTimeBetween('2001-01-01', 'now')->format('Y-m-d') 
+                : null,
         ];
     }
 }

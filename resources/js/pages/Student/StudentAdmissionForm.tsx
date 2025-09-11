@@ -112,6 +112,7 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
   const resetFormState = () => {
     setForm(initialFormValues);
     setSiblings([{ sibling_name: '', relationship: '', sibling_age: 0, occupation: '', contact: '' }]);
+    setPhotoPreview(null);
 
     setCurrentPage(1);
   };
@@ -140,7 +141,7 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
       const newSiblings = [...prev];
       newSiblings[index] = {
         ...newSiblings[index],
-        [name]: name === "sibling_age" ? Number(value) : value,
+        [name]: name === "sibling_age" ? (value ?  Number(value) : 0) : value,
       };
       return newSiblings;
     });
@@ -212,9 +213,17 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
       }));
     }
   };
-
+const [isSubmitting, setIsSubmitting]=useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+setIsSubmitting(true);
+try{
+     if (!form.reg_no || !form.class_id || !form.full_name || !form.birthday || 
+      !form.address || !form.gender || !form.ethnicity || !form.religion) {
+    alert("Please fill in all required fields.");
+    
+    return;
+  }
 
     if (!window.confirm('Are you sure you want to submit this admission form?')) return;
 
@@ -279,10 +288,7 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
       payload.append(`siblings[${index}][occupation]`, sibling.occupation);
       payload.append(`siblings[${index}][contact]`, sibling.contact);
     });
-    if (!form.reg_no || !form.class_id || !form.full_name || !form.birthday) {
-      alert("Please fill in all required fields.");
-      return;
-    }
+   
 
     fetch('/api/student', {
       method: 'POST',
@@ -294,22 +300,26 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
 
       .then(async (response) => {
         if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Error:', errorData);
-          alert("Submission failed. Please check the data.");
-        } else {
-          const data = await response.json();
+          const errorData = await response.json().catch(()=>({}));
+          const errorMessage = errorData.message || `Server responded with status: ${response.status}`;
+          throw new Error(errorMessage);
+          
+        } 
+        return response.json();
+      })
+        .then((data) =>  {
           console.log('Success:', data);
           alert("Student admission submitted successfully!");
           resetFormState(); 
           setShowForm(false);
-        }
-      })
+        })
       .catch((error) => {
         console.error('Network error:', error);
         alert("Network error occurred while submitting the form.");
       });
-
+    }finally{
+      setIsSubmitting(false);
+    }
   }
   return (
    
@@ -342,7 +352,7 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
         </div>
 
   
-        <div className="mt-6">
+        <div className="mt-6"  role="progressbar" aria-valuenow={currentPage} aria-valuemin={1} aria-valuemax={totalPages} aria-label='Form progress'>
           <div className="flex justify-between mb-2 text-sm font-medium text-blue-100">
             {[1, 2, 3, 4, 5].map((page) => (
               <span
@@ -350,16 +360,17 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
                 className={`${currentPage >= page ? 'text-white' : 'text-blue-200'}`}
               >
                 {page === 1 && 'Academic'}
-                {page === 2 && 'Family'}
-                {page === 3 && 'Personal'}
+                {page === 2 && 'Personal'}
+                {page === 3 && 'Family'}
+                
                 {page === 4 && 'Siblings'}
                 {page === 5 && 'Review'}
               </span>
             ))}
           </div>
-          <div className="w-full bg-blue-400 bg-opacity-50 rounded-full h-2">
+          <div className="w-full bg-white bg-opacity-50 rounded-full h-2">
             <div
-              className="bg-white h-2 rounded-full"
+              className="bg-blue-400 h-2 rounded-full"
               style={{ width: `${(currentPage / totalPages) * 100}%` }}
             ></div>
           </div>
@@ -412,11 +423,11 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
                   <InfoRow label="Gender" value={form.gender} />
                   <InfoRow label="Ethnicity" value={form.ethnicity} />
                   <InfoRow label="Religion" value={form.religion} />
-                  {form.photo && (
+                  {photoPreview && (
                     <div>
                       <InfoRow label="Photo" value="" />
                       <img
-                        src={typeof form.photo === "string" ? form.photo : URL.createObjectURL(form.photo)}
+                        src={photoPreview}
                         alt="Student"
                         className="mt-1 h-24 w-24 object-cover rounded-lg border-2 border-blue-200"
                       />
@@ -566,12 +577,24 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
           ) : (
             <button
               type="submit"
-              className="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              disabled={isSubmitting}
+              className="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
             >
+              {isSubmitting ? (
+                <>
+                <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className='opacity-25' cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"> </circle> 
+               <path className ="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V4a4 4 0 00-4 4H4z"></path>
+               </svg>Submitting....
+               </>
+              ):(
+                <>
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
               Submit Application
+              </>
+              )}
             </button>
           )}
         </div>
@@ -582,9 +605,9 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
 };
 
 
-const InfoRow = ({ label, value }: { label: string; value: string }) => (
+const InfoRow = ({ label, value }: { label: string; value: string | number | boolean }) => (
   <div className="flex">
     <span className="font-medium text-gray-700 w-40">{label}:</span>
-    <span className="text-gray-900">{value || '-'}</span>
+    <span className="text-gray-900">{value !== undefined && value !==null ? String(value): '-'}</span>
   </div>
 );

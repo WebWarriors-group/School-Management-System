@@ -70,6 +70,9 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
     Route::post('/study_material', [StudyMaterialController::class, 'store']);
     // Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
+
+    Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
+
 });
 
 
