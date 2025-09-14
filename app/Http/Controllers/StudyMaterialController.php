@@ -10,6 +10,7 @@ use App\Models\StudyMaterial;
 use App\Events\StudyMaterialUploaded;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class StudyMaterialController extends Controller
 {
@@ -23,14 +24,23 @@ class StudyMaterialController extends Controller
      */
     public function index($category)
     {
+        $user = Auth::user();
+
         $materials = StudyMaterial::with('uploaded_by:id,name,role')
             ->where('category', $category)
             ->get();
 
-        return Inertia::render('studyMaterial/studyMaterialIndex', [
-            'category' => $category,
-            'materials' => $materials,
-        ]);
+        if ($user->role == 'student'){
+            return Inertia::render('Student/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        } else {
+             return Inertia::render('studyMaterial/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        }
     }
 
     /**

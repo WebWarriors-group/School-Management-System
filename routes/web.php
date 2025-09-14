@@ -11,8 +11,8 @@ use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TimetableController;
 use App\Events\TestNotificationEvent;
-use App\Models\StudyMaterial; // ✅ Add this
-use App\Events\StudyMaterialUploaded; // ✅ If using event
+use App\Models\StudyMaterial;
+use App\Events\StudyMaterialUploaded;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -20,6 +20,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeacherRequestController;
+use App\Http\Controllers\StudyMaterialController;
 use App\Models\GalleryImage;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
@@ -103,6 +104,10 @@ Route::post('/classadd', [ClassController::class, 'store']);
 })->name('add-teacher');
 
 Route::get('/student/academic', [StudentController::class, 'academicPage']);
+Route::get('/student/studyMaterial', function () { return Inertia::render('Student/studyMaterial'); });
+Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
+Route::post('/study_material', [StudyMaterialController::class, 'store']);
+Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
 
 
 

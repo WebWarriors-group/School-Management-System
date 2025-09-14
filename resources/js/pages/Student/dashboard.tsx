@@ -243,26 +243,29 @@ useEffect(() => {
           </h2>
           <div className="space-y-1">
             {[
-              { name: 'Dashboard', icon: <Home size={18} /> },
-              { name: 'Courses', icon: <Book size={18} /> },
-              { name: 'Assignments', icon: <ClipboardList size={18} /> },
-              { name: 'Grades', icon: <BarChart2 size={18} /> },
-              { name: 'Attendance', icon: <CalendarCheck size={18} /> },
-              { name: 'Messages', icon: <MessageSquare size={18} /> },
-              { name: 'Notifications', icon: <Bell size={18} /> },
-              { name: 'Settings', icon: <Settings size={18} /> },
-              { name: 'Logout', icon: <LogOut size={18} /> },
+              { name: 'Dashboard', icon: <Home size={18} />, link: '/student/dashboard' },
+              { name: 'Courses', icon: <Book size={18} />, link: '/courses' },
+              { name: 'Assignments', icon: <ClipboardList size={18} />, link: '/assignments' },
+              { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
+              { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
+              { name: 'Study Materials', icon: <Book size={18} />, link: '/student/studyMaterial' },
+              { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
+              { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
+              { name: 'Settings', icon: <Settings size={18} />, link: '/settings' },
+              { name: 'Logout', icon: <LogOut size={18} />, link: '/logout' },
             ].map((item, index) => (
-              <button
+              <Link
                 key={index}
-                className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${index === 0
-                  ? 'bg-amber-100 text-amber-700 font-medium'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
-                  }`}
+                href={item.link}
+                className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${
+                  index === 0
+                    ? 'bg-amber-100 text-amber-700 font-medium'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
+                }`}
               >
                 <span className="mr-3">{item.icon}</span>
                 {item.name}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
@@ -294,7 +297,7 @@ useEffect(() => {
 <DailyQuote/>
 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
   {[
-    { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
+    { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/student/studyMaterial' },
     { name: 'Submit Assignment', icon: <ClipboardList size={20} />, link: '/assignments' },
     { name: 'View Grades', icon: <BarChart2 size={20} />, link: '/grades' },
     { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, link: '/messages' },

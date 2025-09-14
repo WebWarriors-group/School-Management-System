@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import AppLayout from "@/layouts/app-layout";
 import { Head } from "@inertiajs/react";
@@ -12,26 +12,36 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const studyMaterials = () => {
-    const categories = [
+
+    const user = usePage().props.auth.user;
+    
+    const baseCategories = [
         {
             title: "Past Papers",
             description: "Access previous years' exam papers to help with your studies.",
             image: "/images/pastpapers.jpg",
             link: route("studMatCat", { category: "pastpapers" }),
+            visibleTo: ["student", "teacher", "admin"],
         },
         {
             title: "Teachers' Handbooks",
             description: "Guides and reference materials for teachers.",
             image: "/images/handbook.jpg",
             link: route("studMatCat", { category: "teachersHandbooks" }),
+            visibleTo: ["teacher", "admin"],
         },
         {
             title: "Notes",
             description: "Summarized notes and study guides for various subjects.",
             image: "/images/notebook.png",
             link: route("studMatCat", { category: "notes" }),
+            visibleTo: ["student", "teacher", "admin"],
         },
     ];
+
+    const categories = baseCategories.filter(category =>
+        category.visibleTo.includes(user.role)
+    );
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -39,14 +49,9 @@ const studyMaterials = () => {
             <div className="flex flex-col w-full gap-6 bg-gradient-to-b from-gray-100 to-gray-200 min-h-screen pb-12">
 
                 {/* Header */}
-                <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
-          
-          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
-            Classes,Students,Subjects Overall performance
-          </p>
-        </div>
-      </header>
+                <header className="bg-white sticky top-0 z-10 w-full flex items-center justify-between border-b px-6 py-4 shadow-md">
+                    {/* <h2 className="text-xl md:text-2xl font-bold text-red-800 tracking-tight">📚 Study Materials</h2> */}
+                </header>
 
                 {/* Categories Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-4 sm:px-8 max-w-6xl mx-auto mt-6">
