@@ -28,8 +28,7 @@ use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
-
-
+use App\Http\Controllers\MessageController;
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
 
@@ -232,6 +231,9 @@ Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index
 
 Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
     ->name('admin.overallPerformance');
+
+Route::get('/api/admin/messages', [MessageController::class, 'indexForAdmin']);
+Route::post('/api/messages', [MessageController::class, 'store']);
 
 
 require __DIR__ . '/settings.php';

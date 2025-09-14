@@ -71,7 +71,7 @@ Route::middleware('auth', 'admin')->group(function () {
 Route::middleware('auth', 'teacher')->group(function () {
     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
-
+   
    
 Route::get('/leave', function () {
     $user_id = Auth::id();
@@ -95,3 +95,8 @@ Route::middleware('auth')->group(function () {
 });
 
 
+/*Route::middleware('auth', 'teacher')->group(function () {
+    
+    Route::get('/teacher/messages', [MessageController::class, 'teacherMessages']); // fetch
+    Route::post('/teacher/messages/send', [MessageController::class, 'send']);
+});*/

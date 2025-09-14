@@ -18,7 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 type StudentAcademic = {
   reg_no: string;
   class_name: string;
-  personal?: { Full_name: string; Gender: string; Photo?: string };
+  personal?: { full_name: string; gender: string; photo?: string };
   marks?: { subject: string; marks_obtained: number }[];
   attendance?: { date: string; status: string }[];
 };
@@ -124,7 +124,7 @@ const assignedClassAvg =
 
   // Fetch messages
   useEffect(() => {
-    fetch('/teacher/messages')
+    fetch('/api/teacher/messages')
       .then(res => res.json())
       .then(data => setMessages(data));
   }, []);
@@ -133,6 +133,8 @@ const assignedClassAvg =
   useEffect(() => {
     localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
   }, [tasks]);
+
+ 
 
   const addTask = () => {
     if (!newTask.trim()) return;
@@ -149,15 +151,35 @@ const assignedClassAvg =
   };
 
   const sendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.post('/teacher/messages/send', { subject, message: text }, {
-      onSuccess: () => {
-        setText('');
-        setSubject('');
-        fetch('/teacher/messages').then(res => res.json()).then(data => setMessages(data));
-      }
-    });
-  };
+  e.preventDefault();
+
+  fetch('/api/teacher/messages/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || ''
+    },
+     credentials: 'include',
+    body: JSON.stringify({
+      subject,
+      message: text,
+    }),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to send message");
+      return res.json();
+    })
+    .then(() => {
+      setText('');
+      setSubject('');
+      // reload messages
+      fetch('/api/teacher/messages')
+        .then((res) => res.json())
+        .then((data) => setMessages(data));
+    })
+    .catch((err) => console.error(err));
+};
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -346,7 +368,14 @@ const assignedClassAvg =
                     className="w-full border rounded p-2"
                     required
                   />
-                  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+                 <button
+  type="submit"
+  onSubmit={sendMessage}
+  className="bg-blue-600 text-white px-4 py-2 rounded"
+>
+  Send
+</button>
+
                 </form>
               </div>
             )}

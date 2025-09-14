@@ -13,6 +13,8 @@ use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Api\EventController;
 use App\Mail\StudentAdmissionMail;
+use App\Http\Controllers\MessageController;
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
         'id' => $request->user()->id,
@@ -108,3 +110,21 @@ Route::get('/events', [EventController::class, 'index']);
 Route::post('/events', [EventController::class, 'store']);
 Route::put('/events/{id}', [EventController::class, 'update']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
+
+
+
+
+Route::middleware('auth:sanctum','teacher')->group(function () {
+    
+    Route::get('/teacher/messages', [MessageController::class, 'teacherMessages']); // fetch
+    Route::post('/teacher/messages/send', [MessageController::class, 'send']);
+});
+
+
+
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/admin/messages', [MessageController::class, 'index']);
+    Route::post('/admin/messages/reply', [MessageController::class, 'reply']);
+
+});
