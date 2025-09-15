@@ -14,8 +14,11 @@ class StudentAcademic extends Model
     protected $table = 'student_academic_info';
     protected $primaryKey = 'reg_no';
     public $incrementing = false;
-    protected $keyType = 'integer';
-    protected $casts = ['admission_date' => 'date'];
+    protected $keyType = 'string';
+    protected $casts = [
+        'admission_date' => 'date',
+        'reg_no' => 'int',
+    ];
     protected $fillable = [
         'user_id',
         'reg_no',
@@ -30,8 +33,26 @@ class StudentAcademic extends Model
         'receiving_any_samurdhi_aswesuma',
         'receiving_any_scholarship',
         'admission_date',
+        'leaving_date',
     ];
     protected $autoLoadRelations = true;
+
+    protected $appends = ['scholarship_status'];
+
+    public function getScholarshipStatusAttribute(){
+        $statuses=[];
+
+        if($this->receiving_any_grade_5_scholarship){
+            $statuses[] = "Grade 5 Scholarship";
+        }
+        if($this->receiving_any_samurdhi_aswesuma){
+            $statuses[] = "Samurdhi/Aswesuma";
+        }
+        if($this->receiving_any_scholarship){
+            $statuses[] = "Other Scholarship";
+        }
+        return $statuses ? implode(', ', $statuses): 'No Scholarships';
+    }
     public function subjects()
     {
 

@@ -44,7 +44,7 @@ const studyMaterials = () => {
     );
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={breadcrumbs} user={user}>
             <Head title="Study Materials" />
             <div className="flex flex-col w-full gap-6 bg-gradient-to-b from-gray-100 to-gray-200 min-h-screen pb-12">
 

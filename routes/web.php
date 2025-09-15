@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
+use App\Http\Controllers\RegistrationFormController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TimetableController;
 use App\Events\TestNotificationEvent;
@@ -40,7 +41,7 @@ use App\Http\Controllers\MarkController;
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
-
+Route::get('registrationForms', [RegistrationFormController::class, 'registrationType'])->name('regForms');
 
 
 
@@ -70,8 +71,10 @@ Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
-Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
-    //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+
+    Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
+     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+
      Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
      Route::get('/test-session', function (Request $request) {
   

@@ -7,6 +7,9 @@ import {
   LinearScale,
   Tooltip,
   Legend,
+
+  FontSpec
+
 } from 'chart.js';
 
 ChartJS.register(
@@ -34,6 +37,9 @@ interface StudentOverallPerformanceChartProps {
   examFilter?: string;
   startDate?: string;
   endDate?: string;
+
+  darkMode?:boolean;
+
 }
 
 export default function StudentOverallPerformanceChart({
@@ -41,40 +47,59 @@ export default function StudentOverallPerformanceChart({
   subjectFilter,
   examFilter,
   startDate,
-  endDate
+
+  endDate,
+  darkMode=false
+
 }: StudentOverallPerformanceChartProps) {
 const [marksData, setMarksData] = useState<MarksItem[]>([]);
   const [loading, setLoading] = useState(true);
 useEffect(() => {
   if (!regNo) return;
 
-  setLoading(true); 
 
-  fetch(`/api/student-marks/${regNo}`)
-    .then(res => res.json())
-    .then(data => {
-      if (Array.isArray(data)) {
-        setMarksData(data);
-      } else if (Array.isArray(data.data)) {
-        setMarksData(data.data);
-      } else {
-        setMarksData([]);
+  setLoading(true);
+  const controller = new AbortController();
+
+  fetch(`/api/student/${regNo}/marks`, { signal: controller.signal })
+    .then(async (res) => {
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`HTTP ${res.status}: ${text?.slice(0, 200)}`);
       }
-      setLoading(false); 
+      return res.json();
     })
-    .catch(error => {
-      console.error(error);
+    .then((data) => {
+  
+      const possible = Array.isArray(data)
+        ? data
+        : Array.isArray((data as any)?.marks)
+        ? (data as any).marks
+        : Array.isArray((data as any)?.data)
+        ? (data as any).data
+        : [];
+      setMarksData(possible as MarksItem[]);
+      setLoading(false);
+    })
+    .catch((error) => {
+      if ((error as any)?.name === 'AbortError') return;
+      console.error('StudentOverallPerformanceChart fetch error:', error);
       setMarksData([]);
       setLoading(false);
     });
+
+  return () => controller.abort();
+
 }, [regNo]);
 
 
 console.log("Current marksData state:", marksData);
 
 
- if (loading) return <p>Loading...</p>;
-if (!marksData || marksData.length === 0) return <p>No data found.</p>;
+
+ if (loading) return <p className={darkMode ? "text-gray-300" : ""}>Loading...</p>;
+if (!marksData || marksData.length === 0) return <p className={darkMode ? "text-gray-300" : ""}>No data found.</p>;
+
 
 
 const scores = marksData.map(item => item.marks_obtained);
@@ -86,17 +111,27 @@ const labels = marksData.map(item => item.subject?.subject_name || 'Unknown');
     {
       label: '', // Remove label to avoid legend
       data: scores,
-      borderColor: 'rgba(75,192,192,1)',
+
+      borderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
       borderWidth: 2,
       pointRadius: 3, // No dots on the line
+      pointBackgroundColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
+        pointBorderColor: darkMode ? '#1f2937' : '#fff',
+        pointHoverBackgroundColor: darkMode ? '#1f2937' : '#fff',
+        pointHoverBorderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
       fill: true, // No fill under line
       tension: 0.4, // Smooth curve
+      backgroundColor: darkMode ? 'rgba(251, 191, 36, 0.1)' : 'rgba(75, 192, 192, 0.1)',
+
     },
   ],
 };
 
 const options = {
   responsive: true,
+
+  maintainAspectRatio: false,
+
   plugins: {
     legend: {
       display: false, // Remove legend
@@ -111,7 +146,20 @@ const options = {
       title: {
         display: true,
         text: 'Subjects',
-      },
+
+        color: darkMode ? '#e5e7eb' : '#374151',
+        font: {
+            weight: 'bold' as const,
+            size:14,
+          } as FontSpec
+        },
+        ticks: {
+          color: darkMode ? '#9ca3af' : '#6b7280',
+        },
+        grid: {
+          color: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+      }
+
     },
     y: {
       display: true,
@@ -120,6 +168,19 @@ const options = {
       title: {
         display: true,
         text: 'Marks (%)',
+
+        color: darkMode ? '#e5e7eb' : '#374151',
+          font: {
+            weight: 'bold' as const,
+            size:14
+          } as FontSpec
+        },
+        ticks: {
+          color: darkMode ? '#9ca3af' : '#6b7280',
+        },
+        grid: {
+          color: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+
       },
     },
     

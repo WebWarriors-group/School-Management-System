@@ -9,6 +9,7 @@ use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\StudentAcademic;
 use App\Models\StudentPersonal;
@@ -26,7 +27,25 @@ class StudentController extends Controller
 {
     public function dashboard()
     {
-        return Inertia::render('Student/dashboard');
+        $user = Auth::user();
+        
+         
+        $student = $user->student()->with([
+        'personal',
+        
+        'family',
+        'siblings',
+        'class',
+        'class.teacher',
+        'marks',
+        'subjects',
+        
+    ])->first();
+    
+    if(!$student){
+        return redirect()->route('student-register');
+    }
+        return Inertia::render('Student/dashboard',['student'=>$student]);
     }
 
     public function sendAdmissionForm(Request $request)
@@ -41,7 +60,7 @@ class StudentController extends Controller
 
     public function academicPage()
     {
-        $academicData = StudentAcademic::paginate(10);
+        $academicData = StudentAcademic::paginate(200);
         return Inertia::render('Student/AcademicTable', [
             'academicData' => $academicData,
             'filters' => ['search' => '']
@@ -50,10 +69,11 @@ class StudentController extends Controller
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::paginate(10);
+        $students = StudentAcademic::paginate(205);
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
+            $student->class;
             $student->siblings;
         });
         return response()->json($students);
@@ -144,12 +164,27 @@ class StudentController extends Controller
     public function import(Request $request)
     {
         $request->validate(['file' => 'required|file|mimes:xlsx,xls,csv']);
+
         try {
-            Excel::import(new StudentsImport, $request->file('file'));
-            return response()->json(['message' => 'Students imported successfully!']);
+            $import = new StudentsImport();
+            Excel::import($import, $request->file('file'));
+
+            $failures = method_exists($import, 'failures') ? $import->failures() : collect();
+
+            return response()->json([
+                'message' => 'Students imported successfully!',
+                'failures' => $failures->map(function($f){
+                    return [
+                        'row' => $f->row(),
+                        'attribute' => $f->attribute(),
+                        'errors' => $f->errors(),
+                        'values' => $f->values(),
+                    ];
+                }),
+            ]);
         } catch (\Throwable $e) {
             \Log::error('Student import failed', ['error' => $e->getMessage()]);
-            return response()->json(['message' => 'Import failed.'], 500);
+            return response()->json(['message' => 'Import failed.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -381,6 +416,7 @@ class StudentController extends Controller
             ],
         ]);
     }
+
  public function getMarksBySubject($reg_no)
 {
     try{
