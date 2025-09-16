@@ -835,12 +835,12 @@ export default function StudentDashboard() {
             {[
               { name: 'Dashboard', icon: <Home size={18} />, onClick: () => { } },
               { name: 'Courses', icon: <Book size={18} />, onClick: () => setCoursesOpen(true) },
-              { name: 'Assignments', icon: <ClipboardList size={18} />, onClick: () => { } },
-              { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
-              { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
+              // { name: 'Assignments', icon: <ClipboardList size={18} />, onClick: () => { } },
+              // { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
+              // { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
               { name: 'Study Materials', icon: <Book size={18} />, link: '/student/studyMaterial' },
-              { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
-              { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
+              // { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
+              // { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
               { name: 'Settings', icon: <Settings size={18} />, link: '/settings' },
 
             ].map((item, index) =>
@@ -945,7 +945,7 @@ export default function StudentDashboard() {
 
           {/* Updated tabs to include new features */}
           <div className="flex space-x-4 border-b border-gray-200 mb-6 pb-2">
-            {['Profile', 'Attendance', 'Marks', 'Fees', 'Progress', 'Feedback'].map((tab, idx) => (
+            {['Profile', 'Marks',  'Progress', 'Feedback'].map((tab, idx) => (
               <button
                 key={idx}
                 className={`pb-2 px-4 font-medium ${activeTab === tab ? 'text-amber-600 border-b-2 border-amber-600' : 'text-gray-500 hover:text-amber-600'}`}

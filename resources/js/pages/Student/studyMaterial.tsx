@@ -2,6 +2,7 @@ import StudyMaterials from '../studyMaterial/studyMaterials';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import { Dialog } from '@headlessui/react';
 import {
   Facebook, Mail, MapPin, Menu, X,
   User, Book, Users, Award, CalendarCheck,
@@ -60,7 +61,11 @@ export default function StudentDashboard() {
     { id: 3, label: 'Attendance', value: '96%', icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
     { id: 4, label: 'Avg Marks', value: '82%', icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
   ];
-  
+  const [coursesOpen, setCoursesOpen] = useState(false);
+    const [subjects, setSubjects] = useState<any[]>([]);
+  const [subjectsLoading, setSubjectsLoading] = useState(false);
+  const [subjectsError, setSubjectsError] = useState<string | null>(null);
+  const [subjectsQuery, setSubjectsQuery] = useState("");
 const [currentDateTime,setCurrentDateTime] = useState('');
 useEffect(() => {
   const updateDateTime = () =>{
@@ -139,7 +144,105 @@ useEffect(() => {
           </div>
         </div>
       </nav>
+          {/* Courses Modal */}
+          <Dialog open={coursesOpen} onClose={() => setCoursesOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
+            <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-2xl w-full relative z-10">
+              <Dialog.Title className="text-xl font-bold mb-4 flex items-center">
+                <Book className="mr-2 text-amber-600" size={20} />
+                All Subjects
+              </Dialog.Title>
+              <div className="flex items-center gap-3 mb-4">
+                <input
+                  type="text"
+                  value={subjectsQuery}
+                  onChange={(e) => setSubjectsQuery(e.target.value)}
+                  placeholder="Search subjects..."
+                  className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                />
+                <button
+                  className="px-3 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600"
+                  onClick={() => {
+                    setSubjectsLoading(true);
+                    setSubjectsError(null);
 
+                    fetch('/api/subjects')
+                      .then(async (res) => {
+                        if (!res.ok) {
+                          const text = await res.text();
+                          console.log("Subjects", text);
+                          throw new Error(`HTTP ${res.status}: ${text?.slice(0, 200)}`);
+                        }
+                        return res.json();
+                      })
+                      .then((data) => setSubjects(Array.isArray(data) ? data : []))
+                      .catch((err) => setSubjectsError((err as any)?.message ?? 'Failed to load subjects'))
+                      .finally(() => setSubjectsLoading(false));
+                  }}
+                >
+                  Refresh
+                </button>
+              </div>
+
+              {coursesOpen && subjects.length === 0 && !subjectsLoading && !subjectsError && (
+                <script dangerouslySetInnerHTML={{ __html: `setTimeout(() => { document.querySelector('[data-load-subjects]')?.click(); }, 0);` }} />
+              )}
+
+              <button data-load-subjects className="hidden" onClick={() => {
+                setSubjectsLoading(true);
+                setSubjectsError(null);
+                fetch('/api/subjects')
+                  .then(async (res) => {
+                    if (!res.ok) {
+                      const text = await res.text();
+                      throw new Error(`HTTP ${res.status}: ${text?.slice(0, 200)}`);
+                    }
+                    return res.json();
+                  })
+                  .then((data) => setSubjects(Array.isArray(data) ? data : []))
+                  .catch((err) => setSubjectsError((err as any)?.message ?? 'Failed to load subjects'))
+                  .finally(() => setSubjectsLoading(false));
+              }} />
+
+              {subjectsError && (
+                <div className="mb-3 p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-800">
+                  {subjectsError}
+                </div>
+              )}
+
+              {subjectsLoading ? (
+                <div className="py-8 text-center text-gray-500">Loading subjects...</div>
+              ) : (
+                <div className="max-h-96 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
+                  {subjects
+                    .filter((s) =>
+                      subjectsQuery
+                        ? (s.name || s.subject_name || '').toLowerCase().includes(subjectsQuery.toLowerCase())
+                        : true
+                    )
+                    .map((s, idx) => (
+                      <div key={idx} className="py-3 px-2 hover:bg-amber-50 dark:hover:bg-gray-700 rounded flex items-start justify-between">
+                        <div>
+                          <div className="font-medium text-gray-900 dark:text-gray-100">{s.name || s.subject_name || 'Untitled Subject'}</div>
+                          {s.code && <div className="text-xs text-gray-500">Code: {s.code}</div>}
+                          {s.description && <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">{s.description}</div>}
+                        </div>
+                        {s.status && (
+                          <span className={`text-xs px-2 py-1 rounded-full ${s.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>{s.status}</span>
+                        )}
+                      </div>
+                    ))}
+                  {subjects.length === 0 && (
+                    <div className="py-8 text-center text-gray-500">No subjects found.</div>
+                  )}
+                </div>
+              )}
+
+              <div className="mt-4 text-right">
+                <button onClick={() => setCoursesOpen(false)} className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600">Close</button>
+              </div>
+            </Dialog.Panel>
+          </Dialog>
 
       {menuOpen && (
         <div className="bg-white dark:bg-gray-800 text-black px-4 py-3 md:hidden shadow-lg">
@@ -170,16 +273,16 @@ useEffect(() => {
           <div className="space-y-1">
             {[
               { name: 'Dashboard', icon: <Home size={18} />, link: '/student/dashboard' },
-              { name: 'Courses', icon: <Book size={18} />, link: '/courses' },
-              { name: 'Assignments', icon: <ClipboardList size={18} />, link: '/assignments' },
-              { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
-              { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
+              { name: 'Courses', icon: <Book size={18} />, onClick: () => setCoursesOpen(true)},
+              // { name: 'Assignments', icon: <ClipboardList size={18} />, link: '/assignments' },
+              // { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
+              // { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
               { name: 'Study Materials', icon: <Book size={18} />, link: '/student/studyMaterial' },
-              { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
-              { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
+              // { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
+              // { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
               { name: 'Settings', icon: <Settings size={18} />, link: '/settings' },
-              { name: 'Logout', icon: <LogOut size={18} />, link: '/logout' },
-            ].map((item, index) => (
+            
+            ].map((item, index) => item.link ? (
               <Link
                 key={index}
                 href={item.link}
@@ -192,6 +295,17 @@ useEffect(() => {
                 <span className="mr-3">{item.icon}</span>
                 {item.name}
               </Link>
+            ):(
+              <button key={index} onClick={item.onClick}
+                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${index === 0
+                      ? 'bg-amber-100 text-amber-700 font-medium'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
+                    }`}
+                >
+                  <span className="mr-3">{item.icon}</span>
+                  {item.name}
+
+                </button>
             ))}
           </div>
         </div>
