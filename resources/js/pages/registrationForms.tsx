@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
-import { Facebook, Mail, MapPin, Menu, X, GraduationCap, Users } from "lucide-react";
+import { Facebook, Home,Mail, MapPin, Menu, X, GraduationCap, Users } from "lucide-react";
 
 export default function LoginPage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,6 +29,8 @@ export default function LoginPage() {
                 T / Tn / Mahadivulwewa Maha Vidyalaya (National School)
               </h1>
             </div>
+            <Link href="/"> <Home/></Link>
+            
           </div>
         </nav>
 
@@ -68,7 +70,7 @@ export default function LoginPage() {
               <p className="text-sm text-gray-300">© 2025 All rights reserved.</p>
             </div>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white">Home</a>
+              <a href="/" className="text-gray-300 hover:text-white">Home</a>
               <a href="#" className="text-gray-300 hover:text-white">About</a>
               <a href="#" className="text-gray-300 hover:text-white">Contact</a>
               <a href="#" className="text-gray-300 hover:text-white">Privacy</a>
