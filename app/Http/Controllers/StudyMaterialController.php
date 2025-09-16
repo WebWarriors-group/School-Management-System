@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\StudyMaterialUploaded;
 use Illuminate\Validation\ValidationException;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+
 
 class StudyMaterialController extends Controller
 {
