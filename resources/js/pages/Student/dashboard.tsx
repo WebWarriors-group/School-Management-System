@@ -846,7 +846,7 @@ export default function StudentDashboard() {
               { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
               { name: 'Settings', icon: <Settings size={18} />, link: '/settings' },
               { name: 'Logout', icon: <LogOut size={18} />, link: '/logout' },
-            ].map((item, index) => (
+            ].map((item, index) => item.link ? (
               <Link
                 key={index}
                 href={item.link}
@@ -855,12 +855,24 @@ export default function StudentDashboard() {
                     ? 'bg-amber-100 text-amber-700 font-medium'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
                 }`}
-                onClick={item.onClick}
-                type="button"
+                
+                
               >
                 <span className="mr-3">{item.icon}</span>
                 {item.name}
               </Link>
+            ):(
+              <button key={index} onClick={item.onClick}
+               className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${
+        index === 0
+          ? 'bg-amber-100 text-amber-700 font-medium'
+          : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
+      }`}
+              >
+                 <span className="mr-3">{item.icon}</span>
+                {item.name}
+
+              </button>
             ))}
           </div>
         </div>
