@@ -1,13 +1,14 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
-import { PageProps as InertiaPageProps} from '@inertiajs/core';
+import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import RealTimeChatBot from './RealTimeChatBot';
 import {
   Facebook, Mail, MapPin, Menu, X,
   User, Book, Users, Award, CalendarCheck,
   FileText, Home, ClipboardList, BarChart2,
-  Bell, MessageSquare, Settings, LogOut, Sun, Moon, Search
+  Bell, MessageSquare, Settings, LogOut, Sun, Moon, Search,
+  Component
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import StudentOverallPerformanceChart from "./StudentOverallPerformanceChart";
@@ -58,13 +59,13 @@ interface AttendanceData {
   }[];
 }
 
-interface DashboardPageProps extends InertiaPageProps{
-  auth:{
-    user:any;
+interface DashboardPageProps extends InertiaPageProps {
+  auth: {
+    user: any;
   };
-  student:any;
-  errors?:any;
-  deferred?: Record<string,string[] | undefined> | undefined;
+  student: any;
+  errors?: any;
+  deferred?: Record<string, string[] | undefined> | undefined;
 }
 
 interface DashboardData {
@@ -82,17 +83,17 @@ interface DashboardData {
 
 export default function StudentDashboard() {
   const user = usePage().props.auth.user;
-  const { student} = usePage().props as DashboardPageProps;
+  const { student } = usePage().props as DashboardPageProps;
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  
+
   useEffect(() => {
     try {
       const stored = localStorage.getItem("theme");
       if (stored === "dark") {
         setDarkMode(true);
       }
-    } catch {}
+    } catch { }
   }, []);
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function StudentDashboard() {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
-  
+
   // Update initial data with new features
   const [data, setData] = useState<DashboardData | null>({
     classes: [{ name: "10A" }],
@@ -190,7 +191,7 @@ export default function StudentDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
-  
+
   // Filters for performance chart
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedExamType, setSelectedExamType] = useState("");
@@ -226,29 +227,29 @@ export default function StudentDashboard() {
   };
 
   const getAverageGrade = (marks: any[]) => {
-    if(!marks?.length) return 'N/A';
+    if (!marks?.length) return 'N/A';
     const gradeToPoints: Record<string, number> = {
       A: 4, B: 3, C: 2, D: 1, F: 0,
     };
     const points = marks.map(m => gradeToPoints[m.grade] ?? null).filter(p => p !== null);
-    if(!points.length) return 'N/A';
+    if (!points.length) return 'N/A';
     const avg = points.reduce((a, b) => a + b, 0) / points.length;
-    if(avg >= 3.5) return 'A';
-    if(avg >= 2.5) return 'B';
-    if(avg >= 1.5) return 'C';
-    if(avg >= 0.5) return 'D';
+    if (avg >= 3.5) return 'A';
+    if (avg >= 2.5) return 'B';
+    if (avg >= 1.5) return 'C';
+    if (avg >= 0.5) return 'D';
     return 'F';
   };
 
   if (!data) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  
+
   const infoCards = [
     { id: 1, label: 'Class Enrolled', value: student.class?.class_name ?? 'N/A', icon: <Users size={24} />, color: 'bg-blue-100 text-blue-600' },
     { id: 2, label: 'Scholarship', value: student?.scholarship_status ?? 'N/A', icon: <Award size={24} />, color: 'bg-amber-100 text-amber-600' },
     { id: 3, label: 'Attendance', value: `${data.attendance?.overall_percentage ?? 96}%`, icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
     { id: 4, label: 'Avg Grade', value: getAverageGrade(student.marks), icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
   ];
-  
+
   const [currentDateTime, setCurrentDateTime] = useState('');
   useEffect(() => {
     const updateDateTime = () => {
@@ -373,28 +374,28 @@ export default function StudentDashboard() {
 
     const calculateGPA = (grades: GradeRecord[]) => {
       if (!grades.length) return 0;
-      
+
       let totalPoints = 0;
       let totalCredits = 0;
-      
+
       grades.forEach(grade => {
         totalPoints += gradePoints[grade.grade] || 0;
         totalCredits += 1;
       });
-      
+
       return totalPoints / totalCredits;
     };
 
     const currentGPA = calculateGPA(data?.grades || []);
     const projectedGPA = currentGPA + 0.2; // Simplified for demo
-    
+
     return (
       <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
           <Award className="mr-2 text-amber-600" size={20} />
           GPA Calculator
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 p-5 rounded-lg border border-amber-200 dark:border-amber-800">
             <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-200 mb-2">Current GPA</h3>
@@ -405,7 +406,7 @@ export default function StudentDashboard() {
               Based on {data?.grades?.length || 0} assessments
             </div>
           </div>
-          
+
           <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-5 rounded-lg border border-blue-200 dark:border-blue-800">
             <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">Projected GPA</h3>
             <div className="text-4xl font-bold text-blue-700 dark:text-blue-300">
@@ -416,7 +417,7 @@ export default function StudentDashboard() {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-6">
           <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-3">GPA Scale</h3>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -448,7 +449,7 @@ export default function StudentDashboard() {
             Grade Tracker
           </h2>
           <div className="flex space-x-2">
-            <select 
+            <select
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg text-sm"
               value={gradeFilter}
               onChange={(e) => setGradeFilter(e.target.value)}
@@ -459,7 +460,7 @@ export default function StudentDashboard() {
               <option value="exam">Exams</option>
               <option value="project">Projects</option>
             </select>
-            <select 
+            <select
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg text-sm"
               value={subjectFilter}
               onChange={(e) => setSubjectFilter(e.target.value)}
@@ -471,7 +472,7 @@ export default function StudentDashboard() {
             </select>
           </div>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full text-left border">
             <thead className="bg-amber-50 dark:bg-gray-700">
@@ -496,13 +497,12 @@ export default function StudentDashboard() {
                     <span className="font-medium">{grade.marks_obtained}</span>/{grade.max_marks}
                   </td>
                   <td className="p-3 text-sm">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      grade.grade === 'A' ? 'bg-green-100 text-green-800' :
-                      grade.grade === 'B' ? 'bg-blue-100 text-blue-800' :
-                      grade.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
-                      grade.grade === 'D' ? 'bg-orange-100 text-orange-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${grade.grade === 'A' ? 'bg-green-100 text-green-800' :
+                        grade.grade === 'B' ? 'bg-blue-100 text-blue-800' :
+                          grade.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
+                            grade.grade === 'D' ? 'bg-orange-100 text-orange-800' :
+                              'bg-red-100 text-red-800'
+                      }`}>
                       {grade.grade}
                     </span>
                   </td>
@@ -530,12 +530,12 @@ export default function StudentDashboard() {
       acc[grade.subject].push(grade);
       return acc;
     }, {} as Record<string, GradeRecord[]>) || {};
-    
+
     const subjectAverages = Object.entries(subjectGroups).map(([subject, grades]) => {
       const totalMarks = grades.reduce((sum, grade) => sum + grade.marks_obtained, 0);
       const maxMarks = grades.reduce((sum, grade) => sum + grade.max_marks, 0);
       const average = maxMarks > 0 ? (totalMarks / maxMarks) * 100 : 0;
-      
+
       return {
         subject,
         average,
@@ -543,14 +543,14 @@ export default function StudentDashboard() {
         latestGrade: grades[grades.length - 1]?.grade || 'N/A'
       };
     });
-    
+
     return (
       <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
           <BarChart2 className="mr-2 text-amber-600" size={20} />
           Subject-wise Progress
         </h2>
-        
+
         <div className="space-y-5">
           {subjectAverages.map(({ subject, average, count, latestGrade }) => (
             <div key={subject}>
@@ -558,20 +558,19 @@ export default function StudentDashboard() {
                 <span className="font-medium text-gray-700 dark:text-gray-300">{subject}</span>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-medium">{average.toFixed(1)}%</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    latestGrade === 'A' ? 'bg-green-100 text-green-800' :
-                    latestGrade === 'B' ? 'bg-blue-100 text-blue-800' :
-                    latestGrade === 'C' ? 'bg-yellow-100 text-yellow-800' :
-                    latestGrade === 'D' ? 'bg-orange-100 text-orange-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${latestGrade === 'A' ? 'bg-green-100 text-green-800' :
+                      latestGrade === 'B' ? 'bg-blue-100 text-blue-800' :
+                        latestGrade === 'C' ? 'bg-yellow-100 text-yellow-800' :
+                          latestGrade === 'D' ? 'bg-orange-100 text-orange-800' :
+                            'bg-red-100 text-red-800'
+                    }`}>
                     {latestGrade}
                   </span>
                 </div>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                <div 
-                  className="bg-amber-600 h-2.5 rounded-full" 
+                <div
+                  className="bg-amber-600 h-2.5 rounded-full"
                   style={{ width: `${average}%` }}
                 ></div>
               </div>
@@ -581,7 +580,7 @@ export default function StudentDashboard() {
             </div>
           ))}
         </div>
-        
+
         {subjectAverages.length === 0 && (
           <div className="text-center py-8 text-gray-500">No progress data available</div>
         )}
@@ -603,9 +602,9 @@ export default function StudentDashboard() {
         { date: '2023-02-10', reason: 'Family event' }
       ]
     };
-    
+
     const isLowAttendance = attendanceData.overall_percentage < 85;
-    
+
     return (
       <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
         <div className="flex justify-between items-center mb-4">
@@ -613,14 +612,14 @@ export default function StudentDashboard() {
             <CalendarCheck className="mr-2 text-amber-600" size={20} />
             Attendance Summary
           </h2>
-          <button 
+          <button
             onClick={() => setAttendanceModalOpen(true)}
             className="px-3 py-1 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600"
           >
             View Details
           </button>
         </div>
-        
+
         {isLowAttendance && (
           <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start">
             <div className="flex-shrink-0">
@@ -636,23 +635,22 @@ export default function StudentDashboard() {
             </div>
           </div>
         )}
-        
+
         <div className="mb-4">
           <div className="flex justify-between mb-1">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Attendance</span>
             <span className="text-sm font-medium">{attendanceData.overall_percentage}%</span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-            <div 
-              className={`h-2.5 rounded-full ${
-                attendanceData.overall_percentage >= 90 ? 'bg-green-600' :
-                attendanceData.overall_percentage >= 75 ? 'bg-amber-600' : 'bg-red-600'
-              }`} 
+            <div
+              className={`h-2.5 rounded-full ${attendanceData.overall_percentage >= 90 ? 'bg-green-600' :
+                  attendanceData.overall_percentage >= 75 ? 'bg-amber-600' : 'bg-red-600'
+                }`}
               style={{ width: `${attendanceData.overall_percentage}%` }}
             ></div>
           </div>
         </div>
-        
+
         <div>
           <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-3">Monthly Attendance</h3>
           <div className="space-y-3">
@@ -663,11 +661,10 @@ export default function StudentDashboard() {
                   <span className="text-sm font-medium">{month.percentage}%</span>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full ${
-                      month.percentage >= 90 ? 'bg-green-600' :
-                      month.percentage >= 75 ? 'bg-amber-600' : 'bg-red-600'
-                    }`} 
+                  <div
+                    className={`h-2 rounded-full ${month.percentage >= 90 ? 'bg-green-600' :
+                        month.percentage >= 75 ? 'bg-amber-600' : 'bg-red-600'
+                      }`}
                     style={{ width: `${month.percentage}%` }}
                   ></div>
                 </div>
@@ -678,7 +675,7 @@ export default function StudentDashboard() {
             ))}
           </div>
         </div>
-        
+
         {attendanceData.recent_absences.length > 0 && (
           <div className="mt-6">
             <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-3">Recent Absences</h3>
@@ -718,14 +715,14 @@ export default function StudentDashboard() {
         date: '2023-06-10'
       }
     ];
-    
+
     return (
       <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
         <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
           <MessageSquare className="mr-2 text-amber-600" size={20} />
           Teacher Feedback Hub
         </h2>
-        
+
         {feedbackData.length === 0 ? (
           <div className="text-center py-8 text-gray-500">No feedback available at this time</div>
         ) : (
@@ -778,7 +775,7 @@ export default function StudentDashboard() {
           </a>
         </div>
       </div>
-      
+
       <nav className="bg-gradient-to-r from-[#7a0000] to-[#650000] text-white py-3 px-6 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
@@ -809,7 +806,7 @@ export default function StudentDashboard() {
           </div>
         </div>
       </nav>
-      
+
       {menuOpen && (
         <div className="bg-white dark:bg-gray-800 text-black px-4 py-3 md:hidden shadow-lg">
           <div className="grid grid-cols-3 gap-2 mb-3">
@@ -836,44 +833,43 @@ export default function StudentDashboard() {
           </h2>
           <div className="space-y-1">
             {[
-              { name: 'Dashboard', icon: <Home size={18} />, onClick: () => {} },
+              { name: 'Dashboard', icon: <Home size={18} />, onClick: () => { } },
               { name: 'Courses', icon: <Book size={18} />, onClick: () => setCoursesOpen(true) },
-              { name: 'Assignments', icon: <ClipboardList size={18} />, onClick: () => {} },
+              { name: 'Assignments', icon: <ClipboardList size={18} />, onClick: () => { } },
               { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
               { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
               { name: 'Study Materials', icon: <Book size={18} />, link: '/student/studyMaterial' },
               { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
               { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
               { name: 'Settings', icon: <Settings size={18} />, link: '/settings' },
-              { name: 'Logout', icon: <LogOut size={18} />, link: '/logout' },
-            ].map((item, index) => item.link ? (
-              <Link
-                key={index}
-                href={item.link}
-                className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${
-                  index === 0
-                    ? 'bg-amber-100 text-amber-700 font-medium'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
-                }`}
-                
-                
-              >
-                <span className="mr-3">{item.icon}</span>
-                {item.name}
-              </Link>
-            ):(
-              <button key={index} onClick={item.onClick}
-               className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${
-        index === 0
-          ? 'bg-amber-100 text-amber-700 font-medium'
-          : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
-      }`}
-              >
-                 <span className="mr-3">{item.icon}</span>
-                {item.name}
 
-              </button>
-            ))}
+            ].map((item, index) =>
+              item.link ? (
+                <Link
+                  key={index}
+                  href={item.link}
+                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${index === 0
+                      ? 'bg-amber-100 text-amber-700 font-medium'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
+                    }`}
+
+
+                >
+                  <span className="mr-3">{item.icon}</span>
+                  {item.name}
+                </Link>
+              ) : (
+                <button key={index} onClick={item.onClick}
+                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all ${index === 0
+                      ? 'bg-amber-100 text-amber-700 font-medium'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-amber-50 hover:text-amber-600 dark:hover:bg-gray-700 dark:hover:text-amber-400'
+                    }`}
+                >
+                  <span className="mr-3">{item.icon}</span>
+                  {item.name}
+
+                </button>
+              ))}
           </div>
         </div>
 
@@ -895,13 +891,13 @@ export default function StudentDashboard() {
               </div>
               <div className="bg-white/20 dark:bg-gray-800 backdrop-blur-sm rounded-full px-4 py-2 inline-flex items-center">
                 <CalendarCheck className="mr-2" size={18} />
-                <span>{ currentDateTime}</span>
+                <span>{currentDateTime}</span>
               </div>
             </div>
           </div>
-          
-          <DailyQuote/>
-          
+
+          <DailyQuote />
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
             {[
               { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
@@ -910,7 +906,7 @@ export default function StudentDashboard() {
               { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, onClick: () => setTeachersModalOpen(true) },
             ].map((action, idx) => (
               action.link ? (
-                <Link key={idx} href={action.link} 
+                <Link key={idx} href={action.link}
                   className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
                   {action.icon}
                   <span className="mt-2 text-sm font-medium">{action.name}</span>
@@ -923,8 +919,8 @@ export default function StudentDashboard() {
                 </button>
               )
             ))}
-          </div>  
-          
+          </div>
+
           <div className="mb-6 mt-8">
             <h2 className="text-lg font-bold text-gray-800 flex items-center">
               <Search className="mr-2 text-amber-600" size={20} />
@@ -992,13 +988,13 @@ export default function StudentDashboard() {
                 <MessageSquare className="mr-2 text-amber-600" size={20} />
                 Teacher Contacts
               </Dialog.Title>
-              
+
               {teachersError && (
                 <div className="mb-3 p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-800">
                   {teachersError}
                 </div>
               )}
-              
+
               {teachersLoading ? (
                 <div className="py-8 text-center text-gray-500">Loading teachers...</div>
               ) : (
@@ -1013,7 +1009,7 @@ export default function StudentDashboard() {
                         {teacher.personal?.Email_address && (
                           <div className="flex items-center mt-1">
                             <Mail size={14} className="mr-2" />
-                            <a 
+                            <a
                               href={`mailto:${teacher.personal.Email_address}`}
                               className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
                               onClick={(e) => e.stopPropagation()}
@@ -1022,7 +1018,7 @@ export default function StudentDashboard() {
                             >
                               {teacher.personal.Email_address}
                             </a>
-                            <button 
+                            <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 copyToClipboard(teacher.personal.Email_address, 'email');
@@ -1034,12 +1030,12 @@ export default function StudentDashboard() {
                             </button>
                           </div>
                         )}
-                        
+
                         {teacher.personal?.Mobile_number && (
                           <div className="flex items-center mt-1">
                             <span className="mr-2">📱</span>
                             <div className="flex flex-wrap gap-2">
-                              <a 
+                              <a
                                 href={`https://wa.me/${formatPhoneNumberForWhatsApp(teacher.personal.Mobile_number)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -1048,14 +1044,14 @@ export default function StudentDashboard() {
                               >
                                 WhatsApp
                               </a>
-                              <a 
+                              <a
                                 href={`tel:${teacher.personal.Mobile_number}`}
                                 className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 Call
                               </a>
-                              <button 
+                              <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   copyToClipboard(teacher.personal.Mobile_number, 'mobile');
@@ -1071,7 +1067,7 @@ export default function StudentDashboard() {
                         {teacher.personal?.Fixed_telephone_number && (
                           <div className="flex items-center mt-1">
                             <span className="mr-2">📞</span>
-                            <a 
+                            <a
                               href={`tel:${teacher.personal.Fixed_telephone_number}`}
                               className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 underline"
                               onClick={(e) => e.stopPropagation()}
@@ -1088,10 +1084,10 @@ export default function StudentDashboard() {
                   )}
                 </div>
               )}
-              
+
               <div className="mt-4 text-right">
-                <button 
-                  onClick={() => setTeachersModalOpen(false)} 
+                <button
+                  onClick={() => setTeachersModalOpen(false)}
                   className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600"
                 >
                   Close
@@ -1107,14 +1103,14 @@ export default function StudentDashboard() {
                 <BarChart2 className="mr-2 text-amber-600" size={20} />
                 Your Marks
               </h2>
-              
+
               {marksLoading && (
                 <div className="text-center py-8">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-amber-500"></div>
                   <p className="mt-2 text-gray-600 dark:text-gray-300">Loading marks...</p>
                 </div>
               )}
-              
+
               {marksError && (
                 <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
                   <div className="flex">
@@ -1131,7 +1127,7 @@ export default function StudentDashboard() {
                   </div>
                 </div>
               )}
-              
+
               {!marksLoading && !marksError && (
                 <>
                   <div className="flex justify-end mb-4">
@@ -1227,13 +1223,12 @@ export default function StudentDashboard() {
                                   {mark.marks_obtained || 'N/A'}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                    mark.grade === 'A' ? 'bg-green-100 text-green-800' :
-                                    mark.grade === 'B' ? 'bg-blue-100 text-blue-800' :
-                                    mark.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
-                                    mark.grade === 'S' ? 'bg-orange-100 text-orange-800' :
-                                    'bg-red-100 text-red-800'
-                                  }`}>
+                                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${mark.grade === 'A' ? 'bg-green-100 text-green-800' :
+                                      mark.grade === 'B' ? 'bg-blue-100 text-blue-800' :
+                                        mark.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
+                                          mark.grade === 'S' ? 'bg-orange-100 text-orange-800' :
+                                            'bg-red-100 text-red-800'
+                                    }`}>
                                     {mark.grade || 'N/A'}
                                   </span>
                                 </td>
@@ -1315,12 +1310,12 @@ export default function StudentDashboard() {
                   onClick={() => {
                     setSubjectsLoading(true);
                     setSubjectsError(null);
-                
+
                     fetch('/api/subjects')
                       .then(async (res) => {
                         if (!res.ok) {
                           const text = await res.text();
-                          console.log("Subjects" ,text);
+                          console.log("Subjects", text);
                           throw new Error(`HTTP ${res.status}: ${text?.slice(0, 200)}`);
                         }
                         return res.json();
@@ -1333,11 +1328,11 @@ export default function StudentDashboard() {
                   Refresh
                 </button>
               </div>
-              
+
               {coursesOpen && subjects.length === 0 && !subjectsLoading && !subjectsError && (
                 <script dangerouslySetInnerHTML={{ __html: `setTimeout(() => { document.querySelector('[data-load-subjects]')?.click(); }, 0);` }} />
               )}
-              
+
               <button data-load-subjects className="hidden" onClick={() => {
                 setSubjectsLoading(true);
                 setSubjectsError(null);
@@ -1353,13 +1348,13 @@ export default function StudentDashboard() {
                   .catch((err) => setSubjectsError((err as any)?.message ?? 'Failed to load subjects'))
                   .finally(() => setSubjectsLoading(false));
               }} />
-              
+
               {subjectsError && (
                 <div className="mb-3 p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-800">
                   {subjectsError}
                 </div>
               )}
-              
+
               {subjectsLoading ? (
                 <div className="py-8 text-center text-gray-500">Loading subjects...</div>
               ) : (
@@ -1387,7 +1382,7 @@ export default function StudentDashboard() {
                   )}
                 </div>
               )}
-              
+
               <div className="mt-4 text-right">
                 <button onClick={() => setCoursesOpen(false)} className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600">Close</button>
               </div>
@@ -1439,7 +1434,7 @@ export default function StudentDashboard() {
                   <BarChart2 className="mr-2 text-amber-600" size={20} />
                   Academic Performance
                 </h2>
-                <StudentOverallPerformanceChart regNo={student?.reg_no ?? String(user.id)} darkMode={darkMode}/>
+                <StudentOverallPerformanceChart regNo={student?.reg_no ?? String(user.id)} darkMode={darkMode} />
               </div>
 
               <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm">
@@ -1483,7 +1478,7 @@ export default function StudentDashboard() {
                   <CalendarCheck className="mr-2 text-amber-600" size={20} />
                   Academic Calendar
                 </h2>
-                <CalendarView darkMode={darkMode}/>
+                <CalendarView darkMode={darkMode} />
               </div>
 
               {/* Enhanced Attendance Summary */}
@@ -1509,8 +1504,8 @@ export default function StudentDashboard() {
                 </h2>
                 <StudentPerformanceChart marksData={data.monthlyMarks ?? []} darkMode={darkMode} />
               </div>
-              
-              <RealTimeChatBot darkMode={darkMode}/>
+
+              <RealTimeChatBot darkMode={darkMode} />
             </div>
           </div>
         </main>
