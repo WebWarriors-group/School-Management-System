@@ -12,8 +12,32 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class QualificationFactory extends Factory
 {
     protected $model = Qualification::class;
+
+
+
+   
+
     public function definition(): array
     {
+
+
+
+
+         $subjectNames = [
+            'Science', 'Maths', 'Tamil', 'English', 'Geography', 'Civics',
+            'Islam', 'Hinduism', 'Buddhism', 'History', 'Physics', 'Chemistry',
+            'Combined Maths', 'Art', 'Sinhala', 'Tamil Literature', 'Agriculture', 'Biology'
+        ];
+
+
+        $appointed = $this->faker->randomElement($subjectNames);
+
+        // Pick 2 others different from appointed
+        $others = collect($subjectNames)
+            ->reject(fn ($s) => $s === $appointed)
+            ->shuffle()
+            ->take(2)
+            ->all();
         return [
             'teacher_NIC' => Teacher::all()->random()->teacher_NIC,  // Assign a random teacher's NIC
             'type_of_service_in_school' => $this->faker->randomElement(['Full-time', 'Part-time', 'Contract']),
@@ -27,9 +51,9 @@ class QualificationFactory extends Factory
             'appointment_date_for_current_grade' => $this->faker->date(),
             'current_appointment_service_medium' => $this->faker->randomElement(['English', 'Tamil', 'Sinhala']),
             'appointed_subject_section' => $this->faker->randomElement(['Mathematics', 'Science', 'English']),
-            'subject_appointed' => $this->faker->randomElement(['Maths', 'Physics', 'Chemistry', 'History', 'English']),
+            'subject_appointed' => $appointed,
             'currentservice_appointed_date' => $this->faker->date(),
-            'subjects_taught_most_and_second_most' => $this->faker->randomElement(['Maths and Physics', 'English and History']),
+            'subjects_taught_most_and_second_most' =>  $others[0] . ' and ' . $others[1],
             'position_in_the_school' => $this->faker->randomElement(['Teacher', 'Head of Department', 'Principal']),
             'assign_date_for_the_school' => $this->faker->date(),
         ];

@@ -141,6 +141,8 @@ export default function AssignTeachersPage() {
 
     Inertia.post('/assignments', { assignments: payload } as any, {
       preserveScroll: true,
+     // ✅ force fetch new props
+
     });
   };
 
@@ -522,7 +524,8 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
         {/* Assignment Summary Table */}
         <div className="mt-16 max-w-9xl mx-auto bg-white rounded shadow-md overflow-x-auto">
           <h2 className="text-xl font-bold p-6 border-b">📋 Teacher Assignment Summary</h2>
-            <button className="text-xl font-bold p-6 border-b text-end">Generate time table</button>
+
+            <button className="text-xl font-bold p-2 border-b text-end bg-green-400 mt-[20px] hover:cursor-[pointer]">Generate time table</button>
           <table className="min-w-300 table-auto text-left text-sm text-gray-700">
             <thead className="bg-blue-200 border-b">
               <tr>

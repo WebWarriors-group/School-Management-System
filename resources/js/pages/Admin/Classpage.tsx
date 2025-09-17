@@ -58,7 +58,6 @@ const [expandedGrade, setExpandedGrade] = useState<string | null>(null);
 const [selectedTeacherNIC, setSelectedTeacherNIC] = useState<string>('');
 const assignedTeacherNICs = new Set<string>();
 
-  // Convert selectedGrade to number safely
   const gradeNum = selectedGrade === '' ? null : parseInt(selectedGrade);
 
   const [sectionAssignments, setSectionAssignments] = useState<Record<string, string>>({});

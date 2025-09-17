@@ -17,6 +17,7 @@ use App\Models\StudentSibling;
 use App\Models\StudyMaterial;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Grade;
 use App\Models\TeacherAddress;
 use App\Models\TeacherOtherServices;
 use App\Models\TeacherPersonal;
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
         StudyMaterial::factory(10)->create();
         ClassModel::factory(16)->create();
         Subject::factory(10)->create();
+        Grade::factory(100)->create();
 $students = StudentAcademic::factory(200)->create();
 
         // Marks::factory(10)->create();
