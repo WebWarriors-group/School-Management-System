@@ -1311,7 +1311,7 @@ export default function StudentDashboard() {
                     setSubjectsLoading(true);
                     setSubjectsError(null);
 
-                    fetch('/api/subjects')
+                    fetch(`/api/student/${student.reg_no}/subjects`)
                       .then(async (res) => {
                         if (!res.ok) {
                           const text = await res.text();
@@ -1418,7 +1418,12 @@ export default function StudentDashboard() {
               <div className="flex items-center space-x-4 mb-4">
                 <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg" value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
                   <option value="">All Subjects</option>
-                  {subjects.map(sub => <option key={sub} value={sub}>{sub}</option>)}
+                {subjects.map((s) => (
+  <div key={s.subject_id}>
+    {s.subject_name}  {/* <-- Access the name property */}
+  </div>
+))}
+
                 </select>
                 <select className="px-3 py-2 border border-gray-300 rounded-lg" value={selectedExamType} onChange={(e) => setSelectedExamType(e.target.value)}>
                   <option value="">All Exams</option>
