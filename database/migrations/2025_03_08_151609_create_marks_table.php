@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->id();
-             $table->integer('class');
+             $table->integer('class_id')->nullable();
               $table->integer('year');
                $table->string('term', 20);
             $table->integer('reg_no');

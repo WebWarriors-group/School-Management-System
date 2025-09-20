@@ -17,7 +17,8 @@ class Marks extends Model
         'marks_obtained',
         'grade',
         'term',
-        'year',           // Include if you store it directly, otherwise access via studentAcademic
+        'year',
+        'class_id',           // Include if you store it directly, otherwise access via studentAcademic
     ];
 
     // Relationship with StudentAcademicInfo (assuming 'reg_no' is the primary key in student_academic_info)
@@ -25,6 +26,11 @@ class Marks extends Model
     {
         return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
     }
+
+    public function classModel()
+{
+    return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
+}
 
     // Relationship with Subject
     public function subject()

@@ -141,6 +141,8 @@ export default function AssignTeachersPage() {
 
     Inertia.post('/assignments', { assignments: payload } as any, {
       preserveScroll: true,
+     // ✅ force fetch new props
+
     });
   };
 
@@ -174,10 +176,23 @@ export default function AssignTeachersPage() {
       })
     : [];
 
+
+    const teacherSummary = teachers.map((teacher) => {
+const teacherAssignments = assignments.filter((a) => a.teacher_NIC === teacher.teacher_NIC);
+return {
+...teacher,
+assignments: teacherAssignments.map((a) => {
+const cls = classes.find((c) => c.class_id === a.class_id);
+const subj = subjects.find((s) => s.subject_id === a.subject_id);
+return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})`;
+}),
+};
+});
+
   return (
     <AppLayout>
-      <main className="p-6 bg-gray-200 space-y-12">
-<div className="flex justify-between items-center">
+      <main className="p-6 bg-gray-200">
+ <div className="flex flex-col lg:flex-row gap-8">
           <Button
             className="bg-yellow-500 w-40 h-10 text-lg shadow-sm hover:scale-105 transition"
             onClick={() => router.visit('/admin/dashboardoverview')}
@@ -202,24 +217,55 @@ export default function AssignTeachersPage() {
           </div>
 
           {/* Show teachers for selected subject */}
-          {selectedSubjectId && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-2">
-                Teachers who can teach:{" "}
-                <span className="text-blue-700">
-                  {subjects.find((s) => s.subject_id === selectedSubjectId)?.subject_name}
-                </span>
-              </h3>
-              {teachersForSelectedSubject.length === 0 && <p>No teachers available for this subject.</p>}
-              <ul className="list-disc pl-5 space-y-1 max-h-64 overflow-y-auto border p-3 rounded bg-gray-50">
-                {teachersForSelectedSubject.map((teacher) => (
-                  <li key={teacher.teacher_NIC}>
-                    {teacher.personal?.Full_name_with_initial || teacher.name || teacher.teacher_NIC}
-                  </li>
-                ))}
-              </ul>
+         {selectedSubjectId && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-4">
+      Teachers who can teach:{" "}
+      <span className="text-blue-700">
+        {subjects.find((s) => s.subject_id === selectedSubjectId)?.subject_name}
+      </span>
+    </h3>
+
+    {teachersForSelectedSubject.length === 0 ? (
+      <p>No teachers available for this subject.</p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-80 overflow-y-auto">
+        {teachersForSelectedSubject.map((teacher) => (
+          <div
+            key={teacher.teacher_NIC}
+            className="flex items-center gap-3 p-3 border rounded shadow hover:shadow-md transition cursor-pointer bg-white"
+          >
+            {/* Profile Picture */}
+            <img
+              src={teacher.personal?.Photo || '/default-profile.png'}
+              alt={teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+              className="w-12 h-12 rounded-full object-cover border"
+            />
+
+            {/* Teacher Info */}
+            <div className="flex flex-col">
+              <span className="font-semibold text-gray-800">
+                {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+              </span>
+              <span className="text-sm text-gray-500">
+                Subject: {teacher.qualifications?.subject_appointed || 'N/A'}
+              </span>
+              <span className="text-sm text-gray-500">
+                Subject Most Teaching: {teacher.qualifications?.subjects_taught_most_and_second_most  || 'N/A'}
+              </span>
+              <span className="text-sm text-gray-500">
+                Medium: {teacher.qualifications?.current_appointment_service_medium || 'N/A'}
+              </span>
+
+            
             </div>
-          )}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
         </section>
 
         {/* Back Button */}
@@ -230,87 +276,140 @@ export default function AssignTeachersPage() {
          
         </div>
 
-        {/* Form to Assign */}
-        <div className="bg-white p-8 shadow-md rounded space-y-6">
-          <h1 className="text-2xl font-bold text-blue-800">Assign Teachers to Subjects</h1>
-          {flash?.success && (
-            <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">{flash.success}</div>
-          )}
+        {/* Form to Assign */}<div className="flex flex-col lg:flex-row gap-8 items-start">
 
-          <div className="flex gap-4">
-            <div className="w-1/2">
-              <label className="block font-medium mb-1">Select Grade</label>
+  {/* Left Side: Form */}
+  <div className="flex-1 bg-white p-6 rounded shadow-md space-y-6 max-h-[80vh] overflow-y-auto">
+    {flash?.success && (
+      <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+        {flash.success}
+      </div>
+    )}
+
+    <h1 className="text-2xl font-bold text-blue-800">Assign Teachers to Subjects</h1>
+
+    {/* Select Grade */}
+    <div className="w-1/2">
+      <label className="block font-medium mb-1">Select Grade</label>
+      <select
+        className="w-full border rounded px-3 py-2"
+        value={selectedGrade ?? ''}
+        onChange={(e) => {
+          const val = e.target.value ? Number(e.target.value) : null;
+          setSelectedGrade(val);
+          setSelectedClassId(null);
+          setLocalAssignments({});
+        }}
+      >
+        <option value="">-- Select Grade --</option>
+        {grades.map((g) => (
+          <option key={g} value={g}>
+            Grade {g}
+          </option>
+        ))}
+      </select>
+      {errors?.grade && <p className="text-red-600 text-sm mt-1">{errors.grade.join(', ')}</p>}
+    </div>
+
+    {selectedGrade && filteredSubjects.length > 0 && (
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        {/* Select Section */}
+        <div className="w-1/2">
+          <label className="block font-medium mb-1">Select Section</label>
+          <select
+            className="w-full border rounded px-3 py-2"
+            value={selectedClassId ?? ''}
+            onChange={(e) => setSelectedClassId(e.target.value ? Number(e.target.value) : null)}
+          >
+            <option value="">-- Select Section --</option>
+            {filteredClasses.map((cls) => (
+              <option key={cls.class_id} value={cls.class_id}>
+                {cls.section}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subject → Teacher Assignment */}
+        {filteredSubjects.map((subject) => {
+          const eligibleTeachers = teachers.filter((t) =>
+            canTeacherTeachSubject(t, subject.subject_name)
+          );
+
+          return (
+            <div
+              key={subject.subject_id}
+              className="flex justify-between items-center border rounded px-4 py-2"
+            >
+              <span className="font-medium text-gray-700">{subject.subject_name}</span>
               <select
-                className="w-full border rounded px-3 py-2"
-                value={selectedGrade ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value ? Number(e.target.value) : null;
-                  setSelectedGrade(val);
-                  setSelectedClassId(null);
-                  setLocalAssignments({});
-                }}
+                className="border rounded px-3 py-1"
+                value={localAssignments[subject.subject_id] ?? ''}
+                onChange={(e) => handleTeacherChange(subject.subject_id, e.target.value)}
+                disabled={!selectedClassId}
               >
-                <option value="">-- Select Grade --</option>
-                {grades.map((g) => (
-                  <option key={g} value={g}>
-                    Grade {g}
-                  </option>
-                ))}
+                <option value="">-- Select Teacher --</option>
+                {eligibleTeachers.length > 0 ? (
+                  eligibleTeachers.map((teacher) => (
+                    <option key={teacher.teacher_NIC} value={teacher.teacher_NIC}>
+                      {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No eligible teachers</option>
+                )}
               </select>
-              {errors?.grade && <p className="text-red-600 text-sm mt-1">{errors.grade.join(', ')}</p>}
+            </div>
+          );
+        })}
+
+        <button
+          type="submit"
+          disabled={!selectedClassId}
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+        >
+          Save Assignments
+        </button>
+      </form>
+    )}
+  </div>
+
+  {/* Right Side: Teacher Summary */}
+  <aside className="w-full lg:w-1/3 bg-white p-6 rounded shadow-md h-[80vh] lg:sticky top-6 overflow-y-auto">
+    <h2 className="text-xl font-bold mb-4">👩‍🏫 Teacher Assignment Summary</h2>
+    <div className="space-y-4">
+      {teacherSummary.map((teacher) => (
+        <div key={teacher.teacher_NIC} className="p-4 border rounded shadow-sm hover:shadow-md transition">
+          <div className="flex items-center gap-3">
+            <img
+              src={teacher.personal?.Photo || '/default-profile.png'}
+              alt={teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
+              className="w-12 h-12 rounded-full object-cover border"
+            />
+            <div>
+              <p className="font-semibold">{teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}</p>
+              <p className="text-sm text-gray-500">{teacher.assignments.length} classes</p>
             </div>
           </div>
-
-          {selectedGrade && filteredSubjects.length > 0 && (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="w-1/2">
-                <label className="block font-medium mb-1">Select Section</label>
-                <select
-                  className="w-full border rounded px-3 py-2"
-                  value={selectedClassId ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value ? Number(e.target.value) : null;
-                    setSelectedClassId(val);
-                  }}
-                >
-                  <option value="">-- Select Section--</option>
-                  {filteredClasses.map((cls) => (
-                    <option key={cls.class_id} value={cls.class_id}>
-                      {cls.section}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {filteredSubjects.map((subject) => (
-                <div key={subject.subject_id} className="flex justify-between items-center border rounded px-4 py-2">
-                  <span className="font-medium text-gray-700">{subject.subject_name}</span>
-                  <select
-                    className="border rounded px-3 py-1"
-                    value={localAssignments[subject.subject_id] ?? ''}
-                    onChange={(e) => handleTeacherChange(subject.subject_id, e.target.value)}
-                    disabled={!selectedClassId}
-                  >
-                    <option value="">-- Select Teacher --</option>
-                    {teachers.map((teacher) => (
-                      <option key={teacher.teacher_NIC} value={teacher.teacher_NIC}>
-                        {teacher.teacher_NIC}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          {teacher.assignments.length > 0 ? (
+            <ul className="mt-2 text-sm list-disc list-inside text-gray-600">
+              {teacher.assignments.map((a, idx) => (
+                <li key={idx}>{a}</li>
               ))}
-
-              <button
-                type="submit"
-                disabled={!selectedClassId}
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                Save Assignments
-              </button>
-            </form>
+            </ul>
+          ) : (
+            <p className="text-sm text-red-500 mt-2">❌ No Assignments</p>
           )}
         </div>
+      ))}
+    </div>
+  </aside>
+
+</div>
+
+
+        
 
         {/* Grade → Section → Subject Tree with Class Teacher */}
         <div className="mt-16 bg-white py-5 py">
@@ -340,13 +439,46 @@ export default function AssignTeachersPage() {
                               setExpandedSection(expandedSection === cls.class_id ? null : cls.class_id);
                             }}
                           >
-                            <h4 className="text-gray-800 font-medium grid grid-cols-3 gap-4 items-center">
-                              <span>Section {cls.section}</span>
-                              <span>
-                                Class Teacher:{" "}
-                                <span className="text-green-700 font-semibold ml-10">{cls.teacher_NIC}</span>
-                              </span>
-                            </h4>
+                            {/* Section & Class Teacher */}
+<div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
+  <span className="font-semibold text-gray-800 text-lg">Section {cls.section}</span>
+
+  {cls.teacher_NIC ? (
+    (() => {
+      const classTeacher = teachers.find(t => t.teacher_NIC === cls.teacher_NIC);
+      return classTeacher ? (
+        <div className="flex items-center gap-3 bg-blue-50 rounded-lg p-3 shadow-sm w-full md:w-auto">
+          {classTeacher.personal?.Photo && (
+            <img
+              src={classTeacher.personal.Photo}
+              alt={classTeacher.personal.Full_name_with_initial}
+              className="w-16 h-16 rounded-full object-cover border-2 border-blue-300"
+            />
+          )}
+          <div className="text-sm">
+            <p className="font-semibold text-gray-900">
+              {classTeacher.personal?.Full_name_with_initial || classTeacher.teacher_NIC}
+            </p>
+            <p className="text-gray-600 text-xs">
+              Medium: <span className="font-medium">{classTeacher.qualifications?.current_appointment_service_medium || 'N/A'}</span>
+            </p>
+            <p className="text-gray-600 text-xs">
+              Subject: <span className="font-medium">{classTeacher.qualifications?.subject_appointed || 'N/A'}</span>
+            </p>
+            <p className="text-gray-500 text-xs">
+              Qualification: <span className="font-medium">{classTeacher.qualifications?.highest_education_qualification || 'N/A'}</span>
+            </p>
+          </div>
+        </div>
+      ) : (
+        <p className="text-red-500 font-semibold">❌ Class Teacher Not Found</p>
+      );
+    })()
+  ) : (
+    <p className="text-red-500 font-semibold">❌ Class Teacher Not Assigned</p>
+  )}
+</div>
+
 
                             {expandedSection === cls.class_id && (
                               <div className="mt-3 space-y-7">
@@ -381,12 +513,19 @@ export default function AssignTeachersPage() {
               </div>
             ))}
           </div>
+
+
+
+
+
+          
         </div>
 
         {/* Assignment Summary Table */}
         <div className="mt-16 max-w-9xl mx-auto bg-white rounded shadow-md overflow-x-auto">
           <h2 className="text-xl font-bold p-6 border-b">📋 Teacher Assignment Summary</h2>
-            <button className="text-xl font-bold p-6 border-b text-end">Generate time table</button>
+
+            <button className="text-xl font-bold p-2 border-b text-end bg-green-400 mt-[20px] hover:cursor-[pointer]">Generate time table</button>
           <table className="min-w-300 table-auto text-left text-sm text-gray-700">
             <thead className="bg-blue-200 border-b">
               <tr>
@@ -421,6 +560,12 @@ export default function AssignTeachersPage() {
             </tbody>
           </table>
         </div>
+
+
+
+
+
+
       </main>
     </AppLayout>
   );

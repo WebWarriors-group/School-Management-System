@@ -395,7 +395,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
         onClick={() => setSelectedSection(null)}
         className="bg-blue-600 text-white hover:bg-blue-700"
       >
-        Back
+        Backh
       </Button>
     </div>
   </div>
