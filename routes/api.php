@@ -23,7 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         'role' => $request->user()->role,        
     ]);
 });
-
+ Route::get('formlayout',function(){
+        return Inertia::render('FormLayout');
+    })->name('formlayout');
 Route::get('/quotable/random', [ExternalController::class, 'getRandomQuote']);
 
 Route::prefix('student')->group(function () {

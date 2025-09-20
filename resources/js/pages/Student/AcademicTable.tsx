@@ -153,28 +153,28 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
       </div>
 
       <div className="overflow-x-auto w-290 ">
-        <table className="min-w-full  text-sm text-gray-700">
-          <thead className="bg-blue-700 text-left text-sm font-semibold uppercase text-white z-10" >
+         <table className="min-w-full  text-sm text-gray-700 w-290">
+           <thead className="bg-blue-200 text-left text-sm font-semibold uppercase text-black">
             <tr>
-              <th className="py-3 border font-semibold whitespace-nowrap ">Reg. No</th>
-              <th className="z-5 p-2 border font-semibold ">Student ID</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Class</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Distance</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Method</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[120px]">Grade 6–9 Aesthetic</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket1</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket2</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket3</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Grade 5 Scholarship</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Aswesuma Scholarship</th>
-              <th className="p-1 border font-semibold whitespace-nowrap">Any Other Scholarship</th>
-              <th className="p-2  w-2 border font-semibold whitespace-nowrap">View</th>
+              <th className="w-300 py-4">Reg. No</th>
+              <th className="px-2 py-4">StudentID</th>
+              <th className="px-2 py-4">Class</th>
+              <th className="px-2 py-4">Distance</th>
+              <th className="px-2 py-4">Method</th>
+              <th className="px-2 py-4">Grade 6–9 Aesthetic</th>
+              <th className="px-2 py-4"> 10–11 Basket1</th>
+              <th className="px-2 py-4">10–11 Basket2</th>
+              <th className="px-2 py-4">10–11 Basket3</th>
+              <th className="px-2 py-4"> 5 Scholarship</th>
+              <th className="px-2 py-4">Aswesuma Scholarship</th>
+              <th className="px-2 py-4">Any Other Scholarship</th>
+              <th className="px-2 py-4">View</th>
             </tr>
           </thead>
           <tbody>
             {currentData.length === 0 ? (
               <tr>
-                <td colSpan={13} className="px-6 py-6 text-center text-gray-500">
+                <td colSpan={13} className="px-6 py-6 text-center text-gray-500 border-b hover:bg-gray-50">
                   No records found.
                 </td>
               </tr>
@@ -185,37 +185,37 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
                   className="border-b hover:bg-blue-50 cursor-pointer"
                   onClick={(e) => handleRowClick(e, student)}
                 >
-                  <td className="py-4 px-12 border bg-blue-300 font-semibold text-black ">{student.reg_no}</td>
-                  <td className="py-3 px-12 border">{student.student_id_no}</td>
-                  <td className="p-2 px-12 border">{student.class_id}</td>
-                  <td className="p-2 px-12 border">{student.distance_to_school ?? '—'}</td>
-                  <td className="p-2 px-12 border">{student.method_of_coming_to_school ?? '—'}</td>
-                  <td className="p-2 px-12 border whitespace-nowrap">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
-                  <td className="p-2 px-12 border whitespace-nowrap ">{student.grade_10_11_basket1_subjects ?? '—'}</td>
-                  <td className="p-2  px-10 border whitespace-nowrap">{student.grade_10_11_basket2_subjects ?? '—'}</td>
-                  <td className="p-2 px-12 border whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
-                  <td className="p-2 px-10 border">
+                  <td className="px-2 py-4">{student.reg_no}</td>
+                  <td className="px-1 py-4">{student.student_id_no}</td>
+                  <td className="px-2 py-4">{student.class_id}</td>
+                  <td className="px-1 py-4">{student.distance_to_school ?? '—'}</td>
+                  <td className="px-1 py-4">{student.method_of_coming_to_school ?? '—'}</td>
+                  <td className="px-1 py-4">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
+                  <td className="px-1 py-4">{student.grade_10_11_basket1_subjects ?? '—'}</td>
+                  <td >{student.grade_10_11_basket2_subjects ?? '—'}</td>
+                  <td className="px-6 py-4  whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
+                  <td className="px-6 py-4 ">
                     {student.receiving_any_grade_5_scholarship ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (
                       <span className="text-red-500 font-medium">No</span>
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 ">
                     {student.receiving_any_samurdhi_aswesuma ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (
                       <span className="text-red-500 font-medium">No</span>
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 ">
                     {student.receiving_any_scholarship ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (
                       <span className="text-red-500 font-medium">No</span>
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 ">
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={(e) => handleViewIconClick(e, student.reg_no)}
@@ -274,6 +274,6 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
           />
         </div>
       )}
-    </div>
+    </div> 
   );
 }

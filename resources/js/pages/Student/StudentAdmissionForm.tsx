@@ -3,6 +3,8 @@ import StudentAcademicForm from './StudentAcademicForm';
 import StudentPersonalForm from './StudentPersonalForm';
 import StudentFamilyForm from './StudentFamilyForm';
 import StudentSiblingForm from './StudentSiblingForm';
+import { Facebook, Home, Mail, MapPin, Menu, X } from 'lucide-react';
+import { Link } from '@inertiajs/react';
 interface StudentAdmissionFormProps {
   setShowForm: (val: boolean) => void
 }
@@ -321,8 +323,14 @@ try{
       setIsSubmitting(false);
     }
   }
+  const [menuOpen, setMenuOpen] = useState(false);
+
+
+
   return (
-   
+   <>
+
+
     <form
       onSubmit={handleSubmit}
       className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden border-t-4 border-blue-600"
@@ -600,7 +608,9 @@ try{
         </div>
       </div>
     </form>
-
+   
+       
+</>
   );
 };
 

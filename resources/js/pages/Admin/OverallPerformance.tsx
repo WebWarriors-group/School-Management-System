@@ -99,10 +99,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
   
 
-  <div className="w-36 bg-white" /> {/* Empty div to balance spacing on the right */}
+  <div className="w-36 bg-white" /> 
 </div>
 
-          {/* <h1 className="text-xl text-white bg-purple-800 py-3 font-bold mb-6 w-150 text-start ml-[-190px] px-10">TOTAL STUDENTS - CLASS-WISE BREAKDOWN</h1> */}
+        
        <div className="transparent  p-6 mb-8 ">
   
 

@@ -80,12 +80,13 @@ type TeacherForm = {
 };
  interface props{
   user:number;
+  setShowTeacherForm: (val: boolean) => void
  }
 
 
 
 
-export default function AddTeacherForm({user}:props) {
+export default function AddTeacherForm({user,setShowTeacherForm}:props) {
   const { data, setData, post, processing, errors } = useForm<TeacherForm>({
     // TeacherForm Fields
     teacher_NIC: '',

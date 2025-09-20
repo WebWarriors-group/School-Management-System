@@ -8,7 +8,7 @@ interface StudentPersonal {
 
 interface Student {
   reg_no: string;
-  studentpersonal?: StudentPersonal;
+  personal?: StudentPersonal;
 }
 
 interface Class {
@@ -261,9 +261,9 @@ export default function ClassIndex({ classes }: Props) {
             >
               <td className="px-6 py-3 border-r">{student.reg_no}</td>
               <td className="px-6 py-3 border-r">
-                {student.studentpersonal?.full_name_with_initial || 'Not Available'}
+                {student.personal?.full_name_with_initial}
               </td>
-              <td className="px-6 py-3">{student.studentpersonal?.gender ?? 'N/A'}</td>
+              <td className="px-6 py-3">{student.personal?.gender ?? 'N/A'}</td>
             </tr>
           ))
         ) : (

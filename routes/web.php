@@ -258,22 +258,7 @@ Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerfor
 
 
 
-Route::get('/typesense/create', function (TypesenseService $typesense) {
-    return $typesense->createCollection();
-});
 
-Route::get('/typesense/add', function (TypesenseService $typesense) {
-    return $typesense->indexDocument([
-        'id'     => '1',
-        'title'  => 'Harry Potter',
-        'author' => 'J.K. Rowling',
-        'year'   => 1997
-    ]);
-});
-
-Route::get('/typesense/search', function (TypesenseService $typesense) {
-    return $typesense->search('Harry');
-});
 
 
 Route::get('/broadcast-test', function () {
