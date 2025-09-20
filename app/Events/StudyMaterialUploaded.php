@@ -20,7 +20,6 @@ class StudyMaterialUploaded implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        // Broadcast on private channel for the admin (or intended user)
         return new PrivateChannel('study-materials.' . $this->material->uploaded_by);
     }
 
