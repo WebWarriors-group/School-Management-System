@@ -74,13 +74,6 @@ Route::prefix('subjects')->group(function () {
     //Route::delete('/{subject_id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 });
 
-Route::prefix('study-materials')->group(function () {
-    Route::get('/', [StudyMaterialController::class, 'index']);
-    Route::post('/', [StudyMaterialController::class, 'store']);
-    Route::get('/{id}', [StudyMaterialController::class, 'show']);
-    Route::put('/{id}', [StudyMaterialController::class, 'update']);
-    Route::delete('/{id}', [StudyMaterialController::class, 'destroy']);
-});
 
 
 Route::prefix('events')->group(function () {

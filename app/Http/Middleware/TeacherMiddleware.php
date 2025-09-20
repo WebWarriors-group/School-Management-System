@@ -13,7 +13,6 @@ class TeacherMiddleware
     {
         if (!Auth::check() || Auth::user()->role !== 'teacher') {
             abort(403, 'Unauthorized access'); // Restrict access
-            return redirect('/home')->with('error', 'You do not have permission to access this page');
         }
 
         return $next($request);
