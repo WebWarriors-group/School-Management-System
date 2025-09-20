@@ -13,15 +13,17 @@ use App\Models\TeacherRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\TeacherLeaveRequest;
 
 class TeacherController extends Controller
 {
 
-    public function dashboard()
-    {
+public function dashboard()
+{
+    try {
         $user = Auth::user();
+
 
        if (!$user->teacher()->exists()) {
             return Inertia::render('loginToRegRedirect');
@@ -32,15 +34,35 @@ class TeacherController extends Controller
             'teachersaddress',
             'personal',
             'qualifications',
-            'teacherotherService',
+            'teacherotherservice',
             'class',
             'class.studentacademics',
-            'class.studentacademics.personal'
+            'class.studentacademics.personal',
+            'class.studentacademics.marks',
+            'class.studentacademics.attendance',
         ])->first();
+//  dd($teacher->toArray());
 
         return Inertia::render('Teacher/dashboard', [
-            'teacher' => $teacher
-        ]);
+    'teacher' => $teacher,
+]);
+
+    } catch (\Exception $e) {
+    dd($e->getMessage(), $e->getTraceAsString());
+}
+
+    
+}
+
+
+public function getGenderStats(): JsonResponse
+    {
+        $stats = DB::table('students_personal_info')
+            ->select('gender', DB::raw('count(*) as count'))
+            ->groupBy('gender')
+            ->get();
+
+        return response()->json($stats);
     }
 
     /**
@@ -443,6 +465,7 @@ public function profile()
         ]);
     }
     
+    
     public function getTeacherCount():JsonResponse
     {
         // Get the latest count from the first row
@@ -452,6 +475,35 @@ public function profile()
         ]);
     
     }
+
+    public function studentDetails()
+{
+    $teacher = auth()->user()->teacher;
+
+    if (!$teacher) {
+        return response()->json(['error' => 'Teacher not found'], 404);
+    }
+
+    $students = $teacher->class()
+        ->with(['studentacademics.personal', 'studentacademics.marks', 'studentacademics.attendance'])
+        ->get()
+        ->map(function ($class) {
+            return [
+                'class' => $class->name ?? $class->id,
+                'students' => $class->studentacademics->map(function ($studentAcademic) {
+                    return [
+                        'reg_no' => $studentAcademic->reg_no,
+                        'personal' => $studentAcademic->personal,
+                        'marks' => $studentAcademic->marks,
+                        'attendance' => $studentAcademic->attendance,
+                    ];
+                })
+            ];
+        });
+
+    return response()->json($students);
+}
+
 
 //     public function leavereqstore(Request $request)
 // {

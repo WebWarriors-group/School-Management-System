@@ -88,6 +88,8 @@ Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
     });
 });
 
+// routes/api.php
+Route::get('/student-gender-stats', [TeacherController::class, 'studentGenderStats']);
 
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 
@@ -213,7 +215,6 @@ Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('tea
 
     
 
-    
 
 Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
 Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);

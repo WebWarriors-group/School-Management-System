@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import { router } from '@inertiajs/react';
@@ -215,3 +216,6 @@ Inertia.post('/teacher/leave/request', payload, {
     </div>
   );
 }
+
+
+

@@ -85,10 +85,12 @@ class StudentAcademic extends Model
     {
         return $this->hasMany(Marks::class, 'reg_no', 'reg_no');
     }
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class, 'reg_no', 'reg_no');
+    }
     public function user()
     {
         return $this->belongsTo(User::class,'user_id','id');
     }
-
-
 }
