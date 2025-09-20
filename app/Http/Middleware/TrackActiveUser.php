@@ -19,23 +19,23 @@ class TrackActiveUser
     public function handle(Request $request, Closure $next): Response
     {
 
-        if(Auth::check()){
-            $user=Auth::user();
+        if (Auth::check()) {
+            $user = Auth::user();
 
-            $sessionData =Session::all();
+            $sessionData = Session::all();
 
             ActiveSession::updateOrCreate(
 
                 ['user_id' => $user->id],
                 [
-                    'ip_address'=>$request->ip(),
-                    'user_agent'=>$request->header('User-Agent'),
-                    'payload'=>serialize($sessionData),
-                    'last_activity'=> now(),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->header('User-Agent'),
+                    'payload' => serialize($sessionData),
+                    'last_activity' => now(),
 
 
                 ]
-                );
+            );
 
         }
         return $next($request);

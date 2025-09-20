@@ -14,7 +14,6 @@ class ClassModelFactory extends Factory
 
     public function definition(): array
     {
-        // Pre-generate the full list of grade-section pairs once
         if (empty(static::$gradeSectionPairs)) {
             foreach (range(6, 13) as $grade) {
                 foreach (['A', 'B'] as $section) {
@@ -23,10 +22,8 @@ class ClassModelFactory extends Factory
             }
         }
 
-        // Pop the next unique grade-section pair
         [$grade, $section] = array_shift(static::$gradeSectionPairs);
 
-        // Assign class_name based on grade
         if ($grade >= 6 && $grade <= 9) {
             $className = 'junior';
         } elseif ($grade >= 10 && $grade <= 11) {

@@ -12,63 +12,57 @@ use DB;
 
 class TeacherAssignedController extends Controller
 {
-    
- public function index()
-{
-    // 1. Get all grades (distinct)
-    $grades = ClassModel::select('grade')->distinct()->orderBy('grade')->pluck('grade')->toArray();
 
-    // 2. Get all classes (all grades)
-    $classes = ClassModel::all();
+    public function index()
+    {
+        $grades = ClassModel::select('grade')->distinct()->orderBy('grade')->pluck('grade')->toArray();
 
-    // 3. Get all subjects (without grade info)
-    $subjects = Subject::all();
+        $classes = ClassModel::all();
 
-    // 4. Get all teachers
-     $teachers = Teacher::with('qualifications', 'personal')->get();
+        $subjects = Subject::all();
 
-    // 5. Get all assignments (all classes)
-    $assignments = SubjectTeacher::all();
+        $teachers = Teacher::with('qualifications', 'personal')->get();
 
-    // 6. Get grade-subject mappings from pivot table
-    $gradeSubjects = DB::table('grade_subjects')->get();
+        $assignments = SubjectTeacher::all();
 
-    return Inertia::render('Admin/AssignTeachersPage', [
-        'grades' => $grades,
-        'classes' => $classes,
-        'subjects' => $subjects,
-        'teachers' => $teachers,
-        'assignments' => $assignments,
-        'gradeSubjects' => $gradeSubjects,
-    ]);
-}
+        $gradeSubjects = DB::table('grade_subjects')->get();
+
+        return Inertia::render('Admin/AssignTeachersPage', [
+            'grades' => $grades,
+            'classes' => $classes,
+            'subjects' => $subjects,
+            'teachers' => $teachers,
+            'assignments' => $assignments,
+            'gradeSubjects' => $gradeSubjects,
+        ]);
+    }
 
 
-   
+
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'assignments' => 'required|array|min:1',
-        'assignments.*.subject_id' => 'required|integer|exists:subjects,subject_id',
-        'assignments.*.teacher_NIC' => 'required|string|exists:teacher_work_infos,teacher_NIC',
-        'assignments.*.class_id' => 'required|integer|exists:classes,class_id',
-    ]);
+    {
+        $validated = $request->validate([
+            'assignments' => 'required|array|min:1',
+            'assignments.*.subject_id' => 'required|integer|exists:subjects,subject_id',
+            'assignments.*.teacher_NIC' => 'required|string|exists:teacher_work_infos,teacher_NIC',
+            'assignments.*.class_id' => 'required|integer|exists:classes,class_id',
+        ]);
 
-    $assignments = $validated['assignments'];
-    $classId = $assignments[0]['class_id'];
-
-    
-    SubjectTeacher::where('class_id', $classId)->delete();
-
-    
-    SubjectTeacher::insert($assignments);
+        $assignments = $validated['assignments'];
+        $classId = $assignments[0]['class_id'];
 
 
-    return redirect()
-        ->route('teacher.index')
-        ->with('success', 'Assignments saved successfully!');
-}
+        SubjectTeacher::where('class_id', $classId)->delete();
 
-    
+
+        SubjectTeacher::insert($assignments);
+
+
+        return redirect()
+            ->route('teacher.index')
+            ->with('success', 'Assignments saved successfully!');
+    }
+
+
 }

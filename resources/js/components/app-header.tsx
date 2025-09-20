@@ -16,7 +16,7 @@ import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
 const mainNavItems: NavItem[] = [
-    
+
 
     {
         title: 'Admin Dashboard',

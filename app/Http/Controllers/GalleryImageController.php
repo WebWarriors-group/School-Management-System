@@ -9,62 +9,59 @@ use Illuminate\Support\Facades\Storage;
 
 class GalleryImageController extends Controller
 {
-    
+
     public function create()
     {
         $categories = GalleryCategory::all();
         return view('gallery.create', compact('categories'));
     }
 
-    
-  public function store(Request $request)
-{
-    $validated = $request->validate([
-        'category_id' => 'required|exists:gallery_categories,id',
-        'title' => 'nullable|string|max:255',
-        'image' => 'required|image|max:2048',
-    ]);
 
-    $file = $request->file('image');
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'category_id' => 'required|exists:gallery_categories,id',
+            'title' => 'nullable|string|max:255',
+            'image' => 'required|image|max:2048',
+        ]);
 
-    // Create the gallery folder if it doesn't exist
-    $destinationPath = public_path('gallery');
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
+        $file = $request->file('image');
+
+        $destinationPath = public_path('gallery');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+        $file->move($destinationPath, $filename);
+
+        $imagePath = 'gallery/' . $filename;
+
+        GalleryImage::create([
+            'category_id' => $validated['category_id'],
+            'title' => $validated['title'],
+            'image_path' => $imagePath,
+        ]);
+
+        return redirect()->back()->with('success', 'Image uploaded successfully!');
+
+
     }
 
-    $filename = time() . '_' . $file->getClientOriginalName();
-
-    // Move the uploaded file to public/gallery
-    $file->move($destinationPath, $filename);
-
-    // Save the relative path in DB (relative to public folder)
-    $imagePath = 'gallery/' . $filename;
-
-    GalleryImage::create([
-        'category_id' => $validated['category_id'],
-        'title' => $validated['title'],
-        'image_path' => $imagePath,
-    ]);
-
-    return redirect()->back()->with('success', 'Image uploaded successfully!');
-
-    
-}
 
 
-    
-   public function index()
-{
-    $categories = GalleryCategory::with('images')->get();
+    public function index()
+    {
+        $categories = GalleryCategory::with('images')->get();
 
-    return Inertia::render('Admin/Gallery', [
-    'categories' => $categories,
-]);
-       
-}
+        return Inertia::render('Admin/Gallery', [
+            'categories' => $categories,
+        ]);
 
-    
+    }
+
+
     public function destroy(GalleryImage $image)
     {
         if (Storage::disk('public')->exists($image->image_path)) {
@@ -76,14 +73,14 @@ class GalleryImageController extends Controller
     }
 
 
-  public function storeCategory(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255|unique:gallery_categories,name',
-    ]);
+    public function storeCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:gallery_categories,name',
+        ]);
 
-    GalleryCategory::create(['name' => $request->name]);
+        GalleryCategory::create(['name' => $request->name]);
 
-    return back()->with('success', 'Category added!');
-}
+        return back()->with('success', 'Category added!');
+    }
 }

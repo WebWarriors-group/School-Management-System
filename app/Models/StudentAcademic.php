@@ -39,19 +39,20 @@ class StudentAcademic extends Model
 
     protected $appends = ['scholarship_status'];
 
-    public function getScholarshipStatusAttribute(){
-        $statuses=[];
+    public function getScholarshipStatusAttribute()
+    {
+        $statuses = [];
 
-        if($this->receiving_any_grade_5_scholarship){
+        if ($this->receiving_any_grade_5_scholarship) {
             $statuses[] = "Grade 5 Scholarship";
         }
-        if($this->receiving_any_samurdhi_aswesuma){
+        if ($this->receiving_any_samurdhi_aswesuma) {
             $statuses[] = "Samurdhi/Aswesuma";
         }
-        if($this->receiving_any_scholarship){
+        if ($this->receiving_any_scholarship) {
             $statuses[] = "Other Scholarship";
         }
-        return $statuses ? implode(', ', $statuses): 'No Scholarships';
+        return $statuses ? implode(', ', $statuses) : 'No Scholarships';
     }
     public function subjects()
     {
@@ -91,6 +92,6 @@ class StudentAcademic extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

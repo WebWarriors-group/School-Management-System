@@ -16,7 +16,7 @@ import PieChart from '@/components/PieChart';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: '📊 Overall Performance',
+    title: ' Overall Performance',
     href: '/',
   },
 ];
@@ -64,7 +64,7 @@ export default function OverallPerformance({
   const [showSubjectAverageDetails, setShowSubjectAverageDetails] = useState(false);
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: ' 📊 Overall Performance Overview',
+    title: '  Overall Performance Overview',
     href: '/',
   },
 ];
@@ -78,7 +78,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     avgBySubject[0]
   );
 
-  // === Total Students Detail View ===
+
   if (showTotalStudentsDetails) {
     return (
       <AppLayout breadcrumbs={breadcrumbs} >
@@ -115,7 +115,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   key={idx}
   className="bg-white shadow-xl p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer border-t-4 border-blue-600"
 >
-  {/* Header Section */}
+
   <div className="flex items-center justify-between mb-6">
     <div>
       <h3 className="text-sm text-gray-500 uppercase font-semibold tracking-wide">
@@ -128,7 +128,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     </div>
   </div>
 
-  {/* Statistics Section */}
+
   <div className="space-y-4">
     <div className="flex items-center justify-between bg-gray-100 py-2 px-4">
       <div className="flex items-center space-x-1 ">
@@ -196,7 +196,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     );
   }
 
-  // === Average Class Score Detail View ===
+ 
   if (showAverageScoreDetails) {
     const labels = avgByClass.map(item => item.class?.name ?? `Class ${item.class_id}`);
     const values = avgByClass.map(item => item.avg_marks);
@@ -224,7 +224,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   key={idx}
   className="bg-white border border-gray-200  shadow-lg p-6 w-full hover:shadow-xl transition-shadow"
 >
-  {/* Header */}
+
   <div className="flex justify-between items-center mb-6">
     <div>
       <h3 className="text-2xl font-bold text-red-800">
@@ -239,7 +239,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     </div>
   </div>
 
-  {/* Subject Averages */}
+
   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
     {[
       { name: 'Maths', avg: 80 },
@@ -257,7 +257,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     ))}
   </div>
 
-  {/* Below/Above 40 Table */}
   <div>
     <h4 className="text-lg font-semibold text-gray-700 mb-3">Subject Pass/Fail Breakdown</h4>
     <table className="w-full text-sm text-left text-gray-700 mb-6">
@@ -285,7 +284,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     </table>
   </div>
 
-  {/* Feedback */}
   <div>
     <h4 className="text-lg font-semibold text-gray-700 mb-2">Class Feedback</h4>
     <p className="text-sm text-gray-600 italic mt-2">
@@ -311,7 +309,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     );
   }
 
-  // === Average Subject Score Detail View ===
+
   if (showSubjectAverageDetails) {
     const labels = avgBySubject.map(item => item.subject_name);
     const values = avgBySubject.map(item => item.avg_marks);
@@ -354,7 +352,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     );
   }
 
-  // === Dashboard View ===
   return (
     <AppLayout  breadcrumbs={breadcrumbs}>
       <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">

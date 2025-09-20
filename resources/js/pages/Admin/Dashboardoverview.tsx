@@ -24,7 +24,7 @@ import NotificationListener from '@/pages/Admin/notify';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: '📊 Dashboard Overview',
+    title: ' Dashboard Overview',
     href: '/',
   },
 ];
@@ -173,10 +173,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       replace: true,
     });
 
-    // Keep class table visible
   };
 
-   
+
 
 
 
@@ -201,12 +200,12 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     const hasFilter = filters.grade || filters.section || filters.class_name;
 
     if (hasFilter) {
-      setClass(true); 
+      setClass(true);
     } else {
-      setClass(false); 
+      setClass(false);
     }
 
-    
+
     setGrade(filters.grade || '');
     setSection(filters.section || '');
     setClassName(filters.class_name || '');
@@ -276,7 +275,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     setClass(false);
 
     if (filtersApplied) {
-      // Only reload if filters were applied
+
       Inertia.get('/admin/dashboardoverview', {}, {
         preserveState: false,
         replace: true,
@@ -295,8 +294,8 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimate(true);
-      setTimeout(() => setAnimate(false), 2000); 
-    }, 9000); 
+      setTimeout(() => setAnimate(false), 2000);
+    }, 9000);
     return () => clearInterval(interval);
   }, []);
 
@@ -346,13 +345,13 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      
-      
-       <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
+
+
+      <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
-           {/* <NotificationListener/> */}
+          {/* <NotificationListener/> */}
           <p className=" text-gray-600 md:text-lg  md:text-left md:text-base md:mt-2">
-            Teacher Assignements  
+            Teacher Assignements
           </p>
         </div>
       </header>
@@ -361,7 +360,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
 
 
-        
+
 
         {selectedCard && selectedCard.id === 4 ? (
           <>
@@ -424,9 +423,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                       <div>
 
 
-                        {/* Filter Form */}
+
                         <form onSubmit={handleFilterSubmit} className="mb-4 space-x-4">
-                          {/* Grade Dropdown */}
+
                           <select
                             value={grade}
                             onChange={(e) => {
@@ -441,7 +440,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                             ))}
                           </select>
 
-                          {/* Section Input */}
+
                           <input
                             type="text"
                             placeholder="Section"
@@ -450,7 +449,6 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                             className="border p-2 rounded"
                           />
 
-                          {/* Class Name Input */}
                           <input
                             type="text"
                             placeholder="Class Name"
@@ -464,7 +462,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                           </button>
                         </form>
 
-                        {/* Display Filtered Classes */}
+
                         <table className="min-w-full border border-gray-300">
                           <thead className="bg-gray-100">
                             <tr>
@@ -606,13 +604,13 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                       Click here for yearly updates
 
 
-                     
+
                     </div>
                   </div>
                 </div>
-                <StudentPerformanceLineChart/>
-                
-                
+                <StudentPerformanceLineChart />
+
+
               </>
             )}
 

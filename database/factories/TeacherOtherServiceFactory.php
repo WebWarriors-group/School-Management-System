@@ -22,7 +22,7 @@ class TeacherOtherServiceFactory extends Factory
                 null
             ]),
             'EDCS_membership' => $this->faker->boolean(),
-            'WSOP_Number' => $this->faker->optional()->numerify('##########'), // Generates a 10-digit number or null
+            'WSOP_Number' => $this->faker->optional()->numerify('##########'),
             'Agrahara_insuarence_membership' => $this->faker->boolean(),
             'created_at' => now(),
             'updated_at' => now(),

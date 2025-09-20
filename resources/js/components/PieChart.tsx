@@ -1,5 +1,4 @@
-// components/PieChart.tsx
-import React from 'react';
+\import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js';
 
@@ -9,7 +8,7 @@ interface PieChartProps {
   labels: string[];
   values: number[];
   title?: string;
-  colors?: string[]; // Optional colors for slices
+  colors?: string[];
 }
 
 const PieChart: React.FC<PieChartProps> = ({ labels, values, title, colors }) => {

@@ -45,24 +45,20 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         $studentParam = $this->route('student');
-        
+
         if ($studentParam) {
-            // Student login via reg_no
             $student = StudentAcademic::where('reg_no', $this->input('reg_no'))->first();
 
-            if (! $student || ! Hash::check($this->input('password'), $student->user->password)) {
+            if (!$student || !Hash::check($this->input('password'), $student->user->password)) {
                 RateLimiter::hit($this->throttleKey());
                 throw ValidationException::withMessages([
                     'reg_no' => __('auth.failed'),
                 ]);
             }
-
-            // Log in the related user
             Auth::login($student->user, $this->boolean('remember'));
 
         } else {
-            // Normal login via email
-            if (! Auth::attempt(['email' => $this->input('email'), 'password' => $this->input('password')], $this->boolean('remember'))) {
+            if (!Auth::attempt(['email' => $this->input('email'), 'password' => $this->input('password')], $this->boolean('remember'))) {
                 RateLimiter::hit($this->throttleKey());
                 throw ValidationException::withMessages([
                     'email' => __('auth.failed'),
@@ -80,7 +76,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -105,6 +101,6 @@ class LoginRequest extends FormRequest
     {
         $studentParam = $this->route('student');
         $key = $studentParam ? $this->string('reg_no') : $this->string('email');
-        return Str::transliterate(Str::lower($key).'|'.$this->ip());
+        return Str::transliterate(Str::lower($key) . '|' . $this->ip());
     }
 }

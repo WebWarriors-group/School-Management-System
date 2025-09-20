@@ -11,10 +11,8 @@ return new class extends Migration {
             $table->integer('reg_no')->primary();
             $table->string('student_id_no')->default(0);
             $table->softDeletes();
-            // Use the same data type as in 'classes' table
             $table->integer('class_id');
             $table->foreign('class_id')->references('class_id')->on('classes')->onDelete('cascade');
-
             $table->float('distance_to_school')->nullable();
             $table->string('method_of_coming_to_school', 50)->nullable();
             $table->enum('grade_6_9_asthectic_subjects', ['Art', 'Dance', 'Music', 'Drama & Theatre'])->nullable();

@@ -32,13 +32,13 @@ class StudyMaterialController extends Controller
             ->where('category', $category)
             ->get();
 
-        if ($user->role == 'student'){
+        if ($user->role == 'student') {
             return Inertia::render('Student/studyMaterialIndex', [
                 'category' => $category,
                 'materials' => $materials,
             ]);
         } else {
-             return Inertia::render('studyMaterial/studyMaterialIndex', [
+            return Inertia::render('studyMaterial/studyMaterialIndex', [
                 'category' => $category,
                 'materials' => $materials,
             ]);
@@ -52,12 +52,12 @@ class StudyMaterialController extends Controller
     {
         try {
             $validated = $request->validate([
-               'title' => 'required|string|max:255',
-               'grade' => 'required|integer|min:6|max:13',
-               'subject' => 'required|string',
-               'year' => 'required|integer',
-               'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:51200', // 50MB max
-               'category' => 'required|string',
+                'title' => 'required|string|max:255',
+                'grade' => 'required|integer|min:6|max:13',
+                'subject' => 'required|string',
+                'year' => 'required|integer',
+                'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:51200', // 50MB max
+                'category' => 'required|string',
             ]);
 
             if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
@@ -121,14 +121,12 @@ class StudyMaterialController extends Controller
             return response()->json(['message' => 'Material not found'], 404);
         }
 
-        // Validate the incoming request
         $validated = $request->validate([
             'subject_id' => 'required|integer|exists:subjects,subject_id',
             'title' => 'required|string|max:255',
             'file_path' => 'required|string',
         ]);
 
-        // Update the material
         $material->update($validated);
 
         return response()->json([
@@ -148,7 +146,6 @@ class StudyMaterialController extends Controller
             return response()->json(['message' => 'Material not found'], 404);
         }
 
-        // Delete the material
         $material->delete();
 
         return response()->json(['message' => 'Material deleted successfully']);

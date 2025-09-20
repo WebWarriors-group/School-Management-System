@@ -9,19 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentAttendanceController extends Controller
 {
-    // Load the Attendance Page
+
     public function index(Request $request)
     {
         return Inertia::render('Attendance/AttendancePage');
     }
 
-    // Fetch all attendance records (with filters)
     public function create(Request $request)
     {
         $user = Auth::user();
         $query = Attendance::query();
 
-        // If logged-in user is a teacher → fetch students of their class
         if ($user->teacher()->exists()) {
             $teacher = $user->teacher()->with('class.studentacademics')->first();
 
@@ -35,7 +33,6 @@ class StudentAttendanceController extends Controller
             }
         }
 
-        // Apply filters
         if ($request->has('reg_no')) {
             $query->where('reg_no', 'LIKE', '%' . $request->input('reg_no') . '%');
         }
@@ -48,17 +45,14 @@ class StudentAttendanceController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        // Pagination
         $attendances = $query->paginate($request->get('limit', 10));
 
-        // Get the total number of records (before pagination)
+
         $totalAttendanceCount = Attendance::count();
 
-        // Return JSON with total count header
         return response()->json($attendances)->header('x-total-count', $totalAttendanceCount);
     }
 
-    // Store attendance records
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -83,7 +77,6 @@ class StudentAttendanceController extends Controller
         ], 201);
     }
 
-    // Fetch a specific attendance record
     public function show($id)
     {
         $attendance = Attendance::find($id);
@@ -95,7 +88,6 @@ class StudentAttendanceController extends Controller
         return response()->json($attendance);
     }
 
-    // Update attendance
     public function update(Request $request, $id)
     {
         $attendance = Attendance::find($id);
@@ -118,7 +110,6 @@ class StudentAttendanceController extends Controller
         ]);
     }
 
-    // Delete attendance
     public function destroy($id)
     {
         $attendance = Attendance::find($id);
@@ -132,7 +123,6 @@ class StudentAttendanceController extends Controller
         return response()->json(['message' => 'Attendance deleted successfully']);
     }
 
-    // Summary of today's attendance
     public function summary()
     {
         $today = now()->toDateString();

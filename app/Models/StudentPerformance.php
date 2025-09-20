@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class StudentPerformance extends Model
 {
   use HasFactory;
-    protected $fillable = [
-  'year', 'ol_passed', 'ol_expected',
-  'al_passed', 'al_expected'
-];
+  protected $fillable = [
+    'year',
+    'ol_passed',
+    'ol_expected',
+    'al_passed',
+    'al_expected'
+  ];
 
 }

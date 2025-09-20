@@ -14,7 +14,7 @@ class StudentReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'report_id' => Str::uuid(), // Generate a unique ID
+            'report_id' => Str::uuid(),
             'reg_no' => StudentAcademic::all()->random()->reg_no,
             'term' => $this->faker->randomElement(['Term 1', 'Term 2', 'Term 3']),
             'total_days' => 180,

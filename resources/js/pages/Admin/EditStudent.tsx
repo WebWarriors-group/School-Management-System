@@ -23,15 +23,15 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
         <div className="overflow-hidden rounded-lg border border-gray-200">
             <table className="w-full text-sm text-center text-gray-800">
                 <tbody>
-                    {/* Reg No - Not editable */}
+
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold w-1/2">🎓 Reg No</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold w-1/2"> Reg No</th>
                         <td className="px-4 py-3">{student.reg_no}</td>
                     </tr>
 
-                    {/* Class ID */}
+
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">🏫 Class ID</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold"> Class ID</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input
@@ -45,9 +45,8 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
                         </td>
                     </tr>
 
-                    {/* Distance to School */}
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">📍 Distance to School</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold"> Distance to School</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input
@@ -62,9 +61,8 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
                         </td>
                     </tr>
 
-                    {/* Method of Coming */}
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">🚲 Method of Coming</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold"> Method of Coming</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input
@@ -78,9 +76,8 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
                         </td>
                     </tr>
 
-                    {/* Boolean Fields - Grade 5 Scholarship */}
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">🏅 Grade 5 Scholarship</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold"> Grade 5 Scholarship</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input
@@ -98,9 +95,8 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
                         </td>
                     </tr>
 
-                    {/* Samurdhi */}
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">🟢 Samurdhi Beneficiary</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold"> Samurdhi Beneficiary</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input
@@ -118,9 +114,8 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
                         </td>
                     </tr>
 
-                    {/* Other Scholarship */}
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">🎁 Other Scholarship</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold"> Other Scholarship</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input
@@ -138,9 +133,8 @@ const EditStudent: React.FC<Props> = ({ student, isEditing, editData, setEditDat
                         </td>
                     </tr>
 
-                    {/* Admission Date */}
                     <tr className="even:bg-gray-50">
-                        <th className="px-4 py-3 bg-gray-100 font-semibold">📅 Admission Date</th>
+                        <th className="px-4 py-3 bg-gray-100 font-semibold">Admission Date</th>
                         <td className="px-4 py-3">
                             {isEditing ? (
                                 <input

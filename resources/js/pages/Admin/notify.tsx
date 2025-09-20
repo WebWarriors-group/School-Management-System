@@ -45,19 +45,19 @@ const NotificationListener: React.FC = () => {
       return;
     }
 
-   const  key=import.meta.env.VITE_REVERB_APP_KEY;
-   const    host= import.meta.env.VITE_REVERB_HOST;
-   const    port=import.meta.env.VITE_REVERB_PORT;
-   const    scheme=import.meta.env.VITE_REVERB_SCHEME;
-console.log('Environment variables:', {
+    const key = import.meta.env.VITE_REVERB_APP_KEY;
+    const host = import.meta.env.VITE_REVERB_HOST;
+    const port = import.meta.env.VITE_REVERB_PORT;
+    const scheme = import.meta.env.VITE_REVERB_SCHEME;
+    console.log('Environment variables:', {
       key, host, port, scheme
     });
-  if (!key) {
-    console.error('Reverb app key is missing in environment variables');
-    return;
-  }
+    if (!key) {
+      console.error('Reverb app key is missing in environment variables');
+      return;
+    }
 
-console.log('Environment variables:', {
+    console.log('Environment variables:', {
       key: import.meta.env.VITE_REVERB_APP_KEY,
       host: import.meta.env.VITE_REVERB_HOST,
       port: import.meta.env.VITE_REVERB_PORT,
@@ -104,7 +104,6 @@ console.log('Environment variables:', {
 
       setNotification(e);
 
-      // ** Removed auto-dismiss timeout so notification stays visible **
     });
 
     return () => {
@@ -121,8 +120,8 @@ console.log('Environment variables:', {
   border border-blue-500 rounded-lg shadow-lg z-50 backdrop-blur-md text-white">
 
 
-     
-    
+
+
       <strong className="block mb-2">New Study Material Uploaded!</strong>
       <p><b>Title:</b> {notification.material.title}</p>
       <p><b>Grade:</b> {notification.material.grade}</p>

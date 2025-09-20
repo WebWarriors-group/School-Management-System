@@ -30,111 +30,113 @@ class AdminController extends Controller
 {
     public function dashboard(Request $request)
     {
-$teacher = Teacher::count();
-   $subject = Subject::count();
-   $student = StudentAcademic::count();
-   $student1 = StudentAcademic::select('class_id','reg_no')->get();
-   $class = ClassModel::count();
-    $subjects = Subject::all();
-     $grades = Grade::all();
+        $teacher = Teacher::count();
+        $subject = Subject::count();
+        $student = StudentAcademic::count();
+        $student1 = StudentAcademic::select('class_id', 'reg_no')->get();
+        $class = ClassModel::count();
+        $subjects = Subject::all();
+        $grades = Grade::all();
 
-$query=ClassModel::query();
+        $query = ClassModel::query();
 
-if ($request->filled('grade')) {
-    $query->where('grade', (int) $request->grade); // cast to int explicitly
-}
-
-
-if($request->filled('section')){
-    $query->where('section',$request->section);
-}
-
-if($request->filled('class_name')){
-    $query->where('class_name',$request->class_name);
-}
+        if ($request->filled('grade')) {
+            $query->where('grade', (int) $request->grade);
+        }
 
 
-    $classData = $query->withCount('studentacademics')
-        ->with([
-            'studentacademics.personal' 
-        ])
-        ->get();
+        if ($request->filled('section')) {
+            $query->where('section', $request->section);
+        }
 
-   
-   
-$images=Img::all();
+        if ($request->filled('class_name')) {
+            $query->where('class_name', $request->class_name);
+        }
 
 
-   $teacherupdate=Teacher::latest('updated_at')->value('updated_at');
-   $studentupdate=StudentAcademic::latest('updated_at')->value('updated_at');
-    
-   $classupdate=ClassModel::latest('updated_at')->value('updated_at');
-    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC','class_name','year')
-        ->get()
-        ->groupBy('class_name') 
-        ->map->groupBy('grade');  
-
-    $teachers = Teacher::select('teacher_NIC')->get();
-    $teachers = Teacher::with('qualifications','personal')->select('teacher_NIC')->get();
+        $classData = $query->withCount('studentacademics')
+            ->with([
+                'studentacademics.personal'
+            ])
+            ->get();
 
 
-   $studentDeleted = StudentAcademic::onlyTrashed()
-        ->latest('deleted_at')
-        ->value('deleted_at');
-$teacherDeleted = Teacher::onlyTrashed()
-        ->latest('deleted_at')
-        ->value('deleted_at');
-$classDeleted = ClassModel::onlyTrashed()
-        ->latest('deleted_at')
-        ->value('deleted_at');
+
+        $images = Img::all();
 
 
-   $classFooter = 'Last updated ' . Carbon::parse(max($classupdate,$classDeleted))->diffForHumans();
-   $teacherFooter = 'Last updated ' . Carbon::parse(max($teacherupdate,$teacherDeleted))->diffForHumans();
-  $studentActivity ='Last updated '. Carbon::parse(max($studentupdate, $studentDeleted))->diffForHumans();
+        $teacherupdate = Teacher::latest('updated_at')->value('updated_at');
+        $studentupdate = StudentAcademic::latest('updated_at')->value('updated_at');
 
-        return Inertia::render('Admin/Dashboardoverview',['teachers' => $teacher,
-    'students'=> $student,
-'class1'=>$class,
-'classfooter'=>$classFooter,
-'teacherfooter'=>$teacherFooter,
-'studentfooter'=>$studentActivity,
-'subjects' => Subject::all(), 
-'grades'=>$grades,
-'subject'=>$subject,
-'subjects'=>$subjects,
- 'classData' => [
-            'data' => $classData,
-        ],
-        'classes' => $classes,
-        'teacher12' => $teachers,
-        'student1'=>[
-            'data1'=>$student1],
-            'img'=>[
-                'data'=>$images,
+        $classupdate = ClassModel::latest('updated_at')->value('updated_at');
+        $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC', 'class_name', 'year')
+            ->get()
+            ->groupBy('class_name')
+            ->map->groupBy('grade');
+
+        $teachers = Teacher::select('teacher_NIC')->get();
+        $teachers = Teacher::with('qualifications', 'personal')->select('teacher_NIC')->get();
+
+
+        $studentDeleted = StudentAcademic::onlyTrashed()
+            ->latest('deleted_at')
+            ->value('deleted_at');
+        $teacherDeleted = Teacher::onlyTrashed()
+            ->latest('deleted_at')
+            ->value('deleted_at');
+        $classDeleted = ClassModel::onlyTrashed()
+            ->latest('deleted_at')
+            ->value('deleted_at');
+
+
+        $classFooter = 'Last updated ' . Carbon::parse(max($classupdate, $classDeleted))->diffForHumans();
+        $teacherFooter = 'Last updated ' . Carbon::parse(max($teacherupdate, $teacherDeleted))->diffForHumans();
+        $studentActivity = 'Last updated ' . Carbon::parse(max($studentupdate, $studentDeleted))->diffForHumans();
+
+        return Inertia::render('Admin/Dashboardoverview', [
+            'teachers' => $teacher,
+            'students' => $student,
+            'class1' => $class,
+            'classfooter' => $classFooter,
+            'teacherfooter' => $teacherFooter,
+            'studentfooter' => $studentActivity,
+            'subjects' => Subject::all(),
+            'grades' => $grades,
+            'subject' => $subject,
+            'subjects' => $subjects,
+            'classData' => [
+                'data' => $classData,
+            ],
+            'classes' => $classes,
+            'teacher12' => $teachers,
+            'student1' => [
+                'data1' => $student1
+            ],
+            'img' => [
+                'data' => $images,
             ],
 
-            'filters'=>$request->only(['grade','section','class_name'])
-            
-]);
+            'filters' => $request->only(['grade', 'section', 'class_name'])
+
+        ]);
     }
 
 
     public function user()
     {
 
-         $teacherupdate=Teacher::latest('updated_at')->value('updated_at');
-   $studentupdate=StudentAcademic::latest('updated_at')->value('updated_at');
-    
-   $studentDeleted = StudentAcademic::onlyTrashed()
-        ->latest('deleted_at')
-        ->value('deleted_at');
-$teacherDeleted = Teacher::onlyTrashed()
-        ->latest('deleted_at')
-        ->value('deleted_at');
+        $teacherupdate = Teacher::latest('updated_at')->value('updated_at');
+        $studentupdate = StudentAcademic::latest('updated_at')->value('updated_at');
 
-        $teacherFooter = 'Last updated ' . Carbon::parse(max($teacherupdate,$teacherDeleted))->diffForHumans();
-  $studentActivity ='Last updated '. Carbon::parse(max($studentupdate, $studentDeleted))->diffForHumans();
+        $studentDeleted = StudentAcademic::onlyTrashed()
+            ->latest('deleted_at')
+            ->value('deleted_at');
+        $teacherDeleted = Teacher::onlyTrashed()
+            ->latest('deleted_at')
+            ->value('deleted_at');
+
+        $teacherFooter = 'Last updated ' . Carbon::parse(max($teacherupdate, $teacherDeleted))->diffForHumans();
+        $studentActivity = 'Last updated ' . Carbon::parse(max($studentupdate, $studentDeleted))->diffForHumans();
         $adminCount = User::where('role', 'admin')->count();
         $teacherCount = User::where('role', 'teacher')->count();
         $studentCount = User::where('role', 'student')->count();
@@ -142,10 +144,9 @@ $teacherDeleted = Teacher::onlyTrashed()
         $totalUserCount = User::count();
         $teacherCount1 = Teacher::count();
         $studentCount1 = StudentAcademic::count();
-        // Fetch only currently active sessions (active within the last 5 minutes)
-   $userupdate=User::latest('updated_at')->value('updated_at');
+        $userupdate = User::latest('updated_at')->value('updated_at');
 
-       $userFooter = 'Last updated ' . $userupdate->diffForHumans();
+        $userFooter = 'Last updated ' . $userupdate->diffForHumans();
 
         $activeSessions = ActiveSession::with('user')
             ->where('last_activity', '>=', Carbon::now('Asia/Colombo')->subMinutes(5)->timestamp) // Filter active sessions only
@@ -163,13 +164,13 @@ $teacherDeleted = Teacher::onlyTrashed()
                 'teacher' => $teacherCount,
                 'student' => $studentCount,
             ],
-            'userfooter'=>$userFooter,
-            'teacherfooter'=>$teacherFooter,
-            'studentfooter'=>$studentActivity,
+            'userfooter' => $userFooter,
+            'teacherfooter' => $teacherFooter,
+            'studentfooter' => $studentActivity,
         ]);
     }
 
-     public function register(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -186,46 +187,41 @@ $teacherDeleted = Teacher::onlyTrashed()
         ]);
 
 
-Mail::to($user->email)->queue(new WelcomeMail($user,$request->password));
+        Mail::to($user->email)->queue(new WelcomeMail($user, $request->password));
 
 
-       
-         }
+
+    }
 
     public function delete(int $id)
     {
-        $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
+        $user = User::findOrFail($id);
         $user->delete();
     }
 
-public function store3(Request $request){
-   $request->validate([
-        'title' => 'required|string|max:255',
-        'image' => 'required|image|max:2048', // max ~2MB
-    ]);
-
-    // Step 2: Handle the file
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-
-        // Create unique filename
-        $fileName = time() . '.' . $file->getClientOriginalExtension();
-
-        // Move the file to /public/image folder
-        $file->move(public_path('images'), $fileName);
-
-        // Step 3: Save to DB (column 'path' holds filename)
-        Img::create([
-            'title' => $request->input('title'),
-            'path' => $fileName,
+    public function store3(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'image' => 'required|image|max:2048',
         ]);
 
-        // Optional: return back with success message
-        return redirect()->back()->with('message', 'Image uploaded successfully!');
-    }
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
 
-    // Step 4: In case file not uploaded
-    return redirect()->back()->with('error', 'Image upload failed');
-}
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('images'), $fileName);
+
+            Img::create([
+                'title' => $request->input('title'),
+                'path' => $fileName,
+            ]);
+
+            return redirect()->back()->with('message', 'Image uploaded successfully!');
+        }
+
+        return redirect()->back()->with('error', 'Image upload failed');
+    }
 
 }

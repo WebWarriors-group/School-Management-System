@@ -12,7 +12,6 @@ class GradeFactory extends Factory
 
     public function definition(): array
     {
-        // Pick a random subject if available, otherwise generate a fallback ID
         $subject = Subject::inRandomOrder()->first();
 
         return [

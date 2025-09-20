@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeacherAttendance extends Model
 {
-    //
-     protected $fillable = [
+    protected $fillable = [
         'teacher_NIC',
         'date',
         'status',

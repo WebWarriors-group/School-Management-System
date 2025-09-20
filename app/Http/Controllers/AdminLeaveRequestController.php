@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/AdminLeaveRequestController.php
-
 namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\TeacherLeaveRequest;
@@ -36,57 +34,51 @@ class AdminLeaveRequestController extends Controller
 
         return redirect()->back()->with('success', 'Leave rejected.');
     }
-    // In TeacherAttendanceController.php
 
-public function getTeacherStats($nic)
-{
-    // Count present days
-    $present = TeacherAttendance::where('teacher_NIC', $nic)
-        ->where('status', 'Present')
-        ->count();
+    public function getTeacherStats($nic)
+    {
 
-    // Count absent days
-    $absent = TeacherAttendance::where('teacher_NIC', $nic)
-        ->where('status', 'Absent')
-        ->count();
+        $present = TeacherAttendance::where('teacher_NIC', $nic)
+            ->where('status', 'Present')
+            ->count();
 
-    // Get all approved leave requests for this teacher
-    $leaves =TeacherLeaveRequest::where('teacher_NIC', $nic)
-        ->where('status', 'Approved')
-        ->get();
+        $absent = TeacherAttendance::where('teacher_NIC', $nic)
+            ->where('status', 'Absent')
+            ->count();
 
-    // Number of leave requests taken
-    $leaveRequestsCount = $leaves->count();
+        $leaves = TeacherLeaveRequest::where('teacher_NIC', $nic)
+            ->where('status', 'Approved')
+            ->get();
 
-    // Calculate total leave days across all leave requests
-    $totalLeaveDays = $leaves->reduce(function ($carry, $leave) {
-        $start = \Carbon\Carbon::parse($leave->leave_start_date);
-        $end = \Carbon\Carbon::parse($leave->leave_end_date);
+        $leaveRequestsCount = $leaves->count();
 
-        // inclusive days count
-        $days = $start->diffInDays($end) + 1;
+        $totalLeaveDays = $leaves->reduce(function ($carry, $leave) {
+            $start = \Carbon\Carbon::parse($leave->leave_start_date);
+            $end = \Carbon\Carbon::parse($leave->leave_end_date);
 
-        return $carry + $days;
-    }, 0);
+            $days = $start->diffInDays($end) + 1;
 
-    return response()->json([
-        'teacher_NIC' => $nic,
-        'present' => $present,
-        'absents' => $absent,
-        'leave_requests' => $leaveRequestsCount,
-        'total_leave_days' => $totalLeaveDays,
-    ]);
-}
-public function getTodayLeaveCount()
-{
-    $today = Carbon::today()->toDateString();
+            return $carry + $days;
+        }, 0);
 
-    $count = TeacherLeaveRequest::where('status', 'Approved')
-        ->whereDate('leave_start_date', '<=', $today)
-        ->whereDate('leave_end_date', '>=', $today)
-        ->count();
+        return response()->json([
+            'teacher_NIC' => $nic,
+            'present' => $present,
+            'absents' => $absent,
+            'leave_requests' => $leaveRequestsCount,
+            'total_leave_days' => $totalLeaveDays,
+        ]);
+    }
+    public function getTodayLeaveCount()
+    {
+        $today = Carbon::today()->toDateString();
 
-    return response()->json(['count' => $count]);
-}
+        $count = TeacherLeaveRequest::where('status', 'Approved')
+            ->whereDate('leave_start_date', '<=', $today)
+            ->whereDate('leave_end_date', '>=', $today)
+            ->count();
+
+        return response()->json(['count' => $count]);
+    }
 }
 

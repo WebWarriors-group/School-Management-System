@@ -12,7 +12,7 @@ class TeacherLeaveRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            'teacher_NIC' => 'NIC123456', // Use a valid NIC that exists in your teacher_work_infos table
+            'teacher_NIC' => 'NIC123456',
             'leave_type' => $this->faker->randomElement(['Medical', 'Casual', 'Maternity']),
             'leave_start_date' => now()->addDays(1),
             'leave_end_date' => now()->addDays(3),
@@ -21,7 +21,7 @@ class TeacherLeaveRequestFactory extends Factory
             'substitute_teacher_name' => $this->faker->name(),
             'substitute_teacher_contact' => $this->faker->phoneNumber(),
             'comments' => $this->faker->optional()->sentence(),
-            'supporting_document' => null, // or a fake file path
+            'supporting_document' => null,
             'status' => 'Pending',
         ];
     }

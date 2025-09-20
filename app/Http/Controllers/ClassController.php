@@ -19,58 +19,58 @@ class ClassController extends Controller
      */
     public function index()
     {
-       
-    $teachers = Teacher::with('qualifications', 'personal')->get();
 
-    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC', 'class_name', 'year')
-        ->get()
-        ->groupBy('class_name')
-        ->map(function ($gradeGroups) {
-            return $gradeGroups->groupBy('grade');
-        });
+        $teachers = Teacher::with('qualifications', 'personal')->get();
 
-    return Inertia::render('Admin/Classpage', [
-        'classes' => $classes,
-        'teachers' => $teachers,
-    ]);
+        $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC', 'class_name', 'year')
+            ->get()
+            ->groupBy('class_name')
+            ->map(function ($gradeGroups) {
+                return $gradeGroups->groupBy('grade');
+            });
+
+        return Inertia::render('Admin/Classpage', [
+            'classes' => $classes,
+            'teachers' => $teachers,
+        ]);
 
     }
 
     public function classpage()
-{
-    $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC')
-        ->get()
-        ->groupBy('grade');
+    {
+        $classes = ClassModel::select('class_id', 'grade', 'section', 'teacher_NIC')
+            ->get()
+            ->groupBy('grade');
 
-    $teachers = Teacher::select('teacher_NIC')->get();
+        $teachers = Teacher::select('teacher_NIC')->get();
 
-    return inertia('Admin/Classpage', [
-        'classes' => $classes,
-        'teachers' => $teachers
-    ]);
-}
-
-public function assignTeachers(Request $request)
-{
-    $request->validate([
-        'grade' => 'required|integer',
-        'sections' => 'required|array',
-        'sections.*' => 'nullable|string' 
-    ]);
-
-    $grade = $request->input('grade');
-    $sections = $request->input('sections'); 
-
-    foreach ($sections as $section => $teacherNIC) {
-       
-        DB::table('classes')
-            ->where('grade', $grade)
-            ->where('section', $section)
-            ->update(['teacher_NIC' => $teacherNIC]);
+        return inertia('Admin/Classpage', [
+            'classes' => $classes,
+            'teachers' => $teachers
+        ]);
     }
 
-    return ;
-}
+    public function assignTeachers(Request $request)
+    {
+        $request->validate([
+            'grade' => 'required|integer',
+            'sections' => 'required|array',
+            'sections.*' => 'nullable|string'
+        ]);
+
+        $grade = $request->input('grade');
+        $sections = $request->input('sections');
+
+        foreach ($sections as $section => $teacherNIC) {
+
+            DB::table('classes')
+                ->where('grade', $grade)
+                ->where('section', $section)
+                ->update(['teacher_NIC' => $teacherNIC]);
+        }
+
+        return;
+    }
 
     /**
      * Store a new class.
@@ -82,7 +82,7 @@ public function assignTeachers(Request $request)
             'class_name' => 'nullable|string|max:10',
             'grade' => 'required|integer',
             'section' => 'required|string|max:5',
-           
+
         ]);
 
         $class = ClassModel::create($validatedData);
@@ -90,10 +90,10 @@ public function assignTeachers(Request $request)
     }
     public function count()
     {
-        $count = ClassModel::count(); // Adjust model name if it's not SchoolClass
+        $count = ClassModel::count();
         return response()->json(['count' => $count]);
     }
-    
+
     /**
      * Display a specific class.
      */
@@ -101,7 +101,7 @@ public function assignTeachers(Request $request)
     {
         $class = ClassModel::find($id);
         return $class ? response()->json($class, 200)
-                      : response()->json(['message' => 'Class not found'], 404);
+            : response()->json(['message' => 'Class not found'], 404);
     }
 
     /**
@@ -145,44 +145,44 @@ public function assignTeachers(Request $request)
 
 
     public function index1(Request $request)
-{
-    $filters = $request->only(['grade', 'section', 'class_name']);
+    {
+        $filters = $request->only(['grade', 'section', 'class_name']);
 
-    $classes = ClassModel::withCount('studentacademics')
-        ->with('studentacademics')
-        ->when($filters['grade'], fn($q) => $q->where('grade', $filters['grade']))
-        ->when($filters['section'], fn($q) => $q->where('section', $filters['section']))
-        ->when($filters['class_name'], fn($q) => $q->where('class_name', $filters['class_name']))
-        ->get();
+        $classes = ClassModel::withCount('studentacademics')
+            ->with('studentacademics')
+            ->when($filters['grade'], fn($q) => $q->where('grade', $filters['grade']))
+            ->when($filters['section'], fn($q) => $q->where('section', $filters['section']))
+            ->when($filters['class_name'], fn($q) => $q->where('class_name', $filters['class_name']))
+            ->get();
 
-    return Inertia::render('Admin/Dashboardoverview', [
-        'classes' => $classes,
-        'filters' => $filters,
-    ]);
-}
-
-
+        return Inertia::render('Admin/Dashboardoverview', [
+            'classes' => $classes,
+            'filters' => $filters,
+        ]);
+    }
 
 
-public function reset(Request $request)
-{
-    $request->validate([
-        'class_name' => 'required|string',
-        'grade' => 'required|integer',
-    ]);
 
-    $className = $request->input('class_name');
-    $grade = $request->input('grade');
 
-    
-    $classIds = ClassModel::where('class_name', $className)
-        ->where('grade', $grade)
-        ->pluck('class_id');
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'class_name' => 'required|string',
+            'grade' => 'required|integer',
+        ]);
 
-   
-    ClassModel::query()->update(['teacher_NIC' => null]);
+        $className = $request->input('class_name');
+        $grade = $request->input('grade');
 
-    return redirect()->back();
-}
+
+        $classIds = ClassModel::where('class_name', $className)
+            ->where('grade', $grade)
+            ->pluck('class_id');
+
+
+        ClassModel::query()->update(['teacher_NIC' => null]);
+
+        return redirect()->back();
+    }
 
 }

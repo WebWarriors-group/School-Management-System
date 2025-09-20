@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
-    protected $table='subjects';
-    protected $primaryKey = 'subject_id'; // Use subject_id as the primary key
-    public $incrementing = false; // Since subject_id is a string
-    protected $keyType = 'string'; // Make sure the primary key is treated as a string
+    protected $table = 'subjects';
+    protected $primaryKey = 'subject_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'subject_id',
@@ -22,7 +22,7 @@ class Subject extends Model
     {
         return $this->belongsToMany(ClassModel::class, 'class_subjects', 'subject_id', 'class_id');
     }
-    
+
 
     public function teachers()
     {
@@ -41,9 +41,9 @@ class Subject extends Model
         return $this->hasMany(StudyMaterial::class, 'subject_id', 'subject_id');
     }
 
-    public function grades ()
-{
-    return $this->belongsTo(Grade::class, 'id', 'id');
-}
+    public function grades()
+    {
+        return $this->belongsTo(Grade::class, 'id', 'id');
+    }
 
 }

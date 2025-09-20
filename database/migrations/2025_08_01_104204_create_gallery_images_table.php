@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,10 +12,10 @@ return new class extends Migration
     {
         Schema::create('gallery_images', function (Blueprint $table) {
             $table->id();
-    $table->foreignId('category_id')->constrained('gallery_categories')->onDelete('cascade');
-    $table->string('title')->nullable();
-    $table->string('image_path');
-    $table->timestamps();
+            $table->foreignId('category_id')->constrained('gallery_categories')->onDelete('cascade');
+            $table->string('title')->nullable();
+            $table->string('image_path');
+            $table->timestamps();
         });
     }
 

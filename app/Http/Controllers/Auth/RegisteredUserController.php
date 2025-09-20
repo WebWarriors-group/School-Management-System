@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Mail\WelcomeMail; // ✅ make sure you have this
+use App\Mail\WelcomeMail;
 
 class RegisteredUserController extends Controller
 {
@@ -36,10 +36,10 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-       
+
         $password = $request->password;
 
-       
+
 
         $user = User::create([
             'name' => $request->name,
@@ -47,9 +47,9 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
             'password' => Hash::make($password),
         ]);
-\Log::info('Before mail send');
-Mail::to($user->email)->send(new WelcomeMail($user));
-\Log::info('After mail send');
+        \Log::info('Before mail send');
+        Mail::to($user->email)->send(new WelcomeMail($user));
+        \Log::info('After mail send');
         return route();
     }
 }

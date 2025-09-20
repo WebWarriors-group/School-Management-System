@@ -8,10 +8,11 @@ use App\Mail\ContactFormMail;
 
 class MailController extends Controller
 {
-    //
 
-    public function sendContactMail(Request $request){
-        $contact_data  = [];
+
+    public function sendContactMail(Request $request)
+    {
+        $contact_data = [];
         $contact_data['name'] = $request->input('name');
         $contact_data['email'] = $request->input('email');
         $contact_data['message'] = $request->input('message');

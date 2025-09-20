@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail; 
+namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -22,6 +22,6 @@ class StudentAdmissionMail extends Mailable
         return $this->view('emails.admission_form');
 
     }
-    
+
 
 }

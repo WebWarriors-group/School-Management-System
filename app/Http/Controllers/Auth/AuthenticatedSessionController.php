@@ -19,7 +19,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(Request $request, ?string $student = null): Response
     {
-        if (!$student){
+        if (!$student) {
             return Inertia::render('auth/login', [
                 'canResetPassword' => Route::has('password.request'),
                 'status' => $request->session()->get('status'),
@@ -39,7 +39,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
         $user = Auth::user();
 
-        // Redirect based on the user's role
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'teacher') {
@@ -54,7 +53,7 @@ class AuthenticatedSessionController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if($user){
+        if ($user) {
 
             Auth::login($user);
             $request->session()->regenerate();
@@ -68,8 +67,7 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('student.dashboard');
             }
             return redirect()->route('homepage');
-        }
-        else {
+        } else {
             return redirect()->route('/');
         }
     }

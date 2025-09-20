@@ -14,7 +14,7 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            'teacher_NIC' => $this->faker->unique()->numerify('###########'), // Generating fake NIC
+            'teacher_NIC' => $this->faker->unique()->numerify('###########'),
             'appointed_date' => $this->faker->date(),
             'work_acceptance_date' => $this->faker->date(),
             'appointment_type' => $this->faker->word,
@@ -30,9 +30,9 @@ class TeacherFactory extends Factory
             'other_responsibilities_assigned' => $this->faker->randomElement(['Class Teacher', 'Discipline Head', 'None']),
             'is_150_hrs_tamil_course_completed' => $this->faker->boolean(),
 
-            'commuting_from_school' => $this->faker->randomElement(['Home','Boarding','Hostel','Other']),
-            'distance_from_school' => $this->faker->randomFloat(1, 0.5, 50), // Distance in km
-            'commuting_method_to_school' => $this->faker->randomElement(['Bicycle','MotorBike','Car','Bus','Threewheeler','Walk','Other']),
+            'commuting_from_school' => $this->faker->randomElement(['Home', 'Boarding', 'Hostel', 'Other']),
+            'distance_from_school' => $this->faker->randomFloat(1, 0.5, 50),
+            'commuting_method_to_school' => $this->faker->randomElement(['Bicycle', 'MotorBike', 'Car', 'Bus', 'Threewheeler', 'Walk', 'Other']),
             'number_in_sign_sheet' => $this->faker->randomNumber(3),
             'number_in_salary_sheet' => $this->faker->randomNumber(3),
 

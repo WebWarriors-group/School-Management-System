@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function teacher()
     {
-        return $this->hasOne(Teacher::class,'user_id','id');
+        return $this->hasOne(Teacher::class, 'user_id', 'id');
     }
 
     public function material()
@@ -65,6 +65,6 @@ class User extends Authenticatable
 
     public function student()
     {
-        return $this->hasOne(StudentAcademic::class,'user_id','id');
+        return $this->hasOne(StudentAcademic::class, 'user_id', 'id');
     }
 }

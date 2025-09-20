@@ -16,14 +16,14 @@ class SubjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Inertia\Response
      */
-public function index()
-{
-    $subjects = Subject::all(); // No pagination
+    public function index()
+    {
+        $subjects = Subject::all(); // No pagination
 
-    return Inertia::render('Admin/SubjectIndex', [
-        'subjects' => $subjects
-    ]);
-}
+        return Inertia::render('Admin/SubjectIndex', [
+            'subjects' => $subjects
+        ]);
+    }
 
 
     // The `create` method is now removed.
@@ -43,7 +43,7 @@ public function index()
      */
     public function store(Request $request)
     {
-        // Validation rules are updated to match React form and include 'status'.
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:subjects,name'],
             'code' => ['required', 'string', 'max:20', 'unique:subjects,code'],
@@ -53,7 +53,6 @@ public function index()
 
         $subject = Subject::create($validated);
 
-        // Return the created subject with a 201 Created status
         return response()->json($subject, 201);
     }
 
@@ -67,7 +66,7 @@ public function index()
      */
     public function show(Subject $subject) // Changed $subject_id to Subject $subject
     {
-        // Route Model Binding automatically handles 404 if subject is not found.
+
         return response()->json($subject, 200);
     }
 
@@ -106,12 +105,12 @@ public function index()
      * @param  \App\Models\Subject  $subject
      * @return \Illuminate\Http\JsonResponse
      */
-   public function destroy($id)
-{
-    $subject = Subject::findOrFail($id);
-    $subject->delete();
+    public function destroy($id)
+    {
+        $subject = Subject::findOrFail($id);
+        $subject->delete();
 
-    return redirect()->route('subjects.index')->with('success', 'Subject deleted successfully');
-}
+        return redirect()->route('subjects.index')->with('success', 'Subject deleted successfully');
+    }
 
 }

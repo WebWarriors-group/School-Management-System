@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,12 +13,12 @@ return new class extends Migration
         Schema::create('class_subject_teachers', function (Blueprint $table) {
             $table->id();
             $table->integer('class_id');
-             $table->foreign('class_id')->references('class_id')->on('classes')->onDelete('cascade');
+            $table->foreign('class_id')->references('class_id')->on('classes')->onDelete('cascade');
             $table->integer('subject_id');
-             $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
-              $table->string('teacher_NIC');
-             $table->foreign('teacher_NIC')->references('teacher_NIC')->on('teacher_work_infos')->onDelete('cascade');
-             
+            $table->foreign('subject_id')->references('subject_id')->on('subjects')->onDelete('cascade');
+            $table->string('teacher_NIC');
+            $table->foreign('teacher_NIC')->references('teacher_NIC')->on('teacher_work_infos')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

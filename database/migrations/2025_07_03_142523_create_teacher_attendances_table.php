@@ -9,16 +9,16 @@ return new class extends Migration {
     {
         Schema::create('teacher_attendances', function (Blueprint $table) {
             $table->id();
-            $table->string('teacher_NIC'); // You can also use foreignId if you use numeric teacher IDs
+            $table->string('teacher_NIC');
             $table->date('date');
             $table->enum('status', ['Present', 'Absent']);
             $table->timestamps();
 
-            $table->unique(['teacher_NIC', 'date']); // Prevent duplicate entries for the same day
+            $table->unique(['teacher_NIC', 'date']);
             $table->foreign('teacher_NIC')
-                  ->references('teacher_NIC')
-                  ->on('teacher_work_infos')
-                  ->onDelete('cascade');
+                ->references('teacher_NIC')
+                ->on('teacher_work_infos')
+                ->onDelete('cascade');
         });
     }
 

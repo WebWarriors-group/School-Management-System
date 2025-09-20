@@ -24,7 +24,7 @@ class StudyMaterialFactory extends Factory
     public function definition(): array
     {
         return [
-            'uploaded_by' =>  User::all()->random()->id,
+            'uploaded_by' => User::all()->random()->id,
             'category' => $this->faker->randomElement(['pastPapers', 'teachersHandbooks', 'notes']),
             'title' => $this->faker->sentence,
             'grade' => $this->faker->randomElement(['6', '7', '8', '9', '10']),

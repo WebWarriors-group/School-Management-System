@@ -22,6 +22,6 @@ class ContactFormMail extends Mailable
     public function build()
     {
         return $this->subject('Your Account Details')
-                    ->view('emails.contact_mail');
+            ->view('emails.contact_mail');
     }
 }

@@ -14,7 +14,7 @@ class TeacherPersonalFactory extends Factory
     public function definition()
     {
         return [
-            'teacher_NIC' =>Teacher::all()->random()->teacher_NIC,
+            'teacher_NIC' => Teacher::all()->random()->teacher_NIC,
             'full_name' => $this->faker->name,
             'full_name_with_initial' => $this->faker->name,
             'photo' => $this->faker->imageUrl(),
@@ -25,16 +25,10 @@ class TeacherPersonalFactory extends Factory
             'title' => $this->faker->title,
             'marital_status' => $this->faker->randomElement(['Single', 'Married']),
             'details_about_family_members' => $this->faker->sentence,
-            // Limit the length to 10 characters
-          'Emergency_telephone_number' => $this->faker->numerify('+1-###-###-####'),
-
-
-
-
-
+            'Emergency_telephone_number' => $this->faker->numerify('+1-###-###-####'),
             'email_address' => $this->faker->safeEmail,
-            'fixed_telephone_number' =>$this->faker->numerify('+1-###-###-####'),
-            'mobile_number' =>$this->faker->numerify('+1-###-###-####'),
+            'fixed_telephone_number' => $this->faker->numerify('+1-###-###-####'),
+            'mobile_number' => $this->faker->numerify('+1-###-###-####'),
             'whatsapp_number' => $this->faker->phoneNumber,
         ];
     }

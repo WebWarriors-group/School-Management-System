@@ -8,14 +8,11 @@ class StudentPersonal extends Model
 {
     use HasFactory;
 
-    protected $table = 'students_personal_info'; // Specify the correct table name
-
-    //protected $primaryKey = 'reg_no'; // Define primary key
-
-    public $incrementing = false; 
+    protected $table = 'students_personal_info';
+    public $incrementing = false;
 
     protected $keyType = 'string';
-    
+
     protected $fillable = [
         'reg_no',
         'full_name',
@@ -38,7 +35,7 @@ class StudentPersonal extends Model
     ];
     public function studentacademic()
     {
-        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no'); 
+        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
     }
 
 }

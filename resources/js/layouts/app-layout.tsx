@@ -6,22 +6,23 @@ import { Toaster } from 'sonner';
 
 
 interface AppLayoutProps {
-    children: ReactNode;
-    breadcrumbs?: BreadcrumbItem[];
+  children: ReactNode;
+  breadcrumbs?: BreadcrumbItem[];
   auth?: {
-        user: any; 
-}
+    user: any;
+  }
 
 }
 export default ({ children, breadcrumbs, auth, ...props }: AppLayoutProps) => {
-  const { auth:authFromPage } = usePage().props;
-return(
-  <>
-    {/* <NotificationListener /> */}
-    <Toaster position="top-right" richColors closeButton />
-    <AppLayoutTemplate breadcrumbs={breadcrumbs}  {...props}>
-      {children}
-    </AppLayoutTemplate>
-  </>
-);}
+  const { auth: authFromPage } = usePage().props;
+  return (
+    <>
+
+      <Toaster position="top-right" richColors closeButton />
+      <AppLayoutTemplate breadcrumbs={breadcrumbs}  {...props}>
+        {children}
+      </AppLayoutTemplate>
+    </>
+  );
+}
 

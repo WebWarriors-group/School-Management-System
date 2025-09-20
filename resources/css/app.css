@@ -68,6 +68,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
     *,
     ::after,
     ::before,
@@ -159,14 +160,13 @@
 }
 
 #nprogress {
-  display: none !important;
+    display: none !important;
 }
 
 #nprogress .bar {
-  display: none !important;
+    display: none !important;
 }
 
 #nprogress .spinner {
-  display: none !important;
+    display: none !important;
 }
-

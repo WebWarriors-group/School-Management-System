@@ -3,8 +3,8 @@ import React from "react";
 interface TableProps {
   columns: string[];
   data: { [key: string]: any }[];
-actions?: (item: any) => JSX.Element;
- }
+  actions?: (item: any) => JSX.Element;
+}
 
 const Table: React.FC<TableProps> = ({ columns, data, actions }) => {
   return (

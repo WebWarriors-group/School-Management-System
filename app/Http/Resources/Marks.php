@@ -16,9 +16,9 @@ class Marks extends ResourceCollection
     {
         return [
             'marks_obtained' => $this->marks_obtained,
-        'subject' => [
-            'subject_name' => $this->subject->subject_name,
-        ],
+            'subject' => [
+                'subject_name' => $this->subject->subject_name,
+            ],
         ];
     }
 }

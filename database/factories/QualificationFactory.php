@@ -15,7 +15,7 @@ class QualificationFactory extends Factory
 
 
 
-   
+
 
     public function definition(): array
     {
@@ -23,23 +23,36 @@ class QualificationFactory extends Factory
 
 
 
-         $subjectNames = [
-            'Science', 'Maths', 'Tamil', 'English', 'Geography', 'Civics',
-            'Islam', 'Hinduism', 'Buddhism', 'History', 'Physics', 'Chemistry',
-            'Combined Maths', 'Art', 'Sinhala', 'Tamil Literature', 'Agriculture', 'Biology'
+        $subjectNames = [
+            'Science',
+            'Maths',
+            'Tamil',
+            'English',
+            'Geography',
+            'Civics',
+            'Islam',
+            'Hinduism',
+            'Buddhism',
+            'History',
+            'Physics',
+            'Chemistry',
+            'Combined Maths',
+            'Art',
+            'Sinhala',
+            'Tamil Literature',
+            'Agriculture',
+            'Biology'
         ];
 
 
         $appointed = $this->faker->randomElement($subjectNames);
-
-        // Pick 2 others different from appointed
         $others = collect($subjectNames)
-            ->reject(fn ($s) => $s === $appointed)
+            ->reject(fn($s) => $s === $appointed)
             ->shuffle()
             ->take(2)
             ->all();
         return [
-            'teacher_NIC' => Teacher::all()->random()->teacher_NIC,  // Assign a random teacher's NIC
+            'teacher_NIC' => Teacher::all()->random()->teacher_NIC,
             'type_of_service_in_school' => $this->faker->randomElement(['Full-time', 'Part-time', 'Contract']),
             'gce_al_subject_stream' => $this->faker->randomElement(['Science', 'Commerce', 'Arts']),
             'highest_education_qualification' => $this->faker->randomElement(['Bachelor\'s', 'Master\'s', 'PhD']),
@@ -53,7 +66,7 @@ class QualificationFactory extends Factory
             'appointed_subject_section' => $this->faker->randomElement(['Mathematics', 'Science', 'English']),
             'subject_appointed' => $appointed,
             'currentservice_appointed_date' => $this->faker->date(),
-            'subjects_taught_most_and_second_most' =>  $others[0] . ' and ' . $others[1],
+            'subjects_taught_most_and_second_most' => $others[0] . ' and ' . $others[1],
             'position_in_the_school' => $this->faker->randomElement(['Teacher', 'Head of Department', 'Principal']),
             'assign_date_for_the_school' => $this->faker->date(),
         ];

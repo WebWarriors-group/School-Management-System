@@ -10,8 +10,8 @@ use App\Models\StudentPerformance;
  */
 class StudentPerformanceFactory extends Factory
 {
-     use HasFactory;
-         protected $model = StudentPerformance::class;
+    use HasFactory;
+    protected $model = StudentPerformance::class;
     /**
      * Define the model's default state.
      *

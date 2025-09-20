@@ -9,7 +9,7 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    protected $table='attendances';
+    protected $table = 'attendances';
 
     protected $fillable = ['reg_no', 'date', 'status'];
 
@@ -17,5 +17,5 @@ class Attendance extends Model
     {
         return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
     }
-    
+
 }

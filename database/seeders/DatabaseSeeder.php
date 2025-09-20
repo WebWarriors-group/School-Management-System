@@ -29,40 +29,38 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
         Teacher::factory(10)->create();
-         TeacherPersonal::factory(10)->create();
+        TeacherPersonal::factory(10)->create();
         TeacherOtherServices::factory(10)->create();
         Qualification::factory(10)->create();
         StudyMaterial::factory(10)->create();
         ClassModel::factory(16)->create();
         Subject::factory(10)->create();
         Grade::factory(100)->create();
-$students = StudentAcademic::factory(200)->create();
+        $students = StudentAcademic::factory(200)->create();
 
         // Marks::factory(10)->create();
         StudentPerformance::factory(10)->create();
-   
 
 
-        // Create related info for each student
         foreach ($students as $student) {
             StudentPersonal::factory()->create([
                 'reg_no' => $student->reg_no,
             ]);
-             StudentFamilyInfo::factory()->create([
+            StudentFamilyInfo::factory()->create([
                 'reg_no' => $student->reg_no,
             ]);
             StudentSibling::factory(rand(1, 3))->create([
                 'reg_no' => $student->reg_no,
             ]);
             $studentClass = $student->class_id;
-    //         
 
-    StudentReport::factory(rand(1, 3))->create([
-        'reg_no' => $student->reg_no,
-    ]);
+
+            StudentReport::factory(rand(1, 3))->create([
+                'reg_no' => $student->reg_no,
+            ]);
         }
         User::updateOrCreate(
-            ['email' => 'admin@sms.lk'], // Unique constraint
+            ['email' => 'admin@sms.lk'],
             [
                 'name' => 'Admin User',
                 'email' => 'admin@sms.lk',
@@ -71,7 +69,7 @@ $students = StudentAcademic::factory(200)->create();
             ]
         );
         User::updateOrCreate(
-            ['email' => 'teacher@sms.lk'], // Unique constraint
+            ['email' => 'teacher@sms.lk'],
             [
                 'name' => 'Teacher User',
                 'email' => 'teacher@sms.lk',
@@ -80,7 +78,7 @@ $students = StudentAcademic::factory(200)->create();
             ]
         );
         User::updateOrCreate(
-            ['email' => 'student@sms.lk'], // Unique constraint
+            ['email' => 'student@sms.lk'],
             [
                 'name' => 'Student User',
                 'email' => 'student@sms.lk',
@@ -91,7 +89,7 @@ $students = StudentAcademic::factory(200)->create();
 
 
         User::updateOrCreate(
-            ['email' => 'student@sms1.lk'], // Unique constraint
+            ['email' => 'student@sms1.lk'],
             [
                 'name' => 'Student User',
                 'email' => 'student@sms1.lk',

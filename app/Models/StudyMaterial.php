@@ -12,13 +12,13 @@ class StudyMaterial extends Model
     protected $table = 'study_materials';
 
     protected $fillable = [
-        'uploaded_by', 
+        'uploaded_by',
         'category',
-        'title', 
-        'grade', 
-        'subject', 
+        'title',
+        'grade',
+        'subject',
         'year',
-        'file_url', 
+        'file_url',
     ];
 
     public function uploaded_by()

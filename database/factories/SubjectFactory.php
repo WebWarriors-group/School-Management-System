@@ -11,20 +11,35 @@ class SubjectFactory extends Factory
 {
     public function definition(): array
     {
-        static $counter = 101; // Start from 101 or any number you want
+        static $counter = 101;
 
         $subjectNames = [
-            'Science', 'Maths', 'Tamil', 'English', 'Geography', 'Civics',
-            'Islam', 'Hinduism', 'Buddhism', 'History', 'Physics', 'Chemistry',
-            'Combined Maths', 'Art', 'Sinhala', 'Tamil Literature', 'Agriculture', 'Biology'
+            'Science',
+            'Maths',
+            'Tamil',
+            'English',
+            'Geography',
+            'Civics',
+            'Islam',
+            'Hinduism',
+            'Buddhism',
+            'History',
+            'Physics',
+            'Chemistry',
+            'Combined Maths',
+            'Art',
+            'Sinhala',
+            'Tamil Literature',
+            'Agriculture',
+            'Biology'
         ];
 
-        
+
 
         return [
-            'subject_id' => $counter++, // Increment for each subject
+            'subject_id' => $counter++,
             'subject_name' => $this->faker->randomElement($subjectNames),
-             
+
         ];
     }
 }

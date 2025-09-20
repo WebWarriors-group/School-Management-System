@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,18 +12,17 @@ return new class extends Migration
     {
         Schema::create('student_siblings', function (Blueprint $table) {
             $table->id();
-            $table->integer('reg_no'); // Foreign key to students table
+            $table->integer('reg_no');
             $table->foreign('reg_no')->references('reg_no')->on('student_academic_info')->onDelete('cascade');
 
             $table->string('sibling_name', 100)->nullable();
-            $table->string('relationship', 20)->nullable(); // Brother, Sister, etc.
-            $table->integer('sibling_age')->nullable(); // Optional
-            $table->string('occupation', 150)->nullable(); // Optional
-            $table->string('contact', 20)->nullable(); // Optional, sibling's contact
+            $table->string('relationship', 20)->nullable();
+            $table->integer('sibling_age')->nullable();
+            $table->string('occupation', 150)->nullable();
+            $table->string('contact', 20)->nullable();
             $table->timestamps();
 
-            // Foreign key constraint
-            
+
         });
     }
 

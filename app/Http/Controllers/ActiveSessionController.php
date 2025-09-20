@@ -18,7 +18,7 @@ class ActiveSessionController extends Controller
         }
 
         $user = Auth::user();
-        $route = match($user->role) {
+        $route = match ($user->role) {
             'admin' => route('admin.dashboard'),
             'teacher' => route('teacher.dashboard'),
             'student' => route('student.dashboard'),

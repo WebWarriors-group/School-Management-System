@@ -14,16 +14,15 @@ class WelcomeMail extends Mailable implements ShouldQueue
     public $user;
     public $password;
 
-public function __construct($user,$password)
-{
-    $this->user = $user;
-     $this->password = $password;
-}
+    public function __construct($user, $password)
+    {
+        $this->user = $user;
+        $this->password = $password;
+    }
 
     public function build()
     {
         return $this->subject('Your Login Credentials')
-                    ->view('emails.welcome');
+            ->view('emails.welcome');
     }
 }
- 

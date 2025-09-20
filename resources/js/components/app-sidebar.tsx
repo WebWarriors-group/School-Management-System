@@ -5,27 +5,26 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Users, UsersRound } from 'lucide-react';
 
-// ✅ Interface to receive the user role from AppSidebarLayout
+
 interface AppSidebarProps {
-    role: string; // either 'admin' or 'teacher'
+    role: string;
 }
 
-// ✅ Define menu items based on role (admin or teacher)
 export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
-            
+
             { title: 'Dashboard Overview', url: '/admin/dashboardoverview', icon: LayoutGrid },
             { title: 'Image Gallery', url: '/gallery1', icon: LayoutGrid },
             { title: 'School Event Calendar', url: '/admin/calendar', icon: LayoutGrid },
-              { title: 'Overall Performance', url: '/admin/OverallPerformance', icon: LayoutGrid },
-              
+            { title: 'Overall Performance', url: '/admin/OverallPerformance', icon: LayoutGrid },
+
             { title: 'User Management', url: '/admin/usermanage', icon: LayoutGrid },
             { title: 'Teachers Management', url: '/admin/teacher', icon: Users },
             { title: 'Students Management', url: '/admin/studentdashboard', icon: UsersRound },
             { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
-             { title: 'Old Students History', url: '/students/past', icon: LayoutGrid },
+            { title: 'Old Students History', url: '/students/past', icon: LayoutGrid },
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/teacher/dashboard/{teacher_NIC}', icon: LayoutGrid },
@@ -42,7 +41,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
             //   { title: 'Reports', url: '/teacher/reports', icon: BookOpen },
         ],
     };
-    // ✅ Get main nav items for the current role
+
     const mainNavItems = navItemsByRole[role] || [];
 
     const footerNavItems: NavItem[] = [
@@ -60,39 +59,39 @@ export function AppSidebar({ role }: AppSidebarProps) {
 
     return (
         <>
-         {(role !== 'student' && role !== 'teacher') && (
-        <Sidebar collapsible="icon" variant="inset" className="text-white" style={{ background: sidebarBackground }}>
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            size="lg"
-                            asChild
-                            className="hover:from-maroon-800 bg-red-900 text-white transition-all hover:bg-gradient-to-r hover:to-red-300"
-                            style={{ background: sidebarBackground }}
-                        >
-                            <Link href="/dashboard" prefetch>
-                                {/* <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
+            {(role !== 'student' && role !== 'teacher') && (
+                <Sidebar collapsible="icon" variant="inset" className="text-white" style={{ background: sidebarBackground }}>
+                    <SidebarHeader>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    size="lg"
+                                    asChild
+                                    className="hover:from-maroon-800 bg-red-900 text-white transition-all hover:bg-gradient-to-r hover:to-red-300"
+                                    style={{ background: sidebarBackground }}
+                                >
+                                    <Link href="/dashboard" prefetch>
+                                        {/* <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
                   
                 </div> */}
-                                <div className="ml-2 grid flex-1 text-left text-sm">
-                                    <span className="mb-0.5 truncate text-[16px] leading-none font-semibold text-[white]">Admin Panel Board</span>
-                                </div>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+                                        <div className="ml-2 grid flex-1 text-left text-sm">
+                                            <span className="mb-0.5 truncate text-[16px] leading-none font-semibold text-[white]">Admin Panel Board</span>
+                                        </div>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarHeader>
 
-           
-                <SidebarContent className="text-[white]" style={{ background: sidebarBackground }}>
-                    <NavMain items={mainNavItems} />
-                </SidebarContent>
-          
-            
-            
-        </Sidebar>
-          )}
+
+                    <SidebarContent className="text-[white]" style={{ background: sidebarBackground }}>
+                        <NavMain items={mainNavItems} />
+                    </SidebarContent>
+
+
+
+                </Sidebar>
+            )}
         </>
     );
 

@@ -9,14 +9,13 @@ class Qualification extends Model
 {
     use HasFactory;
 
-    protected $table = 'teacher_qualifications'; // Set the table name
+    protected $table = 'teacher_qualifications';
 
-    //protected $primaryKey = 'teacher_NIC'; // Primary key if different from auto-incrementing ID
-    public $incrementing = false; // Because teacher_NIC is a string
+    public $incrementing = false;
     public $timestamps = false;
-    protected $keyType = 'string'; // Define the key type as string
+    protected $keyType = 'string';
     protected $fillable = [
-        
+
         'teacher_NIC',
         'type_of_service_in_school',
         'gce_al_subject_stream',
@@ -37,7 +36,7 @@ class Qualification extends Model
     ];
     public function teacher()
     {
-        return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC'); // Relationship to Teacher model
+        return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');
     }
 
 

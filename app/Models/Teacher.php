@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Teacher extends Model
 {
     use HasFactory;
-  use SoftDeletes;
-    protected $table = 'teacher_work_infos'; // Specify the correct table name
+    use SoftDeletes;
+    protected $table = 'teacher_work_infos';
 
-    protected $primaryKey = 'teacher_NIC'; // Define primary key
+    protected $primaryKey = 'teacher_NIC';
 
-    public $incrementing = false; // Important because teacher_NIC is a string
+    public $incrementing = false;
 
-    protected $keyType = 'string'; // Ensures teacher_NIC is treated as a string
+    protected $keyType = 'string';
 
     protected $fillable = [
         'teacher_NIC',
@@ -38,16 +38,16 @@ class Teacher extends Model
         'commuting_from_school',
         'distance_from_school',
         'commuting_method_to_school',
-       
+
         'number_in_sign_sheet',
         'number_in_salary_sheet',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    
+
     public function subjects()
     {
         return $this->belongsToMany(Subject::class, 'teach_subjects', 'teacher_NIC', 'subject_id');
@@ -74,7 +74,7 @@ class Teacher extends Model
     }
     public function qualifications()
     {
-        return $this->hasOne(Qualification::class,'teacher_NIC','teacher_NIC');
+        return $this->hasOne(Qualification::class, 'teacher_NIC', 'teacher_NIC');
 
     }
 }

@@ -18,7 +18,7 @@ class StudentSiblingFactory extends Factory
      */
 
     protected $model = StudentSibling::class;
-    
+
     public function definition(): array
     {
         return [

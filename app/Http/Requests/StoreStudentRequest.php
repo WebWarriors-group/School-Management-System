@@ -36,15 +36,16 @@ class StoreStudentRequest extends FormRequest
             'family.father_name' => 'nullable|string|max:100',
 
             'siblings.*.sibling_name' => 'nullable|string|max:100',
-            'siblings.*.relationship'=>'nullable|string|max:50',
-            'siblings.*.sibling_age'=>'nullable|integer|min:0,max:40',
-            'siblings.*.occupation'=>'nullable|string|max:100',
-            'siblings.*.contact'=>'nullable|string|regex:/^(?:\+94|0)?\d{9}$|max:15'
+            'siblings.*.relationship' => 'nullable|string|max:50',
+            'siblings.*.sibling_age' => 'nullable|integer|min:0,max:40',
+            'siblings.*.occupation' => 'nullable|string|max:100',
+            'siblings.*.contact' => 'nullable|string|regex:/^(?:\+94|0)?\d{9}$|max:15'
         ];
     }
-    public function messages():array{
+    public function messages(): array
+    {
         return [
-         'reg_no.unique' => 'The registration number already exists!'
+            'reg_no.unique' => 'The registration number already exists!'
         ];
     }
 }

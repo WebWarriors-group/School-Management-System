@@ -34,10 +34,10 @@ class StudentFamilyInfo extends Model
         'siblings' => 'array',
     ];
 
-    
+
     public function studentacademic()
     {
-        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no'); 
+        return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
     }
-    
+
 }

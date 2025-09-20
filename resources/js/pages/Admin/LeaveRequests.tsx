@@ -8,7 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: '👩‍🏫 Teacher Management',
+    title: ' Teacher Management',
     href: '/dashboard',
   },
 ];
@@ -63,28 +63,28 @@ export default function AdminLeaveRequests() {
 
   const handleApprove = (id: number) => {
     if (confirm("Are you sure you want to approve this request?")) {
-    Inertia.post(`/admin/teacher-leave-requests/${id}/approve`, {}, {
-          onSuccess: () => {
-            toast.success("Request approved successfully!");
-          },
-          onError: () => {
-            toast.error("Failed to approve the request.");
-          }
-        });
-      }
+      Inertia.post(`/admin/teacher-leave-requests/${id}/approve`, {}, {
+        onSuccess: () => {
+          toast.success("Request approved successfully!");
+        },
+        onError: () => {
+          toast.error("Failed to approve the request.");
+        }
+      });
+    }
   };
 
   const handleReject = (id: number) => {
     if (confirm("Are you sure you want to reject this request?")) {
-    Inertia.post(`/admin/teacher-leave-requests/${id}/reject`, {}, {
-          onSuccess: () => {
-            toast.success("Request rejected.");
-          },
-          onError: () => {
-            toast.error("Failed to reject the request.");
-          }
-        });
-      }
+      Inertia.post(`/admin/teacher-leave-requests/${id}/reject`, {}, {
+        onSuccess: () => {
+          toast.success("Request rejected.");
+        },
+        onError: () => {
+          toast.error("Failed to reject the request.");
+        }
+      });
+    }
   };
 
   const renderRequests = (
@@ -94,50 +94,50 @@ export default function AdminLeaveRequests() {
   ) => (
     <div className="bg-white shadow p-4 rounded-lg border-t-4 flex-1 h-fit">
       <h2 className="text-xl font-bold mb-4 text-gray-800">{title}</h2>
-{requests.map((req) => (
-  <div
-    key={req.id}
-    className={`bg-gray-50 shadow-sm p-4 rounded border-l-4 ${color} mb-4`}
-  >
-    <h2 className="text-md font-semibold text-gray-800 mb-1">
-      NIC: {req.teacher_NIC}
-    </h2>
-
-    <p className="text-sm text-gray-600 mb-2">
-      <strong>Status:</strong> {req.status}
-    </p>
-
-    <p className="text-sm text-gray-700 mb-1">
-      <strong>Leave Type:</strong> {req.leave_type}
-    </p>
-    <p className="text-sm text-gray-700 mb-1">
-      <strong>Start Date:</strong> {req.leave_start_date}
-    </p>
-    <p className="text-sm text-gray-700 mb-1">
-      <strong>End Date:</strong> {req.leave_end_date}
-    </p>
-    <p className="text-sm text-gray-700 mb-1">
-      <strong>Reason:</strong> {req.reason}
-    </p>
-
-    {req.status === 'Pending' && (
-      <div className="flex gap-2 mt-4">
-        <button
-          onClick={() => handleApprove(req.id)}
-          className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+      {requests.map((req) => (
+        <div
+          key={req.id}
+          className={`bg-gray-50 shadow-sm p-4 rounded border-l-4 ${color} mb-4`}
         >
-          Approve
-        </button>
-        <button
-          onClick={() => handleReject(req.id)}
-          className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
-        >
-          Reject
-        </button>
-      </div>
-    )}
-  </div>
-))}
+          <h2 className="text-md font-semibold text-gray-800 mb-1">
+            NIC: {req.teacher_NIC}
+          </h2>
+
+          <p className="text-sm text-gray-600 mb-2">
+            <strong>Status:</strong> {req.status}
+          </p>
+
+          <p className="text-sm text-gray-700 mb-1">
+            <strong>Leave Type:</strong> {req.leave_type}
+          </p>
+          <p className="text-sm text-gray-700 mb-1">
+            <strong>Start Date:</strong> {req.leave_start_date}
+          </p>
+          <p className="text-sm text-gray-700 mb-1">
+            <strong>End Date:</strong> {req.leave_end_date}
+          </p>
+          <p className="text-sm text-gray-700 mb-1">
+            <strong>Reason:</strong> {req.reason}
+          </p>
+
+          {req.status === 'Pending' && (
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => handleApprove(req.id)}
+                className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => handleReject(req.id)}
+                className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
+              >
+                Reject
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
 
     </div>
   );
@@ -146,7 +146,7 @@ export default function AdminLeaveRequests() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <div className="p-6 max-w-7xl mx-auto">
         <Head title="Leave Requests" />
-        <h1 className="text-2xl font-bold mb-6">📋 Leave Requests</h1>
+        <h1 className="text-2xl font-bold mb-6"> Leave Requests</h1>
 
         <input
           type="text"
@@ -164,7 +164,7 @@ export default function AdminLeaveRequests() {
         {teacherStats && (
           <div className="bg-white p-4 rounded shadow mb-6">
             <h3 className="text-lg font-semibold mb-2">
-              📊 Attendance Stats
+              Attendance Stats
             </h3>
             <p>
               <strong>Leave Requests Taken:</strong>{' '}
@@ -187,17 +187,17 @@ export default function AdminLeaveRequests() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {renderRequests(
             pendingRequests,
-            '🟡 Pending Requests',
+            ' Pending Requests',
             'border-yellow-500'
           )}
           {renderRequests(
             approvedRequests,
-            '✅ Approved Requests',
+            'Approved Requests',
             'border-green-500'
           )}
           {renderRequests(
             rejectedRequests,
-            '❌ Rejected Requests',
+            ' Rejected Requests',
             'border-red-500'
           )}
         </div>

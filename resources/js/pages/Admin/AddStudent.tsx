@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
-import { Button } from "@/components/ui/button"; // Adjust import paths as per your project
-import { Input } from "@/components/ui/input"; // Adjust import paths as per your project
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Student } from "@/types";
 
 
@@ -12,14 +12,14 @@ interface AddStudentProps {
 
 const AddStudent: React.FC<AddStudentProps> = ({ onClose, onStudentAdded }) => {
     const [newStudent, setNewStudent] = useState<Student>({
-        reg_no:"",
+        reg_no: "",
         class_id: 0,
         distance_to_school: 0,
         method_of_coming_to_school: "",
         receiving_any_grade_5_scholarship: false,
         receiving_any_samurdhi_aswesuma: false,
         receiving_any_scholarship: false,
-        admission_date:"",
+        admission_date: "",
     });
 
     const [errors, setErrors] = useState<string[]>([]);

@@ -1,6 +1,4 @@
 <?php
-// app/Http/Controllers/Admin/GradeController.php
-
 
 namespace App\Http\Controllers;
 use App\Http\Controllers;
@@ -29,16 +27,16 @@ class GradeController extends Controller
     {
         $request->validate([
             'grade' => 'required|numeric|max:255',
-             'subject_type' => 'required|string|max:255',
+            'subject_type' => 'required|string|max:255',
             'subject_id' => 'required|exists:subjects,subject_id',
-            
+
         ]);
 
-        Grade::create($request->only('grade','subject_type', 'subject_id'));
+        Grade::create($request->only('grade', 'subject_type', 'subject_id'));
 
-         return redirect()->back();
-           
-        
+        return redirect()->back();
+
+
     }
 
     public function edit(Grade $grade)

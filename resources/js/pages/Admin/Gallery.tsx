@@ -5,7 +5,7 @@ import AppLayout from '@/layouts/app-layout';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: '📊 Image Gallery',
+    title: ' Image Gallery',
     href: '/',
   },
 ];
@@ -31,7 +31,7 @@ export default function Gallery({ categories }: PageProps) {
   const [image, setImage] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState<number | ''>('');
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [openCategory, setOpenCategory] = useState<number | null>(null); // 👈 Track open category
+  const [openCategory, setOpenCategory] = useState<number | null>(null);
 
   const handleCategorySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,9 +72,9 @@ export default function Gallery({ categories }: PageProps) {
       <main className="bg-gray-100 min-h-screen">
         <div className="max-w-5xl mx-auto p-6 space-y-8">
 
-          {/* Category Form */}
+
           <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-2xl font-bold mb-4">🗂️ Add Category</h2>
+            <h2 className="text-2xl font-bold mb-4"> Add Category</h2>
             <form onSubmit={handleCategorySubmit} className="flex gap-4">
               <input
                 type="text"
@@ -90,9 +90,8 @@ export default function Gallery({ categories }: PageProps) {
             </form>
           </div>
 
-          {/* Image Upload Form */}
           <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-2xl font-bold mb-4">📸 Upload Image</h2>
+            <h2 className="text-2xl font-bold mb-4"> Upload Image</h2>
             <form onSubmit={handleImageSubmit} className="space-y-4">
               <div>
                 <label className="block text-gray-700 font-medium mb-1">Category</label>
@@ -140,27 +139,25 @@ export default function Gallery({ categories }: PageProps) {
             </form>
           </div>
 
-          {/* Category Cards */}
           <div className="space-y-6">
             {categories.map((category) => (
               <div
                 key={category.id}
                 className="bg-white rounded shadow border"
               >
-                {/* Category Card Header */}
+
                 <div
                   className="cursor-pointer p-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100"
                   onClick={() => toggleCategory(category.id)}
                 >
                   <h3 className="text-lg font-semibold text-gray-800">
-                    📁 {category.name}
+                    {category.name}
                   </h3>
                   <span className="text-sm text-blue-600">
                     {openCategory === category.id ? '▲ Hide Images' : '▼ Show Images'}
                   </span>
                 </div>
 
-                {/* Image Grid - Only if this category is open */}
                 {openCategory === category.id && (
                   <div className="p-4">
                     {category.images.length === 0 ? (

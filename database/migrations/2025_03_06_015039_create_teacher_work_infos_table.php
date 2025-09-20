@@ -4,15 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('teacher_work_infos', function (Blueprint $table) {
-            $table->string('teacher_NIC', 20)->primary(); // Primary key
+            $table->string('teacher_NIC', 20)->primary();
             $table->date('appointed_date');
             $table->softDeletes();
             $table->date('work_acceptance_date');
@@ -37,7 +36,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id')->nullable()->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            
+
             $table->timestamps();
         });
     }
