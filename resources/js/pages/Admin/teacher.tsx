@@ -56,12 +56,23 @@ export default function AdminTeacherDashboard() {
 
       <div className="flex flex-col gap-10 px-8 py-10 bg-gray-200 min-h-screen">
         
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
   {/* Example Card Template */}
   <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition flex flex-col h-full">
     <h3 className="text-xl font-semibold mb-2">📋 Attendance Summary</h3>
     <p className="text-sm text-gray-500 mb-4">Date: <span className="font-semibold">{today}</span></p>
     <div className="w-full h-60 mb-4">
+
+        {/* ===== Top Section: Quick Stats ===== */}
+<!--         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          
+          {/* Attendance */}
+          <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">📋 Attendance Summary</h3>
+            <p className="text-sm text-gray-500 mb-4">Date: <span className="font-semibold">{today}</span></p>
+            <div className="w-full h-60"> -->
+
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={attendanceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80}>
@@ -80,7 +91,6 @@ export default function AdminTeacherDashboard() {
             </Link>
           </div>
 
-         
 
 {/* Registered Teachers & Requests */}
 <div className="bg-white border border-slate-200 shadow-md p-6 hover:shadow-lg transition flex flex-col gap-8">
@@ -142,6 +152,7 @@ export default function AdminTeacherDashboard() {
               Send Message
             </button>
       </Link>
+
           </div>
 
           {/* Announcements */}

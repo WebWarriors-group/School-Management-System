@@ -16,6 +16,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
         admin: [
             
             { title: 'Dashboard Overview', url: '/admin/dashboardoverview', icon: LayoutGrid },
+            { title: 'Image Gallery', url: '/gallery1', icon: LayoutGrid },
             { title: 'School Event Calendar', url: '/admin/calendar', icon: LayoutGrid },
               { title: 'Overall Performance', url: '/admin/OverallPerformance', icon: LayoutGrid },
               
@@ -24,7 +25,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
             { title: 'Students Management', url: '/admin/studentdashboard', icon: UsersRound },
             { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
-             { title: 'Old Students History', url: '/admin/Old', icon: LayoutGrid },
+             { title: 'Old Students History', url: '/students/past', icon: LayoutGrid },
         ],
         teacher: [
             { title: 'Teacher Dashboard', url: '/teacher/dashboard/{teacher_NIC}', icon: LayoutGrid },

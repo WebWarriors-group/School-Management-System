@@ -94,8 +94,8 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">👤 Siblings Information</h2>
+    <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
+      
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
@@ -119,18 +119,18 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm md:text-base">
-          <thead className="bg-green-100 text-green-800">
+      <div className="overflow-x-auto w-290">
+        <table className="min-w-full  text-sm text-gray-700">
+          <thead className="bg-blue-700 text-left text-sm font-semibold uppercase text-white z-10 space-x-100">
             <tr>
-              <th className="p-2 border">Reg. No</th>
-              <th className="p-2 border">Student ID</th>
-              <th className="p-2 border">Sibling Name</th>
-              <th className="p-2 border">Relationship</th>
-              <th className="p-2 border">Age</th>
-              <th className="p-2 border">Occupation</th>
-              <th className="p-2 border">Contact</th>
-              <th className="p-2 border">View</th>
+              <th className="  py-3 p-2 space-x-4 border">Reg. No</th>
+              <th className="  p-2 space-x-8  border">Student ID</th>
+              <th className="    border">Sibling Name</th>
+              <th className="  px-12  border">Relationship</th>
+              <th className="  px-12  border">Age</th>
+              <th className="  px-12  border">Occupation</th>
+              <th className="  px-12  border">Contact</th>
+              <th className="  px-12  border">View</th>
             </tr>
           </thead>
           <tbody>
@@ -144,17 +144,17 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
               currentData.map((s, i) => (
                 <tr
                   key={i}
-                  className="cursor-pointer border-t hover:bg-green-50"
+                  className="border-t hover:bg-blue-50 cursor-pointer   space-x-20"
                   onClick={(e) => handleRowClick(e, s.reg_no)}
                 >
-                  <td className="p-2 border">{s.reg_no}</td>
-                  <td className="p-2 border">{s.student_id_no || '-'}</td>
-                  <td className="p-2 border">{s.sibling_name || '-'}</td>
-                  <td className="p-2 border">{s.relationship || '-'}</td>
-                  <td className="p-2 border">{s.sibling_age ?? '-'}</td>
-                  <td className="p-2 border">{s.occupation || '-'}</td>
-                  <td className="p-2 border">{s.contact || '-'}</td>
-                  <td className="p-2 border">
+                  <td className="py-4 px-12 border bg-blue-300 font-semibold text-black ">{s.reg_no}</td>
+                  <td className="py-2 px-12 border">{s.student_id_no || '-'}</td>
+                  <td className="p-2  border">{s.sibling_name || '-'}</td>
+                  <td className="p-2  space-x-4 border">{s.relationship || '-'}</td>
+                  <td className="p-2  space-x-4 border">{s.sibling_age ?? '-'}</td>
+                  <td className="p-2 p-2 space-x-4 border">{s.occupation || '-'}</td>
+                  <td className="p-2 p-2 space-x-4 border">{s.contact || '-'}</td>
+                  <td className="p-2 p-2 space-x-4  border">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

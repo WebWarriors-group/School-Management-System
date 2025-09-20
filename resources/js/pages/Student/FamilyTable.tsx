@@ -72,8 +72,8 @@ const FamilyTable = ({ familyData }: FamilyTableProps) => {
   }, [search]);
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">👨‍👩‍👧‍👦 Family Information</h2>
+    <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
+      
 
       <div className="mb-4">
         <input
@@ -85,25 +85,25 @@ const FamilyTable = ({ familyData }: FamilyTableProps) => {
         />
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm md:text-base">
-          <thead className="bg-green-100 text-green-800">
+      <div className="overflow-x-auto ">
+        <table className="min-w-full  text-sm text-gray-700">
+          <thead className="bg-blue-700 text-left text-sm font-semibold uppercase text-white z-10">
             <tr>
-              <th className="p-2 border font-semibold whitespace-nowrap">Reg. No</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother Name</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother Occupation</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother Income</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother Working Place</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother Contact</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother Email</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Mother WhatsApp</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father Name</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father Occupation</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father Income</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father Working Place</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father Contact</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father Email</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Father WhatsApp</th>
+              <th className="py-3 px-10  border font-semibold whitespace-nowrap">Reg. No</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Mother Name</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Mother Occupation</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Mother Income</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Mother Working Place</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Mother Contact</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Mother Email</th>
+              <th className="p-2 px-9 border font-semibold whitespace-nowrap">Mother WhatsApp</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Father Name</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Father Occupation</th>
+              <th className="p-2 px-10 border font-semibold whitespace-nowrap">Father Income</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Father Working Place</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Father Contact</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Father Email</th>
+              <th className="p-2 px-12 border font-semibold whitespace-nowrap">Father WhatsApp</th>
               <th className="p-2 border font-semibold whitespace-nowrap">View</th>
             </tr>
           </thead>
@@ -118,10 +118,10 @@ const FamilyTable = ({ familyData }: FamilyTableProps) => {
               currentData.map((s) => (
                 <tr
                   key={s.reg_no}
-                  className="cursor-pointer border-t hover:bg-green-50"
+                  className="border-t hover:bg-blue-50 cursor-pointer"
                   onClick={(e) => handleRowClick(e, s)}
                 >
-                  <td className="p-2 border">{s.reg_no}</td>
+                  <td className="py-5 px-12 border bg-blue-300 font-semibold text-black">{s.reg_no}</td>
                   <td className="p-2 border">{s.mother_name?.trim() || 'Not provided'}</td>
                   <td className="p-2 border">{s.mother_occupation || '-'}</td>
                   <td className="p-2 border">{s.mother_income ?? '-'}</td>

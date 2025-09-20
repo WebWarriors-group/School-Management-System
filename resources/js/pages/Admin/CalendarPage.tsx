@@ -107,11 +107,13 @@ export default function CalendarPage() {
       <header className="bg-white shadow-md py-1 mb-10">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row md:items-center md:justify-between">
           
-          <p className="mt-[-10px] text-gray-600 text-sm md:text-base">
+           <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
             Stay organized with your important events and exams.
           </p>
         </div>
       </header>
+
+
 
       {/* Calendar container */}
       <main className="flex-grow max-w-9xl mx-auto px-6">

@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StudyMaterial;
+use Illuminate\Support\Facades\Auth;
+
+use App\Events\StudyMaterialUploaded;
+use Illuminate\Validation\ValidationException;
+use Exception;
+
 
 class StudyMaterialController extends Controller
 {
@@ -14,20 +20,29 @@ class StudyMaterialController extends Controller
     {
         return Inertia::render('studyMaterial/studyMaterials');
     }
+
     /**
      * Display a listing of the materials.
      */
     public function index($category)
     {
+        $user = Auth::user();
+
         $materials = StudyMaterial::with('uploaded_by:id,name,role')
             ->where('category', $category)
             ->get();
 
-        return Inertia::render('studyMaterial/studyMaterialIndex', [
-            'category' => $category,
-            'materials' => $materials,
-        ]);
-        
+        if ($user->role == 'student'){
+            return Inertia::render('Student/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        } else {
+             return Inertia::render('studyMaterial/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        }
     }
 
     /**
@@ -41,18 +56,17 @@ class StudyMaterialController extends Controller
                'grade' => 'required|integer|min:6|max:13',
                'subject' => 'required|string',
                'year' => 'required|integer',
-               'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:52428800',
+               'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:51200', // 50MB max
                'category' => 'required|string',
             ]);
 
-            // Store the file with original name and public visibility
-            $file = $request->file('file');
             if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
                 return response()->json(['message' => 'No valid file uploaded'], 400);
             }
-            $path = $file->storeAs('materials', time().'_'.Str::slug($file->getClientOriginalName()), 'public');
 
-            // Save to DB
+            $file = $request->file('file');
+            $path = $file->storeAs('materials', time() . '_' . Str::slug($file->getClientOriginalName()), 'public');
+
             $material = StudyMaterial::create([
                 'title' => $validated['title'],
                 'uploaded_by' => auth()->id(),
@@ -63,10 +77,9 @@ class StudyMaterialController extends Controller
                 'category' => $validated['category'],
             ]);
 
-            return response()->json([
-                'message' => 'Material uploaded successfully',
-                'material' => $material,
-            ], 201);
+            event(new StudyMaterialUploaded($material, auth()->id()));
+
+            return "";
 
         } catch (ValidationException $e) {
             return response()->json([
@@ -74,6 +87,8 @@ class StudyMaterialController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (Exception $e) {
+            \Log::error('File upload failed: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+
             return response()->json([
                 'message' => 'File upload failed',
                 'error' => $e->getMessage()
@@ -92,7 +107,7 @@ class StudyMaterialController extends Controller
             return response()->json(['message' => 'Material not found'], 404);
         }
 
-        return response()->json($material,200);
+        return response()->json($material, 200);
     }
 
     /**

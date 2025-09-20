@@ -104,7 +104,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                 year: currentYear,
             });
             
-            alert("Upload successful!");
+           
             if (onClose) onClose();
             console.log(response.data);
             

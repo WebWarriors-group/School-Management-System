@@ -24,9 +24,11 @@ public function dashboard()
     try {
         $user = Auth::user();
 
-        if (!$user->teacher()->exists()) {
-            return redirect()->route('add-teacher');
+
+       if (!$user->teacher()->exists()) {
+            return Inertia::render('loginToRegRedirect');
         }
+
 
         $teacher = $user->teacher()->with([
             'teachersaddress',

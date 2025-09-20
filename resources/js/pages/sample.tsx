@@ -1,5 +1,5 @@
-import { router } from '@inertiajs/react'; // Import Inertia.js router for making API requests.
-import { useEffect, useState } from 'react'; // Import React hooks for managing component state and effects.
+import { router } from '@inertiajs/react'; 
+import { useEffect, useState } from 'react'; 
 import {Toaster ,toast } from 'sonner';
 
 interface Post {

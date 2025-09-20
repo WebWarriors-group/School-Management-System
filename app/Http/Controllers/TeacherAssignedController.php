@@ -65,7 +65,9 @@ class TeacherAssignedController extends Controller
     SubjectTeacher::insert($assignments);
 
 
-    return redirect()->back()->with('success', 'Assignments saved successfully!');
+    return redirect()
+        ->route('teacher.index')
+        ->with('success', 'Assignments saved successfully!');
 }
 
     
