@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { Facebook, Home, Mail, MapPin, Menu, X } from 'lucide-react';
 import { useState, useRef } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
@@ -10,6 +10,10 @@ import TeacherForm from './Teacher/teacherForm';
 
 
 export default function FormLayout() {
+
+const { props } = usePage();
+const { type } = props; 
+
 const [showForm, setShowForm] = useState(false);
 const [showTeacherForm, setShowTeacherForm] = useState(false);
 
@@ -56,15 +60,16 @@ const [showTeacherForm, setShowTeacherForm] = useState(false);
 
           
         </nav>
-<div className=" bg-gray-200 px-10 py-10 flex justify-center items-center">
 
+        <div className=" bg-gray-200 px-10 py-10 flex justify-center items-center">
+            {type === 'student' && (
+              <StudentAdmissionForm setShowForm={setShowForm} />
+            )}
+            {type === 'teacher' && (
+              <TeacherForm setShowTeacherForm={setShowTeacherForm} />
+            )}
+        </div>
 
-    <StudentAdmissionForm setShowForm={setShowForm} />
-    {/* <TeacherForm setShowTeacherForm={setShowTeacherForm} /> */}
-</div>
-
-
-   
         <footer className="bg-[#650000] text-white py-7 ">
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0 text-center md:text-left">
