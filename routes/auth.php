@@ -14,9 +14,14 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\StudyMaterialController;
+use App\Http\Controllers\TeacherAttendanceController;
+use App\Http\Controllers\TeacherAssignedController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TimetableController;
+use App\Http\Controllers\AdminLeaveRequestController;
+use App\Http\Controllers\SubjectController;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -36,9 +41,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-
-    
-
     Route::get('verify-email', EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
@@ -46,7 +48,22 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+    // Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
     // Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
+    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+    // Route::post('/marks', [MarkController::class, 'store']);
+    // Route::get('/marks', [MarkController::class, 'create']);
+    // Route::get('/marks/{id}', [MarkController::class, 'show']);
+    // Route::put('/marks/{id}', [MarkController::class, 'update']);
+    // Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
+    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    // Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+    Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
 
@@ -60,10 +77,67 @@ Route::middleware(['auth', 'admin'])->group(function () {
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
 
+    Route::get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
+    Route::get('/admin/teacher-attendance', [TeacherAttendanceController::class, 'index'])->name('teacher.attendance.index');
+    Route::post('/admin/teacher-attendance', [TeacherAttendanceController::class, 'store']);
+    Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
+
     //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     // Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
     Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
+
+    Route::get('/Admin/techerInfo', function () {
+        return Inertia::render('Admin/teacher');
+    });
+
+    Route::get('admin/calendar', function () {
+        return Inertia::render('Admin/CalendarPage');
+    })->name('calendar');
+
+    Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
+    Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
+
+    // web.php
+    Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
+    Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index']);
+
+
+
+    Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerformance'])
+        ->name('admin.overallPerformance');
+
+    Route::get('/generate-timetable', [TimetableController::class, 'generate']);
+    Route::get('/admin/teacher-leave-requests', [AdminLeaveRequestController::class, 'index']);
+    Route::post('/admin/teacher-leave-requests/{id}/approve', [AdminLeaveRequestController::class, 'approve']);
+    Route::post('/admin/teacher-leave-requests/{id}/reject', [AdminLeaveRequestController::class, 'reject']);
+
+    Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
+    Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
+    Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
+    Route::post('/admin/import', [UserImportController::class, 'import'])->name('users.import');
+    Route::delete('/posts/{id}', [AdminController::class, 'delete']);
+    Route::get('/admin/studentdashboard', function () {
+        return Inertia::render('Admin/StudentDashboard'); });
+    Route::get('/admin/teacher', function () {
+        return Inertia::render('Admin/teacher'); });
+    Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
+
+    Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+
+    Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
+    Route::get('/test-session', function (Request $request) {
+
+
+        session(['current_url' => $request->fullUrl()]);
+        session()->save();
+        return 'Session data: ' . session('current_url');
+
+
+
+    });
 
 });
 
@@ -72,27 +146,22 @@ Route::middleware(['auth', 'teacher'])->group(function () {
     // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
-   
-Route::get('/leave', function () {
-    $user_id = Auth::id();
-    return inertia::render('Teacher/LeaveRequest',[
-        'user_id' => $user_id,
-    ]); // This should return the Inertia page
-})->name('leave');
+    Route::get('/leave', function () {
+        $user_id = Auth::id();
+        return inertia::render('Teacher/LeaveRequest',[
+            'user_id' => $user_id,
+        ]); // This should return the Inertia page
+    })->name('leave');
 
-});
+    //  Route::get('/classes/{classId}/students', [MarkController::class, 'index']);
 
+    // Route::post('/marks/bulk', [MarkController::class, 'storeBulkMarks']);
+    Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    Route::get('/marks', [MarkController::class, 'getMarks']);
+    Route::post('/marks/update', [MarkController::class, 'updateMark']);
+    Route::post('/marks/delete', [MarkController::class, 'delete']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
-    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
-    // Route::post('/marks', [MarkController::class, 'store']);
-    // Route::get('/marks', [MarkController::class, 'create']);
-    // Route::get('/marks/{id}', [MarkController::class, 'show']);
-    // Route::put('/marks/{id}', [MarkController::class, 'update']);
-    // Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
-    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::post('/marks/storeBulkMarks', [MarkController::class, 'storeBulkMarks'])->name('marks.storeBulkMarks');
 });
 
 
