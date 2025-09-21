@@ -43,7 +43,7 @@ export default function LoginPage() {
 
             <div className="flex flex-col gap-6">
               <Link
-                href={route('formlayout')}
+                href={route('formlayout', {type: 'student'})}
                 className="flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-yellow-500 to-yellow-600 text-gray-900 font-bold py-8 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300"
               >
                 <GraduationCap className="w-12 h-12" />
@@ -51,7 +51,7 @@ export default function LoginPage() {
               </Link>
 
               <Link
-                href={route('formlayout')}
+                href={route('formlayout', {type: 'teacher'})}
                 className="flex flex-col items-center justify-center gap-4 text-white font-bold py-8 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300"
                 style={{ background: "linear-gradient(to bottom, #800000, #4B0000)" }}
               >
