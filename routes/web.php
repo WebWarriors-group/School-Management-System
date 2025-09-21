@@ -99,14 +99,7 @@ Route::delete('/grades/{grade}', [GradeController::class, 'destroy'])->name('gra
 Route::post('/classadd', [ClassController::class, 'store']);
 
 
- Route::get('/add-teacher', function () {
-    
-    $user_id=Auth::id();
-    return inertia::render('Teacher/teacherForm',[
-        'user'=>$user_id
-    ]); // This should return the Inertia page
-
-})->name('add-teacher');
+Route::get('/add-teacher', function () {return inertia::render('Teacher/teacherForm');})->name('add-teacher');
 
 Route::get('/student/academic', [StudentController::class, 'academicPage']);
 Route::get('/student/studyMaterial', function () { return Inertia::render('Student/studyMaterial'); });

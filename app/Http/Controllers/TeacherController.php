@@ -209,7 +209,6 @@ public function getGenderStats(): JsonResponse
 {
     $validatedData = $request->validate([
         'teacher_NIC' => 'required|string|max:12|unique:teacher_work_infos,teacher_NIC',
-        
         'appointed_date' => 'required|date',
         'work_acceptance_date' => 'required|date',
         'appointment_type' => 'required|string',
@@ -229,7 +228,6 @@ public function getGenderStats(): JsonResponse
         'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
         'number_in_sign_sheet' => 'required|string|max:20',
         'number_in_salary_sheet' => 'required|string|max:20',
-        'user_id'=>'required|numeric',
     ]);
 
     // Handle Photo if uploaded
