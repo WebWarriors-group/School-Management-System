@@ -30,7 +30,7 @@ const StudentSiblingView: React.FC<ViewStudentProps> = ({ student, isOpen, onClo
       setLoading(true);
       setError(null);
 
-      fetch(`/api/student-sibling/${student.reg_no}`)
+      fetch(`/api/student/${student.reg_no}/sibling`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch sibling info");
           return res.json();
