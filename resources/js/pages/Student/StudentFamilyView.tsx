@@ -37,7 +37,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
       setLoading(true);
       setError(null);
 
-      fetch(`/api/student-family/${student.reg_no}`)
+      fetch(`/api/student/${student.reg_no}/family`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch family info");
           return res.json();

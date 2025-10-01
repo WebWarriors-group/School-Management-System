@@ -6,19 +6,20 @@ interface StudentPersonal {
   full_name: string;
   full_name_with_initial: string;
   birthday: string;
-  age: string;
+  age: number | null;
   ethnicity: string;
   religion: string;
   gender: string;
-  birth_certificate_number: string;
-  nic_number: string;
-  postal_ic_number: string;
+  birth_certificate_number: string | null;
+  nic_number: string | null;
+  postal_ic_number: string | null;
   address: string;
   special_needs: boolean;
-  height: string;
-  weight: string;
+  height: number | null;
+  weight: number | null;
   photo: string | null;
 }
+
 
 interface ViewStudentProps {
   student: Student | null;
@@ -38,7 +39,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
       setLoading(true);
       setError(null);
 
-      fetch(`/api/student-personal/${student.reg_no}`)
+      fetch(`/api/student/${student.reg_no}/personal`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch personal info");
           return res.json();

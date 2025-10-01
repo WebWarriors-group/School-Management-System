@@ -2,6 +2,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController; 
+use App\Http\Controllers\StudentSubjectController; 
 use App\Http\Controllers\TeacherController; 
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ChatController;
@@ -44,8 +45,8 @@ Route::prefix('student')->group(function () {
         Route::get('/family', [StudentController::class, 'showFamily']);
         Route::get('/sibling', [StudentController::class, 'showSibling']);
         Route::get('/personal', [StudentController::class, 'showPersonal']);
+        Route::get('/subjects', [StudentSubjectController::class, 'index']);
         Route::get('/marks', [StudentController::class, 'getMarksBySubject']);
-
         Route::put('/personal', [StudentController::class, 'updatePersonal']);
         Route::put('/family', [StudentController::class, 'updateFamily']);
         Route::put('/sibling', [StudentController::class, 'updateSibling']);

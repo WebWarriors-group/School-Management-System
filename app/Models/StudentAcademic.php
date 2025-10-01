@@ -39,6 +39,30 @@ class StudentAcademic extends Model
 
     protected $appends = ['scholarship_status'];
 
+
+    protected static function booted()
+{
+    static::created(function ($student) {
+        // Example: auto-add chosen subjects
+        $subjects = [
+            $student->grade_6_9_asthectic_subjects,
+            $student->grade_10_11_basket1_subjects,
+            $student->grade_10_11_basket2_subjects,
+            $student->grade_10_11_basket3_subjects,
+        ];
+
+        foreach (array_filter($subjects) as $subjectName) {
+            $subject = Subject::where('name', $subjectName)->first();
+            if ($subject) {
+                StudentSubject::create([
+                    'reg_no' => $student->reg_no,
+                    'subject_id' => $subject->subject_id,
+                ]);
+            }
+        }
+    });
+}
+
     public function getScholarshipStatusAttribute(){
         $statuses=[];
 
@@ -56,7 +80,7 @@ class StudentAcademic extends Model
     public function subjects()
     {
 
-        return $this->belongsToMany(Subject::class, 'student_subjects', 'reg_no', 'subject_id');
+        return $this->hasMany(StudentSubject::class,  'reg_no', 'reg_no')->with(('subjects'));
 
 
     }

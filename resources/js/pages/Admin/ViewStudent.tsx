@@ -10,9 +10,11 @@ interface ViewStudentProps {
     isOpen: boolean;
     onClose: () => void;
     onStudentUpdated: (updated: Student) => void;
+    canEdit?: boolean;
 }
 
-const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose, onStudentUpdated }) => {
+const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose, onStudentUpdated, 
+  canEdit = false  }) => {
     if (!isOpen || !student) return null;
 
     const [isPersonalModalOpen, setPersonalIsModalOpen] = useState(false);
@@ -253,7 +255,8 @@ const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose, onS
                 {/* Action Buttons */}
                 <div className="bg-gray-50 border-t p-6 flex flex-wrap justify-between gap-3">
                     <div className="flex flex-wrap gap-3">
-                        {isEditing ? (
+ {canEdit && (
+                        isEditing ? (
                             <>
                                 <button
                                     onClick={handleSaveEdit}
@@ -275,6 +278,7 @@ const ViewStudent: React.FC<ViewStudentProps> = ({ student, isOpen, onClose, onS
                             >
                                 <Edit size={16} /> Edit Information
                             </button>
+)
                         )}
                     </div>
 
