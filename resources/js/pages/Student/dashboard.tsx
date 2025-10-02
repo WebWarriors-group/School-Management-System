@@ -18,7 +18,8 @@ import CalendarView from './CalenderView';
 import { Dialog } from '@headlessui/react';
 import DailyQuote from './DailyQuote';
 import ViewStudent from '../Admin/ViewStudent';
-
+import TimetableModal from './TimetableModal';
+import { on } from 'events';
 const breadcrumbs = [
   { title: 'Student Dashboard', href: '/dashboard' },
 ];
@@ -86,6 +87,7 @@ export default function StudentDashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
+  const [timetableModalOpen, setTimetableModalOpen] = useState(false);
   useEffect(() => {
     try {
       const stored = localStorage.getItem("theme");
@@ -909,7 +911,7 @@ export default function StudentDashboard() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
                 {[
-                  { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
+                  { name: 'View Timetable', icon: <CalendarCheck size={20} />, onClick: () => setTimetableModalOpen(true) },
                   { name: 'Submit Assignment', icon: <ClipboardList size={20} />, link: '/assignments' },
                   { name: 'View Grades', icon: <BarChart2 size={20} />, link: '/grades' },
                   { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, onClick: () => setTeachersModalOpen(true) },
@@ -929,7 +931,10 @@ export default function StudentDashboard() {
                   )
                 ))}
               </div>
-
+<TimetableModal
+                isOpen={timetableModalOpen}
+                onClose={ () => setTimetableModalOpen(false) }
+                student={ student }/>
               <div className="mb-6 mt-8">
                 <h2 className="text-lg font-bold text-gray-800 flex items-center">
                   <Search className="mr-2 text-amber-600" size={20} />
