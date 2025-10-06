@@ -1,26 +1,22 @@
-import { router } from '@inertiajs/react'; 
-import { useEffect, useState } from 'react'; 
-import {Toaster ,toast } from 'sonner';
+import { router } from '@inertiajs/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface Post {
-    id?: number; 
-    
+    id?: number;
+
     file?: File; // Optional picture URL.
 }
 
 interface Props {
-   
-    post?: Post | null; 
+    post?: Post | null;
 }
 
-export default function PostFormModel({  post }: Props) {
+export default function PostFormModel({ post }: Props) {
     // State to manage form data
-    const [formData, setFormData] = useState<Post>({  });
+    const [formData, setFormData] = useState<Post>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
- const [preview, setPreview] = useState<string>('');
-
-    
-    
+    const [preview, setPreview] = useState<string>('');
 
     // Function to handle image file selection
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +35,7 @@ export default function PostFormModel({  post }: Props) {
         if (selectedFile) {
             data.append('file', selectedFile); // <-- match this with Laravel field name
         }
-    
+
         router.post('/admin/import', data, {
             onSuccess: () => {
                 toast.success('Users created successfully!');
@@ -52,15 +48,11 @@ export default function PostFormModel({  post }: Props) {
         });
     };
 
-   
-
     return (
         <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
             {/* Modal wrapper with background overlay */}
             <div className="w-full max-w-xl rounded-lg bg-white p-6 shadow-lg">
-                
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
-                   
                     <div className="mb-3">
                         <label className="block text-sm font-medium text-gray-700">Picture (optional)</label>
                         <input type="file" name="file" onChange={handleFileChange} className="w-full text-gray-700" accept=".xlsx,.xls" />
@@ -74,7 +66,6 @@ export default function PostFormModel({  post }: Props) {
                     )}
                     {/* Action buttons */}
                     <div className="flex justify-end gap-2">
-                      
                         <button type="submit" className="rounded bg-blue-600 px-4 py-2 text-white">
                             {post ? 'Update' : 'Create'}
                         </button>
