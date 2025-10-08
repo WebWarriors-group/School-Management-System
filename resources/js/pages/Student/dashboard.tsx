@@ -211,7 +211,6 @@ export default function StudentDashboard() {
   const handleSearch = (query: string) => {
     setSearchTerm(query);
     if (!query) return setSearchResults([]);
-    // Mock search (replace with API fetch)
     const searchData = [
       { label: "Math Class - Grade 10", link: "/classes/10" },
       { label: "English Assignment 2", link: "/assignments/2" },
@@ -235,7 +234,6 @@ export default function StudentDashboard() {
     return 'F';
   };
 
-  // Teachers state and functions
   const [teachers, setTeachers] = useState<any[]>([]);
   const [teachersModalOpen, setTeachersModalOpen] = useState(false);
   const [teachersLoading, setTeachersLoading] = useState(false);
@@ -328,7 +326,6 @@ export default function StudentDashboard() {
     }
   };
 
-  // GPA Calculator Component
   const GPACalculator = () => {
     const gradePoints: Record<string, number> = {
       'A': 4.0,
@@ -353,7 +350,7 @@ export default function StudentDashboard() {
     };
 
     const currentGPA = calculateGPA(data?.grades || []);
-    const projectedGPA = currentGPA + 0.2; // Simplified for demo
+    const projectedGPA = currentGPA + 0.2; 
 
     return (
       <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
@@ -399,7 +396,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Grade Tracker Component
   const GradeTracker = () => {
     const filteredGrades = data?.grades?.filter(grade => {
       const typeMatch = gradeFilter === 'all' || grade.assessment_type === gradeFilter;
@@ -487,7 +483,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Subject Progress Component
   const SubjectProgress = () => {
     const subjectGroups = data?.grades?.reduce((acc, grade) => {
       if (!acc[grade.subject]) {
@@ -554,7 +549,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Enhanced Attendance Summary Component
   const AttendanceSummary = () => {
     const attendanceData = data?.attendance || {
       overall_percentage: 96,
@@ -658,7 +652,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Teacher Feedback Hub Component
   const TeacherFeedbackHub = () => {
     const feedbackData = data?.teacherFeedback || [
       {
@@ -749,7 +742,6 @@ export default function StudentDashboard() {
     <AppLayout breadcrumbs={breadcrumbs} auth={usePage().props.auth}>
       <Head title="Student Dashboard" />
 
-      {/* Existing header and navigation code remains unchanged */}
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
         <div className="font-medium text-center md:text-left">
           <span className="hidden sm:inline">Welcome to</span> Mahadivulwewa National School
@@ -957,7 +949,6 @@ export default function StudentDashboard() {
                 )}
               </div>
 
-              {/* Updated tabs to include new features */}
               <div className="flex space-x-4 border-b border-gray-200 mb-6 pb-2">
                 {['Profile', 'Marks', 'Progress', 'Feedback'].map((tab, idx) => (
                   <button
@@ -994,7 +985,6 @@ export default function StudentDashboard() {
                 ))}
               </div>
 
-              {/* Teachers Modal */}
               <Dialog open={teachersModalOpen} onClose={() => setTeachersModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
                 <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
                 <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-2xl w-full relative z-10">
@@ -1110,7 +1100,7 @@ export default function StudentDashboard() {
                 </Dialog.Panel>
               </Dialog>
 
-              {/* Marks Tab */}
+          
               {activeTab === 'Marks' && (
                 <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
                   <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
