@@ -192,10 +192,11 @@ Mail::to($user->email)->queue(new WelcomeMail($user,$request->password));
        
          }
 
-    public function delete(int $id)
+    public function delete($id)
     {
         $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
         $user->delete();
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 
 public function store3(Request $request){

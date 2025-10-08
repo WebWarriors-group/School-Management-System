@@ -107,11 +107,6 @@ public function getGenderStats(): JsonResponse
             'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
             'number_in_sign_sheet' => 'required|string|max:20',
             'number_in_salary_sheet' => 'required|string|max:20',
-
-             
-
-            'user_id'=>'required|numeric',
-
         ]);
 
         // Create the teacher in teacher_work_infos table
@@ -135,8 +130,7 @@ public function getGenderStats(): JsonResponse
             'distance_from_school' => $validatedData['distance_from_school'] ?? null, // Use null if not provided
             'commuting_method_to_school' => $validatedData['commuting_method_to_school'] ?? null, // Use null if not provided
             'number_in_sign_sheet' => $validatedData['number_in_sign_sheet'] ?? null, // Use null if not provided
-            'number_in_salary_sheet' => $validatedData['number_in_salary_sheet'] ?? null, // Use null if not provided
-            'user_id'=>$validatedData['user_id'],
+            'number_in_salary_sheet' => $validatedData['number_in_salary_sheet'] ?? null, // Use null if not provide
 
         ]);
         
@@ -181,8 +175,9 @@ public function getGenderStats(): JsonResponse
 
         Teacher::query()->increment('count');
 
-       return redirect()->route('login');
-
+       return response()->json([
+        'message' => 'Teacher Work Info stored successfully',
+    ], 201);
     }
 
     /**
