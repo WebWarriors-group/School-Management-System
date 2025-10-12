@@ -18,7 +18,8 @@ import CalendarView from './CalenderView';
 import { Dialog } from '@headlessui/react';
 import DailyQuote from './DailyQuote';
 import ViewStudent from '../Admin/ViewStudent';
-
+import TimetableModal from './TimetableModal';
+import { on } from 'events';
 const breadcrumbs = [
   { title: 'Student Dashboard', href: '/dashboard' },
 ];
@@ -86,6 +87,7 @@ export default function StudentDashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
+  const [timetableModalOpen, setTimetableModalOpen] = useState(false);
   useEffect(() => {
     try {
       const stored = localStorage.getItem("theme");
@@ -209,7 +211,6 @@ export default function StudentDashboard() {
   const handleSearch = (query: string) => {
     setSearchTerm(query);
     if (!query) return setSearchResults([]);
-    // Mock search (replace with API fetch)
     const searchData = [
       { label: "Math Class - Grade 10", link: "/classes/10" },
       { label: "English Assignment 2", link: "/assignments/2" },
@@ -233,7 +234,6 @@ export default function StudentDashboard() {
     return 'F';
   };
 
-  // Teachers state and functions
   const [teachers, setTeachers] = useState<any[]>([]);
   const [teachersModalOpen, setTeachersModalOpen] = useState(false);
   const [teachersLoading, setTeachersLoading] = useState(false);
@@ -326,7 +326,6 @@ export default function StudentDashboard() {
     }
   };
 
-  // GPA Calculator Component
   const GPACalculator = () => {
     const gradePoints: Record<string, number> = {
       'A': 4.0,
@@ -351,7 +350,7 @@ export default function StudentDashboard() {
     };
 
     const currentGPA = calculateGPA(data?.grades || []);
-    const projectedGPA = currentGPA + 0.2; // Simplified for demo
+    const projectedGPA = currentGPA + 0.2; 
 
     return (
       <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
@@ -397,7 +396,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Grade Tracker Component
   const GradeTracker = () => {
     const filteredGrades = data?.grades?.filter(grade => {
       const typeMatch = gradeFilter === 'all' || grade.assessment_type === gradeFilter;
@@ -485,7 +483,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Subject Progress Component
   const SubjectProgress = () => {
     const subjectGroups = data?.grades?.reduce((acc, grade) => {
       if (!acc[grade.subject]) {
@@ -552,7 +549,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Enhanced Attendance Summary Component
   const AttendanceSummary = () => {
     const attendanceData = data?.attendance || {
       overall_percentage: 96,
@@ -656,7 +652,6 @@ export default function StudentDashboard() {
     );
   };
 
-  // Teacher Feedback Hub Component
   const TeacherFeedbackHub = () => {
     const feedbackData = data?.teacherFeedback || [
       {
@@ -747,7 +742,6 @@ export default function StudentDashboard() {
     <AppLayout breadcrumbs={breadcrumbs} auth={usePage().props.auth}>
       <Head title="Student Dashboard" />
 
-      {/* Existing header and navigation code remains unchanged */}
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
         <div className="font-medium text-center md:text-left">
           <span className="hidden sm:inline">Welcome to</span> Mahadivulwewa National School
@@ -909,7 +903,7 @@ export default function StudentDashboard() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
                 {[
-                  { name: 'View Timetable', icon: <CalendarCheck size={20} />, link: '/timetable' },
+                  { name: 'View Timetable', icon: <CalendarCheck size={20} />, onClick: () => setTimetableModalOpen(true) },
                   { name: 'Submit Assignment', icon: <ClipboardList size={20} />, link: '/assignments' },
                   { name: 'View Grades', icon: <BarChart2 size={20} />, link: '/grades' },
                   { name: 'Ask a Teacher', icon: <MessageSquare size={20} />, onClick: () => setTeachersModalOpen(true) },
@@ -929,7 +923,10 @@ export default function StudentDashboard() {
                   )
                 ))}
               </div>
-
+<TimetableModal
+                isOpen={timetableModalOpen}
+                onClose={ () => setTimetableModalOpen(false) }
+                student={ student }/>
               <div className="mb-6 mt-8">
                 <h2 className="text-lg font-bold text-gray-800 flex items-center">
                   <Search className="mr-2 text-amber-600" size={20} />
@@ -952,7 +949,6 @@ export default function StudentDashboard() {
                 )}
               </div>
 
-              {/* Updated tabs to include new features */}
               <div className="flex space-x-4 border-b border-gray-200 mb-6 pb-2">
                 {['Profile', 'Marks', 'Progress', 'Feedback'].map((tab, idx) => (
                   <button
@@ -989,7 +985,6 @@ export default function StudentDashboard() {
                 ))}
               </div>
 
-              {/* Teachers Modal */}
               <Dialog open={teachersModalOpen} onClose={() => setTeachersModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
                 <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
                 <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-2xl w-full relative z-10">
@@ -1105,7 +1100,7 @@ export default function StudentDashboard() {
                 </Dialog.Panel>
               </Dialog>
 
-              {/* Marks Tab */}
+          
               {activeTab === 'Marks' && (
                 <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm mt-6">
                   <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
