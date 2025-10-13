@@ -22,6 +22,8 @@ use App\Mail\StudentAdmissionMail;
 use App\Models\Marks;
 use App\Models\Subject;
 use App\Http\Resources\MarksResource;
+use Illuminate\Support\Facades\Http;
+use App\Models\SubjectTeacher;
 
 class StudentController extends Controller
 {
@@ -300,6 +302,68 @@ class StudentController extends Controller
         return response()->json(['error' => 'Failed to fetch performance data'], 500);
     }
 }
+
+    public function timetable($reg_no)
+    {
+        try {
+            $student = StudentAcademic::with('class')->where('reg_no', $reg_no)->firstOrFail();
+            $class = $student->class;
+            if (!$class) {
+                return response()->json([], 200);
+            }
+
+            // Build the payload similar to TimetableController::generate but for one class
+            $className = trim(($class->grade ?? '') . ' ' . ($class->section ?? ''));
+
+            $assignmentsRaw = SubjectTeacher::with(['subject', 'teacher'])
+                ->where('class_id', $class->class_id)
+                ->get();
+
+            $assignments = $assignmentsRaw->map(function ($item) use ($className) {
+                return [
+                    'class_' => $className,
+                    'subject' => optional($item->subject)->subject_name ?? 'Unknown',
+                    'teacher' => $item->teacher?->teacher_NIC ?? 'Unknown',
+                    'periods_per_week' => 5,
+                ];
+            })->toArray();
+
+            if (empty($assignments)) {
+                return response()->json([], 200);
+            }
+
+            $payload = [
+                'classes' => [$className],
+                'assignments' => $assignments,
+                'days' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                'periods_per_day' => 8,
+            ];
+
+            $resp = Http::post('http://127.0.0.1:8001/timetable', $payload);
+            if (!$resp->successful()) {
+                return response()->json(['error' => 'Failed to generate timetable'], $resp->status());
+            }
+            $tt = $resp->json();
+
+            // Flatten to modal expected structure: [{day, time_slot, subject, teacher, room}]
+            $out = [];
+            foreach ($tt as $day => $slots) {
+                foreach ($slots as $slot => $entry) {
+                    $out[] = [
+                        'day' => (string) $day,
+                        'time_slot' => (string) $slot,
+                        'subject' => (string) ($entry['subject'] ?? ''),
+                        'teacher' => (string) ($entry['teacher'] ?? ''),
+                        'room' => (string) ($entry['room'] ?? ''),
+                    ];
+                }
+            }
+
+            return response()->json($out);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     public function apiStudentPerformance(string $reg_no): JsonResponse
     {

@@ -47,6 +47,7 @@ Route::prefix('student')->group(function () {
         Route::get('/personal', [StudentController::class, 'showPersonal']);
         Route::get('/subjects', [StudentSubjectController::class, 'index']);
         Route::get('/marks', [StudentController::class, 'getMarksBySubject']);
+        Route::get('/timetable', [StudentController::class, 'timetable']);
         Route::put('/personal', [StudentController::class, 'updatePersonal']);
         Route::put('/family', [StudentController::class, 'updateFamily']);
         Route::put('/sibling', [StudentController::class, 'updateSibling']);

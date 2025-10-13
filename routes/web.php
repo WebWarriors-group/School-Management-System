@@ -196,10 +196,9 @@ Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('tea
 //Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 
-    // Your Dashboard route
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    // Student dashboard (Inertia) - aggregated server-side data
+    Route::get('/dashboard', [\App\Http\Controllers\StudentDashboardController::class, 'show'])
+        ->name('dashboard');
 
     // This is the route that loads your React Subject Management page via Inertia.
     // It's under the 'web' middleware group (implicitly or explicitly if added).

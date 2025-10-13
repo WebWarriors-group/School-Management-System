@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import RealTimeChatBot from './RealTimeChatBot';
@@ -7,8 +7,7 @@ import {
   Facebook, Mail, MapPin, Menu, X,
   User, Book, Users, Award, CalendarCheck,
   FileText, Home, ClipboardList, BarChart2,
-  Bell, MessageSquare, Settings, LogOut, Sun, Moon, Search,
-  Component
+  Bell, MessageSquare, Settings, LogOut, Sun, Moon, Search
 } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import StudentOverallPerformanceChart from "./StudentOverallPerformanceChart";
@@ -19,7 +18,7 @@ import { Dialog } from '@headlessui/react';
 import DailyQuote from './DailyQuote';
 import ViewStudent from '../Admin/ViewStudent';
 import TimetableModal from './TimetableModal';
-import { on } from 'events';
+
 const breadcrumbs = [
   { title: 'Student Dashboard', href: '/dashboard' },
 ];
@@ -84,6 +83,16 @@ interface DashboardData {
 export default function StudentDashboard() {
   const user = usePage().props.auth.user;
   const { student } = usePage().props as DashboardPageProps;
+  const gender = String(student?.personal?.gender || '').toLowerCase();
+  const baseAvatarPath = gender === 'female'
+    ? '/images/girlAvatar'
+    : gender === 'male'
+      ? '/images/boyAvatar'
+      : '/images/boy';
+  const defaultAvatar = `${baseAvatarPath}.jpg`;
+  const studentPhoto = (student?.personal?.photo && String(student.personal.photo).trim() !== '')
+    ? student.personal.photo
+    : defaultAvatar;
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -107,85 +116,16 @@ export default function StudentDashboard() {
     }
   }, [darkMode]);
 
-  const [data, setData] = useState<DashboardData | null>({
-    classes: [{ name: "10A" }],
-    upcomingExams: [],
-    latestGrades: [{ marks_obtained: 88 }],
-    feeStatus: { status: "Paid" },
-    scholarship: { status: "Eligible" },
-    monthlyMarks: [
-      { month: 1, avg_marks: 85 },
-      { month: 2, avg_marks: 88 },
-      { month: 3, avg_marks: 82 }
-    ],
-    grades: [
-      {
-        id: '1',
-        subject: 'Mathematics',
-        assessment_type: 'exam',
-        title: 'Midterm Exam',
-        marks_obtained: 85,
-        max_marks: 100,
-        grade: 'B',
-        date: '2023-06-15',
-        teacher_comments: 'Good understanding of concepts, but need to improve problem-solving speed.'
-      },
-      {
-        id: '2',
-        subject: 'Science',
-        assessment_type: 'project',
-        title: 'Science Project',
-        marks_obtained: 92,
-        max_marks: 100,
-        grade: 'A',
-        date: '2023-06-10',
-        teacher_comments: 'Excellent research and presentation skills.'
-      },
-      {
-        id: '3',
-        subject: 'English',
-        assessment_type: 'assignment',
-        title: 'Essay Writing',
-        marks_obtained: 78,
-        max_marks: 100,
-        grade: 'C',
-        date: '2023-06-05',
-        teacher_comments: 'Good content, but needs improvement in grammar and structure.'
-      }
-    ],
-    attendance: {
-      overall_percentage: 96,
-      monthly_data: [
-        { month: 'January', present_days: 20, total_days: 22, percentage: 91 },
-        { month: 'February', present_days: 18, total_days: 20, percentage: 90 },
-        { month: 'March', present_days: 22, total_days: 22, percentage: 100 }
-      ],
-      recent_absences: [
-        { date: '2023-03-15', reason: 'Medical' },
-        { date: '2023-02-10', reason: 'Family event' }
-      ]
-    },
-    teacherFeedback: [
-      {
-        id: '1',
-        assessment_id: 'a1',
-        assessment_title: 'Science Project',
-        subject: 'Science',
-        teacher_name: 'Ms. Silva',
-        feedback: 'Excellent work on the research component. Your presentation was clear and well-organized.',
-        date: '2023-06-15'
-      },
-      {
-        id: '2',
-        assessment_id: 'a2',
-        assessment_title: 'Math Quiz 3',
-        subject: 'Mathematics',
-        teacher_name: 'Mr. Perera',
-        feedback: 'Good understanding of concepts, but need to work on showing your work step-by-step.',
-        date: '2023-06-10'
-      }
-    ]
-  });
+  const page = usePage().props as DashboardPageProps & {
+    dashboard?: DashboardData;
+    notifications?: any[];
+    todaySchedule?: any[];
+    availableSubjects?: any[];
+  };
+  const dashboard = page.dashboard;
+  const notifications = page.notifications ?? [];
+  const todaySchedule = page.todaySchedule ?? [];
+  const availableSubjects = page.availableSubjects ?? [];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -195,19 +135,17 @@ export default function StudentDashboard() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [coursesOpen, setCoursesOpen] = useState(false);
-  const [subjects, setSubjects] = useState<any[]>([]);
+  const [subjects, setSubjects] = useState<any[]>(availableSubjects ?? []);
+  useEffect(() => {
+    setSubjects(availableSubjects ?? []);
+  }, [availableSubjects]);
   const [subjectsLoading, setSubjectsLoading] = useState(false);
   const [subjectsError, setSubjectsError] = useState<string | null>(null);
   const [subjectsQuery, setSubjectsQuery] = useState("");
   const [gradeFilter, setGradeFilter] = useState<string>('all');
   const [subjectFilter, setSubjectFilter] = useState<string>('all');
 
-  const notifications = [
-    { id: 1, title: 'Science Assignment', description: 'Due tomorrow at 9:00 AM', time: '2 hours ago' },
-    { id: 2, title: 'Parent Meeting', description: 'Scheduled for Friday 10 AM', time: '1 day ago' },
-    { id: 3, title: 'Sports Day', description: 'Annual sports event next week', time: '3 days ago' },
-  ];
-
+  
   const handleSearch = (query: string) => {
     setSearchTerm(query);
     if (!query) return setSearchResults([]);
@@ -349,7 +287,7 @@ export default function StudentDashboard() {
       return totalPoints / totalCredits;
     };
 
-    const currentGPA = calculateGPA(data?.grades || []);
+    const currentGPA = calculateGPA((dashboard?.grades as any[]) || []);
     const projectedGPA = currentGPA + 0.2; 
 
     return (
@@ -366,7 +304,7 @@ export default function StudentDashboard() {
               {currentGPA.toFixed(2)}
             </div>
             <div className="mt-2 text-sm text-amber-600 dark:text-amber-400">
-              Based on {data?.grades?.length || 0} assessments
+              Based on {(dashboard?.grades?.length || 0)} assessments
             </div>
           </div>
 
@@ -397,7 +335,7 @@ export default function StudentDashboard() {
   };
 
   const GradeTracker = () => {
-    const filteredGrades = data?.grades?.filter(grade => {
+    const filteredGrades = dashboard?.grades?.filter(grade => {
       const typeMatch = gradeFilter === 'all' || grade.assessment_type === gradeFilter;
       const subjectMatch = subjectFilter === 'all' || grade.subject === subjectFilter;
       return typeMatch && subjectMatch;
@@ -428,7 +366,7 @@ export default function StudentDashboard() {
               onChange={(e) => setSubjectFilter(e.target.value)}
             >
               <option value="all">All Subjects</option>
-              {Array.from(new Set(data?.grades?.map(g => g.subject) || [])).map(subject => (
+              {Array.from(new Set(dashboard?.grades?.map(g => g.subject) || [])).map(subject => (
                 <option key={subject} value={subject}>{subject}</option>
               ))}
             </select>
@@ -484,7 +422,7 @@ export default function StudentDashboard() {
   };
 
   const SubjectProgress = () => {
-    const subjectGroups = data?.grades?.reduce((acc, grade) => {
+    const subjectGroups = dashboard?.grades?.reduce((acc, grade) => {
       if (!acc[grade.subject]) {
         acc[grade.subject] = [];
       }
@@ -550,7 +488,7 @@ export default function StudentDashboard() {
   };
 
   const AttendanceSummary = () => {
-    const attendanceData = data?.attendance || {
+    const attendanceData = dashboard?.attendance || {
       overall_percentage: 96,
       monthly_data: [
         { month: 'January', present_days: 20, total_days: 22, percentage: 91 },
@@ -572,7 +510,7 @@ export default function StudentDashboard() {
             Attendance Summary
           </h2>
           <button
-            onClick={() => setAttendanceModalOpen(true)}
+            onClick={() => { router.reload({ only: ['dashboard'], preserveScroll: true }); setAttendanceModalOpen(true); }}
             className="px-3 py-1 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600"
           >
             View Details
@@ -653,7 +591,7 @@ export default function StudentDashboard() {
   };
 
   const TeacherFeedbackHub = () => {
-    const feedbackData = data?.teacherFeedback || [
+    const feedbackData = dashboard?.teacherFeedback || [
       {
         id: '1',
         assessment_id: 'a1',
@@ -729,13 +667,18 @@ export default function StudentDashboard() {
     return () => clearInterval(intervalId);
   }, []);
 
-  if (!data) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-
+  const getGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  };
   const infoCards = [
     { id: 1, label: 'Class Enrolled', value: student.class?.class_name ?? 'N/A', icon: <Users size={24} />, color: 'bg-blue-100 text-blue-600' },
     { id: 2, label: 'Scholarship', value: student?.scholarship_status ?? 'N/A', icon: <Award size={24} />, color: 'bg-amber-100 text-amber-600' },
-    { id: 3, label: 'Attendance', value: `${data.attendance?.overall_percentage ?? 96}%`, icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
-    { id: 4, label: 'Avg Grade', value: getAverageGrade(student.marks), icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
+    { id: 3, label: 'Attendance', value: dashboard?.attendance?.overall_percentage != null ? `${dashboard.attendance.overall_percentage}%` : '—', icon: <CalendarCheck size={24} />, color: 'bg-emerald-100 text-emerald-600' },
+    { id: 4, label: 'Avg Grade', value: getAverageGrade(((dashboard?.grades as any[]) || (dashboard?.latestGrades as any[]) || [])), icon: <BarChart2 size={24} />, color: 'bg-purple-100 text-purple-600' },
   ];
 
   return (
@@ -745,6 +688,7 @@ export default function StudentDashboard() {
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-3 px-6 flex flex-col md:flex-row justify-between items-center">
         <div className="font-medium text-center md:text-left">
           <span className="hidden sm:inline">Welcome to</span> Mahadivulwewa National School
+          
         </div>
         <div className="flex space-x-5 mt-2 md:mt-0">
           <a href="https://www.facebook.com/ttnmmv" target="_blank" rel="noopener noreferrer"
@@ -886,11 +830,25 @@ export default function StudentDashboard() {
                 dark:hover:from-amber-600 dark:hover:to-amber-700
               ">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-                  <div className="mb-4 md:mb-0">
-                    <h1 className="text-2xl md:text-3xl font-bold mb-2">Good Morning, {student.personal?.full_name_with_initial}!</h1>
-                    <p className="opacity-90 max-w-2xl">
-                      You have 3 assignments to complete this week. Your next class is Mathematics at 10:30 AM.
-                    </p>
+                  <div className="mb-4 md:mb-0 flex items-center">
+                    <div className="h-16 w-16 md:h-30 md:w-30 rounded-full  border-2 border-white/70 shadow bg-white flex items-center justify-center">
+                      <img
+                        src={studentPhoto}
+                        alt={student.personal?.full_name_with_initial || 'Student photo'}
+                        className="h-full w-full object-contain rounded-full"
+                        onError={(e) => {
+                          e.currentTarget.src = defaultAvatar; 
+                        }}
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <h1 className="text-2xl md:text-3xl font-bold mb-2">
+  {getGreeting()}, {student.personal?.full_name_with_initial}!
+</h1>
+                      <p className="opacity-90 max-w-2xl">
+                        {/* You have 3 assignments to complete this week. Your next class is Mathematics at 10:30 AM. */}
+                      </p>
+                    </div>
                   </div>
                   <div className="bg-white/20 dark:bg-gray-800 backdrop-blur-sm rounded-full px-4 py-2 inline-flex items-center">
                     <CalendarCheck className="mr-2" size={18} />
@@ -910,13 +868,13 @@ export default function StudentDashboard() {
                 ].map((action, idx) => (
                   action.link ? (
                     <Link key={idx} href={action.link}
-                      className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
+                      className=" cursor-pointer p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
                       {action.icon}
                       <span className="mt-2 text-sm font-medium">{action.name}</span>
                     </Link>
                   ) : (
                     <button key={idx} onClick={action.onClick}
-                      className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
+                      className=" cursor-pointer p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-amber-50 dark:hover:bg-gray-600 flex flex-col items-center text-center transition">
                       {action.icon}
                       <span className="mt-2 text-sm font-medium">{action.name}</span>
                     </button>
@@ -958,6 +916,9 @@ export default function StudentDashboard() {
                       setActiveTab(tab);
                       if (tab === 'Marks' && marks.length === 0) {
                         fetchMarks();
+                      }
+                      if ((tab === 'Progress' || tab === 'Feedback')) {
+                        router.reload({ only: ['dashboard'], preserveScroll: true });
                       }
                     }}
                   >
@@ -1386,14 +1347,16 @@ export default function StudentDashboard() {
                       </Link>
                     </div>
                     <div className="space-y-3">
-                      {notifications.map((item) => (
+                      {notifications.map((item: any) => (
                         <div key={item.id} className="border-l-4 border-amber-500 pl-4 py-2 
                           hover:bg-amber-50 dark:hover:bg-amber-700 rounded-r transition-colors">
                           <div className="flex justify-between">
                             <h3 className="font-semibold text-gray-800 dark:text-gray-100">{item.title}</h3>
-                            <span className="text-xs text-gray-500 dark:text-gray-300">{item.time}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-300">{item.start ? new Date(item.start).toLocaleString() : ''}</span>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.description}</p>
+                          {item.description && (
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.description}</p>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -1441,19 +1404,20 @@ export default function StudentDashboard() {
                           </tr>
                         </thead>
                         <tbody>
-                          {[
-                            { time: '8:30 - 9:30', subject: 'Mathematics', teacher: 'Mr. Perera', room: 'B12' },
-                            { time: '9:30 - 10:30', subject: 'Science', teacher: 'Ms. Silva', room: 'Lab 2' },
-                            { time: '11:00 - 12:00', subject: 'History', teacher: 'Mr. Fernando', room: 'A07' },
-                            { time: '1:30 - 2:30', subject: 'English', teacher: 'Ms. Herath', room: 'C03' },
-                          ].map((cls, index) => (
-                            <tr key={index} className="border-b hover:bg-amber-50 dark:hover:bg-amber-700 transition-colors">
-                              <td className="p-3 font-medium text-sm text-gray-800 dark:text-gray-100">{cls.time}</td>
-                              <td className="p-3 text-sm text-gray-800 dark:text-gray-100">{cls.subject}</td>
-                              <td className="p-3 text-sm text-gray-600 dark:text-gray-300">{cls.teacher}</td>
-                              <td className="p-3 text-sm text-gray-800 dark:text-gray-100">{cls.room}</td>
+                          {todaySchedule.length > 0 ? (
+                            todaySchedule.map((cls: any, index: number) => (
+                              <tr key={index} className="border-b hover:bg-amber-50 dark:hover:bg-amber-700 transition-colors">
+                                <td className="p-3 font-medium text-sm text-gray-800 dark:text-gray-100">{cls.time}</td>
+                                <td className="p-3 text-sm text-gray-800 dark:text-gray-100">{cls.subject}</td>
+                                <td className="p-3 text-sm text-gray-600 dark:text-gray-300">{cls.teacher}</td>
+                                <td className="p-3 text-sm text-gray-800 dark:text-gray-100">{cls.room}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan={4} className="p-4 text-center text-gray-500">No classes scheduled today</td>
                             </tr>
-                          ))}
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -1478,10 +1442,10 @@ export default function StudentDashboard() {
                       Quick Summary
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <SummaryCard title="Classes Enrolled" value={data.classes.length} />
-                      <SummaryCard title="Upcoming Exams" value={data.upcomingExams.length} />
-                      <SummaryCard title="Latest Grades" value={data.latestGrades[0]?.marks_obtained || 'N/A'} />
-                      <SummaryCard title="Fee Due Status" value={data.feeStatus?.status || 'Paid'} />
+                      <SummaryCard title="Classes Enrolled" value={dashboard?.classes?.length ?? 0} />
+                      <SummaryCard title="Upcoming Exams" value={dashboard?.upcomingExams?.length ?? 0} />
+                      <SummaryCard title="Latest Grades" value={dashboard?.latestGrades?.[0]?.marks_obtained ?? 'N/A'} />
+                      <SummaryCard title="Fee Due Status" value={dashboard?.feeStatus?.status || 'Paid'} />
                     </div>
                   </div>
 
@@ -1490,7 +1454,7 @@ export default function StudentDashboard() {
                       <BarChart2 className="mr-2 text-amber-600" size={20} />
                       Monthly Performance
                     </h2>
-                    <StudentPerformanceChart marksData={data.monthlyMarks ?? []} darkMode={darkMode} />
+                    <StudentPerformanceChart marksData={dashboard?.monthlyMarks ?? []} darkMode={darkMode} />
                   </div>
 
                   <RealTimeChatBot darkMode={darkMode} />

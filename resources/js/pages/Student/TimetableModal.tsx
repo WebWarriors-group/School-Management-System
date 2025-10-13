@@ -23,14 +23,15 @@ export default function TimetableModal({ isOpen, onClose, student }: TimetableMo
 
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const timeSlots = [
-        "08:00 - 09:00",
-        "09:00 - 10:00",
-        "10:00 - 11:00",
-        "11:00 - 12:00",
-        "12:00 - 13:00",
-        "13:00 - 14:00",
-        "14:00 - 15:00",
-        "15:00 - 16:00",
+        "07:50 - 08:30",
+        "08:30 - 09:10",
+        "09:10 - 09:50",
+        "09:50 - 10:30",
+        "10:30 - 10:50",
+        "10:50 - 11:30",
+        "11:30 - 12:10",
+        "12:10 - 12:50",
+        "12:50 - 13:30",
     ];
 
     const fetchTimetable = async () => {
@@ -61,11 +62,10 @@ export default function TimetableModal({ isOpen, onClose, student }: TimetableMo
             } else {
                 setError("An unknown error occurred.");
             }
+        } finally {
+            setLoading(false);
         }
-            // } finally {
-            //     setLoading(false);
-            // }
-        };
+    };
 
         useEffect(() => {
             if (isOpen && timetableData.length === 0) {
@@ -137,7 +137,7 @@ export default function TimetableModal({ isOpen, onClose, student }: TimetableMo
                                         <div className="text-center text-gray-500 py-4">No timetable data available.</div>
                                     )}
 <div className="text-right mt-4">
-    <div className="text-sm text-gray-600">Class : {student.class?.className || 'N/A'}.</div>
+    <div className="text-sm text-gray-600">Class : {student.class?.class_name || 'N/A'}.</div>
     <div className="flex space-x-3">
         <button
             onClick={fetchTimetable}
