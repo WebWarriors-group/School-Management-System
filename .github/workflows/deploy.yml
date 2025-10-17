@@ -1,0 +1,57 @@
+name: Deploy Laravel to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # optional: run tests/build on runner (uncomment if you want)
+      # - name: Run PHP tests
+      #   uses: shivammathur/setup-php@v2
+      #   with:
+      #     php-version: '8.2'
+      # - name: Run composer install (CI)
+      #   run: composer install --no-dev --prefer-dist --no-interaction
+
+      - name: Setup SSH for deploy
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Ensure host key is known
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Run remote deploy script on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=yes -p ${ { secrets.EC2_SSH_PORT }:-22 } ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "bash -s" <<'EOF'
+            # you can run the deploy script we created, or inline commands
+            if [ -f /home/${{ secrets.EC2_USER }}/deploy.sh ]; then
+              /home/${{ secrets.EC2_USER }}/deploy.sh
+            else
+              cd /var/www/smsdir
+              git fetch --all
+              git reset --hard origin/main
+              composer install --no-dev --prefer-dist --optimize-autoloader -q
+              npm ci --silent
+              npm run build --silent
+              php artisan config:cache
+              php artisan route:cache
+              php artisan view:cache || true
+              sudo chown -R www-data:www-data storage bootstrap/cache || true
+              sudo chmod -R 775 storage bootstrap/cache || true
+              sudo systemctl restart apache2 || sudo systemctl restart php8.2-fpm || true
+            fi
+          EOF
+        env:
+          # ensure these are defined if you use them in the inline script
+          DEPLOY_USER: ${{ secrets.EC2_USER }}
