@@ -240,7 +240,7 @@ Route::get('/students/all', function () {
 
 
 Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
-Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
+Route::post('/assignments', [TeacherAssignedController::class, 'store']);
 
 // web.php
 Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
