@@ -13,11 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Git identity
-        run: |
-          git config --global user.name "piyjeem277"
-          git config --global user.email "piyumanthajm@gmail.com"
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -61,24 +56,6 @@ jobs:
 
       - name: Run remote deploy script on EC2
         run: |
-          ssh -o StrictHostKeyChecking=yes -p ${{ secrets.EC2_SSH_PORT || 22 }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "bash -s" <<'EOF'
-            # you can run the deploy script we created, or inline commands
-            if [ -f /home/${{ secrets.EC2_USER }}/deploy.sh ]; then
+          ssh -o StrictHostKeyChecking=yes -p ${{ secrets.EC2_SSH_PORT }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "bash -s" <<'EOF'
               /home/${{ secrets.EC2_USER }}/deploy.sh
-            else
-              cd /var/www/smsdir
-              git fetch --all
-              git reset --hard origin/main
-              composer install --no-dev --prefer-dist --optimize-autoloader -q
-              npm ci --silent
-              npm run build --silent
-              php artisan config:cache
-              php artisan route:cache
-              php artisan view:cache || true
-              sudo chown -R www-data:www-data storage bootstrap/cache || true
-              sudo chmod -R 775 storage bootstrap/cache || true
-              sudo systemctl restart apache2 || sudo systemctl restart php8.2-fpm || true
-            fi
           EOF
-        env:
-          DEPLOY_USER: ${{ secrets.EC2_USER }}
