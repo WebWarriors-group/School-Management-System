@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
     // Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     
     Route::get('login/{student?}', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('login/{student?}', [AuthenticatedSessionController::class, 'store'])->name('login');
+    Route::post('login/{student?}', [AuthenticatedSessionController::class, 'store'])->name('login.post');
     Route::post('/google-login', [AuthenticatedSessionController::class, 'googleLoginStore']);
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
