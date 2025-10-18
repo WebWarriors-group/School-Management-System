@@ -29,4 +29,4 @@ jobs:
           git config --global user.email "piyumanthajm@gmail.com"
 
       - name: Run the deploy script
-        run: /home/deploy/deploy.sh
+        run: /var/www/smsdir/deploy.sh
