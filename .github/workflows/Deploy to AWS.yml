@@ -23,18 +23,24 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install and build frontend
-        run: |
-          npm install
-          npm run build
-
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+          extensions: mbstring, bcmath, intl, mysql, gd
+          coverage: none
 
-      - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
+      - name: Install PHP dependencies
+        run: |
+          composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Install JS dependencies
+        run: |
+          rm -f package-lock.json
+          npm install
+
+      - name: Build frontend
+        run: npm run build
 
       - name: Deploy via SSH
         uses: appleboy/scp-action@v0.1.7
