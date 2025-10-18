@@ -28,36 +28,6 @@ jobs:
           git config --global user.name "piyjeem277"
           git config --global user.email "piyumanthajm@gmail.com"
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, intl, mysql, gd
-          coverage: none
-
-      - name: Ensure missing PHP dependencies
-        run: |
-          composer require php-http/multipart-stream-builder --no-update
-          composer clear-cache
-
-      - name: Install PHP dependencies
-        run: |
-          composer install --no-interaction --prefer-dist --no-progress || \
-          composer update --no-interaction --prefer-dist --no-progress
-
-      - name: Install JS dependencies
-        run: |
-          rm -f package-lock.json
-          npm install
-
-      - name: Build frontend
-        run: npm run build
-
       - name: Setup SSH for deploy
         uses: webfactory/ssh-agent@v0.9.0
         with:
