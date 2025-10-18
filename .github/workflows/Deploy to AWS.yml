@@ -30,6 +30,9 @@ jobs:
           extensions: mbstring, bcmath, intl, mysql, gd
           coverage: none
 
+      - name: Ensure missing PHP dependencies
+        run: composer require php-http/multipart-stream-builder --no-update
+  
       - name: Install PHP dependencies
         run: |
           composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
