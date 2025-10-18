@@ -20,7 +20,11 @@ jobs:
 
       - name: Install and build frontend
         run: |
-          npm ci
+          rm package-lock.json
+          npm install
+          git add package-lock.json
+          git commit -m "Fix: sync package-lock.json with package.json"
+          git push
           npm run build
 
       - name: Set up PHP
