@@ -476,7 +476,7 @@ public function calendarData()
     return response()->json(['error' => $e->getMessage()], 500);
 }
 }
-// Export as Excel
+
 public function exportExcel()
 {
     return Excel::download(new StudentExport, 'student_profile.xlsx');

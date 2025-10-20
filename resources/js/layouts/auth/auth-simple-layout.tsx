@@ -5,13 +5,13 @@ interface AuthLayoutProps {
     name?: string;
     title?: string;
     description?: string;
-    // bg-[#D4B28C]
+    
 }
 
 export default function AuthSimpleLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
         <main className="flex flex-col md:flex-row justify-center items-stretch bg-gray-200 min-h-screen p-8 gap-4">
-  {/* Logo Column */}
+  {}
   <div className="flex flex-col items-center w-full md:max-w-[300px] bg-yellow-600 text-[#5D4037] shadow-2xl p-8">
     <img
       src="/images/school.jpg"
@@ -23,7 +23,7 @@ export default function AuthSimpleLayout({ children, title, description }: Props
     </h2>
   </div>
 
-  {/* Form Column */}
+  {}
   <div className="flex flex-col w-full md:max-w-[500px] bg-white p-8 text-[#5D4037] shadow-2xl">
     <div className="flex flex-col items-center gap-4 mb-6 text-center">
       {title && <h1 className="text-2xl font-semibold">{title}</h1>}

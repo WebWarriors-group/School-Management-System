@@ -76,7 +76,7 @@ Route::prefix('subjects')->group(function () {
     Route::post('/', [SubjectController::class, 'store']);
     Route::get('/{subject_id}', [SubjectController::class, 'show']);
     Route::put('/{subject_id}', [SubjectController::class, 'update']);
-    //Route::delete('/{subject_id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+    
 });
 
 Route::prefix('study-materials')->group(function () {
@@ -130,6 +130,6 @@ Route::post('students/import', [StudentController::class, 'import']);
 
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 
-//Route::get('/report/{reg_no}', [ReportController::class, 'show']);
+
 
 

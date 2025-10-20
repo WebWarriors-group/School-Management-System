@@ -67,7 +67,7 @@ class MarkController extends Controller
                 'year' => 'required|integer',
                 'marks_obtained' => 'required|integer|min:0|max:100',
                 'grade' => 'required|string|in:A,B,C,S,F',
-                'class_id' => 'required|integer', // ✅ validate class
+                'class_id' => 'required|integer', 
             ]);
 
             if ($validator->fails()) {
@@ -81,7 +81,7 @@ class MarkController extends Controller
                     'subject_id' => $mark['subject_id'],
                     'term' => $mark['term'],
                     'year' => $mark['year'],
-                    'class_id' => $mark['class_id'], // ✅ include class
+                    'class_id' => $mark['class_id'], 
                 ],
                 [
                     'marks_obtained' => $mark['marks_obtained'],
@@ -112,7 +112,7 @@ class MarkController extends Controller
             'year' => 'required|integer',
             'marks_obtained' => 'required|integer|min:0|max:100',
             'grade' => 'required|string|in:A,B,C,S,F',
-            'class_id' => 'required|integer', // ✅ validate class
+            'class_id' => 'required|integer', 
         ]);
 
         if ($validator->fails()) {
@@ -123,7 +123,7 @@ class MarkController extends Controller
             ->where('subject_id', $request->subject_id)
             ->where('term', $request->term)
             ->where('year', $request->year)
-            ->where('class', $request->class) // ✅ include class
+            ->where('class', $request->class) 
             ->first();
 
         if (!$mark) {
@@ -145,7 +145,7 @@ class MarkController extends Controller
             'subject_id' => 'required|string',
             'term' => 'required|string',
             'year' => 'required|integer',
-            'class' => 'required|integer', // ✅ validate class
+            'class' => 'required|integer', 
         ]);
 
         if ($validator->fails()) {

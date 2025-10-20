@@ -43,7 +43,7 @@ class StudentAcademic extends Model
     protected static function booted()
 {
     static::created(function ($student) {
-        // Example: auto-add chosen subjects
+        
         $subjects = [
             $student->grade_6_9_asthectic_subjects,
             $student->grade_10_11_basket1_subjects,

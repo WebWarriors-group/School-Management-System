@@ -5,21 +5,6 @@ import ViewStudent from '../Admin/ViewStudent';
 import StudentPreviewCard from './StudentPreviewCard';
 
 
-// type AcademicRecord = {
-//   reg_no: number;
-//   student_id_no: string;
-//   class_id: number;
-//   distance_to_school: number | null;
-//   method_of_coming_to_school: string | null;
-//   grade_6_9_asthectic_subjects: string | null;
-//   grade_10_11_basket1_subjects: string | null;
-//   grade_10_11_basket2_subjects: string | null;
-//   grade_10_11_basket3_subjects: string | null;
-//   receiving_any_scholarship: boolean;
-//   receiving_any_grade_5_scholarship: boolean;
-//   receiving_any_samurdhi_aswesuma: boolean;
-//   admission_date: string; 
-// };
 
 type PaginationData<T> = {
   current_page: number;

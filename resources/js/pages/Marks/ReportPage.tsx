@@ -77,7 +77,7 @@ export default function ReportPage() {
       <Head title={`Report Card - ${student.full_name}`} />
 
       <main className="min-h-screen bg-gray-200 py-12 px-4 w-10">
-        {/* Action Buttons */}
+        {}
         <div className="flex justify-between mb-8 print:hidden w-30">
           <button
             onClick={() => router.visit('/admin/studentdashboard')}
@@ -101,22 +101,22 @@ export default function ReportPage() {
           </div>
         </div>
 
-        {/* Report Content */}
+        {}
         <div ref={reportRef} className="max-w-2xl mx-auto bg-white shadow-2xl border border-gray-200 p-8 sm:p-10 space-y-10">
-          {/* Title */}
+          {}
          <div className="relative text-center py-10 overflow-hidden">
 
-  {/* Background image */}
+  {}
   <img
     src="/images/tag4"
     alt="Background"
     className="absolute inset-0 w-full h-full object-cover"
   />
 
-  {/* Gradient overlay */}
+  {}
   <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-purple-700/80"></div>
 
-  {/* Text content */}
+  {}
   <div className="relative z-10">
     <h1 className="text-3xl font-bold text-white uppercase">Student Report Card</h1>
     <p className="text-gray-200 text-lg mt-2">Academic Performance Summary</p>
@@ -124,7 +124,7 @@ export default function ReportPage() {
 </div>
 
 
-          {/* 📌 Profile Info */}
+          {}
           <section>
             <h2 className="text-lg font-bold text-purple-800 mb-4 border-b pb-1">📌 PROFILE INFO</h2>
             <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -142,7 +142,7 @@ export default function ReportPage() {
             </div>
           </section>
 
-          {/* 📌 Class Info */}
+          {}
           <section>
             <h2 className="text-lg font-bold text-purple-800 mb-4 border-b pb-1 ">📌 ClASS INFORMATION</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
@@ -171,7 +171,7 @@ export default function ReportPage() {
 
           </section>
 
-          {/* 📊 Summary */}
+          {}
           <section>
             <h2 className="text-lg font-bold text-purple-800 mb-4 border-b pb-1">📌 SUMMARY</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-  ml-15">
@@ -190,7 +190,7 @@ export default function ReportPage() {
             </div>
           </section>
 
-          {/* 📚 Subject-wise Marks */}
+          {}
           <section>
             <h2 className="text-lg font-bold text-purple-800 mb-4 border-b pb-1">📚 SUBJECT-WISE MARKS</h2>
             <div className="overflow-x-auto shadow border border-gray-200">

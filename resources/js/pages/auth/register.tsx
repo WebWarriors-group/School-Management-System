@@ -14,11 +14,10 @@ interface User {
     name: string;
     email: string;
     role: string;
-    // password: string;
-}
+   
 
 interface RegisterProps {
-    user: User | null; // Accepts either a User object or null
+    user: User | null; 
     setShowRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -32,7 +31,7 @@ type RegisterForm = {
 
 export default function Register({ user, setShowRegister }: RegisterProps) {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-        name: user?.name || '', // Pre-fill form if editing
+        name: user?.name || '', 
         email: user?.email || '',
         role: user?.role || '',
         password: '',
@@ -43,20 +42,20 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
         e.preventDefault();
 
         if (user) {
-            // Edit existing user
+           
             post(route('admin.update', user.id), {
                 onFinish: () => {
                     reset('password', 'password_confirmation');
-                    setShowRegister(false); // Close the form after submission
+                    setShowRegister(false); 
                 },
             });
         } else {
-            // Create new user
+           
             post(route('admin.register'), {
                 preserveState: true,
                 onFinish: () => {
                     reset('password', 'password_confirmation');
-                    setShowRegister(false); // Close the form after submission
+                    setShowRegister(false); 
                 },
                 onSuccess: () => {
                                       toast.success('User has been added successfully!'); 
@@ -127,7 +126,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
                         <Input
                             id="password"
                             type="password"
-                            required={!user} // If editing, password is not required
+                            required={!user} 
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
@@ -141,7 +140,7 @@ export default function Register({ user, setShowRegister }: RegisterProps) {
                         <Input
                             id="password_confirmation"
                             type="password"
-                            required={!user} // If editing, confirmation is not required
+                            required={!user} 
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}

@@ -47,7 +47,7 @@ const [editing, setEditing] = useState(false);
     <>
       <Head title="Subjects & Grades" />
       <div className="px-6  md:px-12 space-y-16">
-        {/* Subject Section */}
+        {}
         <div>
           <div className="items-center justify-between ">
             <h1 className="text-2xl font-bold text-white    text-center bg-gradient-to-br from-blue-900 to-sky-700 er py-3 ">Subjects' Summary</h1>
@@ -128,7 +128,7 @@ const [editing, setEditing] = useState(false);
           </div>
         </div>
 
-        {/* Grade Section */}
+        {}
         <div>
           <div className=" items-center justify-between mb-6">
             <h1 className="text-2xl font-bold text-white  bg-gradient-to-br from-blue-900 to-sky-700   text-center py-3 "> Grade and Subjects</h1>

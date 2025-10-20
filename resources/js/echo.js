@@ -3,7 +3,7 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
-// Get userId from meta tag
+
 const userId = document.querySelector('meta[name="user-id"]')?.getAttribute('content');
 
 if (userId) {
@@ -24,7 +24,7 @@ if (userId) {
     window.Echo.private(`study-materials.${userId}`)
         .listen('.StudyMaterialUploaded', (e) => {
             console.log('Notification:', e);
-            // Show notification here
+           
         });
 } else {
     console.error('User ID not found in meta tag');

@@ -9,9 +9,9 @@ class Subject extends Model
 {
     use HasFactory;
     protected $table='subjects';
-    protected $primaryKey = 'subject_id'; // Use subject_id as the primary key
-    public $incrementing = false; // Since subject_id is a string
-    protected $keyType = 'string'; // Make sure the primary key is treated as a string
+    protected $primaryKey = 'subject_id'; 
+    public $incrementing = false; 
+    protected $keyType = 'string'; 
 
     protected $fillable = [
         'subject_id',

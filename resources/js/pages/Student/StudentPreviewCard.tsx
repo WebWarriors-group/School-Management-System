@@ -14,7 +14,7 @@ interface StudentPreviewCardProps {
 const StudentPreviewCard: React.FC<StudentPreviewCardProps> = ({ student, position }) => {
   if (!student || !position) return null;
 
-  // Fallback path based on reg_no
+  
   const profilePhotoUrl = `/images/students/${student.reg_no}.jpg`;
 
   return (

@@ -62,9 +62,7 @@ export default function TimetableModal({ isOpen, onClose, student }: TimetableMo
                 setError("An unknown error occurred.");
             }
         }
-            // } finally {
-            //     setLoading(false);
-            // }
+           
         };
 
         useEffect(() => {
@@ -83,7 +81,7 @@ export default function TimetableModal({ isOpen, onClose, student }: TimetableMo
 
         return ( 
             <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                {/* <div   className="bg-white rounded-lg shadow-lg w-11/12 max-w-4xl p-6 relative" aria-hidden="true"/> */}
+                {}
                 <Dialog.Panel className="bg-white rounded-lg shadow-lg w-11/12 max-w-4xl p-6 relative">
                 <Dialog.Title className="text-2xl font-semibold mb-4 flex items-center">
                     <CalendarCheck className="mr-2" /> Student Timetable

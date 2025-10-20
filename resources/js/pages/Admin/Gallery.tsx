@@ -90,7 +90,7 @@ export default function Gallery({ categories }: PageProps) {
             </form>
           </div>
 
-          {/* Image Upload Form */}
+          {}
           <div className="bg-white p-6 rounded shadow">
             <h2 className="text-2xl font-bold mb-4">📸 Upload Image</h2>
             <form onSubmit={handleImageSubmit} className="space-y-4">
@@ -140,14 +140,14 @@ export default function Gallery({ categories }: PageProps) {
             </form>
           </div>
 
-          {/* Category Cards */}
+          {}
           <div className="space-y-6">
             {categories.map((category) => (
               <div
                 key={category.id}
                 className="bg-white rounded shadow border"
               >
-                {/* Category Card Header */}
+                {}
                 <div
                   className="cursor-pointer p-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100"
                   onClick={() => toggleCategory(category.id)}
@@ -160,7 +160,7 @@ export default function Gallery({ categories }: PageProps) {
                   </span>
                 </div>
 
-                {/* Image Grid - Only if this category is open */}
+                {}
                 {openCategory === category.id && (
                   <div className="p-4">
                     {category.images.length === 0 ? (

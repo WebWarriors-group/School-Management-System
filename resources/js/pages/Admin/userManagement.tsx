@@ -17,7 +17,7 @@ interface User {
 
 interface PageProps {
     auth: {
-        user: User | null; // allow null to avoid TypeScript error
+        user: User | null; 
     };
 }
 
@@ -50,7 +50,7 @@ export default function Management({ post }: Props) {
     const [isImportOpen, setIsImportOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    // --- User CRUD handlers ---
+   
     const handleAddUser = () => {
         setEditingUser(null);
         setShowRegister(true);
@@ -73,7 +73,7 @@ export default function Management({ post }: Props) {
         });
     };
 
-    // --- Pagination ---
+   
     const goToPage = (page: number) => {
         const scrollPos = window.scrollY;
         router.get('/admin/usermanage', { page }, {
@@ -83,7 +83,7 @@ export default function Management({ post }: Props) {
         });
     };
 
-    // --- Import handlers ---
+    
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setSelectedFile(e.target.files[0]);
@@ -119,7 +119,7 @@ export default function Management({ post }: Props) {
             <Toaster position="top-right" richColors closeButton />
 
             <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-                {/* Filter & Import Buttons */}
+                {}
                 <div className="flex items-center gap-2 mt-10">
                     <Button onClick={() => setIsFilterOpen(true)} className="bg-green-800 text-white hover:bg-blue-800">
                         Filter
@@ -237,7 +237,7 @@ export default function Management({ post }: Props) {
                         </tbody>
                     </table>
 
-                    {/* Pagination */}
+                    {}
                     {users.current_page && users.last_page && (
                         <div className="flex justify-between mt-4">
                             <button

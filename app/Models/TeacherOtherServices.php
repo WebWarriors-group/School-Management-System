@@ -9,7 +9,7 @@ class TeacherOtherServices extends Model
 {
     use HasFactory;
 
-    protected $table = 'other_services'; // Specify the correct table name
+    protected $table = 'other_services'; 
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,7 +20,7 @@ class TeacherOtherServices extends Model
         'Agrahara_insuarence_membership'
     ];
 
-    // Define the relationship with the Teacher model
+    
     public function teacher()
     {
         return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');

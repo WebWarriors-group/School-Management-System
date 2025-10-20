@@ -31,11 +31,11 @@ type TeacherForm = {
   appointed_date: string;
   work_acceptance_date: string;
   
-  // New Fields
+ 
   appointment_type: string;
-  salary_increment_date: string; // ISO format date (YYYY-MM-DD)
+  salary_increment_date: string; 
   current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
-  work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
+  work_acceptance_date_school: string; 
   temporary_attachedschool_or_institute_name: string;
   appointed_subject: string;
   which_grades_teaching_done: string;
@@ -205,7 +205,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
   <div>
     <h3 className="text-xl font-bold"> Teacher's Basic Information</h3>
     
-    {/* Teacher NIC */}
+    {}
     <div className="mb-4 py-5">
       <label htmlFor="teacher_NIC" className="block text-sm font-medium text-gray-700">
         Teacher NIC
@@ -342,7 +342,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
         className="w-full p-2 border rounded"
         value={data.Birthdate}
         onChange={(e) => setData('Birthdate', e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]}
 
         required
       />
@@ -634,7 +634,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
         id="appointed_date"
         value={data.appointed_date}
         onChange={(e)=>setData('appointed_date',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
@@ -651,7 +651,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
         id="work_acceptance_date"
         value={data.work_acceptance_date}
         onChange={(e)=>setData('work_acceptance_date',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
@@ -724,7 +724,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
         id="work_acceptance_date_school"
         value={data.work_acceptance_date_school}
         onChange={(e)=>setData('work_acceptance_date_school',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
@@ -972,7 +972,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
       />
     </div>
 
-    {/* Navigation Buttons */}
+    {}
     <div className="flex justify-between">
       <button
         type="button"
@@ -1069,7 +1069,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
       />
     </div>
 
-    {/* Highest Professional Qualification */}
+    {}
     <div className="mb-4">
       <label htmlFor="highest_professional_qualification" className="block text-sm font-medium text-gray-700">
         Highest Professional Qualification
@@ -1324,7 +1324,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
       />
     </div>
 
-    {/* EDCS Membership */}
+    {}
     <div className="mb-4">
       <label htmlFor="EDCS_membership" className="block text-sm font-medium text-gray-700">
         EDCS Membership

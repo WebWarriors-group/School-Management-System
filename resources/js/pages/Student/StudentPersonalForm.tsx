@@ -43,7 +43,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         <p className="text-gray-600 mt-2">Please provide the student's personal details</p>
       </div>
 
-      {/* Basic Information Section */}
+      {}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Basic Information</h3>
         
@@ -112,7 +112,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         </div>
       </div>
 
-      {/* Photo Upload Section */}
+      {}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Student Photo</h3>
         
@@ -170,7 +170,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         </div>
       </div>
 
-      {/* Personal Details Section */}
+      {}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Personal Details</h3>
         
@@ -244,7 +244,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         </div>
       </div>
 
-      {/* Identification Section */}
+      {}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Identification</h3>
         
@@ -293,7 +293,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         </div>
       </div>
 
-      {/* Address Section */}
+      {}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Address</h3>
         
@@ -312,7 +312,7 @@ const StudentPersonalForm: React.FC<StudentPersonalFormProps> = ({ form, handleC
         </div>
       </div>
 
-      {/* Physical Attributes Section */}
+      {}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Physical Attributes</h3>
         

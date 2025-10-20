@@ -1,5 +1,4 @@
 import '../css/app.css';
-// import './echo'; // This will set window.Echo globally
 
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -26,5 +25,5 @@ createInertiaApp({
     },
 });
 
-// This will set light / dark mode on load...
+
 initializeTheme();

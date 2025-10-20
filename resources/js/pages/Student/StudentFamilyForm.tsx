@@ -35,7 +35,7 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({ form, handleChang
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Mother's Information Card */}
+        {}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center mb-4">
             <div className="bg-blue-100 p-2 rounded-lg mr-3">
@@ -74,7 +74,7 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({ form, handleChang
           </div>
         </div>
 
-        {/* Father's Information Card */}
+        {}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center mb-4">
             <div className="bg-blue-100 p-2 rounded-lg mr-3">
@@ -114,7 +114,7 @@ const StudentFamilyForm: React.FC<StudentFamilyFormProps> = ({ form, handleChang
         </div>
       </div>
 
-      {/* Additional Notes */}
+      {}
       <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
         <div className="flex">
           <svg className="w-5 h-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

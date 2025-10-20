@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
-import { Button } from "@/components/ui/button"; // Adjust import paths as per your project
-import { Input } from "@/components/ui/input"; // Adjust import paths as per your project
+import { Button } from "@/components/ui/button"; 
+import { Input } from "@/components/ui/input"; 
 import { Student } from "@/types";
 
 
@@ -35,9 +35,7 @@ const AddStudent: React.FC<AddStudentProps> = ({ onClose, onStudentAdded }) => {
             errors.push("Registration number must be in the format REG-XXXXX.");
         }
 
-        // if (student.distance_to_school < 0 || isNaN(student.distance_to_school)) {
-        //   errors.push("Distance to school must be a valid number ≥ 0.");
-        // }
+      
 
         return errors;
     };

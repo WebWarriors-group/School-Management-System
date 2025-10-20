@@ -42,11 +42,11 @@ type Teacher = {
   appointed_date: string;
   work_acceptance_date: string;
   
-  // New Fields
+  
   appointment_type: string;
-  salary_increment_date: string; // ISO format date (YYYY-MM-DD)
+  salary_increment_date: string; 
   current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
-  work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
+  work_acceptance_date_school: string; 
   temporary_attachedschool_or_institute_name: string;
   appointed_subject: string;
   which_grades_teaching_done: string;
@@ -94,10 +94,9 @@ export default function TeachersTable() {
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
   const [error, setError] = useState("");
 const [selectedStep, setSelectedStep] = useState<number | null>(null);
-const [currentPage, setCurrentPage] = useState(1); // Pagination state
-
+const [currentPage, setCurrentPage] = useState(1); 
 const handleStepClick = (stepNumber: number) => {
-  setCurrentPage(1); // Reset to page 1 whenever a card is clicked
+  setCurrentPage(1); 
   setSelectedStep(prevStep => (prevStep === stepNumber ? null : stepNumber));
 };
 
@@ -121,7 +120,7 @@ const goToPreviousPage = () => {
   if (currentPage > 1) setCurrentPage(currentPage - 1);
 };
 
-  // Fetch teachers from API
+  
   useEffect(() => {
     fetch("/api/teachers")
       .then((res) => res.json())
@@ -129,7 +128,7 @@ const goToPreviousPage = () => {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  // Handle delete
+  
   const handleDelete = async (teacher_NIC: string) => {
   if (!confirm("Are you sure you want to delete this teacher?")) return;
 
@@ -150,7 +149,7 @@ const goToPreviousPage = () => {
 
     setTeachers(teachers.filter((teacher) => teacher.teacher_NIC !== teacher_NIC));
 
-    // ✅ Show success toast message
+   
     toast.success(responseData.message || "Teacher deleted successfully");
   } catch (error: any) {
     console.error("Error deleting teacher:", error);
@@ -159,12 +158,12 @@ const goToPreviousPage = () => {
 };
 
 
-  // Handle edit (open modal)
+ 
 const handleEdit = (teacher: Teacher) => {
   setEditingTeacher(teacher);
 };
 
-// Handle update teacher
+
 const handleUpdate = async (event: React.FormEvent) => {
   event.preventDefault();
   if (!editingTeacher) return;
@@ -182,10 +181,10 @@ const handleUpdate = async (event: React.FormEvent) => {
       throw new Error("Failed to update teacher");
     }
 
-    // Update teacher list in the UI after successful update
+    
     setTeachers(teachers.map((t) => (t.teacher_NIC === editingTeacher.teacher_NIC ? editingTeacher : t)));
 
-    // Close the modal or clear the form
+    
     setEditingTeacher(null);
   } catch (error) {
     console.error("Error updating teacher:", error);
@@ -217,7 +216,7 @@ const handleUpdate = async (event: React.FormEvent) => {
       <div className="max-w-9xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">Search Teacher by NIC</h1>
 
-      {/* Search Input */}
+      {}
       <input
         type="text"
         placeholder="Enter Teacher NIC"
@@ -229,23 +228,23 @@ const handleUpdate = async (event: React.FormEvent) => {
         Search
       </button>
 
-      {/* Display Error Message */}
+      {}
       {error && <p className="text-red-500 mt-2">{error}</p>}
 
-      {/* Display Teacher Details */}
+      {}
 {teacher && (
   <div className="mt-6 p-8 border rounded-lg bg-gray-50 max-w-10xl mx-auto shadow-lg w-300">
     <h2 className="text-4xl font-extrabold text-blue-900 text-center mb-10 tracking-wide drop-shadow-md">
       Teacher Details
     </h2>
 
-    {/* Personal Information */}
+    {}
     <section className="bg-blue-100 shadow-lg rounded-lg p-8  border-l-8 border-blue-700  max-w-10xl">
       <h3 className="text-2xl font-bold text-blue-800 mb-6 uppercase tracking-wide border-b-2 border-blue-300 pb-2">
         Personal Information
       </h3>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-        {/* Photo */}
+        {}
         <div className="flex-shrink-0">
           {teacher.personal?.Photo ? (
             <img
@@ -277,7 +276,7 @@ const handleUpdate = async (event: React.FormEvent) => {
       </div>
     </section>
 
-    {/* Address Information */}
+    {}
     <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-green-700">
       <h3 className="text-2xl font-bold text-green-800 mb-6 uppercase tracking-wide border-b-2 border-green-300 pb-2">
         Address Information
@@ -292,7 +291,7 @@ const handleUpdate = async (event: React.FormEvent) => {
       </div>
     </section>
 
-    {/* Work Information */}
+    {}
     <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-purple-700">
       <h3 className="text-2xl font-bold text-purple-800 mb-6 uppercase tracking-wide border-b-2 border-purple-300 pb-2">
         Work Information
@@ -320,7 +319,7 @@ const handleUpdate = async (event: React.FormEvent) => {
       </div>
     </section>
 
-    {/* Qualifications */}
+    {}
     <section className="mb-19 p-30 bg-white rounded-lg shadow-lg border-l-8 border-yellow-700">
       <h3 className="text-2xl font-bold text-yellow-900 mb-6 uppercase tracking-wide border-b-2 border-yellow-300 pb-2">
         Qualifications
@@ -345,7 +344,7 @@ const handleUpdate = async (event: React.FormEvent) => {
       </div>
     </section>
 
-    {/* Other Service Information */}
+    {}
     <section className="mb-10 p-8 bg-white rounded-lg shadow-lg border-l-8 border-red-700">
       <h3 className="text-2xl font-bold text-red-800 mb-6 uppercase tracking-wide border-b-2 border-red-300 pb-2">
         Other Services
@@ -358,7 +357,7 @@ const handleUpdate = async (event: React.FormEvent) => {
       </div>
     </section>
 
-    {/* Action Buttons */}
+    {}
     <div className="flex justify-center gap-8 mt-8">
       <button
         onClick={() => handleEdit(teacher)}
@@ -376,7 +375,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   </div>
 )}
 
-      {/* Edit Modal */}
+      {}
       {editingTeacher && (
   <div
     className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
@@ -388,7 +387,7 @@ const handleUpdate = async (event: React.FormEvent) => {
           <h3 className="text-xl font-bold mb-4">Edit Teacher</h3>
       <form onSubmit={handleUpdate}>
 
-        {/* Personal Information */}
+        {}
         <h4 className="font-bold text-lg mt-4 mb-2">Personal Information</h4>
         
         <div className="mb-2">
@@ -445,14 +444,14 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.personal?.Birthdate || ""}
-    max={new Date().toISOString().split("T")[0]} // ✅ Set max date to today
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
 
       if (selectedDate > today) {
         alert("Birthdate cannot be in the future.");
-        return; // prevent update
+        return; 
       }
 
       setEditingTeacher({
@@ -465,7 +464,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 </div>
 
 
-        {/* Contact Information */}
+        {}
         <h4 className="font-bold text-lg mt-4 mb-2">Contact Information</h4>
 
         <div className="mb-2">
@@ -493,7 +492,7 @@ const handleUpdate = async (event: React.FormEvent) => {
             className="border p-2 w-full"
           />
         </div>
-{/* Personal Information Continued */}
+{}
 <div className="mb-2">
   <label className="block text-sm font-bold">Region:</label>
   <input
@@ -612,7 +611,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   />
 </div>
 
-        {/* Address */}
+        {}
         <h4 className="font-bold text-lg mt-4 mb-2">Address Information</h4>
 
        
@@ -727,7 +726,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 
         
 
-        {/* Work Information */}
+        {}
         <h4 className="font-bold text-lg mt-4 mb-2">Work Information</h4>
 
       
@@ -737,7 +736,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.appointed_date || ""}
-    max={new Date().toISOString().split("T")[0]} // Limit to today
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -762,7 +761,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.work_acceptance_date || ""}
-    max={new Date().toISOString().split("T")[0]} // Disables future date selection
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -799,7 +798,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.salary_increment_date || ""}
-    max={new Date().toISOString().split("T")[0]} // UI restriction
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -845,7 +844,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.work_acceptance_date_school || ""}
-    max={new Date().toISOString().split("T")[0]} // restrict future dates in UI
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -1063,7 +1062,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 </div>
 
 
-        {/* Qualification Information */}
+        {}
         <h4 className="font-bold text-lg mt-4 mb-2">Qualification Information</h4>
 
         <div className="mb-2">
@@ -1195,7 +1194,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.qualifications?.appointment_date_for_current_class || ""}
-    max={new Date().toISOString().split("T")[0]} // disable future dates in picker
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -1223,7 +1222,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.qualifications?.appointment_date_for_current_grade || ""}
-    max={new Date().toISOString().split("T")[0]} // prevents future dates
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -1346,7 +1345,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <input
     type="date"
     value={editingTeacher.qualifications?.assign_date_for_the_school || ""}
-    max={new Date().toISOString().split("T")[0]} // Prevent future date selection
+    max={new Date().toISOString().split("T")[0]} 
     onChange={(e) => {
       const selectedDate = e.target.value;
       const today = new Date().toISOString().split("T")[0];
@@ -1371,7 +1370,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 
         
 
-        {/* Other Service Information */}
+        {}
         <h4 className="font-bold text-lg mt-4 mb-2">Other Service Information</h4>
 
         <div className="mb-2">
@@ -1449,7 +1448,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 </div>
 
 
-        {/* Save and Cancel Buttons */}
+        {}
         <div className="flex justify-between mt-4">
           <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
           <button onClick={() => setEditingTeacher(null)} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
@@ -1466,7 +1465,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   <div className="max-w-6xl mx-auto p-4">
     <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">📋 Teacher's Information Overview</h1>
 
-    {/* Card Row */}
+    {}
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
       <button
         onClick={() => handleStepClick(1)}
@@ -1516,13 +1515,13 @@ const handleUpdate = async (event: React.FormEvent) => {
     <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 1: Teacher's Basic Information</h3>
 
       <div className="w-[1100px] border rounded overflow-x-auto">
-    {/* Outer scroll container handles horizontal scrolling */}
+    {}
 
     <div className="max-h-[500px] overflow-y-auto">
-      {/* Inner container handles vertical scrolling only */}
+      {}
 
       <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
-        {/* Your table head + body */}
+        {}
          <thead className="bg-gray-100 text-gray-900">
               <tr>
                 {[
@@ -1567,7 +1566,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 <td className="border px-3 py-1 sticky left-0 z-10 bg-white">
   {teacher.teacher_NIC}
 </td>
-      {/* <td className="border px-2 py-1">{teacher.reg_ ?? "-"}</td> */}
+      {}
       <td className="border px-3 py-1">{teacher.personal?.Full_name ?? "-"}</td>
       <td className="border px-3 py-1">{teacher.personal?.Full_name_with_initial ?? "-"}</td>
       <td className="border px-3 py-1">
@@ -1596,14 +1595,7 @@ const handleUpdate = async (event: React.FormEvent) => {
           </table>
         </div>
 </div>
-        {/* <div className="flex justify-end mt-4">
-          <button
-            onClick={handleNextStep}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md"
-          >
-            Next
-          </button>
-        </div> */}
+        {}
         <div className="flex justify-between items-center mt-4">
   <button
     onClick={goToPreviousPage}
@@ -1634,10 +1626,10 @@ const handleUpdate = async (event: React.FormEvent) => {
     <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 2: Address Information</h3>
     
           <div className="w-[1100px] border rounded overflow-x-auto">
-    {/* Outer scroll container handles horizontal scrolling */}
+    {}
 
     <div className="max-h-[500px] overflow-y-auto">
-      {/* Inner container handles vertical scrolling only */}
+      {}
 
       <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
           <thead className="bg-gray-100 text-gray-900">
@@ -1675,7 +1667,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   {teacher.teacher_NIC}
 </td>
 
-      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      {}
       <td className="border px-3 py-1">{teacher.teachersaddress?.permanent_address ?? "-"}</td>
       <td className="border px-3 py-1">{teacher.teachersaddress?.permanent_residential_address ?? "-"}</td>
       
@@ -1690,21 +1682,7 @@ const handleUpdate = async (event: React.FormEvent) => {
           </table>
         </div>
 </div>
-        {/* <div className="flex justify-between mt-4">
-          <button
-            onClick={handlePrevStep}
-            className="bg-gray-600 text-white px-4 py-2 rounded-md"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNextStep}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md"
-          >
-            Next
-          </button>
-        </div>
-       */}
+        {}
        <div className="flex justify-between items-center mt-4">
   <button
     onClick={goToPreviousPage}
@@ -1733,10 +1711,10 @@ const handleUpdate = async (event: React.FormEvent) => {
 
     <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 3: Work Information</h3>
              <div className="w-[1100px] border rounded overflow-x-auto">
-    {/* Outer scroll container handles horizontal scrolling */}
+    {}
 
     <div className="max-h-[500px] overflow-y-auto">
-      {/* Inner container handles vertical scrolling only */}
+      {}
 
       <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
          <thead className="bg-gray-100 text-gray-900">
@@ -1786,7 +1764,7 @@ const handleUpdate = async (event: React.FormEvent) => {
   {teacher.teacher_NIC}
 </td>
 
-      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      {}
       <td className="border px-3 py-1">{teacher.appointed_date ?? "-"}</td>
       <td className="border px-3 py-1">{teacher.work_acceptance_date_school ?? "-"}</td>
       
@@ -1814,20 +1792,7 @@ const handleUpdate = async (event: React.FormEvent) => {
           </table>
         </div>
 </div>
-        {/* <div className="flex justify-between mt-4">
-          <button
-            onClick={handlePrevStep}
-            className="bg-gray-600 text-white px-4 py-2 rounded-md"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNextStep}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md"
-          >
-            Next
-          </button>
-        </div> */}
+        {}
         <div className="flex justify-between items-center mt-4">
   <button
     onClick={goToPreviousPage}
@@ -1856,10 +1821,10 @@ const handleUpdate = async (event: React.FormEvent) => {
 
     <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 4: Qualification</h3>
             <div className="w-[1100px] border rounded overflow-x-auto">
-    {/* Outer scroll container handles horizontal scrolling */}
+    {}
 
     <div className="max-h-[500px] overflow-y-auto">
-      {/* Inner container handles vertical scrolling only */}
+      {}
 
       <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
            <thead className="bg-gray-100 text-gray-900">
@@ -1906,7 +1871,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 <td className="border px-3 py-1 sticky left-0 z-10 bg-white">
   {teacher.teacher_NIC}
 </td>
-      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      {}
       <td className="border px-3 py-1">{teacher.qualifications?.type_of_service_in_school ?? "-"}</td>
       <td className="border px-3 py-1">{teacher.qualifications?.gce_al_subject_stream ?? "-"}</td>
       
@@ -1931,20 +1896,7 @@ const handleUpdate = async (event: React.FormEvent) => {
           </table>
         </div>
 </div>
-        {/* <div className="flex justify-between mt-4">
-          <button
-            onClick={handlePrevStep}
-            className="bg-gray-600 text-white px-4 py-2 rounded-md"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNextStep}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md"
-          >
-            Next
-          </button>
-        </div> */}
+        {}
         <div className="flex justify-between items-center mt-4">
   <button
     onClick={goToPreviousPage}
@@ -1973,10 +1925,10 @@ const handleUpdate = async (event: React.FormEvent) => {
 
     <h3 className="text-2xl font-semibold mb-4 text-blue-800">Step 5: Responsibilities & Memberships</h3>
           <div className="w-[1100px] border rounded overflow-x-auto">
-    {/* Outer scroll container handles horizontal scrolling */}
+    {}
 
     <div className="max-h-[500px] overflow-y-auto">
-      {/* Inner container handles vertical scrolling only */}
+      {}
 
       <table className="min-w-[2000px] border border-gray-300 text-sm text-left">
            <thead className="bg-gray-100 text-gray-900">
@@ -2011,7 +1963,7 @@ const handleUpdate = async (event: React.FormEvent) => {
 <td className="border px-3 py-1 sticky left-0 z-10 bg-white">
   {teacher.teacher_NIC}
 </td>
-      {/* <td className="border px-3 py-1">{teacher.reg_ ?? "-"}</td> */}
+      {}
       <td className="border px-3 py-1">{teacher.teacherotherservice?.other_responsibilities_in_school ?? "-"}</td>
       <td className="border px-3 py-1">{teacher.teacherotherservice?.EDCS_membership ?? "-"}</td>
       
@@ -2024,15 +1976,7 @@ const handleUpdate = async (event: React.FormEvent) => {
           </table>
         </div>
 </div>
-        {/* <div className="flex justify-between mt-4">
-          <button
-            onClick={handlePrevStep}
-            className="bg-gray-600 text-white px-4 py-2 rounded-md"
-          >
-            Back
-          </button>
-          
-        </div> */}
+        {}
         <div className="flex justify-between items-center mt-4">
   <button
     onClick={goToPreviousPage}

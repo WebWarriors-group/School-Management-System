@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class TeacherAttendanceController extends Controller
 {
-    // TeacherAttendanceController.php
+    
 
 public function index(Request $request)
 {
@@ -18,12 +18,11 @@ public function index(Request $request)
 
     $allTeachers = Teacher::with('personal')->get();
 
-    // Get all attendance for today keyed by NIC
     $attendanceToday = TeacherAttendance::where('date', $date)
         ->pluck('status', 'teacher_NIC')
         ->toArray();
 
-    // Prepare teachers with status
+    
     $teachersWithStatus = $allTeachers->map(function ($teacher) use ($attendanceToday) {
         return [
             'teacher_NIC' => $teacher->teacher_NIC,
@@ -33,7 +32,7 @@ public function index(Request $request)
     });
 
     if (!$showAll) {
-        // Filter only present teachers
+        
         $teachersWithStatus = $teachersWithStatus->filter(fn($t) => $t['status'] === 'Present')->values();
     }
 
@@ -66,7 +65,7 @@ public function index(Request $request)
         );
     }
 
-    // Check if show_all was in the query and redirect accordingly
+    
     $showAll = $request->query('show_all', false);
 
     if ($showAll) {

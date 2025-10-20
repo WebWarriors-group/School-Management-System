@@ -47,7 +47,7 @@ export default function CalendarPage() {
         allDay: selectInfo.allDay,
       };
 
-      setEvents(prev => [...prev, newEvent]); // optimistic
+      setEvents(prev => [...prev, newEvent]); 
 
       axios.post<CalendarEvent>('/api/events', newEvent)
         .then(res => {
@@ -69,7 +69,7 @@ export default function CalendarPage() {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
     <div className="min-h-screen bg-gray-200 flex flex-col mt-10">
-      {/* Header */}
+      {}
 
       
 <style>
@@ -115,7 +115,7 @@ export default function CalendarPage() {
 
 
 
-      {/* Calendar container */}
+      {}
       <main className="flex-grow max-w-9xl mx-auto px-6">
         <div className="bg-white rounded-xl shadow-xl p-8">
           <FullCalendar
@@ -134,19 +134,19 @@ export default function CalendarPage() {
               week: 'Week',
               day: 'Day',
             }}
-            eventColor="#2563EB" // Tailwind blue-600
+            eventColor="#2563EB" 
             eventTextColor="blue"
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
             select={handleDateSelect}
-            // style tweaks
+            
             dayHeaderClassNames={() => 'text-blue-700 font-semibold'}
           />
         </div>
       </main>
 
-      {/* Footer */}
+      {}
       
     </div>
     </AppLayout>

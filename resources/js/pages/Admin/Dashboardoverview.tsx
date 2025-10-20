@@ -173,7 +173,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       replace: true,
     });
 
-    // Keep class table visible
+    
   };
 
    
@@ -276,7 +276,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     setClass(false);
 
     if (filtersApplied) {
-      // Only reload if filters were applied
+     
       Inertia.get('/admin/dashboardoverview', {}, {
         preserveState: false,
         replace: true,
@@ -350,7 +350,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
       
        <header className="sticky top-15 flex w-full  border-b  z-50 p-4 shadow-sm  bg-white">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
-           {/* <NotificationListener/> */}
+           {}
           <p className=" text-gray-600 md:text-lg  md:text-left md:text-base md:mt-2">
             Teacher Assignements  
           </p>
@@ -403,7 +403,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                     Back
                   </Button>
                   <div className="mt-[-100px]">
-                    {/* <AssignClassTeachers teachers={teacher12} classes={classesGrouped} /> */}
+                    {}
                   </div>
                 </>
               ) : (
@@ -424,9 +424,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                       <div>
 
 
-                        {/* Filter Form */}
+                        {}
                         <form onSubmit={handleFilterSubmit} className="mb-4 space-x-4">
-                          {/* Grade Dropdown */}
+                          {}
                           <select
                             value={grade}
                             onChange={(e) => {
@@ -441,7 +441,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                             ))}
                           </select>
 
-                          {/* Section Input */}
+                          {}
                           <input
                             type="text"
                             placeholder="Section"
@@ -450,7 +450,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                             className="border p-2 rounded"
                           />
 
-                          {/* Class Name Input */}
+                          {}
                           <input
                             type="text"
                             placeholder="Class Name"
@@ -464,7 +464,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                           </button>
                         </form>
 
-                        {/* Display Filtered Classes */}
+                        {}
                         <table className="min-w-full border border-gray-300">
                           <thead className="bg-gray-100">
                             <tr>
@@ -511,7 +511,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                 <div className="mt- ml-250 absolute bg-yellow-500 rounded-full w-30 h-30 flex items-center justify-center text-[#152238] text-2xl font-bold border-14 border-[#152238]">
                   {teachers}
                 </div>
-                {/* <AddTeacherForm /> */}
+                {}
               </div>
             ) : showStudentForm ? (
               <>

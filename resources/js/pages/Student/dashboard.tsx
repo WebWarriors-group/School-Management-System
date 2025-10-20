@@ -1261,12 +1261,12 @@ export default function StudentDashboard() {
                 </>
               )}
 
-              {/* Feedback Tab */}
+              {}
               {activeTab === 'Feedback' && (
                 <TeacherFeedbackHub />
               )}
 
-              {/* Attendance Modal */}
+              {}
               <Dialog open={attendanceModalOpen} onClose={() => setAttendanceModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
                 <div className="fixed inset-0 bg-black opacity-50" aria-hidden="true"></div>
                 <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-lg w-full z-50">
@@ -1293,7 +1293,7 @@ export default function StudentDashboard() {
                 </Dialog.Panel>
               </Dialog>
 
-              {/* Courses Modal */}
+              {}
               <Dialog open={coursesOpen} onClose={() => setCoursesOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
                 <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
                 <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-2xl w-full relative z-10">
@@ -1469,7 +1469,7 @@ export default function StudentDashboard() {
                     <CalendarView darkMode={darkMode} />
                   </div>
 
-                  {/* Enhanced Attendance Summary */}
+                  {}
                   <AttendanceSummary />
 
                   <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm">

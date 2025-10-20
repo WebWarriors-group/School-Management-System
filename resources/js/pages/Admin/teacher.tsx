@@ -58,7 +58,7 @@ export default function AdminTeacherDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           
-          {/* Attendance Summary */}
+          {}
           <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition">
             <h3 className="text-xl font-semibold mb-2">📋 Attendance Summary</h3>
             <p className="text-sm text-gray-500 mb-4">
@@ -90,7 +90,7 @@ export default function AdminTeacherDashboard() {
             </Link>
           </div>
 
-          {/* Registered Teachers & Requests */}
+          {}
           <div className="bg-white border border-slate-200 shadow-md p-6 hover:shadow-lg transition flex flex-col gap-8">
             <div className="flex flex-col items-center text-center">
               <h3 className="text-xl font-semibold mb-4">👩‍🏫 Registered Teachers</h3>
@@ -131,7 +131,7 @@ export default function AdminTeacherDashboard() {
             </div>
           </div>
 
-          {/* Direct Communication */}
+          {}
           <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
             <h3 className="text-xl font-semibold mb-3">📧 Direct Communication</h3>
             <p className="text-gray-600 mb-4">
@@ -144,7 +144,7 @@ export default function AdminTeacherDashboard() {
             </Link>
           </div>
 
-          {/* Announcements */}
+          {}
           <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
             <h3 className="text-xl font-semibold mb-3">📢 Announcements</h3>
             <p className="text-gray-600 mb-4">Post updates for all teachers.</p>

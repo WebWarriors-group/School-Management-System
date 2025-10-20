@@ -77,7 +77,7 @@ export default function Navbar({ categories }: Props) {
 
       <div className="min-h-screen bg-white text-gray-900">
 
-        {/* Top Bar */}
+        {}
         <div className=" sticky top-0 left-0 bg-yellow-500 text-brown-900 py-4 px-4 text-[16px] flex justify-between items-center shadow z-50  max-[639px]:py-4 max-[639px]:px-3 max-[639px]:text-[16px]">
           <span>Welcome to Mahadivulwewa National School</span>
           <div className="space-x-3 hidden md:flex">
@@ -87,7 +87,7 @@ export default function Navbar({ categories }: Props) {
           </div>
         </div>
 
-        {/* Navbar */}
+        {}
         <nav className="sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50  max-[639px]:py-2 max-[639px]:px-3">
 
           <div className="flex justify-between items-center">
@@ -135,7 +135,7 @@ export default function Navbar({ categories }: Props) {
 
 
         >
-          {/* Optional overlay */}
+          {}
           <div className="absolute inset-0 bg-black/40 z-0"></div>
 
           <div className="relative z-10 max-w-5xl mx-auto text-center text-white space-y-8 ">
@@ -204,7 +204,7 @@ export default function Navbar({ categories }: Props) {
                   }`}
                 onClick={() => toggleCategory(category)}
               >
-                {/* Background image if exists */}
+                {}
                 {category.images.length > 0 && (
                   <img
                     src={category.images[0].image_path}
@@ -213,10 +213,10 @@ export default function Navbar({ categories }: Props) {
                   />
                 )}
 
-                {/* Overlay */}
+                {}
                 <div className="absolute inset-0 bg-blue-900 bg-opacity-40"></div>
 
-                {/* Text content */}
+                {}
                 <div className="relative z-10 flex flex-col  flex-wrap justify-center items-center h-full text-center text-white">
                   <h1 className="text-lg font-bold">{category.name.toUpperCase()}</h1>
                   <p className="text-sm mt-1">{category.images.length} images</p>
@@ -226,12 +226,12 @@ export default function Navbar({ categories }: Props) {
             ))}
 
 
-            {/* Show Carousel */}
+            {}
             {openCategory && (
               <div className=" mt-8  relative h-90 w-330 ">
 
 
-                {/* Carousel Buttons */}
+                {}
                 <button
                   onClick={() => scrollCarousel("left")}
                   className="absolute left-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10 cursor:pointer"
@@ -247,8 +247,8 @@ export default function Navbar({ categories }: Props) {
                   ›
                 </button>
 
-                {/* Carousel */}
-                {/* Carousel */}
+                {}
+                {}
                 {openCategory.images.length === 0 ? (
                   <p className="text-gray-500 italic text-center py-10">
                     No images uploaded in this category yet.
@@ -280,7 +280,7 @@ export default function Navbar({ categories }: Props) {
               </div>
             )}
 
-            {/* Lightbox */}
+            {}
             {openCategory && lightboxIndex !== null && (
               <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
                 <button

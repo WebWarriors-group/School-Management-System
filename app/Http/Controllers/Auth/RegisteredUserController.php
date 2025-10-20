@@ -12,21 +12,17 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Mail\WelcomeMail; // ✅ make sure you have this
+use App\Mail\WelcomeMail; 
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Show user creation form
-     */
+   
     public function create(): Response
     {
         return Inertia::render('Admin/userManagement');
     }
 
-    /**
-     * Store a new user by admin
-     */
+   
     public function store(Request $request): RedirectResponse
     {
         $request->validate([

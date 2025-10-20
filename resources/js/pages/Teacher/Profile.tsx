@@ -25,7 +25,7 @@ export default function Profile({ teacher }: Props) {
   <h1 className="text-3xl font-bold mb-8 text-blue-700">👤 My Profile</h1>
 
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {/* Personal Info */}
+    {}
     <div className="bg-gray-100 p-6 rounded-lg shadow text-gray-800 space-y-2 text-lg">
       <p><strong className="text-blue-700">NIC:</strong> {teacher.teacher_NIC}</p>
       <p><strong className="text-blue-700">Full Name:</strong> {teacher.personal?.Full_name || 'Not provided'}</p>
@@ -44,7 +44,7 @@ export default function Profile({ teacher }: Props) {
       <p><strong className="text-blue-700">Family Details:</strong> {teacher.personal?.Details_about_family_members || 'Not provided'}</p>
     </div>
 
-    {/* Address Info */}
+    {}
     <div className="bg-gray-100 p-6 rounded-lg shadow text-gray-800 space-y-2 text-lg">
       <p><strong className="text-green-700">Permanent Address:</strong> {teacher.teachersaddress?.permanent_address || 'Not provided'}</p>
       <p><strong className="text-green-700">Residential Address:</strong> {teacher.teachersaddress?.permanent_residential_address || 'Not provided'}</p>
@@ -54,7 +54,7 @@ export default function Profile({ teacher }: Props) {
       <p><strong className="text-green-700">Election Division No:</strong> {teacher.teachersaddress?.election_division_number ?? 'Not provided'}</p>
     </div>
 
-    {/* Work Info */}
+    {}
     <div className="bg-gray-100 p-6 rounded-lg shadow text-gray-800 space-y-2 text-lg">
       <p><strong className="text-purple-700">Appointed Date:</strong> {teacher.appointed_date || 'Not provided'}</p>
       <p><strong className="text-purple-700">Work Acceptance Date:</strong> {teacher.work_acceptance_date || 'Not provided'}</p>
@@ -77,7 +77,7 @@ export default function Profile({ teacher }: Props) {
       <p><strong className="text-purple-700">Salary Sheet No:</strong> {teacher.number_in_salary_sheet || 'Not provided'}</p>
     </div>
 
-    {/* Qualifications */}
+    {}
     <div className="bg-gray-100 p-6 rounded-lg shadow text-gray-800 space-y-2 text-lg">
       <p><strong className="text-yellow-800">AL Subject Stream:</strong> {teacher.qualifications?.gce_al_subject_stream || 'Not provided'}</p>
       <p><strong className="text-yellow-800">Service Type:</strong> {teacher.qualifications?.type_of_service_in_school || 'Not provided'}</p>
@@ -97,7 +97,7 @@ export default function Profile({ teacher }: Props) {
       <p><strong className="text-yellow-800">Assign Date for School:</strong> {teacher.qualifications?.assign_date_for_the_school || 'Not provided'}</p>
     </div>
 
-    {/* Other Services */}
+    {}
     <div className="bg-gray-100 p-6 rounded-lg shadow text-gray-800 space-y-2 text-lg">
       <p><strong className="text-red-700">Other Responsibilities:</strong> {teacher.teacherotherservice?.other_responsibilities_in_school || 'Not provided'}</p>
       <p><strong className="text-red-700">EDCS Member:</strong> {teacher.teacherotherservice?.EDCS_membership || 'Not provided'}</p>

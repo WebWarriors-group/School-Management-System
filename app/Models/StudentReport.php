@@ -9,11 +9,11 @@ class StudentReport extends Model
 {
     use HasFactory;
 
-    protected $table = 'student_reports'; // Table name
+    protected $table = 'student_reports'; 
 
-    protected $primaryKey = 'report_id'; // Primary Key
-    public $incrementing = false; // Since report_id is a string, disable auto-incrementing
-    protected $keyType = 'string'; // Define primary key as string
+    protected $primaryKey = 'report_id'; 
+    public $incrementing = false; 
+    protected $keyType = 'string'; 
 
     protected $fillable = [
         'report_id',
@@ -26,7 +26,7 @@ class StudentReport extends Model
         'teacher_comments'
     ];
 
-    // Relationship with StudentAcademicInfo
+    
     public function student()
     {
         return $this->hasOne(StudentAcademic::class, 'reg_no', 'reg_no');

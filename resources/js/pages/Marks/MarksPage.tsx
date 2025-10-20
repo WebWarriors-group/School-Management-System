@@ -21,7 +21,7 @@ interface MarkInput {
   term: string;
   year: number;
   subject_id: string;
-  class_id: number; // ✅ added class
+  class_id: number; 
   isNew?: boolean;
 }
 
@@ -50,14 +50,14 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
           term,
           year,
           subject_id: subjectId,
-          class_id: selectedClassId ?? 0, // ✅ send class to backend
+          class_id: selectedClassId ?? 0, 
           isNew: true,
         }))
       );
 
       setEditingRows(
         students.reduce((acc, s) => {
-          acc[s.reg_no] = true; // new rows editable
+          acc[s.reg_no] = true; 
           return acc;
         }, {} as Record<string, boolean>)
       );

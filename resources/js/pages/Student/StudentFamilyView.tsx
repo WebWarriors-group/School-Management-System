@@ -90,7 +90,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
 
   if (!isOpen || !student) return null;
 
-  // Filter and organize mother and father fields
+  
   const motherFields = Object.entries(editData || {})
     .filter(([key]) => key.startsWith("mother"))
     .map(([key, value]) => ({
@@ -111,7 +111,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
    <div className="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50 p-4">
 
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
+        {}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
           <div className="flex justify-between items-start">
             <div>
@@ -129,7 +129,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
           </div>
         </div>
 
-        {/* Main Content */}
+        {}
         <div className="overflow-y-auto flex-grow p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           {loading && (
             <div className="col-span-2 text-center py-10">
@@ -143,7 +143,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
             </div>
           )}
 
-          {/* Mother Information Card */}
+          {}
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
             <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
               <span className="bg-pink-100 text-pink-800 p-1 rounded-lg">
@@ -170,7 +170,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
             </div>
           </div>
 
-          {/* Father Information Card */}
+          {}
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
             <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
               <span className="bg-blue-100 text-blue-800 p-1 rounded-lg">
@@ -198,7 +198,7 @@ const StudentFamilyView: React.FC<ViewStudentProps> = ({ student, isOpen, onClos
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {}
         <div className="bg-gray-50 border-t p-6 flex flex-wrap justify-between gap-3">
           <div>
             {isEditing ? (

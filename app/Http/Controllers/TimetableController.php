@@ -9,7 +9,7 @@ class TimetableController extends Controller
 {
     public function generate()
     {
-        // Get distinct classes as "Grade Section" strings from your class_subject_teachers relationships
+        
         $classes = SubjectTeacher::with('class')
             ->get()
             ->pluck('class')
@@ -18,20 +18,20 @@ class TimetableController extends Controller
             ->values()
             ->toArray();
 
-        // Load all assignments with related data eagerly
+        
         $assignmentsRaw = SubjectTeacher::with(['class', 'subject', 'teacher'])->get();
 
-        // Format assignments to send to API
+        
         $assignments = $assignmentsRaw->map(function ($item) {
             return [
                 'class_' => $item->class->grade . ' ' . $item->class->section,
                 'subject' => $item->subject->subject_name,
-                'teacher' => $item->teacher->teacher_NIC, // or teacher_NIC if you want IDs
-                'periods_per_week' => 5, // fixed value; adjust or calculate dynamically
+                'teacher' => $item->teacher->teacher_NIC, 
+                'periods_per_week' => 5, 
             ];
         })->toArray();
 
-        // Payload to send to FastAPI
+        
         $payload = [
             'classes' => $classes,
             'assignments' => $assignments,
@@ -46,7 +46,7 @@ class TimetableController extends Controller
         }
 
         $timetable = $response->json();
-       // dd($timetable);
+       
 
         if (isset($timetable['error'])) {
             dd('Timetable error:', $timetable['error']);

@@ -29,7 +29,7 @@ const [showTeacherForm, setShowTeacherForm] = useState(false);
 
       <div className="min-h-screen bg-white text-gray-900">
 
-        {/* Top Bar */}
+        {}
         <div className=" sticky top-0 left-0 bg-yellow-500 text-brown-900 py-4 px-4 text-[16px] flex justify-between items-center shadow z-50  max-[639px]:py-4 max-[639px]:px-3 max-[639px]:text-[16px]">
           <span>Welcome to Mahadivulwewa National School</span>
           <div className="space-x-3 hidden md:flex">
@@ -39,7 +39,7 @@ const [showTeacherForm, setShowTeacherForm] = useState(false);
           </div>
         </div>
 
-        {/* Navbar */}
+        {}
         <nav className="sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50  max-[639px]:py-2 max-[639px]:px-3">
 
           <div className="flex justify-between items-center">

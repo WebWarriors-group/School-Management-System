@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Inertia } from '@inertiajs/inertia'; // Used for handling form submissions in Inertia.js
-import { Teacher } from '@/types/Teacher'; // Assuming you've defined a Teacher type for type safety
+import { Inertia } from '@inertiajs/inertia'; 
+import { Teacher } from '@/types/Teacher'; 
 
-// TeacherEditModal component
+
 const TeacherEditModal: React.FC<{ teacher: Teacher; onClose: () => void }> = ({
   teacher,
   onClose,
 }) => {
-  // Define state to hold the teacher's editable data
+  
   const [formData, setFormData] = useState({
     first_name: teacher.first_name,
     last_name: teacher.last_name,
@@ -16,7 +16,7 @@ const TeacherEditModal: React.FC<{ teacher: Teacher; onClose: () => void }> = ({
     address: teacher.address,
     work_info: teacher.work_info,
     qualifications: teacher.qualifications,
-    // Add other relevant fields here
+    
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,10 +30,10 @@ const TeacherEditModal: React.FC<{ teacher: Teacher; onClose: () => void }> = ({
   const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Update logic using Inertia.js to submit the form data to the backend
+    
     Inertia.put(`/teachers/${teacher.id}`, formData, {
       onSuccess: () => {
-        // Close the modal after a successful update
+        
         onClose();
       },
     });
@@ -143,7 +143,7 @@ const TeacherEditModal: React.FC<{ teacher: Teacher; onClose: () => void }> = ({
             />
           </div>
 
-          {/* Add more fields here as necessary */}
+          {}
 
           <div className="flex justify-end space-x-4 mt-4">
             <button
@@ -166,15 +166,15 @@ const TeacherEditModal: React.FC<{ teacher: Teacher; onClose: () => void }> = ({
   );
 };
 
-// TeacherList component (Parent Component for Modal)
+
 const TeacherList: React.FC = () => {
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Sample teacher list, you should fetch this data from your backend or API
+  
   const teachers: Teacher[] = [
     { id: 1, first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com', phone_number: '1234567890', address: '123 Main St', work_info: 'Math Teacher', qualifications: 'MSc in Mathematics' },
-    // Add more sample data as needed
+    
   ];
 
   const openModal = (teacher: Teacher) => {
@@ -189,7 +189,7 @@ const TeacherList: React.FC = () => {
 
   return (
     <div>
-      {/* Render teacher list here with an edit button */}
+      {}
       <div className="space-y-4">
         {teachers.map((teacher) => (
           <div key={teacher.id} className="p-4 border rounded-lg shadow-md">
@@ -205,7 +205,7 @@ const TeacherList: React.FC = () => {
         ))}
       </div>
 
-      {/* Show the edit modal if a teacher is selected */}
+      {}
       {selectedTeacher && isModalOpen && (
         <TeacherEditModal teacher={selectedTeacher} onClose={closeModal} />
       )}

@@ -9,7 +9,7 @@ class TeacherAddress extends Model
 {
     use HasFactory;
 
-    protected $table = 'teachers_address'; // Specify the correct table name
+    protected $table = 'teachers_address'; 
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +23,7 @@ class TeacherAddress extends Model
 ',
     ];
 
-    // Define the relationship with the Teacher model
+    
     public function teacher()
     {
         return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');

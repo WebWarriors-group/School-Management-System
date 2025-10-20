@@ -142,7 +142,7 @@ $teacherDeleted = Teacher::onlyTrashed()
         $totalUserCount = User::count();
         $teacherCount1 = Teacher::count();
         $studentCount1 = StudentAcademic::count();
-        // Fetch only currently active sessions (active within the last 5 minutes)
+       
    $userupdate=User::latest('updated_at')->value('updated_at');
 
        $userFooter = 'Last updated ' . $userupdate->diffForHumans();
@@ -194,7 +194,7 @@ Mail::to($user->email)->queue(new WelcomeMail($user,$request->password));
 
     public function delete($id)
     {
-        $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
+        $user = User::findOrFail($id); 
         $user->delete();
         return redirect()->back()->with('success', 'User deleted successfully');
     }
@@ -202,30 +202,30 @@ Mail::to($user->email)->queue(new WelcomeMail($user,$request->password));
 public function store3(Request $request){
    $request->validate([
         'title' => 'required|string|max:255',
-        'image' => 'required|image|max:2048', // max ~2MB
+        'image' => 'required|image|max:2048', 
     ]);
 
-    // Step 2: Handle the file
+    
     if ($request->hasFile('image')) {
         $file = $request->file('image');
 
-        // Create unique filename
+        
         $fileName = time() . '.' . $file->getClientOriginalExtension();
 
-        // Move the file to /public/image folder
+        
         $file->move(public_path('images'), $fileName);
 
-        // Step 3: Save to DB (column 'path' holds filename)
+        
         Img::create([
             'title' => $request->input('title'),
             'path' => $fileName,
         ]);
 
-        // Optional: return back with success message
+        
         return redirect()->back()->with('message', 'Image uploaded successfully!');
     }
 
-    // Step 4: In case file not uploaded
+    
     return redirect()->back()->with('error', 'Image upload failed');
 }
 

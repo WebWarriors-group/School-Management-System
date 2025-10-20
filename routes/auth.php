@@ -24,7 +24,7 @@ use App\Mail\WelcomeEmail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    // Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+   
     
     Route::get('login/{student?}', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login/{student?}', [AuthenticatedSessionController::class, 'store'])->name('login');
@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-    // Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    
 });
 
 
@@ -60,8 +60,7 @@ Route::middleware('auth', 'admin')->group(function () {
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
 
-    //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    // Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
+ 
 
     Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
 
@@ -69,7 +68,7 @@ Route::middleware('auth', 'admin')->group(function () {
 
 
 Route::middleware('auth', 'teacher')->group(function () {
-    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+   
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
    
@@ -77,7 +76,7 @@ Route::get('/leave', function () {
     $user_id = Auth::id();
     return inertia::render('Teacher/LeaveRequest',[
         'user_id' => $user_id,
-    ]); // This should return the Inertia page
+    ]); 
 })->name('leave');
 
 });
@@ -85,13 +84,9 @@ Route::get('/leave', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
-    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+    
     Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
-    // Route::post('/marks', [MarkController::class, 'store']);
-    // Route::get('/marks', [MarkController::class, 'create']);
-    // Route::get('/marks/{id}', [MarkController::class, 'show']);
-    // Route::put('/marks/{id}', [MarkController::class, 'update']);
-    // Route::delete('/marks/{id}', [MarkController::class, 'destroy']);
+    
     Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
 });
 

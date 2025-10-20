@@ -50,7 +50,7 @@ Route::get('registrationForms', [RegistrationFormController::class, 'registratio
 Route::get('/', function () {
     $categories = GalleryCategory::with('images')->get();
 
-    return Inertia::render('homepage', [  // your React page name
+    return Inertia::render('homepage', [  
         'categories' => $categories,
     ]);
 
@@ -88,7 +88,7 @@ Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
     });
 });
 
-// routes/api.php
+
 Route::get('/student-gender-stats', [TeacherController::class, 'studentGenderStats']);
 
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
@@ -122,7 +122,7 @@ Route::get('/Admin/techerInfo', function () {
 
 
 Route::get('/teacher_requests', function () {
-    return inertia::render('Admin/TeacherRequests'); // This should return the Inertia page
+    return inertia::render('Admin/TeacherRequests'); 
 })->name('teacher_requests');
 Route::get('/Admin/TeacherRequests', function () {
     return Inertia::render('Admin/teacher');
@@ -172,7 +172,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
 });
 
-// Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
+
 
 
 Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
@@ -192,18 +192,15 @@ Route::get('/Admin/LeaveRequests', function () {
     return Inertia::render('Admin/teacher');
 });
 Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
-//D:\schoolProj\School-Management-System\resources\js\pages\Admin\teacherAttendance.tsx
-//Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 
-    // Your Dashboard route
+
+    
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // This is the route that loads your React Subject Management page via Inertia.
-    // It's under the 'web' middleware group (implicitly or explicitly if added).
-   // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
+    
 
 
     
@@ -224,13 +221,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware('auth')->group(function () {
       Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    // Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+   
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
 Route::get('/students/all', function () {
     return Inertia::render('Student/ViewAllStudents', [
-        // You can pass props here
+       
     ]);
 })->name('students.all');
 
@@ -239,7 +236,7 @@ Route::get('/students/all', function () {
 Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
 Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
 
-// web.php
+
 Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
 Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index']);
 
@@ -262,7 +259,7 @@ Route::get('/broadcast-test', function () {
         'subject' => 'Science',
         'uploaded_by' => auth()->id(),
         'category' => 'General',
-        'file_url' => 'materials/sample-test-notes.pdf',  // dummy file path
+        'file_url' => 'materials/sample-test-notes.pdf',  
     ]);
 
     event(new \App\Events\StudyMaterialUploaded($material));
@@ -289,9 +286,7 @@ Route::post('/category', [GalleryImageController::class, 'storeCategory']);
 
 
 
-//  Route::get('/classes/{classId}/students', [MarkController::class, 'index']);
 
-// Route::post('/marks/bulk', [MarkController::class, 'storeBulkMarks']);
 Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
 Route::get('/marks', [MarkController::class, 'getMarks']);
 Route::post('/marks/update', [MarkController::class, 'updateMark']);

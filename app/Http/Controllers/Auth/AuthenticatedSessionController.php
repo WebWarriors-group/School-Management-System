@@ -14,9 +14,7 @@ use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Show the login page.
-     */
+    
     public function create(Request $request, ?string $student = null): Response
     {
         if (!$student){
@@ -30,16 +28,14 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
+    
     public function store(LoginRequest $request, ?string $student = null): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
         $user = Auth::user();
 
-        // Redirect based on the user's role
+        
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'teacher') {
@@ -59,7 +55,7 @@ class AuthenticatedSessionController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            // Redirect based on the user's role
+           
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role === 'teacher') {
@@ -74,9 +70,7 @@ class AuthenticatedSessionController extends Controller
         }
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
+   
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
