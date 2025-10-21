@@ -66,7 +66,7 @@ useEffect(() => {
 
   const fetchStudents = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/students');
+      const res = await fetch(`${window.location.origin}/api/students`);
       const data = await res.json();
       setStudents(data.data.filter((student: { class: any; personal: any; }) => student.class && student.personal));
       console.log('Sample student:', data.data[0]);
@@ -82,7 +82,7 @@ useEffect(() => {
 
   const handlePerformanceClick = async (student: Student) => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/students/${student.reg_no}/performance`);
+      const res = await fetch(`${window.location.origin}/api/students/${student.reg_no}/performance`);
       if (!res.ok) throw new Error('Failed to fetch performance');
       const data = await res.json();
       console.log('Fetched Students:', data.data);
