@@ -55,7 +55,7 @@ export default function StudentPerformanceLineChart() {
       try{
         setIsLoading(true);
         setError(null);
-        const response = await fetch('${window.location.origin}/api/student/performance');
+        const response = await fetch(`${window.location.origin}/api/student/performance`);
 
         if (!response.ok) {
           const errorText = await response.text();
