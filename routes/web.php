@@ -28,6 +28,7 @@ use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
+use App\Http\Controllers\AttendanceController;
 
 
 
@@ -94,9 +95,26 @@ Route::get('/student/academic', [StudentController::class, 'academicPage']);
 
 
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendance', [StudentAttendanceController::class, 'index'])->name('attendance.page');
 
+    // API endpoints
+    Route::get('/api/attendance', [StudentAttendanceController::class, 'fetch']);   // list
+    Route::post('/api/attendance', [StudentAttendanceController::class, 'store']);  // create / mark
+    Route::get('/api/attendance/{id}', [StudentAttendanceController::class, 'show']); // single
+    Route::put('/api/attendance/{id}', [StudentAttendanceController::class, 'update']); // update
+    Route::delete('/api/attendance/{id}', [StudentAttendanceController::class, 'destroy']); // delete
 
+    // Summary
+    Route::get('/api/attendance-summary', [StudentAttendanceController::class, 'summary']);
+});
 
+Route::get('/student-attendance', function () {
+    return inertia::render('Teacher/Attendance'); 
+})->name('student-attendance');
+Route::get('/Teacher/Attendance', function () {
+    return Inertia::render('Teacher/dashboard');
+});
 
 Route::get('/teacher-info', function () {
     return inertia::render('Admin/techerInfo'); 

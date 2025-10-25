@@ -436,7 +436,7 @@ const assignedClassAvg =
               {/* Attendance Box */}
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📅 Attendance</h3>
-                <Link href="/leave_details">
+                <Link href="/student-attendance">
                   <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
                     Attendance Details
                   </button>
