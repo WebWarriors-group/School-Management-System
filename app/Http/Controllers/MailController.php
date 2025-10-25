@@ -8,7 +8,7 @@ use App\Mail\ContactFormMail;
 
 class MailController extends Controller
 {
-    //
+    
 
     public function sendContactMail(Request $request){
         $contact_data  = [];

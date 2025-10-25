@@ -6,19 +6,20 @@ interface StudentPersonal {
   full_name: string;
   full_name_with_initial: string;
   birthday: string;
-  age: string;
+  age: number | null;
   ethnicity: string;
   religion: string;
   gender: string;
-  birth_certificate_number: string;
-  nic_number: string;
-  postal_ic_number: string;
+  birth_certificate_number: string | null;
+  nic_number: string | null;
+  postal_ic_number: string | null;
   address: string;
   special_needs: boolean;
-  height: string;
-  weight: string;
+  height: number | null;
+  weight: number | null;
   photo: string | null;
 }
+
 
 interface ViewStudentProps {
   student: Student | null;
@@ -38,7 +39,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
       setLoading(true);
       setError(null);
 
-      fetch(`/api/student-personal/${student.reg_no}`)
+      fetch(`/api/student/${student.reg_no}/personal`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch personal info");
           return res.json();
@@ -93,7 +94,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
 
   if (!isOpen || !student) return null;
 
-  // Group fields by category
+  
   const basicInfoFields = [
     { key: "full_name", label: "Full Name", icon: <User size={16} /> },
     { key: "full_name_with_initial", label: "Name with Initial", icon: <User size={16} /> },
@@ -127,7 +128,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
     <div className="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50 p-4">
 
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
+        {}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
           <div className="flex justify-between items-start">
             <div>
@@ -145,7 +146,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
           </div>
         </div>
 
-        {/* Main Content */}
+        {}
         <div className="overflow-y-auto flex-grow p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           {loading && (
             <div className="col-span-2 text-center py-10">
@@ -161,7 +162,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
 
           {!loading && personalInfo && editData && (
             <>
-                          {/* Photo Card */}
+                          {}
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
                   <span className="bg-purple-100 text-purple-800 p-1 rounded-lg">
@@ -194,7 +195,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
                   )}
                 </div>
               </div>
-              {/* Basic Information Card */}
+              {}
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
                   <span className="bg-blue-100 text-blue-800 p-1 rounded-lg">
@@ -225,7 +226,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
 
 
 
-              {/* Identity Information Card */}
+              {}
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
                   <span className="bg-green-100 text-green-800 p-1 rounded-lg">
@@ -254,7 +255,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
                 </div>
               </div>
 
-              {/* Cultural Information Card */}
+              {}
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
                   <span className="bg-pink-100 text-pink-800 p-1 rounded-lg">
@@ -283,7 +284,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
                 </div>
               </div>
 
-              {/* Physical Information Card */}
+              {}
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
                   <span className="bg-yellow-100 text-yellow-800 p-1 rounded-lg">
@@ -330,7 +331,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
                 </div>
               </div>
 
-              {/* Address Card */}
+              {}
               <div className="bg-gray-50 rounded-xl border border-gray-200 p-5 md:col-span-2">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4 pb-2 border-b">
                   <span className="bg-indigo-100 text-indigo-800 p-1 rounded-lg">
@@ -362,7 +363,7 @@ const StudentPersonalView: React.FC<ViewStudentProps> = ({ student, isOpen, onCl
           )}
         </div>
 
-        {/* Action Buttons */}
+        {}
         <div className="bg-gray-50 border-t p-6 flex flex-wrap justify-between gap-3">
           <div>
             {isEditing ? (

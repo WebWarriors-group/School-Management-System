@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 
-import { Ziggy } from '@/ziggy'; // 👈 adjust this path based on where Ziggy is published
-import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";// adjust the path if needed
+import { Ziggy } from '@/ziggy'; 
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 
 interface Subject {
   subject_id: string;
@@ -32,7 +32,7 @@ const SubjectsIndex = ({ subjects }: Props) => {
     if (selectedSubjectId) {
       router.delete(route('subjects.destroy', selectedSubjectId,undefined, Ziggy), {
         onSuccess: () => {
-          router.reload(); // reload page to refresh the list after deletion
+          router.reload(); 
         },
       });
     }
@@ -46,7 +46,7 @@ const SubjectsIndex = ({ subjects }: Props) => {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 text-sm">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-800">📚 Subject Management</h1>
           <button
@@ -57,7 +57,7 @@ const SubjectsIndex = ({ subjects }: Props) => {
           </button>
         </div>
 
-        {/* Table */}
+        {}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {subjects.length === 0 ? (
             <div className="p-8 text-center text-gray-500 text-sm">No subjects found.</div>
@@ -101,7 +101,7 @@ const SubjectsIndex = ({ subjects }: Props) => {
           )}
         </div>
 
-        {/* Confirm Delete Modal */}
+        {}
         <ConfirmDeleteModal
           isOpen={isModalOpen}
           onClose={closeDeleteModal}

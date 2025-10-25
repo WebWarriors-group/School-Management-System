@@ -8,7 +8,7 @@ interface StudentPersonal {
 
 interface Student {
   reg_no: string;
-  studentpersonal?: StudentPersonal;
+  personal?: StudentPersonal;
 }
 
 interface Class {
@@ -45,7 +45,7 @@ export default function ClassIndex({ classes }: Props) {
     e.preventDefault();
     editing ? put(`/classes/${data.class_id}`) : post('/classadd');
     setEditing(false);
-    // ✅ Keep openClassId visible (don’t reset here unless you want to close the student section)
+    
   };
 
   const editClass = (cls: Class) => {
@@ -63,7 +63,7 @@ export default function ClassIndex({ classes }: Props) {
     setOpenClassId(openClassId?.class_id === cls.class_id ? null : cls);
   };
 
-  // Grade summary calculation
+  
   const gradeSummary = classes.reduce<Record<string, number>>((acc, cls) => {
     const grade = String(cls.grade);
     const count = Number(cls.studentacademics_count) || 0;
@@ -73,7 +73,7 @@ export default function ClassIndex({ classes }: Props) {
 
   return (
     <>
-      {/* Summary Cards */}
+      {}
       <div className="mb-8">
    <h1 className="text-2xl font-bold text-white  bg-gradient-to-br from-blue-900 to-sky-700  text-center py-3 ">Grade Summary</h1>
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-13">
@@ -93,7 +93,7 @@ export default function ClassIndex({ classes }: Props) {
           </p>
         </div>
         <p className="text-sm text-blue-600 mt-2">
-          Last updated: {/* Add dynamic time if needed */}
+          Last updated: {}
         </p>
       </div>
     ))}
@@ -152,7 +152,7 @@ export default function ClassIndex({ classes }: Props) {
           </button>
         </form>
 
-        {/* Class Table */}
+        {}
        <table className="w-full table-auto border-collapse shadow-md  overflow-hidden">
   <thead className="bg-blue-200 text-black text-sm uppercase ">
     <tr>
@@ -211,36 +211,36 @@ export default function ClassIndex({ classes }: Props) {
 
       </div>
 
-      {/* Student Detail View */}
+      {}
       {openClassId && (
         <div className="bg-white shadow-xl rounded-xl p-8 mt-6 space-y-8">
-  {/* Class Title */}
+  {}
   <h3 className="text-3xl font-bold text-sky-900">
     📘 Class: {openClassId.grade} - {openClassId.section}
   </h3>
 
-  {/* Class Info Cards */}
+  {}
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-800">
-    {/* Class Teacher */}
+    {}
     <div className="bg-gradient-to-br from-sky-900 to-sky-600 text-white  shadow p-6 text-center">
       <p className="text-sm uppercase tracking-wide font-medium mb-1">Class Teacher</p>
       <p className="text-xl font-bold">{openClassId.teacher_NIC}</p>
     </div>
 
-    {/* Class Name */}
+    {}
     <div className="bg-gradient-to-r from-pink-800 to-purple-900 border border-gray-200  shadow p-6 text-center">
       <p className="text-sm uppercase tracking-wide font-semibold text-white mb-1">Class Name</p>
       <p className="text-xl font-bold text-white">{openClassId.class_name}</p>
     </div>
 
-    {/* Total Students */}
+    {}
     <div className="bg-gradient-to-br from-indigo-900 to-purple-400 text-white  shadow p-6 text-center">
       <p className="text-sm uppercase tracking-wide font-medium mb-1">Total Students</p>
       <p className="text-xl font-bold">{openClassId.studentacademics_count}</p>
     </div>
   </div>
 
-  {/* Students Table */}
+  {}
   <div className="overflow-x-auto  shadow-md border border-gray-200">
     <table className="w-full text-sm text-left">
       <thead className="bg-blue-200 text-black uppercase text-sm tracking-wider">
@@ -261,9 +261,9 @@ export default function ClassIndex({ classes }: Props) {
             >
               <td className="px-6 py-3 border-r">{student.reg_no}</td>
               <td className="px-6 py-3 border-r">
-                {student.studentpersonal?.full_name_with_initial || 'Not Available'}
+                {student.personal?.full_name_with_initial}
               </td>
-              <td className="px-6 py-3">{student.studentpersonal?.gender ?? 'N/A'}</td>
+              <td className="px-6 py-3">{student.personal?.gender ?? 'N/A'}</td>
             </tr>
           ))
         ) : (

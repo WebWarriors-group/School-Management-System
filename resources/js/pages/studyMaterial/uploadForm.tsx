@@ -30,7 +30,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
     const [error, setError] = useState<string | null>(null);
     const [csrfToken, setCsrfToken] = useState<string>("");
 
-    // Get CSRF token when component mounts
+    
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         if (token) {
@@ -49,7 +49,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
         if (e.target.files && e.target.files.length > 0) {
             const file_got = e.target.files[0];
             
-            // Validate file size (10MB)
+            
             if (file_got.size > 50 * 1024 * 1024) {
                 setError("File size must be less than 50MB");
                 return;
@@ -94,7 +94,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                 }
             });
 
-            // Reset form on success
+            
             setFormData({
                 title: "",
                 grade: 0,
@@ -104,7 +104,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                 year: currentYear,
             });
             
-            alert("Upload successful!");
+           
             if (onClose) onClose();
             console.log(response.data);
             
@@ -114,7 +114,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
             let errorMessage = "Upload failed. Please try again.";
             if (axios.isAxiosError(error)) {
                 if (error.response?.data?.errors) {
-                    // Handle Laravel validation errors
+                   
                     errorMessage = Object.values(error.response.data.errors).flat().join('\n');
                 } else if (error.response?.data?.message) {
                     errorMessage = error.response.data.message;
@@ -142,7 +142,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {/* Title Field */}
+                {}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Title</label>
                     <input
@@ -155,7 +155,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                     />
                 </div>
 
-                {/* Grade Field */}
+                {}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Grade</label>
                     <select
@@ -172,7 +172,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                     </select>
                 </div>
 
-                {/* Subject Field */}
+                {}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Subject</label>
                     <select
@@ -191,7 +191,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                     </select>
                 </div>
 
-                {/* Relevant Year */}
+                {}
                 <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">Relevant Year</label>
                     <div className="mt-1 relative">
@@ -218,7 +218,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ category, onClose }) => {
                     </p>
                 </div>
 
-                {/* File Upload */}
+                {}
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-1">File</label>
                     <div className="relative">

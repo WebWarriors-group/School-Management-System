@@ -10,13 +10,13 @@ class Teacher extends Model
 {
     use HasFactory;
   use SoftDeletes;
-    protected $table = 'teacher_work_infos'; // Specify the correct table name
+    protected $table = 'teacher_work_infos'; 
 
-    protected $primaryKey = 'teacher_NIC'; // Define primary key
+    protected $primaryKey = 'teacher_NIC'; 
 
-    public $incrementing = false; // Important because teacher_NIC is a string
+    public $incrementing = false; 
 
-    protected $keyType = 'string'; // Ensures teacher_NIC is treated as a string
+    protected $keyType = 'string'; 
 
     protected $fillable = [
         'teacher_NIC',

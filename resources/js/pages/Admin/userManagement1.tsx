@@ -70,9 +70,9 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
             { page },
             {
                 preserveState: true,
-                preserveScroll: true, // This ensures the scroll position is maintained
+                preserveScroll: true, 
                 onSuccess: () => {
-                    window.scrollTo(0, currentScrollPosition); // Restore the scroll position after loading
+                    window.scrollTo(0, currentScrollPosition); 
                 },
             },
         );
@@ -144,30 +144,37 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-            <header className="sticky top-1 flex w-full items-center border-b bg-white p-4 shadow-sm ">
-                {/* <h5 className="text-maroon text-xl ">Admin dashboard</h5> */}
+           
 
-                <button className="cursor-pointer text-[18px]" onClick={handleClick}>
+            <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
+          
+          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
+            Classes,Students,Subjects Overall performance
+          </p>
+
+          <button className="cursor-pointer text-[18px]" onClick={handleClick}>
                     <p>
                         {' '}
                         <i className="fa fa-user"></i> User
                     </p>
                 </button>
-            </header>
+        </div>
+      </header>
             {!isVisible ? (
                 <>
-                    <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-100">
+                    <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-200">
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
                             {cards.map((card, index) => (
                                 <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-lg transition hover:shadow-md">
-                                    {/* Colored square icon */}
+                                    {}
                                     <div
                                         className={`absolute z-0 -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}
                                     >
                                         <span className="text-lg">{card.icon}</span>
                                     </div>
 
-                                    {/* Push content down to make space for the icon box */}
+                                    {}
                                     <div className="mt-[-40px] ml-30 pt-8">
                                         <p className="text-sm text-gray-500">{card.title}</p>
                                         <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
@@ -181,7 +188,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                             <UserRolesPieChart roleCounts={roleCounts} secondRoleCounts={secondRoleCountsData} />
                         </div>
 
-                        {/* <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/>   */}
+                        {}
 
                         <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                             <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>
@@ -197,7 +204,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users?.data?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                    {users?.data?.length > 0 ? ( 
                                         users.data.map((user) => (
                                             <tr key={user.id} className="text-[16px] hover:bg-gray-50">
                                                 <td className="border px-4 py-2">{user.email}</td>
@@ -218,7 +225,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                 </tbody>
                             </table>
 
-                            {/* Pagination Controls */}
+                            {}
                             <div className="flex justify-between">
                                 <button
                                     disabled={users.current_page === 1}
@@ -253,13 +260,11 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {activeSessions?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
+                                    {activeSessions?.length > 0 ? ( 
                                         activeSessions.map((session) => (
                                             <tr key={session.id} className="hover:bg-gray-50">
-                                                {/* <td className="border px-4 py-2">
-                                       {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
-                                   </td> */}
-                                                {/* <td className="border px-4 py-2">{session.id}</td> */}
+                                                {}
+                                                {}
                                                 <td className="border px-4 py-2">{session.user.name}</td>
                                                 <td className="border px-4 py-2">{session.user.email}</td>
                                                 <td className="border px-4 py-2">{session.ip_address}</td>

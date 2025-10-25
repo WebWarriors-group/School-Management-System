@@ -1,6 +1,6 @@
-// src/pages/Student/StudentPerformanceCard.tsx
 import React, { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
+import AppLayout from '@/layouts/app-layout';
 
 export type Mark = {
   subject_id: number;
@@ -55,30 +55,30 @@ export default function StudentPerformanceCard({ student, onClose }: Props) {
   };
 
   return (
-    <main className="min-h-screen  inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 ">
+   
+    <main className="min-h-screen flex justify-center items-center z-50 mt-10 ">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 py-4 relative">
-        {/* Close */}
+      
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl"
+          className="absolute  text-gray-600 hover:text-gray-800 text-2xl"
         >
           &times;
         </button>
 
-        <div className="p-6 max-h-[90vh] overflow-auto" ref={reportRef}>
+        <div className="p-6 max-h-[180vh] " ref={reportRef}>
            <div className="relative text-center py-10 overflow-hidden">
 
-  {/* Background image */}
+ 
   <img
     src="/images/tag4"
     alt="Background"
     className="absolute inset-0 w-full h-full object-cover"
   />
 
-  {/* Gradient overlay */}
   <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-purple-700/80"></div>
 
-  {/* Text content */}
+
   <div className="relative z-10">
     <h1 className="text-3xl font-bold text-white uppercase">Student Report Card</h1>
     <p className="text-gray-200 text-lg mt-2">Academic Performance Summary</p>
@@ -161,8 +161,8 @@ export default function StudentPerformanceCard({ student, onClose }: Props) {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-100">
-                  {student.marks.map((mark) => (
-                    <tr key={mark.subject_id} className="hover:bg-sky-100">
+                  {student.marks.map((mark, idx) => (
+                    <tr key={`${mark.subject_id}-${idx}`} className="hover:bg-sky-100">
                       <td className="px-6 py-4 text-sm text-gray-700">{mark.subject_id}</td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">{mark.subject_name}</td>
                       <td className="px-6 py-4 text-sm text-right text-blue-700 font-semibold">{mark.marks_obtained}</td>

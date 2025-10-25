@@ -5,6 +5,15 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  server:{
+    proxy:{
+      '/api/quotable':{
+        target: 'https://api.quotable.io',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/quotable/, ''),
+      }
+    }
+  },
   plugins: [
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.tsx'],
@@ -23,13 +32,13 @@ export default defineConfig({
     },
   },
 
-  // ✅ Fix big chunk warning
+  
   build: {
-    chunkSizeWarningLimit: 1000, // allow larger chunks before warning
+    chunkSizeWarningLimit: 1000, 
     rollupOptions: {
       output: {
         manualChunks: {
-          // split these into separate files
+        
           react: ['react', 'react-dom'],
           pdf: ['html2pdf.js'],
         },

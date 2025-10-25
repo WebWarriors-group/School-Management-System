@@ -14,7 +14,7 @@ class ActiveSessionController extends Controller
     public function loginRedirection()
     {
         if (!Auth::check()) {
-            return Inertia::location(route('login'));
+            return Inertia::render('auth/loginType');
         }
 
         $user = Auth::user();

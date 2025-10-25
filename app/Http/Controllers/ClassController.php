@@ -14,9 +14,7 @@ use Inertia\Inertia;
 
 class ClassController extends Controller
 {
-    /**
-     * Display a listing of classes.
-     */
+    
     public function index()
     {
        
@@ -72,9 +70,7 @@ public function assignTeachers(Request $request)
     return ;
 }
 
-    /**
-     * Store a new class.
-     */
+    
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -90,13 +86,11 @@ public function assignTeachers(Request $request)
     }
     public function count()
     {
-        $count = ClassModel::count(); // Adjust model name if it's not SchoolClass
+        $count = ClassModel::count(); 
         return response()->json(['count' => $count]);
     }
     
-    /**
-     * Display a specific class.
-     */
+    
     public function show($id)
     {
         $class = ClassModel::find($id);
@@ -128,9 +122,7 @@ public function assignTeachers(Request $request)
         return response()->json($class, 200);
     }
 
-    /**
-     * Delete a class.
-     */
+    
     public function destroy($id)
     {
         $class = ClassModel::find($id);
@@ -174,16 +166,12 @@ public function reset(Request $request)
     $className = $request->input('class_name');
     $grade = $request->input('grade');
 
-    // Assuming you have a Class model with class_name and grade columns
-    // and SubjectTeacher model with teacher_NIC that you want to nullify
-
-    // Get the relevant classes/sections matching class_name and grade
+    
     $classIds = ClassModel::where('class_name', $className)
         ->where('grade', $grade)
         ->pluck('class_id');
 
-    // Update all assignments for those classes to set teacher_NIC to null
-    // SubjectTeacher::query()->update(['teacher_NIC' => null]);
+   
     ClassModel::query()->update(['teacher_NIC' => null]);
 
     return redirect()->back();

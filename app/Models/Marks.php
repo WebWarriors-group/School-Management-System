@@ -9,24 +9,49 @@ class Marks extends Model
 {
     use HasFactory;
 
-    protected $table = 'marks'; // Table name
+    protected $table = 'marks';
 
     protected $fillable = [
         'reg_no',
         'subject_id',
         'marks_obtained',
-        'grade'
+        'grade',
+        'term',
+        'year',
+        'class_id',          
     ];
 
-    // Relationship with StudentAcademicInfo (assuming 'reg_no' is the primary key in student_academic_info)
+    
     public function student()
     {
         return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
     }
 
-    // Relationship with Subject
+    public function classModel()
+{
+    return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
+}
+
+    
     public function subject()
     {
         return $this->belongsTo(Subject::class, 'subject_id', 'subject_id');
     }
+
+    public function studentAcademic()
+{
+    return $this->belongsTo(StudentAcademic::class, 'reg_no', 'reg_no');
 }
+
+public function getClassYearAttribute()
+    {
+        return $this->studentAcademic?->class?->year;
+    }
+
+    public function getClassGradeAttribute()
+    {
+        return $this->studentAcademic?->class?->grade;
+    }
+}
+
+

@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type FormData={
    teacher_NIC: string;
-   user_id:number;
   personal:{
   Full_name: string;
   Full_name_with_initial: string;
@@ -37,11 +36,11 @@ type FormData={
   appointed_date: string;
   work_acceptance_date: string;
   
-  // New Fields
+ 
   appointment_type: string;
-  salary_increment_date: string; // ISO format date (YYYY-MM-DD)
+  salary_increment_date: string;
   current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
-  work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
+  work_acceptance_date_school: string; 
   temporary_attachedschool_or_institute_name: string;
   appointed_subject: string;
   which_grades_teaching_done: string;
@@ -83,7 +82,7 @@ type FormData={
 }
 type TeacherRequest = {
   id: number;
-  form_data: FormData; // ✅ use correct key matching backend
+  form_data: FormData; 
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
 };
@@ -111,7 +110,7 @@ export default function TeacherRequests()  {
   const requests = props?.requests ?? [];
   console.log("Teacher Requests:", requests);
 
-  // Separate requests into pending and rejected
+  
   const pendingRequests = requests.filter(req => req.status === 'pending');
   const rejectedRequests = requests.filter(req => req.status === 'rejected');
   const [expanded, setExpanded] = useState(false);
@@ -149,9 +148,7 @@ const handleReject = (id: number) => {
       
       router.visit('/admin/teacher-requests');
     }
-   // router.visit('/admin/reset');
-    // If there is some condition or a form has been successfully submitted, redirect
-    // router.visit('/admin/teacher-requests');
+   
 }, []);
 
 
@@ -185,7 +182,7 @@ const handleReject = (id: number) => {
           <div className="mt-6 border border-gray-300 rounded-lg bg-gray-200 p-8 shadow-inner  bg-cover bg-center ">
             
                     <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 text-m text-gray-800 ">
-        {/* Personal Info */}
+        {}
        <div className="bg-white text-gray-800 shadow-2xl    p-10">
   <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
     PERSONAL INFORMATION
@@ -234,7 +231,7 @@ const handleReject = (id: number) => {
           </div>
           </div>
 
-          {/* Address Info */}
+          {}
 
          
 
@@ -244,7 +241,6 @@ const handleReject = (id: number) => {
   </h3>
    <div className=" grid grid-cols-2 text-lg  text-left  space-y-4 space-x-3 text-gray-600">
                            <p><strong>Appointed Date:</strong> {req.form_data?.appointed_date ?? "N/A"}</p>
-                            <p><strong>User id:</strong> {req.form_data?.user_id ?? "N/A"}</p>
           <p><strong>Work Acceptance Date:</strong> {req.form_data?.work_acceptance_date ?? "N/A"}</p>
           <p><strong>Appointment Type:</strong> {req.form_data?.appointment_type ?? "N/A"}</p>
           <p><strong>Salary Increment Date:</strong> {req.form_data?.salary_increment_date ?? "N/A"}</p>
@@ -265,9 +261,9 @@ const handleReject = (id: number) => {
           <p><strong>Salary Sheet No:</strong> {req.form_data?.number_in_salary_sheet ?? "N/A"}</p>
          </div>
          </div>
-          {/* Qualifications */}
+          {}
 
-          {/* Other Service Info */}
+          {}
  <div className="bg-white text-gray-800 shadow-2xl w-full   p-10">
                        <h3 className="font-bold text-lg text-white mb-6 text-center rounded-md bg-gradient-to-br from-indigo-900 to-purple-700 py-3 shadow-md">
         OTHER SERVICES INFORMATIONS
@@ -303,7 +299,7 @@ const handleReject = (id: number) => {
               
               <p><strong>Submitted on:</strong> {new Date(req.created_at).toLocaleString()}</p>
 
-              {/* You can show more fields from req.data if needed */}
+              {}
               <div className="mt-2 space-x-2">
                 <button
                   onClick={() => handleApprove(req.id)}
@@ -323,7 +319,7 @@ const handleReject = (id: number) => {
         </div>
         </div>
       )}
-      {/* Rejected Requests */}
+      {}
       {rejectedRequests.length === 0 ? (
         <p>No rejected requests.</p>
       ) : (
@@ -340,7 +336,7 @@ const handleReject = (id: number) => {
                 >
                   Approve
                 </button>
-                {/* Optionally you can remove the reject button here */}
+                {}
               </div>
             </div>
           ))}

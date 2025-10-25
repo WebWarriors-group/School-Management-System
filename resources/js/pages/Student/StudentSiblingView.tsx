@@ -30,7 +30,7 @@ const StudentSiblingView: React.FC<ViewStudentProps> = ({ student, isOpen, onClo
       setLoading(true);
       setError(null);
 
-      fetch(`/api/student-sibling/${student.reg_no}`)
+      fetch(`/api/student/${student.reg_no}/sibling`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch sibling info");
           return res.json();
@@ -124,7 +124,7 @@ const StudentSiblingView: React.FC<ViewStudentProps> = ({ student, isOpen, onClo
    <div className="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50 p-4">
 
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
+        {}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
           <div className="flex justify-between items-start">
             <div>
@@ -142,7 +142,7 @@ const StudentSiblingView: React.FC<ViewStudentProps> = ({ student, isOpen, onClo
           </div>
         </div>
 
-        {/* Main Content */}
+        {}
         <div className="overflow-y-auto flex-grow p-6">
           {loading && (
             <div className="text-center py-10">
@@ -232,7 +232,7 @@ const StudentSiblingView: React.FC<ViewStudentProps> = ({ student, isOpen, onClo
           )}
         </div>
 
-        {/* Action Buttons */}
+        {}
         <div className="bg-gray-50 border-t p-6 flex flex-wrap justify-between gap-3">
           <div>
             {anyEditing && (

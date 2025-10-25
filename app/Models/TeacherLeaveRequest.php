@@ -1,6 +1,6 @@
 <?php
 
-// app/Models/TeacherLeaveRequest.php
+
 
 namespace App\Models;
 

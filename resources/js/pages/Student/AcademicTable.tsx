@@ -1,24 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { PersonalRecord } from '@/types';
+import { Student } from '@/types';
 import { Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import ViewStudent from '../Admin/ViewStudent';
 import StudentPreviewCard from './StudentPreviewCard';
 
-type AcademicRecord = {
-  reg_no: number;
-  student_id_no: string;
-  class_id: number;
-  distance_to_school: number | null;
-  method_of_coming_to_school: string | null;
-  grade_6_9_asthectic_subjects: string | null;
-  grade_10_11_basket1_subjects: string | null;
-  grade_10_11_basket2_subjects: string | null;
-  grade_10_11_basket3_subjects: string | null;
-  receiving_any_scholarship: boolean;
-  receiving_any_grade_5_scholarship: boolean;
-  receiving_any_samurdhi_aswesuma: boolean;
-  admission_date: string; 
-};
+
 
 type PaginationData<T> = {
   current_page: number;
@@ -29,7 +15,7 @@ type PaginationData<T> = {
 };
 
 type AcademicTableProps = {
-  academicData: PaginationData<AcademicRecord>;
+  academicData: PaginationData<Student>;
 };
 
 export default function AcademicTable({ academicData }: AcademicTableProps) {
@@ -37,13 +23,13 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   const [filterClass, setFilterClass] = useState<number | ''>('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
-  const [selectedStudent, setSelectedStudent] = useState<AcademicRecord | null>(null);
-  const [previewStudent, setPreviewStudent] = useState<AcademicRecord | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student| null>(null);
+  const [previewStudent, setPreviewStudent] = useState<Student | null>(null);
   const [previewPosition, setPreviewPosition] = useState<{ x: number; y: number } | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  const handleRowClick = (e: React.MouseEvent, student: AcademicRecord) => {
+  const handleRowClick = (e: React.MouseEvent, student: Student) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setPreviewPosition({
       x: rect.left + window.scrollX,
@@ -53,15 +39,14 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   };
 
   const handleViewIconClick = async (e: React.MouseEvent, reg_no: number) => {
-    e.stopPropagation(); // Prevent row click from triggering
-    
+    e.stopPropagation(); 
     try {
       const response = await fetch(`/api/students/${reg_no}`);
       const data = await response.json();
       if (response.ok) {
-        setSelectedStudent(data as AcademicRecord);
+        setSelectedStudent(data as Student);
         setIsViewModalOpen(true);
-        setPreviewStudent(null); // Close preview when modal opens
+        setPreviewStudent(null); 
       } else {
         alert("Failed to load student details.");
       }
@@ -71,7 +56,6 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
     }
   };
 
-  // Close preview when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (previewRef.current && !previewRef.current.contains(e.target as Node)) {
@@ -87,7 +71,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   if (!academicData || !academicData.data) {
     return (
       <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
-        <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
+       
         <p className="text-gray-500">No academic data available.</p>
       </div>
     );
@@ -126,8 +110,10 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-full">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">📘 Academic Information</h2>
+
+    
+    <div className="p-6 bg-white shadow-md rounded-lg w-300 ml-[-40px]">
+      
 
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
@@ -152,29 +138,29 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm">
-          <thead className="bg-blue-100 text-blue-800">
+      <div className="overflow-x-auto w-290 ">
+         <table className="min-w-full  text-sm text-gray-700 w-290">
+           <thead className="bg-blue-200 text-left text-sm font-semibold uppercase text-black">
             <tr>
-              <th className="p-2 border font-semibold whitespace-nowrap">Reg. No</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Student ID</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Class</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Distance</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Method</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[120px]">Grade 6–9 Aesthetic</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket1</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket2</th>
-              <th className="p-2 border font-semibold whitespace-nowrap min-w-[140px]">Grade 10–11 Basket3</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Grade 5 Scholarship</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Aswesuma Scholarship</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">Any Other Scholarship</th>
-              <th className="p-2 border font-semibold whitespace-nowrap">View</th>
+              <th className="w-300 py-4">Reg. No</th>
+              <th className="px-2 py-4">StudentID</th>
+              <th className="px-2 py-4">Class</th>
+              <th className="px-2 py-4">Distance</th>
+              <th className="px-2 py-4">Method</th>
+              <th className="px-2 py-4">Grade 6–9 Aesthetic</th>
+              <th className="px-2 py-4"> 10–11 Basket1</th>
+              <th className="px-2 py-4">10–11 Basket2</th>
+              <th className="px-2 py-4">10–11 Basket3</th>
+              <th className="px-2 py-4"> 5 Scholarship</th>
+              <th className="px-2 py-4">Aswesuma Scholarship</th>
+              <th className="px-2 py-4">Any Other Scholarship</th>
+              <th className="px-2 py-4">View</th>
             </tr>
           </thead>
           <tbody>
             {currentData.length === 0 ? (
               <tr>
-                <td colSpan={13} className="text-center p-4 text-gray-500">
+                <td colSpan={13} className="px-6 py-6 text-center text-gray-500 border-b hover:bg-gray-50">
                   No records found.
                 </td>
               </tr>
@@ -182,40 +168,40 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
               currentData.map((student) => (
                 <tr 
                   key={student.reg_no} 
-                  className="border-t hover:bg-blue-50 cursor-pointer"
+                  className="border-b hover:bg-blue-50 cursor-pointer"
                   onClick={(e) => handleRowClick(e, student)}
                 >
-                  <td className="p-2 border">{student.reg_no}</td>
-                  <td className="p-2 border">{student.student_id_no}</td>
-                  <td className="p-2 border">{student.class_id}</td>
-                  <td className="p-2 border">{student.distance_to_school ?? '—'}</td>
-                  <td className="p-2 border">{student.method_of_coming_to_school ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap ">{student.grade_10_11_basket1_subjects ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap">{student.grade_10_11_basket2_subjects ?? '—'}</td>
-                  <td className="p-2 border whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
-                  <td className="p-2 border">
+                  <td className="px-2 py-4">{student.reg_no}</td>
+                  <td className="px-1 py-4">{student.student_id_no}</td>
+                  <td className="px-2 py-4">{student.class_id}</td>
+                  <td className="px-1 py-4">{student.distance_to_school ?? '—'}</td>
+                  <td className="px-1 py-4">{student.method_of_coming_to_school ?? '—'}</td>
+                  <td className="px-1 py-4">{student.grade_6_9_asthectic_subjects ?? '—'}</td>
+                  <td className="px-1 py-4">{student.grade_10_11_basket1_subjects ?? '—'}</td>
+                  <td >{student.grade_10_11_basket2_subjects ?? '—'}</td>
+                  <td className="px-6 py-4  whitespace-nowrap ">{student.grade_10_11_basket3_subjects ?? '—'}</td>
+                  <td className="px-6 py-4 ">
                     {student.receiving_any_grade_5_scholarship ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (
                       <span className="text-red-500 font-medium">No</span>
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 ">
                     {student.receiving_any_samurdhi_aswesuma ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (
                       <span className="text-red-500 font-medium">No</span>
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 ">
                     {student.receiving_any_scholarship ? (
                       <span className="text-green-600 font-medium">Yes</span>
                     ) : (
                       <span className="text-red-500 font-medium">No</span>
                     )}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 ">
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={(e) => handleViewIconClick(e, student.reg_no)}
@@ -258,8 +244,9 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         onStudentUpdated={(updated) => {
-          setSelectedStudent(updated);
-        }}
+          setSelectedStudent(updated) }}
+canEdit={true} 
+       
       />
       
       {previewStudent && previewPosition && (
@@ -274,6 +261,6 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
           />
         </div>
       )}
-    </div>
+    </div> 
   );
 }

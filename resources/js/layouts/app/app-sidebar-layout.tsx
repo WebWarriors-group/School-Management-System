@@ -8,19 +8,19 @@ import { usePage } from '@inertiajs/react';
 
 export default function AppSidebarLayout({ children, breadcrumbs = [] }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
     
-  // Get user role from backend via Inertia shared props
+  
   const { props } = usePage();
-  const role = props.auth?.user?.role || 'admin'; // fallback to 'admin' if role is not defined
+  const role = props.auth?.user?.role || 'admin'; 
 
   return (
     <AppShell variant="sidebar">
       
-      {/* Pass the role into Sidebar to show correct nav items */}
+      {}
       <AppSidebar role={role} />
       
       <AppContent variant="sidebar">
         
-        {/* 👇 Only show header if user is NOT a student */}
+        {}
         {(role !== 'student'&& role !=='teacher') && <AppSidebarHeader breadcrumbs={breadcrumbs}  />}
         
         {children}

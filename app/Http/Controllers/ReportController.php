@@ -88,9 +88,7 @@ class ReportController extends Controller
         ]);
     }
 
-    // Inside ReportController.php
-
-// Inside ReportController.php
+    
 
 public function overallPerformance()
 {
@@ -121,21 +119,7 @@ public function overallPerformance()
 
     })->toArray();
 
-    // return Inertia::render('Marks/ReportPage', [
-    //     'student' => [
-    //         'full_name' => $student->studentPersonal->full_name ?? 'N/A',
-    //         'reg_no' => $student->reg_no,
-    //         'class_name' => $student->class_name ?? ($student->class->class_name  ?? 'N/A'),
-    //         'grade' => $student->grade ?? ($student->class->grade ?? 'N/A'),
-    //         'section' => $student->section ?? ($student->class->section ?? 'N/A'),
-    //         'class_teacher_name' => optional(optional(optional($student->class)->teachers)->personal)->Full_name ?? 'N/A',
-    //         'total_marks' => $totalMarks,
-    //         'average_marks' => round($averageMarks, 2),
-    //         'rank' => $studentRank,
-    //         'marks' => $marksData,
-    //     ],
-    // ]);
-
+   
     
 
     $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))

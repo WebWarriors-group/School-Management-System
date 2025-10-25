@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\ClassModel; // your class model, rename as needed
+use App\Models\ClassModel; 
 use App\Models\Subject;
 use App\Models\Teacher;
-use App\Models\SubjectTeacher; // model for subjects_teacher pivot
+use App\Models\SubjectTeacher; 
 use DB;
 
 class TeacherAssignedController extends Controller
@@ -15,22 +15,22 @@ class TeacherAssignedController extends Controller
     
  public function index()
 {
-    // 1. Get all grades (distinct)
+    
     $grades = ClassModel::select('grade')->distinct()->orderBy('grade')->pluck('grade')->toArray();
 
-    // 2. Get all classes (all grades)
+    
     $classes = ClassModel::all();
 
-    // 3. Get all subjects (without grade info)
+   
     $subjects = Subject::all();
 
-    // 4. Get all teachers
+    
      $teachers = Teacher::with('qualifications', 'personal')->get();
 
-    // 5. Get all assignments (all classes)
+    
     $assignments = SubjectTeacher::all();
 
-    // 6. Get grade-subject mappings from pivot table
+    
     $gradeSubjects = DB::table('grade_subjects')->get();
 
     return Inertia::render('Admin/AssignTeachersPage', [
@@ -65,7 +65,9 @@ class TeacherAssignedController extends Controller
     SubjectTeacher::insert($assignments);
 
 
-    return redirect()->back()->with('success', 'Assignments saved successfully!');
+    return redirect()
+        ->route('teacher.index')
+        ->with('success', 'Assignments saved successfully!');
 }
 
     

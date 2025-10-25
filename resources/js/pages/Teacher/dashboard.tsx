@@ -34,7 +34,7 @@ type ClassModel = {
 type Teacher = {
   teacher_NIC: string;
   user_id: number;
-  class?: ClassModel[]; // <--- updated type
+  class?: ClassModel[]; 
   personal: { Full_name: string; Photo: string | null; Gender: string };
   appointed_subject: string;
   current_teaching_subject: string;
@@ -63,8 +63,7 @@ export default function Dashboard({ teacher }: { teacher: Teacher }) {
 
   const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
 
-  // Keep students as actual student objects
-// Fixed: works whether teacher.class is an object or array
+  
 const students = Array.isArray(teacher.class)
   ? teacher.class.flatMap(cls => cls.studentacademics ?? [])
   : teacher.class?.studentacademics ?? [];
@@ -82,7 +81,7 @@ console.log('teacher:', teacher);
 
 useEffect(() => {
   const stats = students.reduce((acc: Record<string, number>, s: StudentAcademic) => {
-    const gender = s.personal?.gender ?? 'Unknown'; // lowercase 'gender'
+    const gender = s.personal?.gender ?? 'Unknown'; 
     acc[gender] = (acc[gender] || 0) + 1;
     return acc;
   }, {});
@@ -95,7 +94,7 @@ useEffect(() => {
 
   const COLORS = ['#CC7722', '#FFBF00', '#34d399'];
 
-  // Calculate Average Marks for Teacher's Assigned Class
+  
   
 const assignedClassStudents = students.filter(
   (s: StudentAcademic) => s.class_name === teacher.assigned_class
@@ -115,21 +114,21 @@ const assignedClassAvg =
     : 0;
 
 
-  // Fetch leave stats
+ 
   useEffect(() => {
     fetch('/api/teacher/leave-stats')
       .then(res => res.json())
       .then(data => setLeaveStats(data));
   }, []);
 
-  // Fetch messages
+  
   useEffect(() => {
     fetch('/teacher/messages')
       .then(res => res.json())
       .then(data => setMessages(data));
   }, []);
 
-  // Save tasks to localStorage
+  
   useEffect(() => {
     localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
   }, [tasks]);
@@ -163,7 +162,7 @@ const assignedClassAvg =
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Teacher Dashboard" />
 
-      {/* Top Bar */}
+      {}
       <div className="bg-yellow-500 text-brown-900 text-md py-4 px-6 flex justify-between items-center ">
         <div>Welcome to Mahadivulwewa National School</div>
         <div className="space-x-4 hidden md:flex">
@@ -173,7 +172,7 @@ const assignedClassAvg =
         </div>
       </div>
 
-      {/* Navigation */}
+      {}
       <nav className="bg-[#650000] text-white py-3 px-6 shadow-md relative z-10">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -209,11 +208,11 @@ const assignedClassAvg =
         )}
       </nav>
 
-      {/* Main Grid */}
+      {}
       <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-4 gap-6 px-6 py-8 bg-gray-100">
-        {/* Sidebar */}
+        {}
         <aside className="lg:col-span-1 space-y-6">
-          {/* Profile */}
+          {}
           <div className="bg-white rounded-xl shadow-md p-6 text-center space-y-4">
             <h2 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
               👤 <span>My Profile</span>
@@ -237,12 +236,12 @@ const assignedClassAvg =
             </Link>
           </div>
 
-          {/* Calendar */}
+          {}
           <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
             <Calendar value={date} className="text-sm border border-gray-300 rounded-lg" />
           </div>
 
-          {/* Leave Summary */}
+          {}
           <div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-purple-700 mb-6">🏖️ Leave Summary</h2>
             <div className="flex justify-around mb-6">
@@ -272,7 +271,7 @@ const assignedClassAvg =
             </Link>
           </div>
 
-          {/* To-Do List */}
+          {}
           <div className="bg-white rounded-lg shadow p-4">
             <h2 className="text-lg font-semibold text-gray-700 mb-4">📌 To-Do</h2>
             <div className="flex mb-3">
@@ -309,7 +308,7 @@ const assignedClassAvg =
             </ul>
           </div>
 
-          {/* Messaging Dropdown */}
+          {}
           <div className="bg-white rounded-lg shadow">
             <button
               type="button"
@@ -353,15 +352,15 @@ const assignedClassAvg =
           </div>
         </aside>
 
-        {/* Main Content */}
+        {}
         <main className="lg:col-span-3 space-y-6">
-          {/* Banner */}
+          {}
           <div className="bg-gradient-to-r from-purple-800 to-indigo-800 text-white p-6 rounded-xl shadow">
             <h1 className="text-3xl font-bold">Welcome, {teacher.personal?.Full_name ?? "Teacher"}!</h1>
             <p className="text-sm">Explore your dashboard for insights and actions</p>
           </div>
 
-          {/* Teaching Info */}
+          {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-bold text-blue-700 mb-4">🎓 Teaching Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -385,7 +384,7 @@ const assignedClassAvg =
             </div>
           </div>
 
-          {/* Student Info & Performance */}
+          {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-bold text-red-700 mb-4">📚 Student Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -415,7 +414,7 @@ const assignedClassAvg =
 </div>
 
 
-              {/* Marks Box */}
+              {}
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📝 Marks</h3>
                 <Link href="/mark/MarksPage">
@@ -425,7 +424,7 @@ const assignedClassAvg =
                 </Link>
               </div>
 
-              {/* Performance Box */}
+              {}
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📈 Performance</h3>
                 <p className="text-sm text-gray-700">
@@ -433,7 +432,7 @@ const assignedClassAvg =
                 </p>
               </div>
 
-              {/* Attendance Box */}
+              {}
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📅 Attendance</h3>
                 <Link href="/student-attendance">
@@ -445,7 +444,7 @@ const assignedClassAvg =
 
             </div>
 
-            {/* Student Details Table */}
+            {}
             <div className="mt-8">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">👥 Student Details</h3>
               <div className="overflow-x-auto">
@@ -454,7 +453,7 @@ const assignedClassAvg =
                     <tr>
                       <th className="px-4 py-2 border">Name</th>
                       <th className="px-4 py-2 border">Gender</th>
-                      {/* <th className="px-4 py-2 border">Class</th> */}
+                      {}
                       <th className="px-4 py-2 border">Average Marks</th>
                       <th className="px-4 py-2 border">Attendance</th>
                     </tr>
@@ -464,7 +463,7 @@ const assignedClassAvg =
     <tr key={student.reg_no}>
       <td>{student.personal?.full_name ?? 'Not Assigned'}</td>
       <td>{student.personal?.gender ?? '—'}</td>
-      {/* <td>{teacher.class.class_name ?? '—'}</td> */}
+      {}
       <td>
         {student.marks?.length
           ? (student.marks.reduce((sum: number, m: any) => sum + (m.marks_obtained ?? 0), 0) / student.marks.length).toFixed(2)

@@ -9,10 +9,10 @@ class TeacherPersonal extends Model
 {
     use HasFactory;
 
-    protected $table = 'teachers_personal_info'; // Ensure correct table name
+    protected $table = 'teachers_personal_info'; 
     public $timestamps = false;
     protected $fillable = [
-        'teacher_NIC', // This is a foreign key, not the primary key
+        'teacher_NIC', 
         'Full_name',
         'Full_name_with_initial',
         'Photo',
@@ -32,7 +32,7 @@ class TeacherPersonal extends Model
         'is_verified',
     ];
 
-    // Define the relationship with Teacher (teacher_work_infos table)
+    
     public function teacher()
     {
         return $this->belongsTo(Teacher::class, 'teacher_NIC', 'teacher_NIC');
