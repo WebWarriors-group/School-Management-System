@@ -134,7 +134,7 @@ const missingColumns = REQUIRED_COLUMNS.filter(col => !headers.includes(col.toLo
                     setValidationErrors(
                         failures.map((f: any) => `Row ${f.row} [${f.attribute}]: ${f.errors.join(', ')}`)
                     );
-                    // Keep the dialog open to show errors
+                   
                 } else {
                     toast.success("🎉 Students imported successfully!");
                     fetchStudents();

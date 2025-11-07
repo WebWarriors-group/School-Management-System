@@ -194,41 +194,44 @@ export default function Navbar({ categories }: Props) {
           <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 mt-15 max-[639px]:text-3xl max-[639px]:mt-1">Image Gallery</h2>
           <div className=" bg-white grid flex-wrap grid-cols-4 space-x-2 space-y-6  pb-4 py-9 px-4 item-center justify-center " >
 
-          {open && categories.map((category) => (
-  <div
-    key={category.id}
-    className={`relative w-[280px] h-[180px] overflow-hidden shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer
-      ${openCategory?.id === category.id ? "ring-2 ring-blue-500" : "border border-gray-200"}`}
-    onClick={() => toggleCategory(category)}
-    style={{
-  backgroundImage: `url(/${encodeURIComponent(category.images[0].image_path)})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-}}
+            {open && categories.map((category) => (
+              <div
+                key={category.id}
+                className={`relative w-[280px] h-[180px]  overflow-hidden shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer
+    ${openCategory?.id === category.id
+                    ? "ring-2 ring-blue-500"
+                    : "border border-gray-200"
+                  }`}
+                onClick={() => toggleCategory(category)}
+              >
+                {}
+                {category.images.length > 0 && (
+                  <img
+                    src={category.images[0].image_path}
+                    alt={category.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+
+                {}
+                <div className="absolute inset-0 bg-blue-900 bg-opacity-40"></div>
+
+                {}
+                <div className="relative z-10 flex flex-col  flex-wrap justify-center items-center h-full text-center text-white">
+                  <h1 className="text-lg font-bold">{category.name.toUpperCase()}</h1>
+                  <p className="text-sm mt-1">{category.images.length} images</p>
+                </div>
+              </div>
+
+            ))}
 
 
-
-  >
-    
-    <div className="absolute inset-0 bg-black/70"></div>
-
-    
-    <div className="relative z-10 flex flex-col justify-center items-center h-full text-center text-white">
-      <h1 className="text-xl font-bold">{category.name.toUpperCase()}</h1>
-      
-    </div>
-  </div>
-))}
-
-
-
-          
+            {}
             {openCategory && (
               <div className=" mt-8  relative h-90 w-330 ">
 
 
-               
+                {}
                 <button
                   onClick={() => scrollCarousel("left")}
                   className="absolute left-0 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10 cursor:pointer"
@@ -244,8 +247,8 @@ export default function Navbar({ categories }: Props) {
                   ›
                 </button>
 
-               
-               
+                {}
+                {}
                 {openCategory.images.length === 0 ? (
                   <p className="text-gray-500 italic text-center py-10">
                     No images uploaded in this category yet.
@@ -277,6 +280,7 @@ export default function Navbar({ categories }: Props) {
               </div>
             )}
 
+            {}
             {openCategory && lightboxIndex !== null && (
               <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
                 <button

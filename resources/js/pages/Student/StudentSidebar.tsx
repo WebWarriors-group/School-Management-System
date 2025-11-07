@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { User, Book, Users, Award, CalendarCheck, FileText } from 'lucide-react';
 
 export default function StudentSidebar() {
-  const { url } = usePage(); // For active link logic if needed
+  const { url } = usePage(); 
 
   const navLinks = [
     { label: 'Personal Info', href: '/student/personal', icon: <User size={16} /> },

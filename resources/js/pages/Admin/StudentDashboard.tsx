@@ -57,7 +57,7 @@ setStudents(data.data);
 
 
     if (Array.isArray(data.data)) {
-      setStudents(data.data); // ✅ CORRECT: access the paginated array inside `data`
+      setStudents(data.data);
     } else {
       console.error("Invalid response format:", data);
       toast.error("Failed to load student data");
@@ -120,7 +120,7 @@ useEffect(() => {
   };
 const getAcademicData = (): AcademicRecord[] =>
   students.map((s) => ({
-    reg_no: Number(s.reg_no), // ensure it's a number
+    reg_no: Number(s.reg_no), 
     student_id_no: s.student_id_no || '',
     class_id: s.class_id,
     distance_to_school: s.distance_to_school ?? null,
@@ -349,7 +349,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 )}
 {selectedSection === "personal" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Personal Information</h2> */}
+    {}
     <PersonalTable personalData={getPersonalData()} />
     <div className="mt-4">
       <Button
@@ -388,7 +388,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "siblings" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Siblings Information</h2> */}
+    {}
     <SiblingsTable siblingsData={getSiblingsData()} />
     <div className="mt-4">
       <Button

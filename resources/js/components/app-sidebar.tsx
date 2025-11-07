@@ -5,12 +5,12 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Users, UsersRound } from 'lucide-react';
 
-// ✅ Interface to receive the user role from AppSidebarLayout
+
 interface AppSidebarProps {
-    role: string; // either 'admin' or 'teacher'
+    role: string; 
 }
 
-// ✅ Define menu items based on role (admin or teacher)
+
 export function AppSidebar({ role }: AppSidebarProps) {
     const navItemsByRole: Record<string, NavItem[]> = {
         admin: [
@@ -31,18 +31,16 @@ export function AppSidebar({ role }: AppSidebarProps) {
             { title: 'Teacher Dashboard', url: '/teacher/dashboard/{teacher_NIC}', icon: LayoutGrid },
             { title: 'Student Marks', url: '/mark/MarksPage', icon: BookOpen },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
-            //   { title: 'Students', url: '/teacher/students', icon: Folder },
-            //   { title: 'Reports', url: '/teacher/reports', icon: BookOpen },
+           
         ],
 
         student: [
             { title: 'Student Dashboard', url: '/Student/dashboard', icon: LayoutGrid },
             { title: 'Study materials', url: '/study_material', icon: BookOpen },
-            //   { title: 'Students', url: '/teacher/students', icon: Folder },
-            //   { title: 'Reports', url: '/teacher/reports', icon: BookOpen },
+           
         ],
     };
-    // ✅ Get main nav items for the current role
+    
     const mainNavItems = navItemsByRole[role] || [];
 
     const footerNavItems: NavItem[] = [
@@ -51,9 +49,9 @@ export function AppSidebar({ role }: AppSidebarProps) {
     ];
 
     const roleBackgrounds: Record<string, string> = {
-        admin: '#152238', // maroon gradient
-        teacher: '#51087E', // green gradient
-        student: 'green', // b#80008lue gradient
+        admin: '#152238',
+        teacher: '#51087E', 
+        student: 'green', 
     };
 
     const sidebarBackground = roleBackgrounds[role] || '#800000';
@@ -72,9 +70,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
                             style={{ background: sidebarBackground }}
                         >
                             <Link href="/dashboard" prefetch>
-                                {/* <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
-                  
-                </div> */}
+                                {}
                                 <div className="ml-2 grid flex-1 text-left text-sm">
                                     <span className="mb-0.5 truncate text-[16px] leading-none font-semibold text-[white]">Admin Panel Board</span>
                                 </div>

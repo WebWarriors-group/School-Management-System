@@ -144,7 +144,7 @@ useEffect(() => {
           </div>
         </div>
       </nav>
-          {/* Courses Modal */}
+          {}
           <Dialog open={coursesOpen} onClose={() => setCoursesOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
             <Dialog.Panel className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl max-w-2xl w-full relative z-10">
@@ -263,9 +263,9 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Main Content */}
+      {}
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
-        {/* Sidebar */}
+        {}
         <div className="w-full lg:w-64 p-4 bg-white dark:bg-gray-800 shadow-lg lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <h2 className="text-lg font-bold text-amber-700 mb-4 flex items-center">
             <User className="mr-2" size={20} /> Student Menu
@@ -274,12 +274,7 @@ useEffect(() => {
             {[
               { name: 'Dashboard', icon: <Home size={18} />, link: '/student/dashboard' },
               { name: 'Courses', icon: <Book size={18} />, onClick: () => setCoursesOpen(true)},
-              // { name: 'Assignments', icon: <ClipboardList size={18} />, link: '/assignments' },
-              // { name: 'Grades', icon: <BarChart2 size={18} />, link: '/grades' },
-              // { name: 'Attendance', icon: <CalendarCheck size={18} />, link: '/attendance' },
               { name: 'Study Materials', icon: <Book size={18} />, link: '/student/studyMaterial' },
-              // { name: 'Messages', icon: <MessageSquare size={18} />, link: '/messages' },
-              // { name: 'Notifications', icon: <Bell size={18} />, link: '/notifications' },
               { name: 'Settings', icon: <Settings size={18} />, link: '/settings' },
             
             ].map((item, index) => item.link ? (

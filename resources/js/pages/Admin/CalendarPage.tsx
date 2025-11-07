@@ -47,7 +47,7 @@ export default function CalendarPage() {
         allDay: selectInfo.allDay,
       };
 
-      setEvents(prev => [...prev, newEvent]); // optimistic
+      setEvents(prev => [...prev, newEvent]); 
 
       axios.post<CalendarEvent>('/api/events', newEvent)
         .then(res => {
@@ -69,7 +69,7 @@ export default function CalendarPage() {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
     <div className="min-h-screen bg-gray-200 flex flex-col mt-10">
-      {/* Header */}
+      {}
 
       
 <style>
@@ -107,15 +107,13 @@ export default function CalendarPage() {
       <header className="bg-white shadow-md py-1 mb-10">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row md:items-center md:justify-between">
           
-           <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
-            Stay organized with your important events and exams.
-          </p>
+          
         </div>
       </header>
 
 
 
-      {/* Calendar container */}
+      {}
       <main className="flex-grow max-w-9xl mx-auto px-6">
         <div className="bg-white rounded-xl shadow-xl p-8">
           <FullCalendar
@@ -134,19 +132,19 @@ export default function CalendarPage() {
               week: 'Week',
               day: 'Day',
             }}
-            eventColor="#2563EB" // Tailwind blue-600
+            eventColor="#2563EB" 
             eventTextColor="blue"
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
             select={handleDateSelect}
-            // style tweaks
+            
             dayHeaderClassNames={() => 'text-blue-700 font-semibold'}
           />
         </div>
       </main>
 
-      {/* Footer */}
+      {}
       
     </div>
     </AppLayout>

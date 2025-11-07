@@ -1,24 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { PersonalRecord } from '@/types';
+import { Student } from '@/types';
 import { Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import ViewStudent from '../Admin/ViewStudent';
 import StudentPreviewCard from './StudentPreviewCard';
 
-type AcademicRecord = {
-  reg_no: number;
-  student_id_no: string;
-  class_id: number;
-  distance_to_school: number | null;
-  method_of_coming_to_school: string | null;
-  grade_6_9_asthectic_subjects: string | null;
-  grade_10_11_basket1_subjects: string | null;
-  grade_10_11_basket2_subjects: string | null;
-  grade_10_11_basket3_subjects: string | null;
-  receiving_any_scholarship: boolean;
-  receiving_any_grade_5_scholarship: boolean;
-  receiving_any_samurdhi_aswesuma: boolean;
-  admission_date: string; 
-};
+
 
 type PaginationData<T> = {
   current_page: number;
@@ -29,7 +15,7 @@ type PaginationData<T> = {
 };
 
 type AcademicTableProps = {
-  academicData: PaginationData<AcademicRecord>;
+  academicData: PaginationData<Student>;
 };
 
 export default function AcademicTable({ academicData }: AcademicTableProps) {
@@ -37,13 +23,13 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
   const [filterClass, setFilterClass] = useState<number | ''>('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
-  const [selectedStudent, setSelectedStudent] = useState<AcademicRecord | null>(null);
-  const [previewStudent, setPreviewStudent] = useState<AcademicRecord | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student| null>(null);
+  const [previewStudent, setPreviewStudent] = useState<Student | null>(null);
   const [previewPosition, setPreviewPosition] = useState<{ x: number; y: number } | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  const handleRowClick = (e: React.MouseEvent, student: AcademicRecord) => {
+  const handleRowClick = (e: React.MouseEvent, student: Student) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setPreviewPosition({
       x: rect.left + window.scrollX,
@@ -58,7 +44,7 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
       const response = await fetch(`/api/students/${reg_no}`);
       const data = await response.json();
       if (response.ok) {
-        setSelectedStudent(data as AcademicRecord);
+        setSelectedStudent(data as Student);
         setIsViewModalOpen(true);
         setPreviewStudent(null); 
       } else {
@@ -258,8 +244,9 @@ export default function AcademicTable({ academicData }: AcademicTableProps) {
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         onStudentUpdated={(updated) => {
-          setSelectedStudent(updated);
-        }}
+          setSelectedStudent(updated) }}
+canEdit={true} 
+       
       />
       
       {previewStudent && previewPosition && (

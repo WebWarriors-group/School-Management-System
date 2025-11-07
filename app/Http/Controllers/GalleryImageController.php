@@ -27,7 +27,7 @@ class GalleryImageController extends Controller
 
     $file = $request->file('image');
 
-    // Create the gallery folder if it doesn't exist
+    
     $destinationPath = public_path('gallery');
     if (!file_exists($destinationPath)) {
         mkdir($destinationPath, 0755, true);
@@ -35,10 +35,10 @@ class GalleryImageController extends Controller
 
     $filename = time() . '_' . $file->getClientOriginalName();
 
-    // Move the uploaded file to public/gallery
+    
     $file->move($destinationPath, $filename);
 
-    // Save the relative path in DB (relative to public folder)
+    
     $imagePath = 'gallery/' . $filename;
 
     GalleryImage::create([

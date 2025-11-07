@@ -2,7 +2,7 @@ runtime: php83
 
 env_variables:
   APP_ENV: production
-  #APP_KEY: "your-app-key"
+
   APP_DEBUG: "false"
   APP_STORAGE: "/tmp"
   VIEW_COMPILED_PATH: "/tmp"
@@ -10,7 +10,7 @@ env_variables:
   CACHE_DRIVER: files
 
 handlers:
-  # Serve static assets
+
   - url: /build
     static_dir: public/build
 
@@ -18,6 +18,6 @@ handlers:
     static_files: public/\1
     upload: public/.*\.(css|js|jpg|jpeg|gif|png|svg|woff2|ttf|ico|map)$
 
-  # Redirect everything else to Laravel
+
   - url: /.*
     script: auto

@@ -142,7 +142,7 @@ $teacherDeleted = Teacher::onlyTrashed()
         $totalUserCount = User::count();
         $teacherCount1 = Teacher::count();
         $studentCount1 = StudentAcademic::count();
-        // Fetch only currently active sessions (active within the last 5 minutes)
+       
    $userupdate=User::latest('updated_at')->value('updated_at');
 
        $userFooter = 'Last updated ' . $userupdate->diffForHumans();
@@ -169,15 +169,16 @@ $teacherDeleted = Teacher::onlyTrashed()
         ]);
     }
 
-     public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'role' => 'required|string|max:255',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+    public function register(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+        'role' => 'required|string|max:255',
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
+    try {
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -185,46 +186,73 @@ $teacherDeleted = Teacher::onlyTrashed()
             'password' => Hash::make($request->password),
         ]);
 
+        // ✅ Log user creation
+        \Log::info('New user created successfully.', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role,
+        ]);
 
-Mail::to($user->email)->queue(new WelcomeMail($user,$request->password));
+        // ✅ Log before sending mail
+        \Log::info('Attempting to send WelcomeMail...', [
+            'to' => $user->email,
+            'subject' => 'Your Login Credentials',
+        ]);
+
+        // Queue the email
+        Mail::to($user->email)->queue(new WelcomeMail($user, $request->password));
+
+        // ✅ Log after successfully queuing
+        \Log::info('WelcomeMail queued successfully for user.', [
+            'email' => $user->email,
+        ]);
+
+    } catch (\Exception $e) {
+        // ❌ Log any errors that occur
+        \Log::error('Error occurred while registering user or sending email.', [
+            'error_message' => $e->getMessage(),
+            'stack_trace' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json(['error' => 'Registration or email sending failed.'], 500);
+    }
+}
 
 
-       
-         }
-
-    public function delete(int $id)
+    public function delete($id)
     {
-        $user = User::findOrFail($id); // Assuming your 'id' column is an integer in the 'users' table
+        $user = User::findOrFail($id); 
         $user->delete();
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 
 public function store3(Request $request){
    $request->validate([
         'title' => 'required|string|max:255',
-        'image' => 'required|image|max:2048', // max ~2MB
+        'image' => 'required|image|max:2048', 
     ]);
 
-    // Step 2: Handle the file
+    
     if ($request->hasFile('image')) {
         $file = $request->file('image');
 
-        // Create unique filename
+        
         $fileName = time() . '.' . $file->getClientOriginalExtension();
 
-        // Move the file to /public/image folder
+        
         $file->move(public_path('images'), $fileName);
 
-        // Step 3: Save to DB (column 'path' holds filename)
+        
         Img::create([
             'title' => $request->input('title'),
             'path' => $fileName,
         ]);
 
-        // Optional: return back with success message
+        
         return redirect()->back()->with('message', 'Image uploaded successfully!');
     }
 
-    // Step 4: In case file not uploaded
+    
     return redirect()->back()->with('error', 'Image upload failed');
 }
 

@@ -120,7 +120,7 @@ const assignedTeacherNICs = new Set<string>();
   const getGradeProgressSummary = (): Record<string, { percent: number; conflicted: boolean }> => {
   const progress: Record<string, { assigned: number; total: number; teachers: Set<string> }> = {};
 
-  // First, calculate assigned sections and collect teacher NICs per grade
+  
   Object.values(classes).forEach(classGroup => {
     Object.entries(classGroup).forEach(([gradeStr, sections]) => {
       const grade = `Grade ${gradeStr}`;
@@ -136,7 +136,7 @@ const assignedTeacherNICs = new Set<string>();
     });
   });
 
-  // Detect cross-grade conflicts
+  
   const conflictingGrades = new Set<string>();
   const gradeEntries = Object.entries(progress);
   for (let i = 0; i < gradeEntries.length; i++) {
@@ -153,7 +153,7 @@ const assignedTeacherNICs = new Set<string>();
     }
   }
 
-  // Build final progress info
+ 
   const progressPercent: Record<string, { percent: number; conflicted: boolean }> = {};
   Object.entries(progress).forEach(([grade, data]) => {
     const percent = Math.round((data.assigned / data.total) * 100);
@@ -251,11 +251,11 @@ useEffect(() => {
   </button>
 </div>
 
-      {/* Grade Progress Cards */}
+      {}
 <div className="mt-5">
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     {Object.entries(gradeProgress).map(([grade, data]) => {
-      const { percent, conflicted } = data; // percent + conflicted flag
+      const { percent, conflicted } = data; 
 
       return (
         <div
@@ -273,7 +273,7 @@ useEffect(() => {
               style={{
                 width: `${percent}%`,
                 backgroundColor: conflicted
-                  ? '#dc2626' // red for conflict
+                  ? '#dc2626' 
                   : percent === 100
                   ? '#22c55e'
                   : percent === 0
@@ -341,20 +341,20 @@ useEffect(() => {
 </div>
 
 
-      {/* Success Message */}
+      {}
       {submitted && (
         <div className="mb-1 p-4 bg-green-100 text-green-700 rounded border border-green-400 w-150 text-center ml-50 mt-[60px]">
           ✅ Successfully submitted!
         </div>
       )}
 
-      {/* Main form + teacher profile container */}
+      {}
       <div className=" mt-4 p-6 bg-white  shadow-2xl flex gap-8">
-        {/* Assignment Form (left side) */}
+        {}
         <div className="flex-1">
           <h1 className="text-xl font-bold mb-4">ASSIGN CLASS TEACHER</h1>
 
-          {/* Select Class Name */}
+          {}
           <div className="mb-4">
             <label className="block mb-5 font-medium">Select Class Name:</label>
             <select
@@ -371,7 +371,7 @@ useEffect(() => {
             </select>
           </div>
 
-          {/* Select Grade */}
+          {}
          {selectedClassName ? (
   <div className="mb-4">
     <label className="block mb-1 font-medium ">Select Grade:</label>
@@ -393,7 +393,7 @@ useEffect(() => {
 )}
 
 
-          {/* Assign Teachers to Sections */}
+          {}
           {selectedClassName && selectedGrade !== '' && gradeNum !== null && (
             <div className="space-y-4">
               <h2 className="text-xl font-semibold mb-2">Assign Teachers to Sections</h2>
@@ -442,16 +442,16 @@ useEffect(() => {
           )}
         </div>
 
-        {/* Teacher Profile Card (right side) */}
+        {}
         <div className="w-100 max-w-md mx-auto sticky top-24 self-start rounded-xl">
           {selectedTeacher ? (
             <div className="relative  shadow-xl overflow-hidden border border-gray-200 rounded-2xl">
-              {/* Header section */}
+              {}
               <div className="relative h-32 bg-gradient-to-r from-pink-800 to-purple-900">
                 <div className="absolute inset-0 backdrop-blur-md"></div>
               </div>
 
-              {/* Profile Image */}
+              {}
               <div className="absolute top-12 left-1/2 transform -translate-x-1/2">
                 <img
                   src="/images/tag4"
@@ -460,7 +460,7 @@ useEffect(() => {
                 />
               </div>
 
-              {/* Content */}
+              {}
               <div className="pt-20 pb-6 px-6 text-center rounded-5xl">
                 <h2 className="text-2xl font-bold text-gray-800">
                   {selectedTeacher.personal?.Full_name_with_initial ?? 'No Name'}
@@ -503,7 +503,7 @@ useEffect(() => {
 
 
 
-      {/* === Full Class Teacher Assignment Table === */}
+      {}
 <div className="mt-16 bg-white py-10 px-10 shadow-2xl">
   <h2 className="text-lg font-bold mb-4 text-gray-700">📋 CLASS TEACHER ASSIGNMENT SUMMARRY</h2>
   <div className="overflow-x-auto rounded-md shadow border border-gray-300 bg-white">

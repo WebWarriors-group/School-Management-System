@@ -66,7 +66,7 @@ class ReportController extends Controller
         $marksData = $student->marks->map(function ($mark) use ($highestMarksBySubject) {
             return [
                 'subject_id' => $mark->subject_id,
-                'subject_name' => $mark->subject->subject_name ?? 'Unknown Subject',
+                'name' => $mark->subject->subject_name ?? 'Unknown Subject',
                 'marks_obtained' => $mark->marks_obtained,
                 'highest_mark_in_subject' => $highestMarksBySubject[$mark->subject_id] ?? 'N/A',
             ];
@@ -88,9 +88,7 @@ class ReportController extends Controller
         ]);
     }
 
-    // Inside ReportController.php
-
-// Inside ReportController.php
+    
 
 public function overallPerformance()
 {
@@ -121,21 +119,7 @@ public function overallPerformance()
 
     })->toArray();
 
-    // return Inertia::render('Marks/ReportPage', [
-    //     'student' => [
-    //         'full_name' => $student->studentPersonal->full_name ?? 'N/A',
-    //         'reg_no' => $student->reg_no,
-    //         'class_name' => $student->class_name ?? ($student->class->class_name  ?? 'N/A'),
-    //         'grade' => $student->grade ?? ($student->class->grade ?? 'N/A'),
-    //         'section' => $student->section ?? ($student->class->section ?? 'N/A'),
-    //         'class_teacher_name' => optional(optional(optional($student->class)->teachers)->personal)->Full_name ?? 'N/A',
-    //         'total_marks' => $totalMarks,
-    //         'average_marks' => round($averageMarks, 2),
-    //         'rank' => $studentRank,
-    //         'marks' => $marksData,
-    //     ],
-    // ]);
-
+   
     
 
     $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
@@ -149,14 +133,14 @@ public function overallPerformance()
             ];
         });
 
-    $avgBySubject = Marks::select('marks.subject_id', 'subjects.subject_name', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
+    $avgBySubject = Marks::select('marks.subject_id', 'subjects.name', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
         ->join('subjects', 'marks.subject_id', '=', 'subjects.subject_id')
-        ->groupBy('marks.subject_id', 'subjects.subject_name')
+        ->groupBy('marks.subject_id', 'subjects.name')
         ->get()
         ->map(function ($item) {
             return [
                 'subject_id' => $item->subject_id,
-                'subject_name' => $item->subject_name,
+                'name' => $item->name,
                 'avg_marks' => (float) $item->avg_marks,
             ];
         });

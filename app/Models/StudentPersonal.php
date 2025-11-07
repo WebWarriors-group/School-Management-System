@@ -8,9 +8,9 @@ class StudentPersonal extends Model
 {
     use HasFactory;
 
-    protected $table = 'students_personal_info'; // Specify the correct table name
+    protected $table = 'students_personal_info'; 
 
-    //protected $primaryKey = 'reg_no'; // Define primary key
+    
 
     public $incrementing = false; 
 

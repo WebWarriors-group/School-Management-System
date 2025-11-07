@@ -130,9 +130,9 @@ export default function StudentDashboard() {
         </div>
       )}
 
-      {/* Main Content */}
+      {}
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
-        {/* Sidebar */}
+        {}
         <div className="w-full lg:w-64 p-4 bg-white dark:bg-gray-800 shadow-lg lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
           <h2 className="text-lg font-bold text-amber-700 mb-4 flex items-center">
             <User className="mr-2" size={20} /> Student Menu

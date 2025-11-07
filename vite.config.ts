@@ -34,11 +34,11 @@ export default defineConfig({
 
   
   build: {
-    chunkSizeWarningLimit: 1000, // allow larger chunks before warning
+    chunkSizeWarningLimit: 1000, 
     rollupOptions: {
       output: {
         manualChunks: {
-          // split these into separate files
+        
           react: ['react', 'react-dom'],
           pdf: ['html2pdf.js'],
         },

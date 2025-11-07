@@ -6,23 +6,30 @@ interface Class {
   class_id: number;
   section: string;
   year: number;
-  grade:number;
+  grade: number;
 }
 
 interface Student {
-  reg_no: string;
+  reg_no: number;
   name: string | null;
 }
 
 interface MarkInput {
-  reg_no: string;
+  reg_no: number;
   marks_obtained: number | null;
   grade: string;
   term: string;
   year: number;
   subject_id: string;
-  class_id: number; // ✅ added class
+  class_id: number;
   isNew?: boolean;
+}
+
+interface ExistingMark {
+  id?: number;
+  reg_no: number;
+  marks_obtained: number;
+  grade: string;
 }
 
 interface Props {
@@ -38,7 +45,8 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [subjectId, setSubjectId] = useState('');
   const [marks, setMarks] = useState<MarkInput[]>([]);
-  const [editingRows, setEditingRows] = useState<Record<string, boolean>>({});
+  const [existingMarks, setExistingMarks] = useState<ExistingMark[]>([]);
+  const [loadingMarks, setLoadingMarks] = useState(false);
 
   useEffect(() => {
     if (students.length > 0 && subjectId) {
@@ -50,21 +58,38 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
           term,
           year,
           subject_id: subjectId,
-          class_id: selectedClassId ?? 0, // ✅ send class to backend
+          class_id: selectedClassId ?? 0,
           isNew: true,
         }))
-      );
-
-      setEditingRows(
-        students.reduce((acc, s) => {
-          acc[s.reg_no] = true; // new rows editable
-          return acc;
-        }, {} as Record<string, boolean>)
       );
     } else {
       setMarks([]);
     }
   }, [students, term, year, subjectId, selectedClassId]);
+
+  // 🔹 Fetch existing marks when subject/class/term/year changes
+  useEffect(() => {
+    if (!subjectId || !selectedClassId) return;
+    const fetchMarks = async () => {
+      setLoadingMarks(true);
+      try {
+        const res = await fetch(
+          `/marks/getMarks?subject_id=${subjectId}&term=${term}&year=${year}&class_id=${selectedClassId}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setExistingMarks(data);
+        } else {
+          setExistingMarks([]);
+        }
+      } catch {
+        setExistingMarks([]);
+      } finally {
+        setLoadingMarks(false);
+      }
+    };
+    fetchMarks();
+  }, [subjectId, term, year, selectedClassId]);
 
   const handleMarkChange = (index: number, value: string) => {
     setMarks(prev => {
@@ -110,8 +135,9 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
         credentials: 'same-origin',
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         alert(data.message || 'Failed to submit marks');
         return;
       }
@@ -119,6 +145,7 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
       alert('Marks submitted successfully!');
       setMarks([]);
       setSubjectId('');
+      setExistingMarks([]); // refresh existing table
     } catch (err: any) {
       alert('Submission error: ' + err.message);
     }
@@ -126,11 +153,12 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
 
   return (
     <AppLayout breadcrumbs={[{ title: '📄 Marks Page', href: '#' }]}>
-      <main className="bg-gray-200 h-full">
+      <main className="bg-gray-200 min-h-screen">
         <div className="max-w-6xl mx-auto mt-10 px-6">
-          <div className="bg-white shadow-md p-8 space-y-8">
+          <div className="bg-white shadow-md p-8 space-y-8 rounded-xl">
             <h1 className="text-3xl font-semibold text-gray-800">📘 Student Marks</h1>
 
+            {/* Class Selection */}
             <div className="space-y-2">
               <label className="block text-lg font-medium">Select Class</label>
               <select
@@ -141,12 +169,13 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                 <option value="" disabled>-- Select Class --</option>
                 {classes.map(cls => (
                   <option key={cls.class_id} value={cls.class_id}>
-                    {cls.grade} ({cls.section})
+                    Grade {cls.grade} ({cls.section})
                   </option>
                 ))}
               </select>
             </div>
 
+            {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block mb-1 text-lg font-medium">Term</label>
@@ -158,16 +187,31 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
               </div>
               <div>
                 <label className="block mb-1 text-lg font-medium">Year</label>
-                <input type="number" min={2000} max={2100} value={year} onChange={e => setYear(Number(e.target.value))} className="w-full border rounded-lg p-2" />
+                <input
+                  type="number"
+                  min={2000}
+                  max={2100}
+                  value={year}
+                  onChange={e => setYear(Number(e.target.value))}
+                  className="w-full border rounded-lg p-2"
+                />
               </div>
               <div>
                 <label className="block mb-1 text-lg font-medium">Subject ID</label>
-                <input type="text" value={subjectId} onChange={e => setSubjectId(e.target.value)} className="w-full border rounded-lg p-2" />
+                <input
+                  type="text"
+                  value={subjectId}
+                  onChange={e => setSubjectId(e.target.value)}
+                  className="w-full border rounded-lg p-2"
+                  placeholder="Enter subject ID"
+                />
               </div>
             </div>
 
+            {/* Enter Marks Table */}
             {marks.length > 0 ? (
               <div className="overflow-x-auto">
+                <h2 className="text-2xl font-semibold mb-3 text-gray-800">✏️ Enter Marks</h2>
                 <table className="w-full text-md border rounded-md">
                   <thead className="bg-blue-200">
                     <tr>
@@ -181,7 +225,9 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                     {marks.map((mark, i) => (
                       <tr key={mark.reg_no}>
                         <td className="px-4 py-2 border">{mark.reg_no}</td>
-                        <td className="px-4 py-2 border">{students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}</td>
+                        <td className="px-4 py-2 border">
+                          {students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}
+                        </td>
                         <td className="px-4 py-2 border">
                           <input
                             type="number"
@@ -193,7 +239,11 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                           />
                         </td>
                         <td className="px-4 py-2 border">
-                          <select value={mark.grade} onChange={e => handleGradeChange(i, e.target.value)} className="border rounded px-2 py-1">
+                          <select
+                            value={mark.grade}
+                            onChange={e => handleGradeChange(i, e.target.value)}
+                            className="border rounded px-2 py-1"
+                          >
                             <option value="">Select Grade</option>
                             {allowedGrades.map(g => <option key={g} value={g}>{g}</option>)}
                           </select>
@@ -207,6 +257,7 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
               <p className="text-gray-600">No students found. Please select a class and subject.</p>
             )}
 
+            {/* Submit Button */}
             {marks.length > 0 && (
               <div className="pt-4">
                 <button onClick={handleSubmit} className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg">
@@ -214,6 +265,39 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                 </button>
               </div>
             )}
+
+            {/* Existing Marks Table */}
+            <div className="pt-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-3">📊 Existing Marks</h2>
+              {loadingMarks ? (
+                <p>Loading existing marks...</p>
+              ) : existingMarks.length > 0 ? (
+                <table className="w-full text-md border rounded-md">
+                  <thead className="bg-green-200">
+                    <tr>
+                      <th className="px-4 py-2 border">Reg No</th>
+                      <th className="px-4 py-2 border">Name</th>
+                      <th className="px-4 py-2 border">Marks</th>
+                      <th className="px-4 py-2 border">Grade</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {existingMarks.map((mark) => (
+                      <tr key={mark.reg_no}>
+                        <td className="px-4 py-2 border">{mark.reg_no}</td>
+                        <td className="px-4 py-2 border">
+                          {students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}
+                        </td>
+                        <td className="px-4 py-2 border text-center">{mark.marks_obtained}</td>
+                        <td className="px-4 py-2 border text-center">{mark.grade}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="text-gray-600">No existing marks found for this subject, term, and year.</p>
+              )}
+            </div>
           </div>
         </div>
       </main>

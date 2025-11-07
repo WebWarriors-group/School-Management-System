@@ -23,7 +23,7 @@ class SubjectFactory extends Factory
 
         return [
             'subject_id' => $counter++, // Increment for each subject
-            'subject_name' => $this->faker->randomElement($subjectNames),
+            'name' => $this->faker->randomElement($subjectNames),
              
         ];
     }

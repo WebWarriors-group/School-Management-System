@@ -109,18 +109,18 @@ const labels = marksData.map(item => item.subject?.subject_name || 'Unknown');
   labels,
   datasets: [
     {
-      label: '', // Remove label to avoid legend
+      label: '', 
       data: scores,
 
       borderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
       borderWidth: 2,
-      pointRadius: 3, // No dots on the line
+      pointRadius: 3, 
       pointBackgroundColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
         pointBorderColor: darkMode ? '#1f2937' : '#fff',
         pointHoverBackgroundColor: darkMode ? '#1f2937' : '#fff',
         pointHoverBorderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
-      fill: true, // No fill under line
-      tension: 0.4, // Smooth curve
+      fill: true, 
+      tension: 0.4, 
       backgroundColor: darkMode ? 'rgba(251, 191, 36, 0.1)' : 'rgba(75, 192, 192, 0.1)',
 
     },
@@ -134,10 +134,10 @@ const options = {
 
   plugins: {
     legend: {
-      display: false, // Remove legend
+      display: false, 
     },
     tooltip: {
-      enabled: false, // Remove tooltip on hover
+      enabled: false, 
     },
   },
   scales: {

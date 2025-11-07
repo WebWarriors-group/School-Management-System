@@ -25,7 +25,7 @@ const StudentAcademicForm: React.FC<StudentAcademicFormProps> = ({ form, handleC
       </h2>
 
       <div className="space-y-6">
-        {/* Basic Information Section */}
+        {}
         <section>
           <h3 className="text-lg font-semibold text-gray-700 mb-4">Basic Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -61,7 +61,7 @@ const StudentAcademicForm: React.FC<StudentAcademicFormProps> = ({ form, handleC
           </div>
         </section>
 
-        {/* Transportation Section */}
+        {}
         <section>
           <h3 className="text-lg font-semibold text-gray-700 mb-4">Transportation Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -107,7 +107,7 @@ const StudentAcademicForm: React.FC<StudentAcademicFormProps> = ({ form, handleC
           </div>
         </section>
 
-        {/* Academic Subjects Section */}
+        {}
         <section>
           <h3 className="text-lg font-semibold text-gray-700 mb-4">Academic Subjects</h3>
           
@@ -189,7 +189,7 @@ const StudentAcademicForm: React.FC<StudentAcademicFormProps> = ({ form, handleC
           </div>
         </section>
 
-        {/* Scholarships Section */}
+        {}
         <section>
           <h3 className="text-lg font-semibold text-gray-700 mb-4">Scholarships & Benefits</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -141,7 +141,7 @@ export default function AssignTeachersPage() {
 
     Inertia.post('/assignments', { assignments: payload } as any, {
       preserveScroll: true,
-     // ✅ force fetch new props
+     
 
     });
   };
@@ -151,7 +151,7 @@ export default function AssignTeachersPage() {
     return teacher?.personal?.Full_name_with_initial ?? teacher?.teacher_NIC ?? '❌ Not Assigned';
   };
 
-  // Helper: check if a teacher can teach a subject (matching subject_name with qualifications)
+  
   const canTeacherTeachSubject = (teacher: Teacher, subjectName: string): boolean => {
     if (!teacher.qualifications) return false;
 
@@ -160,14 +160,14 @@ export default function AssignTeachersPage() {
 
     const subjectNameLower = subjectName.toLowerCase();
 
-    // Simple substring matching (can be improved if you store IDs instead)
+   
     if (subjectAppointed.includes(subjectNameLower)) return true;
     if (subjectsMostTaught.includes(subjectNameLower)) return true;
 
     return false;
   };
 
-  // Filter teachers who can teach the selected subject
+  
   const teachersForSelectedSubject = selectedSubjectId
     ? teachers.filter((t) => {
         const subject = subjects.find((s) => s.subject_id === selectedSubjectId);
@@ -200,7 +200,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
             Back
           </Button>
         </div>
-        {/* New: All Subjects List */}
+        {}
         <section className="bg-white p-6 rounded shadow-md mb-8">
           <h2 className="text-xl font-bold mb-4">📚 All Subjects</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -216,7 +216,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
             ))}
           </div>
 
-          {/* Show teachers for selected subject */}
+          {}
          {selectedSubjectId && (
   <div className="mt-6">
     <h3 className="text-lg font-semibold mb-4">
@@ -235,14 +235,14 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
             key={teacher.teacher_NIC}
             className="flex items-center gap-3 p-3 border rounded shadow hover:shadow-md transition cursor-pointer bg-white"
           >
-            {/* Profile Picture */}
+            {}
             <img
               src={teacher.personal?.Photo || '/default-profile.png'}
               alt={teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
               className="w-12 h-12 rounded-full object-cover border"
             />
 
-            {/* Teacher Info */}
+            {}
             <div className="flex flex-col">
               <span className="font-semibold text-gray-800">
                 {teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
@@ -268,17 +268,17 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
 
         </section>
 
-        {/* Back Button */}
+        {}
         
 
-        {/* Medium Count Boxes */}
+        {}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-lg">
          
         </div>
 
-        {/* Form to Assign */}<div className="flex flex-col lg:flex-row gap-8 items-start">
+        {}<div className="flex flex-col lg:flex-row gap-8 items-start">
 
-  {/* Left Side: Form */}
+  {}
   <div className="flex-1 bg-white p-6 rounded shadow-md space-y-6 max-h-[80vh] overflow-y-auto">
     {flash?.success && (
       <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
@@ -288,7 +288,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
 
     <h1 className="text-2xl font-bold text-blue-800">Assign Teachers to Subjects</h1>
 
-    {/* Select Grade */}
+    {}
     <div className="w-1/2">
       <label className="block font-medium mb-1">Select Grade</label>
       <select
@@ -314,7 +314,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
     {selectedGrade && filteredSubjects.length > 0 && (
       <form onSubmit={handleSubmit} className="space-y-4">
 
-        {/* Select Section */}
+        {}
         <div className="w-1/2">
           <label className="block font-medium mb-1">Select Section</label>
           <select
@@ -331,7 +331,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
           </select>
         </div>
 
-        {/* Subject → Teacher Assignment */}
+        {}
         {filteredSubjects.map((subject) => {
           const eligibleTeachers = teachers.filter((t) =>
             canTeacherTeachSubject(t, subject.subject_name)
@@ -375,7 +375,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
     )}
   </div>
 
-  {/* Right Side: Teacher Summary */}
+  {}
   <aside className="w-full lg:w-1/3 bg-white p-6 rounded shadow-md h-[80vh] lg:sticky top-6 overflow-y-auto">
     <h2 className="text-xl font-bold mb-4">👩‍🏫 Teacher Assignment Summary</h2>
     <div className="space-y-4">
@@ -411,7 +411,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
 
         
 
-        {/* Grade → Section → Subject Tree with Class Teacher */}
+        {}
         <div className="mt-16 bg-white py-5 py">
           <h2 className="text-xl font-bold mb-4">📚 Grade → Section → Subject View</h2>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 py-10 px-4">
@@ -439,7 +439,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
                               setExpandedSection(expandedSection === cls.class_id ? null : cls.class_id);
                             }}
                           >
-                            {/* Section & Class Teacher */}
+                            {}
 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
   <span className="font-semibold text-gray-800 text-lg">Section {cls.section}</span>
 
@@ -521,7 +521,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
           
         </div>
 
-        {/* Assignment Summary Table */}
+        {}
         <div className="mt-16 max-w-9xl mx-auto bg-white rounded shadow-md overflow-x-auto">
           <h2 className="text-xl font-bold p-6 border-b">📋 Teacher Assignment Summary</h2>
 

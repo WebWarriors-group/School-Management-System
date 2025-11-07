@@ -8,7 +8,7 @@ interface StudentIDProps {
    
         full_name: string;
         address?: string;
-        photo?: string; // Make sure this is populated from DB
+        photo?: string; 
     
         class_name?: string;
         grade?: string;
@@ -62,7 +62,7 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
   ref={printRef}
   className="relative bg-white w-[700px] h-[360px] rounded-lg shadow-lg font-sans text-[15px] overflow-hidden print:shadow-none print:rounded-none print:w-full print:h-auto"
 >
-  {/* Close Button */}
+  {}
   <button
     onClick={onClose}
     className="absolute top-2 right-3 text-2xl font-bold text-gray-500 hover:text-red-500 print:hidden z-20"
@@ -70,7 +70,7 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
     &times;
   </button>
 
-  {/* Watermark Logo */}
+  {}
   <div className="absolute inset-0 opacity-12 z-0 flex items-center justify-center">
     <img
       src="/images/School.jpg"
@@ -79,10 +79,10 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
     />
   </div>
 
-  {/* Header */}
+  {}
 
   <div className="relative z-10 bg-sky-900 text-white px-6 py-2 flex justify-between items-center rounded-t-lg">
-    {/* Logo + School Name */}
+    {}
     <div className="flex items-center space-x-3">
       <img
         src="/images/School.jpg"
@@ -94,13 +94,13 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
         <p className="text-xs font-light">(National School)</p>
       </div>
     </div>
-    {/* Card Title */}
+    {}
     <h1 className="text-xl font-extrabold tracking-wider uppercase">Student Card</h1>
   </div>
 
-  {/* Body */}
+  {}
   <div className="relative z-10 flex px-6 py-4 justify-between">
-    {/* Student Photo */}
+    {}
     <div className="flex-none w-[170px] h-[170px] mt-5 rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
       <img
         src="/images/school1.jpg"
@@ -139,7 +139,7 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
 
   </div>
 
-  {/* Expiry Date */}
+  {}
   <div className="relative z-10 flex justify-end px-6 pb-2 mt-[-10px]">
     <div className="text-right text-sm  mt-[-30px]">
       <p className="text-gray-700 font-medium">EXPIRE DATE</p>
@@ -147,12 +147,12 @@ export default function StudentID({ student, onClose }: StudentIDProps) {
     </div>
   </div>
 
-  {/* Footer */}
+  {}
   <div className="relative z-10 bg-sky-900 text-white text-center py-2 text-sm rounded-b-lg print:hidden ">
     Valid for Academic Year 2024–2025 • Mahadivulwewa National School
   </div>
 
-  {/* Print Button */}
+  {}
   <div className="relative z-10 text-center mt-3 print:hidden">
     <button
       onClick={handlePrint}

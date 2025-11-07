@@ -11,7 +11,7 @@ interface CalendarEvent {
   description?: string;
 }
 
-// Tailwind color mapping for each event type
+
 const eventColors: Record<EventType, string> = {
   'Exam': 'bg-red-100 text-red-700',
   'Fee Due': 'bg-yellow-100 text-yellow-700',
@@ -124,7 +124,7 @@ useEffect(() => {
        
       /></div>
 
-      {/* Event Details Modal */}
+      {}
       {showModal && (
  <div className={`fixed inset-0 flex items-center justify-center z-50 ${darkMode ? 'bg-black/70' : 'bg-black/40'}`}>
           <div className={`p-6 rounded-xl shadow-lg w-full max-w-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
@@ -132,7 +132,7 @@ useEffect(() => {
             <div className="space-y-3">
               {selectedEvents.map((event, index) => (
                 <div key={index}  className={`p-3 border rounded-lg ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                  {/* Color-coded badge */}
+                  {}
                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${darkMode ? eventColorsDark[event.type] : eventColors[event.type]}`}>
                     {event.type}
                   </span>

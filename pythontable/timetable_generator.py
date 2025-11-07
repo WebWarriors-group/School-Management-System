@@ -2,11 +2,11 @@ def generate_timetable(data):
     timetable = {}
     teacher_schedule = {}
 
-    # Initialize timetable dictionary for all classes
+   
     for cls in data.classes:
         timetable[cls] = {day: [None] * data.periods_per_day for day in data.days}
 
-    # Assign subjects for each class
+    
     for cls in data.classes:
         class_assignments = [
             {
@@ -18,7 +18,7 @@ def generate_timetable(data):
         ]
 
         for day in data.days:
-            daily_subjects = set()  # To ensure subject is not repeated on the same day
+            daily_subjects = set()  
 
             for period_idx in range(data.periods_per_day):
                 assigned = False
@@ -26,24 +26,23 @@ def generate_timetable(data):
                     if assignment['remaining'] <= 0:
                         continue
                     if assignment['subject'] in daily_subjects:
-                        continue  # Skip if subject already assigned today
+                        continue  
 
                     if (day, period_idx) not in teacher_schedule:
                         teacher_schedule[(day, period_idx)] = set()
 
                     if assignment['teacher'] not in teacher_schedule[(day, period_idx)]:
-                        # Assign this subject
+                        
                         timetable[cls][day][period_idx] = {
                             'subject': assignment['subject'],
                             'teacher': assignment['teacher']
                         }
                         teacher_schedule[(day, period_idx)].add(assignment['teacher'])
                         assignment['remaining'] -= 1
-                        daily_subjects.add(assignment['subject'])  # mark subject as used today
+                        daily_subjects.add(assignment['subject']) 
                         assigned = True
                         break
 
                 if not assigned:
-                    timetable[cls][day][period_idx] = None  # Free period
-
+                    timetable[cls][day][period_idx] = None  
     return timetable

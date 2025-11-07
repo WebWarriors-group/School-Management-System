@@ -38,7 +38,7 @@ interface AvgByClass {
 interface AvgBySubject {
   subject_id: number;
   avg_marks: number;
-  subject_name: string;
+  name: string;
 }
 
 interface Props extends PageProps {
@@ -78,7 +78,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     avgBySubject[0]
   );
 
-  // === Total Students Detail View ===
+  
   if (showTotalStudentsDetails) {
     return (
       <AppLayout breadcrumbs={breadcrumbs} >
@@ -115,7 +115,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   key={idx}
   className="bg-white shadow-xl p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer border-t-4 border-blue-600"
 >
-  {/* Header Section */}
+  {}
   <div className="flex items-center justify-between mb-6">
     <div>
       <h3 className="text-sm text-gray-500 uppercase font-semibold tracking-wide">
@@ -128,7 +128,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     </div>
   </div>
 
-  {/* Statistics Section */}
+  {}
   <div className="space-y-4">
     <div className="flex items-center justify-between bg-gray-100 py-2 px-4">
       <div className="flex items-center space-x-1 ">
@@ -148,7 +148,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <div className="flex items-center justify-between bg-gray-100 py-2 px-4">
       <div className="flex items-center space-x-1">
-       <Users className="w-5 h-5 text-black" /> {/* <Female className="w-5 h-5 text-pink-600" /> */}
+       <Users className="w-5 h-5 text-black" /> {}
         <p className="text-lg text-black font-medium">Females</p>
       </div>
       <p className="text-lg font-bold text-black">10</p>
@@ -196,7 +196,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     );
   }
 
-  // === Average Class Score Detail View ===
+
   if (showAverageScoreDetails) {
     const labels = avgByClass.map(item => item.class?.name ?? `Class ${item.class_id}`);
     const values = avgByClass.map(item => item.avg_marks);
@@ -224,7 +224,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   key={idx}
   className="bg-white border border-gray-200  shadow-lg p-6 w-full hover:shadow-xl transition-shadow"
 >
-  {/* Header */}
+  {}
   <div className="flex justify-between items-center mb-6">
     <div>
       <h3 className="text-2xl font-bold text-red-800">
@@ -239,7 +239,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     </div>
   </div>
 
-  {/* Subject Averages */}
+  {}
   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
     {[
       { name: 'Maths', avg: 80 },
@@ -257,7 +257,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     ))}
   </div>
 
-  {/* Below/Above 40 Table */}
+  {}
   <div>
     <h4 className="text-lg font-semibold text-gray-700 mb-3">Subject Pass/Fail Breakdown</h4>
     <table className="w-full text-sm text-left text-gray-700 mb-6">
@@ -285,7 +285,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     </table>
   </div>
 
-  {/* Feedback */}
+  {}
   <div>
     <h4 className="text-lg font-semibold text-gray-700 mb-2">Class Feedback</h4>
     <p className="text-sm text-gray-600 italic mt-2">
@@ -311,9 +311,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     );
   }
 
-  // === Average Subject Score Detail View ===
+
   if (showSubjectAverageDetails) {
-    const labels = avgBySubject.map(item => item.subject_name);
+    const labels = avgBySubject.map(item => item.name);
     const values = avgBySubject.map(item => item.avg_marks);
 
     return (
@@ -336,7 +336,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <ul>
               {avgBySubject.map((item, idx) => (
                 <li key={idx} className="flex justify-between py-2 border-b last:border-b-0">
-                  <span>{item.subject_name}</span>
+                  <span>{item.name}</span>
                   <span>{item.avg_marks.toFixed(2)}</span>
                 </li>
               ))}
@@ -354,21 +354,19 @@ const breadcrumbs: BreadcrumbItem[] = [
     );
   }
 
-  // === Dashboard View ===
+  
   return (
     <AppLayout  breadcrumbs={breadcrumbs}>
       <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
           
-          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
-            Classes,Students,Subjects Overall performance
-          </p>
+          
         </div>
       </header>
 
      
       <Head title="Overall Performance" />
-      <main className='flex h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-200 item-center z-10 '>
+      <main className=' h-full flex-1 flex-col gap-6 p-5 mt-[-20px] bg-gray-300 item-center z-10 '>
      
         <h1 className="text-2xl font-bold mb-6"></h1>
 
@@ -423,7 +421,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   <div className="flex items-center justify-between">
     <div>
       <h2 className="text-sm font-semibold text-indigo-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
+      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.name ?? '–'}</p>
       <p className="text-xs text-gray-500 mt-1">
         Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
       </p>
@@ -439,139 +437,13 @@ const breadcrumbs: BreadcrumbItem[] = [
   </div>
 </div>
 
-<div
-  onClick={() => setShowSubjectAverageDetails(true)}
-  className="bg-gradient-to-tr from-pink-50 to-white border border-indigo-100  shadow-md p-6 transition-all duration-300 hover:shadow-lg cursor-pointer"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-sm font-semibold text-pink-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
-      </p>
-    </div>
 
-    <div className="bg-pink-100 text-pink-700 p-3 rounded-full shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 17v-6h6v6h5V7H4v10h5z" />
-      </svg>
-    </div>
-  </div>
-</div>
 
-<div
-  onClick={() => setShowSubjectAverageDetails(true)}
-  className="bg-gradient-to-tr from-orange-50 to-white border border-indigo-100  shadow-md p-6 transition-all duration-300 hover:shadow-lg cursor-pointer"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-sm font-semibold text-orange-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
-      </p>
-    </div>
 
-    <div className="bg-orange-100 text-orange-700 p-3 rounded-full shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 17v-6h6v6h5V7H4v10h5z" />
-      </svg>
-    </div>
-  </div>
-</div>
-<div
-  onClick={() => setShowSubjectAverageDetails(true)}
-  className="bg-gradient-to-tr from-indigo-50 to-white border border-indigo-100  shadow-md p-6 transition-all duration-300 hover:shadow-lg cursor-pointer"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-sm font-semibold text-indigo-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
-      </p>
-    </div>
 
-    <div className="bg-indigo-100 text-indigo-700 p-3 rounded-full shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 17v-6h6v6h5V7H4v10h5z" />
-      </svg>
-    </div>
-  </div>
-</div>
-<div
-  onClick={() => setShowSubjectAverageDetails(true)}
-  className="bg-gradient-to-tr from-indigo-50 to-white border border-indigo-100  shadow-md p-6 transition-all duration-300 hover:shadow-lg cursor-pointer"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-sm font-semibold text-indigo-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
-      </p>
-    </div>
 
-    <div className="bg-indigo-100 text-indigo-700 p-3 rounded-full shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 17v-6h6v6h5V7H4v10h5z" />
-      </svg>
-    </div>
-  </div>
-</div>
-<div
-  onClick={() => setShowSubjectAverageDetails(true)}
-  className="bg-gradient-to-tr from-indigo-50 to-white border border-indigo-100  shadow-md p-6 transition-all duration-300 hover:shadow-lg cursor-pointer"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-sm font-semibold text-indigo-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
-      </p>
-    </div>
 
-    <div className="bg-indigo-100 text-indigo-700 p-3 rounded-full shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 17v-6h6v6h5V7H4v10h5z" />
-      </svg>
-    </div>
-  </div>
-</div>
-<div
-  onClick={() => setShowSubjectAverageDetails(true)}
-  className="bg-gradient-to-tr from-yellow-50 to-white border border-yellow-100  shadow-md p-6 transition-all duration-300 hover:shadow-lg cursor-pointer"
->
-  <div className="flex items-center justify-between">
-    <div>
-      <h2 className="text-sm font-semibold text-yellow-700 tracking-wide uppercase">Average Subject Score</h2>
-      <p className="text-2xl font-bold text-gray-800 mt-2">{bestSubject?.subject_name ?? '–'}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        Avg Marks: {bestSubject?.avg_marks?.toFixed(2) ?? 'N/A'}
-      </p>
-    </div>
 
-    <div className="bg-yellow-100 text-yellow-700 p-3 rounded-full shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 17v-6h6v6h5V7H4v10h5z" />
-      </svg>
-    </div>
-  </div>
-</div>
 
         </div>
       

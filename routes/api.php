@@ -2,6 +2,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController; 
+use App\Http\Controllers\StudentSubjectController; 
 use App\Http\Controllers\TeacherController; 
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ChatController;
@@ -23,9 +24,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         'role' => $request->user()->role,        
     ]);
 });
- Route::get('formlayout',function(){
-        return Inertia::render('FormLayout');
-    })->name('formlayout');
+
+Route::get('formlayout/{type?}', function (Request $request, $type = null) {
+    return Inertia::render('FormLayout', [
+        'type' => $type ?? $request->query('type'),
+    ]);
+})->name('formlayout');
+
 Route::get('/quotable/random', [ExternalController::class, 'getRandomQuote']);
 
 Route::prefix('student')->group(function () {
@@ -40,8 +45,8 @@ Route::prefix('student')->group(function () {
         Route::get('/family', [StudentController::class, 'showFamily']);
         Route::get('/sibling', [StudentController::class, 'showSibling']);
         Route::get('/personal', [StudentController::class, 'showPersonal']);
+        Route::get('/subjects', [StudentSubjectController::class, 'index']);
         Route::get('/marks', [StudentController::class, 'getMarksBySubject']);
-
         Route::put('/personal', [StudentController::class, 'updatePersonal']);
         Route::put('/family', [StudentController::class, 'updateFamily']);
         Route::put('/sibling', [StudentController::class, 'updateSibling']);
@@ -71,7 +76,7 @@ Route::prefix('subjects')->group(function () {
     Route::post('/', [SubjectController::class, 'store']);
     Route::get('/{subject_id}', [SubjectController::class, 'show']);
     Route::put('/{subject_id}', [SubjectController::class, 'update']);
-    //Route::delete('/{subject_id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+    
 });
 
 Route::prefix('study-materials')->group(function () {
@@ -125,6 +130,6 @@ Route::post('students/import', [StudentController::class, 'import']);
 
 Route::get('/class-ids', [StudentController::class, 'getClassIds']);
 
-//Route::get('/report/{reg_no}', [ReportController::class, 'show']);
+
 
 
