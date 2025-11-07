@@ -1273,7 +1273,7 @@ export default function StudentDashboard() {
                   <Dialog.Title className="text-xl font-bold mb-4">Attendance History</Dialog.Title>
                   <div className="overflow-y-auto max-h-64">
                     <table className="w-full text-left border">
-                      <thead className="bg-amber-50">
+                      <thead className="bg-amber-50 dark:bg-gray-800">
                         <tr>
                           <th className="p-2 border">Date</th>
                           <th className="p-2 border">Status</th>
