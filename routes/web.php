@@ -8,11 +8,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActiveSessionController;
+use App\Http\Controllers\RegistrationFormController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TimetableController;
 use App\Events\TestNotificationEvent;
-use App\Models\StudyMaterial; // ✅ Add this
-use App\Events\StudyMaterialUploaded; // ✅ If using event
+use App\Models\StudyMaterial;
+use App\Events\StudyMaterialUploaded;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ClassController;
@@ -20,7 +21,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeacherRequestController;
-use App\Models\Img;
+use App\Http\Controllers\StudyMaterialController;
+use App\Models\GalleryImage;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ReportController;
@@ -33,18 +35,28 @@ use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
+ use App\Models\GalleryCategory;
+ 
 
 
 
 Route::get('loginCheckout', [ActiveSessionController::class, 'loginRedirection'])->name('loginCheckout');
+Route::get('registrationForms', [RegistrationFormController::class, 'registrationType'])->name('regForms');
+Route::get('/loginToRegRedirect', function () {
+    return Inertia::render('loginToRegRedirect');
+})->name('LoginToRegRedirect');
+
+
+  
 
 Route::get('/', function () {
-    $images = Img::all(); 
+    $categories = GalleryCategory::with('images')->get();
 
-    return Inertia::render('homepage', [
-        'img' =>[
-            'data'=> $images], 
+    return Inertia::render('homepage', [  
+        'categories' => $categories,
     ]);
+
+
 })->name('homepage');
 
 
@@ -60,6 +72,7 @@ Route::middleware('auth')->group(function() {
 });
 
 
+
 Route::middleware('auth', 'admin')->group(function () {
 Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
       Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -70,8 +83,10 @@ Route::post('/image', [AdminController::class, 'store3'])->name('images.store');
      Route::get('/admin/studentdashboard', function () { return Inertia::render('Admin/StudentDashboard'); });
      Route::get('/admin/teacher', function () { return Inertia::render('Admin/teacher'); });
     Route::get('/class1', [ClassController::class, 'classpage'])->name('classpage');
-Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
-    //  Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+
+    Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
+     Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+
      Route::post('/assign-class-teachers', [ClassController::class, 'assignTeachers'])->name('assign.class.teachers');
      Route::get('/test-session', function (Request $request) {
   
@@ -86,6 +101,8 @@ Route::get('/class4', [ClassController::class, 'classpage'])->name('class3');
 });
 
 
+Route::get('/student-gender-stats', [TeacherController::class, 'studentGenderStats']);
+
 Route::get('/admin/teacher/count', [TeacherController::class, 'getTeacherCount']);
 
 Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
@@ -94,16 +111,10 @@ Route::delete('/grades/{grade}', [GradeController::class, 'destroy'])->name('gra
 Route::post('/classadd', [ClassController::class, 'store']);
 
 
- Route::get('/add-teacher', function () {
-    
-    $user_id=Auth::id();
-    return inertia::render('Teacher/teacherForm',[
-        'user'=>$user_id
-    ]); // This should return the Inertia page
-
-})->name('add-teacher');
+Route::get('/add-teacher', function () {return inertia::render('Teacher/teacherForm');})->name('add-teacher');
 
 Route::get('/student/academic', [StudentController::class, 'academicPage']);
+Route::get('/student/studyMaterial', function () { return Inertia::render('Student/studyMaterial'); });
 
 
 
@@ -125,7 +136,7 @@ Route::get('/Admin/messages', function () {
 });
 
 Route::get('/teacher_requests', function () {
-    return inertia::render('Admin/TeacherRequests'); // This should return the Inertia page
+    return inertia::render('Admin/TeacherRequests'); 
 })->name('teacher_requests');
 Route::get('/Admin/TeacherRequests', function () {
     return Inertia::render('Admin/teacher');
@@ -175,7 +186,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/teacher-attendance/update', [TeacherAttendanceController::class, 'update']);
 });
 
-// Route::get('/marks', [MarkController::class, 'index'])->name('marks.index');
+
 
 
 Route::middleware(['auth', 'admin'])->get('/api/teacher-attendance', [TeacherAttendanceController::class, 'fetchAttendance']);
@@ -195,23 +206,19 @@ Route::get('/Admin/LeaveRequests', function () {
     return Inertia::render('Admin/teacher');
 });
 Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
-//D:\schoolProj\School-Management-System\resources\js\pages\Admin\teacherAttendance.tsx
-//Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
 
-    // Your Dashboard route
+
+    
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // This is the route that loads your React Subject Management page via Inertia.
-    // It's under the 'web' middleware group (implicitly or explicitly if added).
-   // Route::get('/Admin/SubjectIndex', [SubjectController::class, 'index'])->name('subjects.index'); // Renamed to admin/subjects for clarity
+    
 
 
     
 
-    
 
 Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
 Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
@@ -228,22 +235,22 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware('auth')->group(function () {
       Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-    // Route::get('/mark/ReportPage/{reg_no}', [ReportController::class, 'show'])->name('report.show');
+   
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 });
 
 Route::get('/students/all', function () {
     return Inertia::render('Student/ViewAllStudents', [
-        // You can pass props here
+       
     ]);
 })->name('students.all');
 
 
 
 Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
-Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
+Route::post('/assignments', [TeacherAssignedController::class, 'store']);
 
-// web.php
+
 Route::post('/reset-class-teachers', [ClassController::class, 'reset']);
 Route::get('/admin/dashboardoverview/classpage', [ClassController::class, 'index']);
 
@@ -256,22 +263,7 @@ Route::get('/admin/OverallPerformance', [ReportController::class, 'overallPerfor
 
 
 
-Route::get('/typesense/create', function (TypesenseService $typesense) {
-    return $typesense->createCollection();
-});
 
-Route::get('/typesense/add', function (TypesenseService $typesense) {
-    return $typesense->indexDocument([
-        'id'     => '1',
-        'title'  => 'Harry Potter',
-        'author' => 'J.K. Rowling',
-        'year'   => 1997
-    ]);
-});
-
-Route::get('/typesense/search', function (TypesenseService $typesense) {
-    return $typesense->search('Harry');
-});
 
 
 Route::get('/broadcast-test', function () {
@@ -281,7 +273,7 @@ Route::get('/broadcast-test', function () {
         'subject' => 'Science',
         'uploaded_by' => auth()->id(),
         'category' => 'General',
-        'file_url' => 'materials/sample-test-notes.pdf',  // dummy file path
+        'file_url' => 'materials/sample-test-notes.pdf',  
     ]);
 
     event(new \App\Events\StudyMaterialUploaded($material));
@@ -308,10 +300,13 @@ Route::post('/category', [GalleryImageController::class, 'storeCategory']);
 
 
 
-//  Route::get('/classes/{classId}/students', [MarkController::class, 'index']);
 
-// Route::post('/marks/bulk', [MarkController::class, 'storeBulkMarks']);
 Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+Route::get('/marks', [MarkController::class, 'getMarks']);
+Route::post('/marks/update', [MarkController::class, 'updateMark']);
+Route::post('/marks/delete', [MarkController::class, 'delete']);
+
+Route::post('/marks/storeBulkMarks', [MarkController::class, 'storeBulkMarks'])->name('marks.storeBulkMarks');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

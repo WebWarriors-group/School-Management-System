@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import { router } from '@inertiajs/react';
@@ -72,7 +73,7 @@ Inertia.post('/teacher/leave/request', payload, {
       <h2 className="text-2xl font-bold mb-6 text-gray-800">📝 Leave Request Form</h2>
      
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Leave Type */}
+        {}
         <div>
           <label className="block mb-2 font-medium text-gray-700">Leave Type</label>
           <select
@@ -91,7 +92,7 @@ Inertia.post('/teacher/leave/request', payload, {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-  {/* Start Date */}
+  {}
   <div>
     <label className="block mb-2 font-medium text-gray-700">Start Date</label>
     <input
@@ -104,7 +105,7 @@ Inertia.post('/teacher/leave/request', payload, {
     />
   </div>
 
-  {/* End Date (with min attribute set to start date) */}
+  {}
   <div>
     <label className="block mb-2 font-medium text-gray-700">End Date</label>
     <input
@@ -112,7 +113,7 @@ Inertia.post('/teacher/leave/request', payload, {
       name="leave_end_date"
       value={formData.leave_end_date}
       onChange={handleChange}
-      min={formData.leave_start_date} // 🔐 disables all dates before start date
+      min={formData.leave_start_date} 
       required
       className="w-full border border-gray-300 rounded-md px-4 py-2"
     />
@@ -120,14 +121,14 @@ Inertia.post('/teacher/leave/request', payload, {
 </div>
 
 
-        {/* Total Leave Days */}
+        {}
         {formData.leave_start_date && formData.leave_end_date && (
           <p className="text-sm text-gray-600">
             📅 Total Leave Days: <span className="font-semibold">{calculateLeaveDays()}</span>
           </p>
         )}
 
-        {/* Reason */}
+        {}
         <div>
           <label className="block mb-2 font-medium text-gray-700">Reason for Leave</label>
           <textarea
@@ -139,7 +140,7 @@ Inertia.post('/teacher/leave/request', payload, {
           />
         </div>
 
-        {/* Supporting Document */}
+        {}
         <div>
           <label className="block mb-2 font-medium text-gray-700">Upload Document (optional)</label>
           <input
@@ -150,7 +151,7 @@ Inertia.post('/teacher/leave/request', payload, {
           />
         </div>
 
-        {/* Requires Substitute */}
+        {}
         <div>
           <label className="flex items-center gap-3 text-gray-700 font-medium">
             <input
@@ -164,7 +165,7 @@ Inertia.post('/teacher/leave/request', payload, {
           </label>
         </div>
 
-        {/* Substitute Details */}
+        {}
         {formData.requires_substitute && (
           <div className="p-4 bg-gray-100 rounded-md shadow-inner">
             <h4 className="text-lg font-semibold mb-4">Substitute Details</h4>
@@ -193,7 +194,7 @@ Inertia.post('/teacher/leave/request', payload, {
           </div>
         )}
 
-        {/* Comments */}
+        {}
         <div>
           <label className="block mb-2 font-medium text-gray-700">Additional Comments (Optional)</label>
           <textarea
@@ -204,7 +205,7 @@ Inertia.post('/teacher/leave/request', payload, {
           />
         </div>
 
-        {/* Submit */}
+        {}
         <button
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md transition"
@@ -215,3 +216,6 @@ Inertia.post('/teacher/leave/request', payload, {
     </div>
   );
 }
+
+
+

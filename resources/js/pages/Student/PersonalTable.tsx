@@ -39,7 +39,7 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
       if (response.ok) {
         setSelectedStudent(data as Student);
         setIsViewModalOpen(true);
-        setPreviewStudent(null); // close preview if modal opens
+        setPreviewStudent(null); 
       } else {
         alert("Failed to load student details.");
       }
@@ -49,7 +49,7 @@ export default function PersonalTable({ personalData }: PersonalTableProps) {
     }
   };
 
-  // Close preview if clicking outside preview card
+  
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (previewRef.current && !previewRef.current.contains(event.target as Node)) {

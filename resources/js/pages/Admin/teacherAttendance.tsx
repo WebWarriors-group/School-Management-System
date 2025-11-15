@@ -27,7 +27,7 @@ const TeacherAttendance = ({
   const [showAll, setShowAll] = useState<boolean>(initialShowAll);
   
   useEffect(() => {
-    // Initialize teachers from server as is (status already provided)
+   
     setTeachers(teachersFromServer.map(t => ({
       ...t,
       status: t.status as 'Present' | 'Absent',
@@ -53,13 +53,13 @@ const TeacherAttendance = ({
   };
 
   router.post('/admin/teacher-attendance', payload, {
-    preserveState: false,  // allow full page reload to follow backend redirect
+    preserveState: false,  
   });
 };
 
 
   const handleShowAll = () => {
-    // Toggle showAll and reload page with query param
+    
     router.get('/admin/teacher-attendance', {
       show_all: !showAll ? 'true' : undefined,
     });

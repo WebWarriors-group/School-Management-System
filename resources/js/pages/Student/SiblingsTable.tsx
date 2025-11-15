@@ -16,7 +16,7 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
 
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
-  // Preview states for click preview card
+ 
   const [previewStudent, setPreviewStudent] = useState<PersonalRecord | null>(null);
   const [previewPosition, setPreviewPosition] = useState<{ x: number; y: number } | null>(null);
 
@@ -45,7 +45,7 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
     setCurrentPage(1);
   }, [search, filterClass]);
 
-  // Close preview card if clicking outside
+  
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (previewRef.current && !previewRef.current.contains(event.target as Node)) {
@@ -57,7 +57,7 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Handle row click to fetch preview data and show preview card near clicked row
+  
   const handleRowClick = async (e: React.MouseEvent, reg_no: number) => {
     try {
       const res = await fetch(`/api/students/${reg_no}`);
@@ -65,7 +65,7 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
       const data = await res.json();
       setPreviewStudent(data as PersonalRecord);
 
-      // Set preview position near the click
+      
       setPreviewPosition({ x: e.clientX, y: e.clientY });
     } catch (err) {
       console.error('Click preview fetch error:', err);
@@ -74,7 +74,7 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
     }
   };
 
-  // Open modal with full details on double click or separate button (optional)
+  
   const handleViewIconClick = async (e: React.MouseEvent, reg_no: number) => {
     e.stopPropagation();
     try {
@@ -83,7 +83,7 @@ export default function SiblingsTable({ siblingsData }: SiblingsTableProps) {
       if (response.ok) {
         setSelectedStudent(data as Student);
         setIsViewModalOpen(true);
-        setPreviewStudent(null); // Close preview when modal opens
+        setPreviewStudent(null); 
       } else {
         alert('Failed to load student details.');
       }

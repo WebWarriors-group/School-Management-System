@@ -1,4 +1,4 @@
-// import React from 'react';
+
 import { Inertia } from '@inertiajs/inertia';
 
 type Slot = {
@@ -20,7 +20,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 export default function TimetableResult({ timetable }: Props) {
   const handleGenerate = () => {
-    Inertia.get('/timetable/generate'); // triggers Laravel controller
+    Inertia.get('/timetable/generate'); 
   };
 
   if (!timetable || Object.keys(timetable).length === 0) {

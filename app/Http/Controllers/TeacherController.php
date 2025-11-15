@@ -13,41 +13,58 @@ use App\Models\TeacherRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\TeacherLeaveRequest;
 
 class TeacherController extends Controller
 {
 
-    public function dashboard()
-    {
+public function dashboard()
+{
+    try {
         $user = Auth::user();
 
-       
-        
        if (!$user->teacher()->exists()) {
-    return redirect()->route('add-teacher');
-}
+            return Inertia::render('loginToRegRedirect');
+        }
 
 
         $teacher = $user->teacher()->with([
             'teachersaddress',
             'personal',
             'qualifications',
-            'teacherotherService',
+            'teacherotherservice',
             'class',
             'class.studentacademics',
-            'class.studentacademics.personal'
+            'class.studentacademics.personal',
+            'class.studentacademics.marks',
+            'class.studentacademics.attendance',
         ])->first();
 
+
         return Inertia::render('Teacher/dashboard', [
-            'teacher' => $teacher
-        ]);
+    'teacher' => $teacher,
+]);
+
+    } catch (\Exception $e) {
+    dd($e->getMessage(), $e->getTraceAsString());
+}
+
+    
+}
+
+
+public function getGenderStats(): JsonResponse
+    {
+        $stats = DB::table('students_personal_info')
+            ->select('gender', DB::raw('count(*) as count'))
+            ->groupBy('gender')
+            ->get();
+
+        return response()->json($stats);
     }
 
-    /**
-     * Display a listing of teachers.
-     */
+   
     public function index(): JsonResponse
     {
         $teachers = Teacher::with([
@@ -59,12 +76,10 @@ class TeacherController extends Controller
     
 
 
-    /**
-     * Store a newly created teacher record.
-     */
+   
     public function store(Request $request): JsonResponse
     {
-        // Validate the input data for Teacher Work Info
+        
         $validatedData = $request->validate([
             'teacher_NIC' => 'required|string|max:12|unique:teacher_work_infos,teacher_NIC',
 
@@ -87,40 +102,34 @@ class TeacherController extends Controller
             'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
             'number_in_sign_sheet' => 'required|string|max:20',
             'number_in_salary_sheet' => 'required|string|max:20',
-
-             
-
-            'user_id'=>'required|numeric',
-
         ]);
 
-        // Create the teacher in teacher_work_infos table
+        
         $teacherWorkInfo = Teacher::create([
             'teacher_NIC' => $validatedData['teacher_NIC'],
             'appointed_date' => $validatedData['appointed_date'],
             'work_acceptance_date' => $validatedData['work_acceptance_date'],
             'appointment_type' => $validatedData['appointment_type'],
-            'salary_increment_date' => $validatedData['salary_increment_date'] ?? null, // Use null if not provided
-            'current_grade_of_teaching_service' => $validatedData['current_grade_of_teaching_service'] ?? null, // Use null if not provided
-            'work_acceptance_date_school' => $validatedData['work_acceptance_date_school'] ?? null, // Use null if not provided
-            'temporary_attachedschool_or_institute_name' => $validatedData['temporary_attachedschool_or_institute_name'] ?? null, // Use null if not provided
-            'appointed_subject' => $validatedData['appointed_subject'] ?? null, // Use null if not provided
-            'which_grades_teaching_done' => $validatedData['which_grades_teaching_done'] ?? null, // Use null if not provided
-            'current_teaching_subject' => $validatedData['current_teaching_subject'] ?? null, // Use null if not provided
-            'other_subjects_taught' => $validatedData['other_subjects_taught'] ?? null, // Use null if not provided
-            'assigned_class' => $validatedData['assigned_class'] ?? null, // Use null if not provided
-            'other_responsibilities_assigned' => $validatedData['other_responsibilities_assigned'] ?? null, // Use null if not provided
-            'is_150_hrs_tamil_course_completed' => $validatedData['is_150_hrs_tamil_course_completed'] ?? false, // Use null if not provided
-            'commuting_from_school' => $validatedData['commuting_from_school'] ?? null, // Use null if not provided
-            'distance_from_school' => $validatedData['distance_from_school'] ?? null, // Use null if not provided
-            'commuting_method_to_school' => $validatedData['commuting_method_to_school'] ?? null, // Use null if not provided
-            'number_in_sign_sheet' => $validatedData['number_in_sign_sheet'] ?? null, // Use null if not provided
-            'number_in_salary_sheet' => $validatedData['number_in_salary_sheet'] ?? null, // Use null if not provided
-            'user_id'=>$validatedData['user_id'],
+            'salary_increment_date' => $validatedData['salary_increment_date'] ?? null, 
+            'current_grade_of_teaching_service' => $validatedData['current_grade_of_teaching_service'] ?? null, 
+            'work_acceptance_date_school' => $validatedData['work_acceptance_date_school'] ?? null, 
+            'temporary_attachedschool_or_institute_name' => $validatedData['temporary_attachedschool_or_institute_name'] ?? null, 
+            'appointed_subject' => $validatedData['appointed_subject'] ?? null, 
+            'which_grades_teaching_done' => $validatedData['which_grades_teaching_done'] ?? null, 
+            'current_teaching_subject' => $validatedData['current_teaching_subject'] ?? null, 
+            'other_subjects_taught' => $validatedData['other_subjects_taught'] ?? null, 
+            'assigned_class' => $validatedData['assigned_class'] ?? null, 
+            'other_responsibilities_assigned' => $validatedData['other_responsibilities_assigned'] ?? null, 
+            'is_150_hrs_tamil_course_completed' => $validatedData['is_150_hrs_tamil_course_completed'] ?? false, 
+            'commuting_from_school' => $validatedData['commuting_from_school'] ?? null, 
+            'distance_from_school' => $validatedData['distance_from_school'] ?? null, 
+            'commuting_method_to_school' => $validatedData['commuting_method_to_school'] ?? null, 
+            'number_in_sign_sheet' => $validatedData['number_in_sign_sheet'] ?? null, 
+            'number_in_salary_sheet' => $validatedData['number_in_salary_sheet'] ?? null, 
 
         ]);
         
-        // Store related records in respective tables
+        
         $teacherWorkInfo->teachersaddress()->create($request->only([
             'permanent_address', 'permanent_residential_address', 'grama_niladari_division',
             'grama_niladari_division_number', 'election_division', 'election_division_number'
@@ -161,19 +170,18 @@ class TeacherController extends Controller
 
         Teacher::query()->increment('count');
 
-       return redirect()->route('login');
-
+       return response()->json([
+        'message' => 'Teacher Work Info stored successfully',
+    ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+   
     public function show($teacher_NIC): JsonResponse
 {
     try {
         $teacherWorkInfo = Teacher::with([
             'teachersaddress', 'personal', 'qualifications', 'teacherotherservice'
-        ])->where('teacher_NIC', $teacher_NIC)->first(); // ✅ use where() and first()
+        ])->where('teacher_NIC', $teacher_NIC)->first(); 
 
         if (!$teacherWorkInfo) {
             return response()->json(['error' => 'Teacher not found'], 404);
@@ -189,7 +197,6 @@ class TeacherController extends Controller
 {
     $validatedData = $request->validate([
         'teacher_NIC' => 'required|string|max:12|unique:teacher_work_infos,teacher_NIC',
-        
         'appointed_date' => 'required|date',
         'work_acceptance_date' => 'required|date',
         'appointment_type' => 'required|string',
@@ -209,18 +216,17 @@ class TeacherController extends Controller
         'commuting_method_to_school' => 'required|in:Bicycle,MotorBike,Car,Bus,Threewheeler,Walk,Other',
         'number_in_sign_sheet' => 'required|string|max:20',
         'number_in_salary_sheet' => 'required|string|max:20',
-        'user_id'=>'required|numeric',
     ]);
 
-    // Handle Photo if uploaded
+    
     $photoPath = null;
     if ($request->hasFile('Photo')) {
         $photoPath = $request->file('Photo')->store('photos', 'public');
     }
 
-    // Structure form data with nested fields properly
+    
     $requestData = [
-    ...$validatedData, // spread the validated main work info fields only ONCE
+    ...$validatedData, 
 
     'personal' => [
         'Full_name' => $request->input('Full_name'),
@@ -297,13 +303,11 @@ public function profile()
         'teacher' => $teacher,
     ]);
 }
-//✅ This will send the authenticated teacher’s full details to your React component.
 
 
 
-    /**
-     * Update the specified resource in storage.
-     */
+
+    
     public function update(Request $request, $teacher_NIC): JsonResponse
 {
     try {
@@ -315,7 +319,7 @@ public function profile()
             return response()->json(['error' => 'Teacher not found'], 404);
         }
 
-        // Update main table (teacher_work_infos)
+       
         $teacherWorkInfo->update([
             'appointed_date' => $request->input('appointed_date') ?? $teacherWorkInfo->appointed_date,
             'work_acceptance_date' => $request->input('work_acceptance_date') ?? $teacherWorkInfo->work_acceptance_date,
@@ -338,7 +342,7 @@ public function profile()
             'number_in_salary_sheet' => $request->input('number_in_salary_sheet') ?? $teacherWorkInfo->number_in_salary_sheet,
         ]);
 
-        // Update personal
+        
         if ($request->has('personal') && $teacherWorkInfo->personal) {
             $personal = $request->input('personal');
             $teacherWorkInfo->personal()->update([
@@ -360,7 +364,7 @@ public function profile()
             ]);
         }
 
-        // Update address
+        
         if ($request->has('teachersaddress') && $teacherWorkInfo->teachersaddress) {
             $address = $request->input('teachersaddress');
             $teacherWorkInfo->teachersaddress()->update([
@@ -373,7 +377,7 @@ public function profile()
             ]);
         }
 
-        // Update qualifications
+        
         if ($request->has('qualifications') && $teacherWorkInfo->qualifications) {
             $qual = $request->input('qualifications');
             $teacherWorkInfo->qualifications()->update([
@@ -396,7 +400,7 @@ public function profile()
             ]);
         }
 
-        // Update other services
+        
         if ($request->has('teacherotherservice') && $teacherWorkInfo->teacherotherservice) {
             $service = $request->input('teacherotherservice');
             $teacherWorkInfo->teacherotherservice()->update([
@@ -417,9 +421,7 @@ public function profile()
 }
 
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy($teacher_NIC): JsonResponse
     {
         $teacherWorkInfo = Teacher::where('teacher_NIC', $teacher_NIC)->first();
@@ -428,13 +430,13 @@ public function profile()
             return response()->json(['error' => 'Teacher not found'], 404);
         }
 
-        // Delete related records first
+        
         $teacherWorkInfo->teachersaddress()->delete();
         $teacherWorkInfo->personal()->delete();
         $teacherWorkInfo->qualifications()->delete();
         $teacherWorkInfo->teacherotherservice()->delete();
 
-        // Finally, delete the teacher work info record
+        
         $teacherWorkInfo->delete();
 
         Teacher::query()->decrement('count');
@@ -445,60 +447,47 @@ public function profile()
         ]);
     }
     
+    
     public function getTeacherCount():JsonResponse
     {
-        // Get the latest count from the first row
-        $teacherCount = Teacher::count(); // This runs SELECT COUNT(*) FROM teacher_work_infos
+        
+        $teacherCount = Teacher::count(); 
         return response()->json([
             'teacherCount' => $teacherCount,
         ]);
     
     }
 
-//     public function leavereqstore(Request $request)
-// {
-//     // Validate the form inputs
-//     $validated = $request->validate([
-//         'leave_type' => 'required|string',
-//         'leave_start_date' => 'required|date',
-//         'leave_end_date' => 'required|date|after_or_equal:leave_start_date',
-//         'reason' => 'required|string',
-//         'requires_substitute' => 'boolean',
-//         'substitute_teacher_name' => 'nullable|string',
-//         'substitute_teacher_contact' => 'nullable|string',
-//         'comments' => 'nullable|string',
-//         'supporting_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-//     ]);
+    public function studentDetails()
+{
+    $teacher = auth()->user()->teacher;
 
-//     // Get the authenticated user
-//     $user = auth()->user();
+    if (!$teacher) {
+        return response()->json(['error' => 'Teacher not found'], 404);
+    }
 
-//     // 🔽 PLACE THIS HERE: Find the teacher by user_id
-//     $teacher = Teacher::where('user_id', $user->id)->first();
+    $students = $teacher->class()
+        ->with(['studentacademics.personal', 'studentacademics.marks', 'studentacademics.attendance'])
+        ->get()
+        ->map(function ($class) {
+            return [
+                'class' => $class->name ?? $class->id,
+                'students' => $class->studentacademics->map(function ($studentAcademic) {
+                    return [
+                        'reg_no' => $studentAcademic->reg_no,
+                        'personal' => $studentAcademic->personal,
+                        'marks' => $studentAcademic->marks,
+                        'attendance' => $studentAcademic->attendance,
+                    ];
+                })
+            ];
+        });
 
-//     // Handle case where teacher record doesn't exist
-//     if (!$teacher) {
-//         return back()->withErrors(['message' => 'Teacher not found.']);
-//     }
+    return response()->json($students);
+}
 
-//     // Handle file upload
-//     if ($request->hasFile('supporting_document')) {
-//         $file = $request->file('supporting_document');
-//         $filename = time() . '_' . $file->getClientOriginalName();
-//         $path = $file->storeAs('leave_documents', $filename, 'public');
-//         $validated['supporting_document'] = $path;
-//     }
 
-//     // Attach teacher NIC and default status
-//     $validated['teacher_NIC'] = $teacher->teacher_NIC;
-//     $validated['status'] = 'Pending';
 
-//     // Save leave request
-//     // \App\Models\TeacherLeaveRequest::create($validated);
-//     Teacher::create($validated);
-
-//     return redirect()->back()->with('success', 'Leave request submitted.');
-// }
 
 
 

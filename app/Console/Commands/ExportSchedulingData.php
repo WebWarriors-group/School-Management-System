@@ -10,23 +10,12 @@ use App\Models\Subject;
 
 class ExportSchedulingData extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+   
     protected $signature = 'export:scheduling-data';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    
     protected $description = 'Export scheduling data to a JSON file';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $classes = ClassModel::with('subjects.teachers')->get();

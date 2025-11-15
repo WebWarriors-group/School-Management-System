@@ -32,7 +32,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('login'), {
+        post(route('login.post'), {
             onFinish: () => reset('password'),
         });
     };
@@ -41,7 +41,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         <AuthLayout title="Login to your account" description="Enter your email and password below to log in ">
             <Head title="Login" />
 
-            <form className="flex flex-col gap-6" onSubmit={submit}>
+            <form className="flex flex-col gap-6 h-100" onSubmit={submit}>
                 <div className="grid gap-6 text-[#5D4037]">
                     <div className="grid gap-2 text-[20px] text-[#5D4037]">
                         <Label htmlFor="email">Email address</Label>

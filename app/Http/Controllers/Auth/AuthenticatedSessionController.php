@@ -14,27 +14,28 @@ use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Show the login page.
-     */
-    public function create(Request $request): Response
+    
+    public function create(Request $request, ?string $student = null): Response
     {
-        return Inertia::render('auth/login', [
-            'canResetPassword' => Route::has('password.request'),
+        if (!$student){
+            return Inertia::render('auth/login', [
+                'canResetPassword' => Route::has('password.request'),
+                'status' => $request->session()->get('status'),
+            ]);
+        }
+        return Inertia::render('auth/login_student', [
             'status' => $request->session()->get('status'),
         ]);
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+    
+    public function store(LoginRequest $request, ?string $student = null): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
         $user = Auth::user();
 
-        // Redirect based on the user's role
+        
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'teacher') {
@@ -54,7 +55,7 @@ class AuthenticatedSessionController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            // Redirect based on the user's role
+           
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role === 'teacher') {
@@ -65,13 +66,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('homepage');
         }
         else {
-            return redirect()->route('/');
+            return redirect()->route('LoginToRegRedirect');
         }
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
+   
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

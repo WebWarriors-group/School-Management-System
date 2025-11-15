@@ -45,15 +45,37 @@ const NotificationListener: React.FC = () => {
       return;
     }
 
+   const  key=import.meta.env.VITE_REVERB_APP_KEY;
+   const    host= import.meta.env.VITE_REVERB_HOST;
+   const    port=import.meta.env.VITE_REVERB_PORT;
+   const    scheme=import.meta.env.VITE_REVERB_SCHEME;
+console.log('Environment variables:', {
+      key, host, port, scheme
+    });
+  if (!key) {
+    console.error('Reverb app key is missing in environment variables');
+    return;
+  }
+
+console.log('Environment variables:', {
+      key: import.meta.env.VITE_REVERB_APP_KEY,
+      host: import.meta.env.VITE_REVERB_HOST,
+      port: import.meta.env.VITE_REVERB_PORT,
+      scheme: import.meta.env.VITE_REVERB_SCHEME
+    });
+
+
     if (!window.Echo) {
       console.log('Initializing Pusher & Echo with key:', import.meta.env.VITE_PUSHER_APP_KEY);
       window.Pusher = Pusher;
       window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: import.meta.env.VITE_PUSHER_APP_KEY,
-        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-        forceTLS: true,
-        encrypted: true,
+        broadcaster: 'reverb',
+        key: import.meta.env.VITE_REVERB_APP_KEY,
+        wsHost: import.meta.env.VITE_REVERB_HOST,
+        wsPort: import.meta.env.VITE_REVERB_PORT,
+        wssPort: import.meta.env.VITE_REVERB_PORT,
+        forceTLS: import.meta.env.VITE_REVERB_SCHEME === 'https',
+        enabledTransports: ['ws', 'wss'],
         authEndpoint: '/broadcasting/auth',
         auth: {
           headers: {

@@ -1,19 +1,12 @@
 import { useState } from "react";
 import { useForm,router } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-
 import InputError from '@/components/input-error';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type TeacherForm = {
   teacher_NIC: string;
-
-  user_id:number|string;
-  
-
   Full_name: string;
   Full_name_with_initial: string;
   Photo: File | null;
@@ -38,11 +31,11 @@ type TeacherForm = {
   appointed_date: string;
   work_acceptance_date: string;
   
-  // New Fields
+ 
   appointment_type: string;
-  salary_increment_date: string; // ISO format date (YYYY-MM-DD)
+  salary_increment_date: string; 
   current_grade_of_teaching_service: "Grade I" | "Grade II" | "Grade III";
-  work_acceptance_date_school: string; // ISO format date (YYYY-MM-DD)
+  work_acceptance_date_school: string; 
   temporary_attachedschool_or_institute_name: string;
   appointed_subject: string;
   which_grades_teaching_done: string;
@@ -79,20 +72,15 @@ type TeacherForm = {
 
 };
  interface props{
-  user:number;
+  setShowTeacherForm: (val: boolean) => void
  }
 
 
 
 
-export default function AddTeacherForm({user}:props) {
+export default function AddTeacherForm({setShowTeacherForm}:props) {
   const { data, setData, post, processing, errors } = useForm<TeacherForm>({
-    // TeacherForm Fields
     teacher_NIC: '',
-
-    user_id:user,
-
-    
 
     Full_name: '',
     Full_name_with_initial: '',
@@ -135,7 +123,7 @@ export default function AddTeacherForm({user}:props) {
     number_in_sign_sheet: '',
     number_in_salary_sheet: '',
   
-    // TeacherAdditionalInfoForm Fields
+    
     type_of_service_in_school:'',
     gce_al_subject_stream: '',
     highest_education_qualification: '',
@@ -167,31 +155,26 @@ export default function AddTeacherForm({user}:props) {
     setData('present_grade', data.present_grade || 'Grade 1');
     setData('current_appointment_service_medium', data.current_appointment_service_medium || 'Tamil');
     setData('is_150_hrs_tamil_course_completed', data.is_150_hrs_tamil_course_completed !== undefined ? data.is_150_hrs_tamil_course_completed : false); // Default to false if undefined
-  setData('commuting_from_school', data.commuting_from_school || 'Home'); // Default to 'Home' if empty
-  setData('distance_from_school', Number(data.distance_from_school) || 0); // Default to 0 if empty
-  setData('commuting_method_to_school', data.commuting_method_to_school || 'Bicycle'); // Default to 'Bicycle' if empty
-  setData('WSOP_Number', data.WSOP_Number || null); // Default to null if empty
+  setData('commuting_from_school', data.commuting_from_school || 'Home'); 
+  setData('distance_from_school', Number(data.distance_from_school) || 0); 
+  setData('commuting_method_to_school', data.commuting_method_to_school || 'Bicycle'); 
+  setData('WSOP_Number', data.WSOP_Number || null); 
 
     
    post(route('teacher.requests'), {
   forceFormData: true,
   onSuccess: () => {
     toast.success('Form submitted. Awaiting admin approval!');
-    //router.visit(route('add-teacher')); // OR reload/redirect to another page
+   
 
   },
   onError: (errors) => {
-    //console.log('Validation Errors:', errors);
+   
     toast.error('Failed to submit. Please check the form.');
   },
 });
 
-//  post(route('teacher.requests'), {
-      
-//     headers: { "Content-Type": "multipart/form-data" }, 
-//       onSuccess: () => alert('Teacher data added successfully!'),
-//       onError: (errors) => console.log('Validation Errors:', errors),
-//     });
+
   };
     
         const [step, setStep] = useState(1);
@@ -207,8 +190,8 @@ export default function AddTeacherForm({user}:props) {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files[0];
-            setPhoto(file);  // Store the file
-            setPhotoName(file.name);  // Store the file name
+            setPhoto(file);  
+            setPhotoName(file.name);  
         }
     };
     return (
@@ -222,7 +205,7 @@ export default function AddTeacherForm({user}:props) {
   <div>
     <h3 className="text-xl font-bold"> Teacher's Basic Information</h3>
     
-    {/* Teacher NIC */}
+    {}
     <div className="mb-4 py-5">
       <label htmlFor="teacher_NIC" className="block text-sm font-medium text-gray-700">
         Teacher NIC
@@ -239,29 +222,7 @@ export default function AddTeacherForm({user}:props) {
       />
       <InputError message={errors.teacher_NIC} className="mt-2" />
     </div>
-    
 
-      
-   
-
-    <div className="mb-4 py-5 hidden">
-      <label htmlFor="teacher_NIC" className="block text-sm font-medium text-gray-700">
-        user_id
-      </label>
-      <input
-        type="text"
-        id="user_id"
-        name="user_id"
-        className="w-full p-2 border rounded"
-       
-        value={data.user_id}
-        onChange={(e) => setData('user_id', e.target.value)}
-        required
-      />
-      
-    </div>
-
-    {/* Full Name */}
     <div className="mb-4">
       <label htmlFor="Full_name" className="block text-sm font-medium text-gray-700">
         Full Name
@@ -279,7 +240,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Full_name} className="mt-2" />
     </div>
 
-    {/* Full Name with Initials */}
+    
     <div className="mb-4">
       <label htmlFor="Full_name_with_initial" className="block text-sm font-medium text-gray-700">
         Full Name with Initials
@@ -297,7 +258,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Full_name_with_initial} className="mt-2" />
     </div>
 
-    {/* Photo Upload */}
+    
     <div className="mb-4">
       <label htmlFor="Photo" className="block text-sm font-medium text-gray-700">
         Upload Photo
@@ -313,7 +274,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Photo} className="mt-2" />
     </div>
 
-    {/* Gender */}
+   
     <div className="mb-4">
       <label htmlFor="Gender" className="block text-sm font-medium text-gray-700">
         Gender
@@ -333,7 +294,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Gender} className="mt-2" />
     </div>
 
-    {/* Region */}
+    
     <div className="mb-4">
       <label htmlFor="Religion" className="block text-sm font-medium text-gray-700">
         Religion
@@ -351,7 +312,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Region} className="mt-2" />
     </div>
 
-    {/* Ethnicity */}
+    
     <div className="mb-4">
       <label htmlFor="Ethnicity" className="block text-sm font-medium text-gray-700">
         Ethnicity
@@ -369,7 +330,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Ethnicity} className="mt-2" />
     </div>
 
-    {/* Birthdate */}
+    
     <div className="mb-4">
       <label htmlFor="Birthdate" className="block text-sm font-medium text-gray-700">
         Birthdate
@@ -381,14 +342,14 @@ export default function AddTeacherForm({user}:props) {
         className="w-full p-2 border rounded"
         value={data.Birthdate}
         onChange={(e) => setData('Birthdate', e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]}
 
         required
       />
       <InputError message={errors.Birthdate} className="mt-2" />
     </div>
 
-    {/* Title */}
+    
     <div className="mb-4">
       <label htmlFor="Title" className="block text-sm font-medium text-gray-700">
         Title
@@ -406,7 +367,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Title} className="mt-2" />
     </div>
 
-    {/* Marital Status */}
+    
     <div className="mb-4">
       <label htmlFor="Marital_status" className="block text-sm font-medium text-gray-700">
         Marital Status
@@ -427,7 +388,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Marital_status} className="mt-2" />
     </div>
 
-    {/* Details About Family Members */}
+    
     <div className="mb-4">
       <label htmlFor="Details_about_family_members" className="block text-sm font-medium text-gray-700">
         Details About Family Members
@@ -443,7 +404,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Details_about_family_members} className="mt-2" />
     </div>
 
-    {/* Emergency Telephone Number */}
+    
     <div className="mb-4">
       <label htmlFor="Emergency_telephone_number" className="block text-sm font-medium text-gray-700">
         Emergency Telephone Number
@@ -527,7 +488,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.Whatsapp_number} className="mt-2" />
     </div>
 
-    {/* Navigation Buttons */}
+   
     <div className="flex justify-between">
       <button
         type="button"
@@ -545,7 +506,7 @@ export default function AddTeacherForm({user}:props) {
   <div>
     <h3 className="text-lg font-bold">Step 2: Address Info</h3>
 
-    {/* Permanent Address */}
+    
 <div className="mb-4">
   <label htmlFor="permanent_address" className="block text-sm font-medium text-gray-700">
     Permanent Address
@@ -562,7 +523,7 @@ export default function AddTeacherForm({user}:props) {
   <InputError message={errors.permanent_address} className="mt-2" />
 </div>
 
-{/* Residential Address */}
+
 <div className="mb-4">
   <label htmlFor="permanent_residential_address" className="block text-sm font-medium text-gray-700">
     Residential Address
@@ -579,7 +540,7 @@ export default function AddTeacherForm({user}:props) {
   <InputError message={errors.permanent_residential_address} className="mt-2" />
 </div>
 
-{/* Grama Niladari Division */}
+
 <div className="mb-4">
   <label htmlFor="grama_niladari_division" className="block text-sm font-medium text-gray-700">
     Grama Niladari Division
@@ -596,7 +557,7 @@ export default function AddTeacherForm({user}:props) {
   <InputError message={errors.grama_niladari_division} className="mt-2" />
 </div>
 
-{/* Grama Niladari Division Number */}
+
 <div className="mb-4">
   <label htmlFor="grama_niladari_division_number" className="block text-sm font-medium text-gray-700">
     Grama Niladari Division Number
@@ -613,7 +574,7 @@ export default function AddTeacherForm({user}:props) {
   <InputError message={errors.grama_niladari_division_number} className="mt-2" />
 </div>
 
-{/* Election Division */}
+
 <div className="mb-4">
   <label htmlFor="election_division" className="block text-sm font-medium text-gray-700">
     Election Division
@@ -630,7 +591,7 @@ export default function AddTeacherForm({user}:props) {
   <InputError message={errors.election_division} className="mt-2" />
 </div>
 
-{/* Election Division Number */}
+
 <div className="mb-4">
   <label htmlFor="election_division_number" className="block text-sm font-medium text-gray-700">
     Election Division Number
@@ -662,7 +623,7 @@ export default function AddTeacherForm({user}:props) {
   <div>
     <h3 className="text-lg font-bold">Step 3: Teacher's Work Information</h3>
 
-    {/* Appointed Date */}
+   
     <div className="mb-4">
       <label htmlFor="appointed_date" className="block text-sm font-medium text-gray-700">
         Appointed Date
@@ -673,13 +634,13 @@ export default function AddTeacherForm({user}:props) {
         id="appointed_date"
         value={data.appointed_date}
         onChange={(e)=>setData('appointed_date',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
     </div>
 
-    {/* Work Acceptance Date */}
+  
     <div className="mb-4">
       <label htmlFor="work_acceptance_date" className="block text-sm font-medium text-gray-700">
         Work Acceptance Date
@@ -690,13 +651,13 @@ export default function AddTeacherForm({user}:props) {
         id="work_acceptance_date"
         value={data.work_acceptance_date}
         onChange={(e)=>setData('work_acceptance_date',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
     </div>
 
-    {/* Appointment Type */}
+   
     <div className="mb-4">
       <label htmlFor="appointment_type" className="block text-sm font-medium text-gray-700">
         Appointment Type
@@ -714,7 +675,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Salary Increment Date */}
+  
     <div className="mb-4">
       <label htmlFor="salary_increment_date" className="block text-sm font-medium text-gray-700">
         Salary Increment Date
@@ -722,16 +683,16 @@ export default function AddTeacherForm({user}:props) {
       <input
         type="date"
         name="salary_increment_date"
-        //id="salary_increment_date"
+        
         value={data.salary_increment_date}
         onChange={(e)=>setData('salary_increment_date',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
     </div>
 
-    {/* Current Grade of Teaching Service */}
+   
     <div className="mb-4">
       <label htmlFor="current_grade_of_teaching_service" className="block text-sm font-medium text-gray-700">
         Current Grade of Teaching Service
@@ -752,7 +713,7 @@ export default function AddTeacherForm({user}:props) {
       </select>
     </div>
 
-    {/* Work Acceptance Date at School */}
+    
     <div className="mb-4">
       <label htmlFor="work_acceptance_date_school" className="block text-sm font-medium text-gray-700">
         Work Acceptance Date at School
@@ -763,13 +724,13 @@ export default function AddTeacherForm({user}:props) {
         id="work_acceptance_date_school"
         value={data.work_acceptance_date_school}
         onChange={(e)=>setData('work_acceptance_date_school',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
     </div>
 
-    {/* Temporary Attached School or Institute Name */}
+    
     <div className="mb-4">
       <label htmlFor="temporary_attachedschool_or_institute_name" className="block text-sm font-medium text-gray-700">
         Temporary Attached School or Institute Name
@@ -787,7 +748,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Appointed Subject */}
+    
     <div className="mb-4">
       <label htmlFor="appointed_subject" className="block text-sm font-medium text-gray-700">
         Appointed Subject
@@ -806,7 +767,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Which Grades Teaching Done */}
+    
     <div className="mb-4">
       <label htmlFor="which_grades_teaching_done" className="block text-sm font-medium text-gray-700">
         Which Grades Teaching Done
@@ -823,8 +784,6 @@ export default function AddTeacherForm({user}:props) {
         required
       />
     </div>
-
-    {/* Current Teaching Subject */}
     <div className="mb-4">
       <label htmlFor="current_teaching_subject" className="block text-sm font-medium text-gray-700">
         Current Teaching Subject
@@ -842,7 +801,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Other Subjects Taught */}
+   
     <div className="mb-4">
       <label htmlFor="other_subjects_taught" className="block text-sm font-medium text-gray-700">
         Other Subjects Taught
@@ -860,7 +819,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Assigned Class */}
+    
     <div className="mb-4">
       <label htmlFor="assigned_class" className="block text-sm font-medium text-gray-700">
         Assigned Class
@@ -878,7 +837,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Other Responsibilities Assigned */}
+    
     <div className="mb-4">
       <label htmlFor="other_responsibilities_assigned" className="block text-sm font-medium text-gray-700">
         Other Responsibilities Assigned
@@ -896,7 +855,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* 150 Hours Tamil Course Completed */}
+   
     <div className="mb-4">
       <label htmlFor="is_150_hrs_tamil_course_completed" className="block text-sm font-medium text-gray-700">
         150 Hours Tamil Course Completed or Not
@@ -906,15 +865,15 @@ export default function AddTeacherForm({user}:props) {
         name="is_150_hrs_tamil_course_completed"
         id="is_150_hrs_tamil_course_completed"
         checked={data.is_150_hrs_tamil_course_completed}
-        onChange={(e) => setData('is_150_hrs_tamil_course_completed', e.target.checked)} // Set true or false
+        onChange={(e) => setData('is_150_hrs_tamil_course_completed', e.target.checked)} 
 
-        //onChange={(e)=>setData('150_hrs_tamil_course_completed',e.target.value)}
+        
  
         className="p-2"
       />
     </div>
 
-    {/* Commuting From School */}
+  
     <div className="mb-4">
       <label htmlFor="commuting_from_school" className="block text-sm font-medium text-gray-700">
         Commuting From School
@@ -935,7 +894,7 @@ export default function AddTeacherForm({user}:props) {
       </select>
     </div>
 
-    {/* Distance From School */}
+    
     <div className="mb-4">
       <label htmlFor="distance_from_school" className="block text-sm font-medium text-gray-700">
         Distance From School
@@ -945,7 +904,7 @@ export default function AddTeacherForm({user}:props) {
         name="distance_from_school"
         id="distance_from_school"
         className="w-full p-2 border rounded"
-        //value="which_grades_teaching_done"
+       
         onChange={(e)=>setData('distance_from_school',parseFloat(e.target.value) || 0)}
  
         placeholder="Enter Distance from School"
@@ -953,7 +912,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Commuting Method to School */}
+  
     <div className="mb-4">
       <label htmlFor="commuting_method_to_school" className="block text-sm font-medium text-gray-700">
         Commuting Method to School
@@ -977,7 +936,7 @@ export default function AddTeacherForm({user}:props) {
       </select>
     </div>
 
-    {/* Number in Sign Sheet */}
+    
     <div className="mb-4">
       <label htmlFor="number_in_sign_sheet" className="block text-sm font-medium text-gray-700">
         Number in Sign Sheet
@@ -995,7 +954,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Number in Salary Sheet */}
+    
     <div className="mb-4">
       <label htmlFor="number_in_salary_sheet" className="block text-sm font-medium text-gray-700">
         Number in Salary Sheet
@@ -1013,7 +972,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Navigation Buttons */}
+    {}
     <div className="flex justify-between">
       <button
         type="button"
@@ -1038,10 +997,7 @@ export default function AddTeacherForm({user}:props) {
   <div>
     <h3 className="text-lg font-bold">Step 4: Teacher's Qualification</h3>
 
-    {/* Teacher NIC */}
-    
-
-    {/* Type of Service in School */}
+   
     <div className="mb-4">
       <label htmlFor="type_of_service_in_school" className="block text-sm font-medium text-gray-700">
         Type of Service in School
@@ -1059,7 +1015,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* GCE AL Subject Stream */}
+    
     <div className="mb-4">
       <label htmlFor="gce_al_subject_stream" className="block text-sm font-medium text-gray-700">
         GCE AL Subject Stream
@@ -1077,7 +1033,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Highest Education Qualification */}
+   
     <div className="mb-4">
       <label htmlFor="highest_education_qualification" className="block text-sm font-medium text-gray-700">
         Highest Education Qualification
@@ -1095,7 +1051,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Basic Degree Stream */}
+    
     <div className="mb-4">
       <label htmlFor="basic_degree_stream" className="block text-sm font-medium text-gray-700">
         Basic Degree Stream
@@ -1113,7 +1069,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Highest Professional Qualification */}
+    {}
     <div className="mb-4">
       <label htmlFor="highest_professional_qualification" className="block text-sm font-medium text-gray-700">
         Highest Professional Qualification
@@ -1131,7 +1087,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Present Class */}
+    
     <div className="mb-4">
       <label htmlFor="present_class" className="block text-sm font-medium text-gray-700">
         Present Class
@@ -1150,7 +1106,7 @@ export default function AddTeacherForm({user}:props) {
 
     </div>
 
-    {/* Present Grade */}
+    
     <div className="mb-4">
       <label htmlFor="present_grade" className="block text-sm font-medium text-gray-700">
         Present Grade
@@ -1170,7 +1126,7 @@ export default function AddTeacherForm({user}:props) {
 
     </div>
 
-    {/* Appointment Date for Current Class */}
+    
     <div className="mb-4">
       <label htmlFor="appointment_date_for_current_class" className="block text-sm font-medium text-gray-700">
         Appointment Date for Current Class
@@ -1181,13 +1137,12 @@ export default function AddTeacherForm({user}:props) {
         name="appointment_date_for_current_class"
         value={data.appointment_date_for_current_class}
         onChange={(e)=>setData('appointment_date_for_current_class',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
     </div>
 
-    {/* Appointment Date for Current Grade */}
     <div className="mb-4">
       <label htmlFor="appointment_date_for_current_grade" className="block text-sm font-medium text-gray-700">
         Appointment Date for Current Grade
@@ -1198,13 +1153,13 @@ export default function AddTeacherForm({user}:props) {
         name="appointment_date_for_current_grade"
         value={data.appointment_date_for_current_grade}
         onChange={(e)=>setData('appointment_date_for_current_grade',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         className="w-full p-2 border rounded"
         required
       />
     </div>
 
-    {/* Current Appointment Service Medium */}
+  
     <div className="mb-4">
       <label htmlFor="current_appointment_service_medium" className="block text-sm font-medium text-gray-700">
         Current Appointment Service Medium
@@ -1223,7 +1178,7 @@ export default function AddTeacherForm({user}:props) {
       <InputError message={errors.current_appointment_service_medium} className="mt-2" />
     </div>
 
-    {/* Appointed Subject Section */}
+    
     <div className="mb-4">
       <label htmlFor="appointed_subject_section" className="block text-sm font-medium text-gray-700">
         Appointed Subject Section
@@ -1241,7 +1196,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Subject Appointed */}
+   
     <div className="mb-4">
       <label htmlFor="subject_appointed" className="block text-sm font-medium text-gray-700">
         Subject Appointed
@@ -1259,7 +1214,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Current Service Appointed Date */}
+    
     <div className="mb-4">
       <label htmlFor="currentservice_appointed_date" className="block text-sm font-medium text-gray-700">
         Current Service Appointed Date
@@ -1276,7 +1231,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Subjects Taught Most and Second Most */}
+   
     <div className="mb-4">
       <label htmlFor="subjects_taught_most_and_second_most" className="block text-sm font-medium text-gray-700">
         Subjects Taught Most and Second Most
@@ -1294,7 +1249,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Position in the School */}
+    
     <div className="mb-4">
       <label htmlFor="position_in_the_school" className="block text-sm font-medium text-gray-700">
         Position in the School
@@ -1312,7 +1267,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Assign Date for the School */}
+    
     <div className="mb-4">
       <label htmlFor="assign_date_for_the_school" className="block text-sm font-medium text-gray-700">
         Assign Date for the School
@@ -1324,12 +1279,12 @@ export default function AddTeacherForm({user}:props) {
         className="w-full p-2 border rounded"
         value={data.assign_date_for_the_school}
         onChange={(e)=>setData('assign_date_for_the_school',e.target.value)}
-        max={new Date().toISOString().split('T')[0]} // This sets today's date as the max
+        max={new Date().toISOString().split('T')[0]} 
         required
       />
     </div>
 
-    {/* Navigation Buttons */}
+   
     <div className="flex justify-between">
       <button
         type="button"
@@ -1352,7 +1307,7 @@ export default function AddTeacherForm({user}:props) {
   <div>
     <h3 className="text-lg font-bold">Step 5: Additional Responsibilities and Memberships</h3>
 
-    {/* Other Responsibilities in School */}
+   
     <div className="mb-4">
       <label htmlFor="other_responsibilities_in_school" className="block text-sm font-medium text-gray-700">
         Other Responsibilities in School
@@ -1369,7 +1324,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* EDCS Membership */}
+    {}
     <div className="mb-4">
       <label htmlFor="EDCS_membership" className="block text-sm font-medium text-gray-700">
         EDCS Membership
@@ -1382,7 +1337,7 @@ export default function AddTeacherForm({user}:props) {
       </select>
     </div>
 
-    {/* WSOP Number */}
+  
     <div className="mb-4">
       <label htmlFor="WSOP_Number" className="block text-sm font-medium text-gray-700">
         WSOP Number
@@ -1399,7 +1354,7 @@ export default function AddTeacherForm({user}:props) {
       />
     </div>
 
-    {/* Agrahara Insurance Membership */}
+   \
     <div className="mb-4">
       <label htmlFor="Agrahara_insuarence_membership" className="block text-sm font-medium text-gray-700">
         Agrahara Insurance Membership
@@ -1412,7 +1367,7 @@ export default function AddTeacherForm({user}:props) {
       </select>
     </div>
 
-    {/* Navigation Buttons */}
+   
     <div className="flex justify-between">
       <button
         type="button"

@@ -9,6 +9,7 @@ use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\StudentAcademic;
 use App\Models\StudentPersonal;
@@ -20,12 +21,31 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentAdmissionMail;
 use App\Models\Marks;
 use App\Models\Subject;
+use App\Http\Resources\MarksResource;
 
 class StudentController extends Controller
 {
     public function dashboard()
     {
-        return Inertia::render('Student/dashboard');
+        $user = Auth::user();
+        
+         
+        $student = $user->student()->with([
+        'personal',
+        
+        'family',
+        'siblings',
+        'class',
+        'class.teacher',
+        'marks',
+        'subjects',
+        
+    ])->first();
+    
+    if(!$student){
+        return redirect()->route('student-register');
+    }
+        return Inertia::render('Student/dashboard',['student'=>$student]);
     }
 
     public function sendAdmissionForm(Request $request)
@@ -40,7 +60,7 @@ class StudentController extends Controller
 
     public function academicPage()
     {
-        $academicData = StudentAcademic::paginate(10);
+        $academicData = StudentAcademic::paginate(200);
         return Inertia::render('Student/AcademicTable', [
             'academicData' => $academicData,
             'filters' => ['search' => '']
@@ -49,10 +69,11 @@ class StudentController extends Controller
 
     public function index(): JsonResponse
     {
-        $students = StudentAcademic::paginate(10);
+        $students = StudentAcademic::paginate(205);
         $students->getCollection()->each(function ($student) {
             $student->family;
             $student->personal;
+            $student->class;
             $student->siblings;
         });
         return response()->json($students);
@@ -143,12 +164,27 @@ class StudentController extends Controller
     public function import(Request $request)
     {
         $request->validate(['file' => 'required|file|mimes:xlsx,xls,csv']);
+
         try {
-            Excel::import(new StudentsImport, $request->file('file'));
-            return response()->json(['message' => 'Students imported successfully!']);
+            $import = new StudentsImport();
+            Excel::import($import, $request->file('file'));
+
+            $failures = method_exists($import, 'failures') ? $import->failures() : collect();
+
+            return response()->json([
+                'message' => 'Students imported successfully!',
+                'failures' => $failures->map(function($f){
+                    return [
+                        'row' => $f->row(),
+                        'attribute' => $f->attribute(),
+                        'errors' => $f->errors(),
+                        'values' => $f->values(),
+                    ];
+                }),
+            ]);
         } catch (\Throwable $e) {
             \Log::error('Student import failed', ['error' => $e->getMessage()]);
-            return response()->json(['message' => 'Import failed.'], 500);
+            return response()->json(['message' => 'Import failed.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -251,6 +287,7 @@ class StudentController extends Controller
 
     public function yearlyPerformance()
     {
+        try{
         $performance = Cache::remember('yearly_performance', 3600, function () {
             return DB::table('student_performances')
                 ->selectRaw('year, ROUND(AVG(ol_passed)) as ol_passed, ROUND(AVG(ol_expected)) as ol_expected, ROUND(AVG(al_passed)) as al_passed, ROUND(AVG(al_expected)) as al_expected')
@@ -259,7 +296,10 @@ class StudentController extends Controller
                 ->get();
         });
         return response()->json($performance);
+    }catch(\Exception $e){
+        return response()->json(['error' => 'Failed to fetch performance data'], 500);
     }
+}
 
     public function apiStudentPerformance(string $reg_no): JsonResponse
     {
@@ -376,4 +416,71 @@ class StudentController extends Controller
             ],
         ]);
     }
+
+ public function getMarksBySubject($reg_no)
+{
+    try{
+        $student = StudentAcademic::where('reg_no', $reg_no)->firstOrFail();
+
+        if(!$student){
+            return response()->json(['error' => 'Student not found'], 404);
+        }
+
+        $marks = Marks::with('subject')
+        ->where('reg_no', $reg_no)
+        ->get();
+
+    return response()->json($marks);
+
+    }catch(\Exception $e){
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+ 
+
+}
+public function calendarData()
+{
+    try{
+        $student = auth()->user();
+
+        if(!$student){
+            return response()->json(['error' => 'Student not authenticated'], 401);
+        }
+
+    
+    
+    $examEvents =collect();
+    $feeDue =collect(); 
+    $assignments =collect(); 
+    $holidays = collect();
+
+    if(method_exists($student, 'exams')){
+        $examEvents = $student->exams()->get(['title', 'exam_date as date']);
+    }
+    if(method_exists($student, 'fees')){
+        $feeDue = $student->fees()->where('status', 'pending')->get(['due_date as date', 'amount']);
+    }
+    if(method_exists($student, 'assignments')){
+        $assignments = $student->assignments()->get(['title', 'due_date as date']);
+    }
+    if(class_exists('App\Models\Holiday')){
+        $holidays = \App\Models\Holiday::all(['name as title', 'date']);
+    }
+    return response()->json([
+        'exams' => $examEvents,
+        'fees' => $feeDue,
+        'assignments' => $assignments,
+        'holidays' => $holidays,
+    ]);
+}catch(\Exception $e){
+    return response()->json(['error' => $e->getMessage()], 500);
+}
+}
+
+public function exportExcel()
+{
+    return Excel::download(new StudentExport, 'student_profile.xlsx');
+}
+
+
 }

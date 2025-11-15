@@ -21,14 +21,14 @@ const FamilyTable = ({ familyData }: FamilyTableProps) => {
   const previewRef = useRef<HTMLDivElement>(null);
 
   const handleViewIconClick = async (e: React.MouseEvent, reg_no: number) => {
-    e.stopPropagation(); // prevent row click
+    e.stopPropagation(); 
     try {
       const response = await fetch(`/api/students/${reg_no}`);
       const data = await response.json();
       if (response.ok) {
         setSelectedStudent(data as Student);
         setIsViewModalOpen(true);
-        setPreviewStudent(null); // close preview on modal open
+        setPreviewStudent(null); 
       } else {
         alert("Failed to load student details.");
       }
@@ -47,7 +47,7 @@ const FamilyTable = ({ familyData }: FamilyTableProps) => {
     setPreviewStudent(student);
   };
 
-  // Close preview when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (previewRef.current && !previewRef.current.contains(e.target as Node)) {

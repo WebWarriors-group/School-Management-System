@@ -3,21 +3,20 @@ import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyAFZQ_mDaRdoGsotG6jThYEtdN-NsrOo_A",
-  
-    authDomain: "mahadivulwewa-national-school.firebaseapp.com",
-  
-    projectId: "mahadivulwewa-national-school",
-  
-    storageBucket: "mahadivulwewa-national-school.firebasestorage.app",
-  
-    messagingSenderId: "465299916200",
-  
-    appId: "1:465299916200:web:b430c97ddd0970e46e499d",
-  
-    measurementId: "G-QJ2PYHLR8Y"
-  
-  };
+  apiKey: "AIzaSyBi_sS5YpLCHkq9oiuGKsksVDzK08banv0",
+
+  authDomain: "sms-login-d5091.firebaseapp.com",
+
+  projectId: "sms-login-d5091",
+
+  storageBucket: "sms-login-d5091.firebasestorage.app",
+
+  messagingSenderId: "403385348718",
+
+  appId: "1:403385348718:web:32245d7ffaace2d21bac7f"
+
+};
+
   
 const app = initializeApp(firebaseConfig);
 

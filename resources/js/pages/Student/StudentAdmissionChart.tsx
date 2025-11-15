@@ -22,7 +22,7 @@ export default function StudentAdmissionLineChart() {
   const [admissionData, setAdmissionData] = useState<AdmissionData[]>([]);
 
   useEffect(() => {
-    // Fetch admission data from backend API
+    
     fetch('/api/admissions-per-year')
       .then(res => res.json())
       .then(data => {

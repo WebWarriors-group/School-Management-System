@@ -183,7 +183,7 @@ export default function AdminLeaveRequests() {
           </div>
         )}
 
-        {/* Responsive 3-column layout */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {renderRequests(
             pendingRequests,

@@ -1,6 +1,7 @@
+// ...existing code...
 import UserRolesPieChart from '@/components/PieChart';
 import AppLayout from '@/layouts/app-layout';
-import Mangement from '@/pages/Admin/userManagement';
+import UserManagement from '@/pages/Admin/userManagement';
 import { type BreadcrumbItem } from '@/types';
 import { faPeopleArrows, faRightToBracket, faUsers, faUsersSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,39 +24,24 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface props{
-
-    userfooter:string,
-    teacherfooter:string,
-studentActivity:string,
+interface Props {
+    userfooter: string;
+    teacherfooter: string;
+    studentActivity: string;
 }
 
-export default function Posts({userfooter,teacherfooter,studentActivity}:props) {
-    const { users, activeSessions, roleCounts, totalUserCount, teacherCount, studentCount } = usePage<{
-        users: {
-            data: { id: number; name: string; email: string; role: string; password: string; created_at: string; updated_at: string }[];
-            current_page: number;
-            last_page: number;
-        };
-        activeSessions: {
-            id: number;
-            user_id: number;
-            ip_address: string;
-            user_agent: string;
-            payload: string;
-            last_activity: number;
-            user: { name: String; email: string };
-        }[];
+export default function Posts({ userfooter, teacherfooter, studentActivity }: Props) {
+    // Simplified usePage typing to avoid complex generics and runtime undefined access.
+    const pageProps = usePage().props as any;
 
-        roleCounts: {
-            admin: number;
-            teacher: number;
-            student: number;
-        };
-        totalUserCount: number;
-        teacherCount: number;
-        studentCount: number;
-    }>().props;
+    const {
+        users = { data: [], current_page: 1, last_page: 1 },
+        activeSessions = [],
+        roleCounts = { admin: 0, teacher: 0, student: 0 },
+        totalUserCount = 0,
+        teacherCount = 0,
+        studentCount = 0,
+    } = pageProps;
 
     const secondRoleCountsData = {
         teacher: teacherCount,
@@ -70,17 +56,19 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
             { page },
             {
                 preserveState: true,
-                preserveScroll: true, // This ensures the scroll position is maintained
+                preserveScroll: true,
                 onSuccess: () => {
-                    window.scrollTo(0, currentScrollPosition); // Restore the scroll position after loading
+                    window.scrollTo(0, currentScrollPosition);
                 },
             },
         );
     };
+
     const [isVisible, setIsVisible] = useState(false);
     const handleClick = () => {
         setIsVisible(true);
     };
+
     const cards = [
         {
             color: 'bg-orange-500',
@@ -95,7 +83,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
             icon: <FontAwesomeIcon icon={faPeopleArrows} className="text-4xl text-white" />,
             title: 'Total Members',
             value: teacherCount + studentCount,
-            footer: studentActivity||teacherfooter,
+            footer: studentActivity || teacherfooter,
             footerColor: 'text-blue-500',
         },
         {
@@ -109,7 +97,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
         {
             color: 'bg-sky-500',
             icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
-            title: 'Dissable Accounts',
+            title: 'Disabled Accounts',
             value: activeSessions?.length || 0,
             footer: 'Just Updated',
             footerColor: 'text-blue-500',
@@ -118,14 +106,14 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
             color: 'bg-purple-500',
             icon: <FontAwesomeIcon icon={faUsers} className="text-4xl text-white" />,
             title: 'Unregistered Users',
-            value: teacherCount + studentCount-totalUserCount,
-            footer: userfooter||studentActivity||teacherfooter,
+            value: teacherCount + studentCount - totalUserCount,
+            footer: userfooter || studentActivity || teacherfooter,
             footerColor: 'text-blue-500',
         },
         {
             color: 'bg-red-700',
             icon: <FontAwesomeIcon icon={faUsersSlash} className="text-4xl text-white" />,
-            title: 'Dissable Accounts',
+            title: 'Disabled Accounts',
             value: activeSessions?.length || 0,
             footer: 'Just Updated',
             footerColor: 'text-blue-500',
@@ -133,7 +121,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
         {
             color: 'bg-sky-500',
             icon: <FontAwesomeIcon icon={faRightToBracket} className="text-4xl text-white" />,
-            title: ' Today Login Users',
+            title: 'Today Login Users',
             value: activeSessions?.length || 0,
             footer: 'Just Updated',
             footerColor: 'text-blue-500',
@@ -144,37 +132,32 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin" />
 
-           
-
-            <header className="sticky top-15 flex w-full  border-b  p-4 shadow-sm  bg-white z-50">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row  md:justify-end">
-          
-          <p className=" text-blue-600 md:text-lg  md:text-left md:text-base md:mt-2">
-            Classes,Students,Subjects Overall performance
-          </p>
-
-          <button className="cursor-pointer text-[18px]" onClick={handleClick}>
-                    <p>
-                        {' '}
-                        <i className="fa fa-user"></i> User
+            <header className="sticky top-15 flex w-full border-b p-4 shadow-sm bg-white z-50">
+                <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row md:justify-end">
+                    <p className="text-blue-600 md:text-lg md:text-left md:text-base md:mt-2">
+                       
                     </p>
-                </button>
-        </div>
-      </header>
+
+                    <button className="cursor-pointer text-[18px]" onClick={handleClick}>
+                        <p>
+                            <i className="fa fa-user" /> User
+                        </p>
+                    </button>
+                </div>
+            </header>
+
             {!isVisible ? (
                 <>
                     <main className="flex h-full flex-1 flex-col gap-6 p-6 bg-gray-200">
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
                             {cards.map((card, index) => (
                                 <div key={index} className="relative mt-20 ml-5 h-30 w-70 border bg-white p-4 shadow-lg transition hover:shadow-md">
-                                    {/* Colored square icon */}
                                     <div
                                         className={`absolute z-0 -top-10 left-4 flex h-25 w-25 items-center justify-center text-white shadow-lg ${card.color}`}
                                     >
                                         <span className="text-lg">{card.icon}</span>
                                     </div>
 
-                                    {/* Push content down to make space for the icon box */}
                                     <div className="mt-[-40px] ml-30 pt-8">
                                         <p className="text-sm text-gray-500">{card.title}</p>
                                         <h2 className="mt-1 text-2xl font-bold">{card.value}</h2>
@@ -187,8 +170,6 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                         <div className="md:grid-cols- mt-[16px] grid w-0 grid-cols-1 gap-7 shadow-lg">
                             <UserRolesPieChart roleCounts={roleCounts} secondRoleCounts={secondRoleCountsData} />
                         </div>
-
-                        {/* <UserRolesPieChart roleCounts={roleCounts}  secondRoleCounts={secondRoleCountsData}/>   */}
 
                         <div className="mt-10 flex flex-col gap-6 rounded-xl bg-white p-6 text-black shadow-lg">
                             <h3 className="text-lg font-bold text-[#004953]">All Users Records </h3>
@@ -204,13 +185,12 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users?.data?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
-                                        users.data.map((user) => (
+                                    {users?.data?.length > 0 ? (
+                                        users.data.map((user: any) => (
                                             <tr key={user.id} className="text-[16px] hover:bg-gray-50">
                                                 <td className="border px-4 py-2">{user.email}</td>
                                                 <td className="border px-4 py-2">{user.name}</td>
                                                 <td className="border px-4 py-2">{user.role}</td>
-
                                                 <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
                                                 <td className="border px-4 py-2">{new Date(user.updated_at).toLocaleString()}</td>
                                             </tr>
@@ -225,12 +205,11 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                 </tbody>
                             </table>
 
-                            {/* Pagination Controls */}
                             <div className="flex justify-between">
                                 <button
                                     disabled={users.current_page === 1}
                                     onClick={() => goToPage(users.current_page - 1)}
-                                    className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer"
+                                    className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer disabled:opacity-50"
                                 >
                                     Previous
                                 </button>
@@ -240,7 +219,7 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                 <button
                                     disabled={users.current_page === users.last_page}
                                     onClick={() => goToPage(users.current_page + 1)}
-                                    className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer"
+                                    className="rounded-xl bg-[maroon] px-3 py-2 text-[white] hover:cursor-pointer disabled:opacity-50"
                                 >
                                     Next
                                 </button>
@@ -260,19 +239,14 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {activeSessions?.length > 0 ? ( // Optional chaining prevents the error when posts is undefined or null
-                                        activeSessions.map((session) => (
+                                    {activeSessions?.length > 0 ? (
+                                        activeSessions.map((session: any) => (
                                             <tr key={session.id} className="hover:bg-gray-50">
-                                                {/* <td className="border px-4 py-2">
-                                       {post.picture ? <img src={post.picture} alt="Post" className="h-16 w-16 rounded object-cover" /> : 'No Image'}
-                                   </td> */}
-                                                {/* <td className="border px-4 py-2">{session.id}</td> */}
-                                                <td className="border px-4 py-2">{session.user.name}</td>
-                                                <td className="border px-4 py-2">{session.user.email}</td>
+                                                <td className="border px-4 py-2">{session.user?.name}</td>
+                                                <td className="border px-4 py-2">{session.user?.email}</td>
                                                 <td className="border px-4 py-2">{session.ip_address}</td>
                                                 <td className="border px-4 py-2">{session.user_agent}</td>
-                                                <td className="border px-4 py-2">{new Date(session.last_activity * 1000).toLocaleString()}</td>
-
+                                                <td className="border px-4 py-2">{new Date((session.last_activity || 0) * 1000).toLocaleString()}</td>
                                                 <td className="border px-4 py-2 text-center">
                                                     <button className="h-[30px] w-[100px] rounded-2xl bg-green-100 text-[green]">active</button>
                                                 </td>
@@ -280,8 +254,8 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={5} className="py-4 text-center text-gray-500">
-                                                No posts available.
+                                            <td colSpan={6} className="py-4 text-center text-gray-500">
+                                                No active sessions.
                                             </td>
                                         </tr>
                                     )}
@@ -291,8 +265,9 @@ export default function Posts({userfooter,teacherfooter,studentActivity}:props) 
                     </main>
                 </>
             ) : (
-                <Mangement />
+                <UserManagement />
             )}
         </AppLayout>
     );
 }
+// ...existing code...

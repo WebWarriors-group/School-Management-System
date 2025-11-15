@@ -1,4 +1,4 @@
-// src/components/DeleteStudent.tsx
+
 
 import React from "react";
 

@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StudyMaterial;
+use Illuminate\Support\Facades\Auth;
+
 use App\Events\StudyMaterialUploaded;
 use Illuminate\Validation\ValidationException;
 use Exception;
+
 
 class StudyMaterialController extends Controller
 {
@@ -18,24 +21,29 @@ class StudyMaterialController extends Controller
         return Inertia::render('studyMaterial/studyMaterials');
     }
 
-    /**
-     * Display a listing of the materials.
-     */
+    
     public function index($category)
     {
+        $user = Auth::user();
+
         $materials = StudyMaterial::with('uploaded_by:id,name,role')
             ->where('category', $category)
             ->get();
 
-        return Inertia::render('studyMaterial/studyMaterialIndex', [
-            'category' => $category,
-            'materials' => $materials,
-        ]);
+        if ($user->role == 'student'){
+            return Inertia::render('Student/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        } else {
+             return Inertia::render('studyMaterial/studyMaterialIndex', [
+                'category' => $category,
+                'materials' => $materials,
+            ]);
+        }
     }
 
-    /**
-     * Store a newly created material in storage.
-     */
+   
     public function store(Request $request)
     {
         try {
@@ -44,7 +52,7 @@ class StudyMaterialController extends Controller
                'grade' => 'required|integer|min:6|max:13',
                'subject' => 'required|string',
                'year' => 'required|integer',
-               'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:51200', // 50MB max
+               'file' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,txt|max:51200', 
                'category' => 'required|string',
             ]);
 
@@ -84,9 +92,7 @@ class StudyMaterialController extends Controller
         }
     }
 
-    /**
-     * Display the specified material.
-     */
+    
     public function show($id)
     {
         $material = StudyMaterial::find($id);
@@ -98,9 +104,7 @@ class StudyMaterialController extends Controller
         return response()->json($material, 200);
     }
 
-    /**
-     * Update the specified material in storage.
-     */
+    
     public function update(Request $request, $id)
     {
         $material = StudyMaterial::find($id);
@@ -109,14 +113,13 @@ class StudyMaterialController extends Controller
             return response()->json(['message' => 'Material not found'], 404);
         }
 
-        // Validate the incoming request
         $validated = $request->validate([
             'subject_id' => 'required|integer|exists:subjects,subject_id',
             'title' => 'required|string|max:255',
             'file_path' => 'required|string',
         ]);
 
-        // Update the material
+        
         $material->update($validated);
 
         return response()->json([
@@ -125,9 +128,7 @@ class StudyMaterialController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified material from storage.
-     */
+  
     public function destroy($id)
     {
         $material = StudyMaterial::find($id);
@@ -136,7 +137,7 @@ class StudyMaterialController extends Controller
             return response()->json(['message' => 'Material not found'], 404);
         }
 
-        // Delete the material
+        
         $material->delete();
 
         return response()->json(['message' => 'Material deleted successfully']);

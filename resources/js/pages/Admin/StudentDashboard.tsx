@@ -49,7 +49,7 @@ type PaginatedResponse<T> = {
 
 const fetchStudents = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/students");
+    const response = await fetch(`${window.location.origin}/api/students`);
     if (!response.ok) throw new Error("Error fetching students");
 
     const data: PaginatedResponse<Student> = await response.json();
@@ -57,7 +57,7 @@ setStudents(data.data);
 
 
     if (Array.isArray(data.data)) {
-      setStudents(data.data); // ✅ CORRECT: access the paginated array inside `data`
+      setStudents(data.data);
     } else {
       console.error("Invalid response format:", data);
       toast.error("Failed to load student data");
@@ -90,7 +90,7 @@ useEffect(() => {
   const confirmDelete = async () => {
     if (!studentToDelete) return;
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/students/${studentToDelete}`, {
+      const response = await fetch(`${window.location.origin}/api/students/${studentToDelete}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ useEffect(() => {
   };
 const getAcademicData = (): AcademicRecord[] =>
   students.map((s) => ({
-    reg_no: Number(s.reg_no), // ensure it's a number
+    reg_no: Number(s.reg_no), 
     student_id_no: s.student_id_no || '',
     class_id: s.class_id,
     distance_to_school: s.distance_to_school ?? null,
@@ -349,7 +349,7 @@ const getSiblingsData = (): SiblingsRecord[] =>
 )}
 {selectedSection === "personal" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Personal Information</h2> */}
+    {}
     <PersonalTable personalData={getPersonalData()} />
     <div className="mt-4">
       <Button
@@ -388,14 +388,14 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "siblings" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Siblings Information</h2> */}
+    {}
     <SiblingsTable siblingsData={getSiblingsData()} />
     <div className="mt-4">
       <Button
         onClick={() => setSelectedSection(null)}
         className="bg-blue-600 text-white hover:bg-blue-700"
       >
-        Back
+        Backh
       </Button>
     </div>
   </div>

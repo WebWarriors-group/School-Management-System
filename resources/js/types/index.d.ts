@@ -34,11 +34,12 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    role: string;
     avatar?: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
+    [key: string]: unknown; 
 }
 
 
@@ -127,7 +128,7 @@ export type SiblingsRecord = {
 };
 export interface Student {
   reg_no: number;
-  student_id_no: string; // ✅ Add this field
+  student_id_no: string; 
   class_id: number;
   distance_to_school: number | null;
   method_of_coming_to_school: string | null;
