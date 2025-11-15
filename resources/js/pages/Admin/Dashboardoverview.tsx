@@ -255,9 +255,9 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
     setteacher(true);
   };
 
-  const back1 = () => {
-    setteacher(false);
-  };
+  // const back1 = () => {
+  //   setteacher(false);
+  // };
 
   const back3 = () => {
     setSelectedCard(null);
@@ -362,11 +362,11 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
         
 
         {selectedCard && selectedCard.id === 4 ? (
-          <>
-            <ViewAllStudents />
-            <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
+          <><Button onClick={() => setSelectedCard(null)} className="cursor-pointer bg-yellow-500 w-40 h-10 mt-4">
               Back
             </Button>
+            <ViewAllStudents />
+            
           </>
         ) : selectedCard && selectedCard.id === 2 ? (
           <>
@@ -383,7 +383,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
         ) :
           selectedCard && selectedCard.id === 1 ? (
             <>
-              <Button onClick={() => setSelectedCard(null)} className="bg-yellow-500 w-40 h-10 mt-4">
+              <Button onClick={() => setSelectedCard(null)} className="cursor-pointer bg-yellow-500 w-40 h-10 mt-4">
                 Back
               </Button>
               <SubjectIndex subjects={subjects} grades={grades} />
@@ -397,7 +397,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
             showclass ? (
               addteacher ? (
                 <>
-                  <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={back1}>
+                  <Button className="text-[black] justify-right bg-yellow-500 w-40 h-10 mt-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={() => router.visit("/admin/dashboardoverview")} >
                     Back
                   </Button>
                   <div className="mt-[-100px]">
@@ -502,7 +502,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
               )
             ) : showForm ? (
               <div className="mt-4">
-                <Button className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={CloseClick}>
+                <Button className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40" onClick={()=> router.visit("/admin/dashboardoverview")}>
                   Back
                 </Button>
                 <span className="ml-212">Total Teachers</span>
@@ -537,7 +537,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
                 <div className="mt-4">
                   <Button
                     className="bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-[pointer] transition-transform duration-900 hover:scale-100  transform scale-90 z-40"
-                    onClick={CloseClick8}
+                    onClick={() => router.visit('/admin/dashboardoverview')}
                   >
                     Back
                   </Button>

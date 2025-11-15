@@ -238,8 +238,23 @@ const getSiblingsData = (): SiblingsRecord[] =>
       <div className="flex h-full bg-gray-200">
         <div className="flex-1 flex flex-col">
           <Toaster position="top-right" richColors />
-
-        
+ 
+        {selectedSection === "personal" && (
+  <div className="px-6 py-4 max-w-6xl mx-auto">
+     <div className="mt-4 mb-4">
+      <Button
+        onClick={() => setSelectedSection(null)}
+        className=" bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
+      >
+        Back
+      </Button>
+    </div>
+    <PersonalTable personalData={getPersonalData()} />
+   
+  </div>
+  
+)}
+ 
 
 
         {!selectedSection && (
@@ -325,7 +340,14 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 {selectedSection === "academic" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-   
+   <div className="mt-4 mb-4">
+      <Button
+        onClick={() => setSelectedSection(null)}
+        className=" bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
+      >
+        Back
+      </Button>
+    </div>
    <AcademicTable academicData={{ 
   current_page: 1,
   data: getAcademicData(),
@@ -337,67 +359,49 @@ const getSiblingsData = (): SiblingsRecord[] =>
 
 
 
-    <div className="mt-4">
-      <Button
-        onClick={() => setSelectedSection(null)}
-        className="bg-blue-600 text-white hover:bg-blue-700"
-      >
-        Back
-      </Button>
-    </div>
+   
   </div>
 )}
-{selectedSection === "personal" && (
-  <div className="px-6 py-4 max-w-6xl mx-auto">
-    {}
-    <PersonalTable personalData={getPersonalData()} />
-    <div className="mt-4">
-      <Button
-        onClick={() => setSelectedSection(null)}
-        className="bg-blue-600 text-white hover:bg-blue-700"
-      >
-        Back
-      </Button>
-    </div>
-  </div>
-)}
-{selectedSection && (
+
+{/* {selectedSection && (
   <div className="flex justify-end px-6 mt-4">
     <Button variant="outline" onClick={() => setSelectedSection(null)}>
       Reset Dashboard
     </Button>
   </div>
-)}
+)} */}
 
 {selectedSection === "family" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Family Information</h2> */}
-   <FamilyTable familyData={getFamilyData()} />
-
-
-    <div className="mt-4">
+     <div className="mt-4 mb-4">
       <Button
         onClick={() => setSelectedSection(null)}
-        className="bg-blue-600 text-white hover:bg-blue-700"
+        className="
+        bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
       >
         Back
       </Button>
     </div>
+    {/* <h2 className="text-2xl font-bold text-blue-700 mb-4">Family Information</h2> */}
+   <FamilyTable familyData={getFamilyData()} />
+
+
+   
   </div>
 )}
 
 {selectedSection === "siblings" && (
   <div className="px-6 py-4 max-w-6xl mx-auto">
-    {}
-    <SiblingsTable siblingsData={getSiblingsData()} />
-    <div className="mt-4">
+     <div className="mt-4 mb-4">
       <Button
         onClick={() => setSelectedSection(null)}
-        className="bg-blue-600 text-white hover:bg-blue-700"
+        className=" bg-yellow-500 w-40 h-10 text-lg shadow-sm cursor-pointer transform scale-90 z-40"
       >
-        Backh
+        Back
       </Button>
     </div>
+    <SiblingsTable siblingsData={getSiblingsData()} />
+   
   </div>
 )}
 

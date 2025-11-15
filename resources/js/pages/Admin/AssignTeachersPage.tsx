@@ -194,7 +194,7 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
       <main className="p-6 bg-gray-200">
  <div className="flex flex-col lg:flex-row gap-8">
           <Button
-            className="bg-yellow-500 w-40 h-10 text-lg shadow-sm hover:scale-105 transition"
+            className="cursor-pointer mb-5 bg-yellow-500 w-40 h-10 text-lg shadow-sm hover:scale-105 transition"
             onClick={() => router.visit('/admin/dashboardoverview')}
           >
             Back

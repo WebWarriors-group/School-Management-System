@@ -114,15 +114,7 @@ const ViewAllStudents = () => {
       {showModal && selectedStudent ? (
         <div className="max-w-lg mx-auto">
           <div className="bg-white p-6 rounded-lg shadow-lg relative">
-            <button
-              onClick={() => {
-                setShowModal(false);
-                setSelectedStudent(null);
-              }}
-              className="absolute top-2 right-2 text-gray-700 text-2xl font-bold"
-            >
-              &times;
-            </button>
+            
             <h2 className="text-xl text-sky-800 font-bold mb-4 text-center">Student Actions</h2>
             <p className="text-center mb-4">
               What do you want to do for <strong>{selectedStudent.full_name}</strong>?
@@ -133,7 +125,7 @@ const ViewAllStudents = () => {
                   setShowModal(false);
                   setShowIDCard(true);
                 }}
-                className="bg-green-600 text-white py-2 rounded"
+                className="cursor-pointer bg-green-600 text-white py-2 rounded"
               >
                 Generate ID
               </button>
@@ -142,7 +134,7 @@ const ViewAllStudents = () => {
                   setShowModal(false);
                   handlePerformanceClick(selectedStudent);
                 }}
-                className="bg-blue-600 text-white py-2 rounded"
+                className=" cursor-pointer bg-blue-600 text-white py-2 rounded"
               >
                 Performance Card
               </button>
@@ -151,7 +143,7 @@ const ViewAllStudents = () => {
                   setShowModal(false);
                   setSelectedStudent(null);
                 }}
-                className="bg-gray-200 text-gray-800 py-2 rounded"
+                className="cursor-pointer bg-gray-200 text-gray-800 py-2 rounded"
               >
                 Back to List
               </button>

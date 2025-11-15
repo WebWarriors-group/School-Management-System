@@ -19,7 +19,7 @@ interface StudentIDProps {
 
 export default function StudentID({ student, onClose }: StudentIDProps) {
     const printRef = useRef<HTMLDivElement>(null);
-    const [showBack, setShowBack] = useState(false);
+    
     const handlePrint = () => {
         const content = printRef.current?.innerHTML;
         if (content) {
