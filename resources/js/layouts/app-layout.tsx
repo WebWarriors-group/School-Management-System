@@ -15,16 +15,18 @@ interface AppLayoutProps {
 }
 export default ({ children, breadcrumbs, auth, ...props }: AppLayoutProps) => {
   const { auth:authFromPage } = usePage().props;
+
+   const user = auth?.user || authFromPage?.user || {
+    name: 'Guest',
+    avatar: '/default-avatar.png', // path to a default image
+    email: '',
+  };
 return(
   <>
     {/* <NotificationListener /> */}
-<<<<<<< HEAD
     <Toaster position="top-right" richColors closeButton />
-=======
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
-    <AppLayoutTemplate breadcrumbs={breadcrumbs}  {...props}>
+    <AppLayoutTemplate breadcrumbs={breadcrumbs}  {...props} >
       {children}
     </AppLayoutTemplate>
   </>
 );}
-
