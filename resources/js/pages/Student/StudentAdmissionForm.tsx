@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import StudentAcademicForm from './StudentAcademicForm';
 import StudentPersonalForm from './StudentPersonalForm';
 import StudentFamilyForm from './StudentFamilyForm';
@@ -122,12 +122,10 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
 
 
   useEffect(() => {
-    if (!form.photo || typeof form.photo === "string") return;
-
-    const objectUrl = URL.createObjectURL(form.photo);
-    setPhotoPreview(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [form.photo]);
+   return () => {
+    abortControllerRef.current?.abort();
+   };},[]
+  );
 
   const [siblings, setSiblings] = React.useState<Sibling[]>([
     { sibling_name: '', relationship: '', sibling_age: 0, occupation: '', contact: '' }
@@ -216,113 +214,69 @@ export default function StudentAdmissionForm({ setShowForm }: StudentAdmissionFo
     }
   };
 const [isSubmitting, setIsSubmitting]=useState(false);
-  const handleSubmit = async (e: React.FormEvent) => {
+const abortControllerRef = useRef<AbortController | null>(null);
+  const handleSubmit = useCallback(async(e: React.FormEvent) => {
     e.preventDefault();
 setIsSubmitting(true);
+setErrors({});
 try{
-     if (!form.reg_no || !form.class_id || !form.full_name || !form.birthday || 
-      !form.address || !form.gender || !form.ethnicity || !form.religion) {
-    alert("Please fill in all required fields.");
+     const result = studentFormSchema.safeParse( { ...form, siblings });
+     if (!result.success) {
+      const validationErrors: Record<string, string> = {};
+      result.error.errors.forEach(err => {
+        if (err.path[0]) validationErrors[err.path[0]] = err.message;
+      });
+      setErrors(validationErrors);
+      setIsSubmitting(false);
+      return;
+     }
+
     
-    return;
-  }
+  
 
     if (!window.confirm('Are you sure you want to submit this admission form?')) return;
 
 
     const payload = new FormData();
-    payload.append('reg_no', form.reg_no);
-    payload.append('class_id', form.class_id);
-    payload.append('distance_to_school', form.distance_to_school);
-    payload.append('method_of_coming_to_school', form.method_of_coming_to_school);
-    payload.append('grade_6_9_asthectic_subjects', form.grade_6_9_asthectic_subjects);
-    payload.append('grade_10_11_basket1_subjects', form.grade_10_11_basket1_subjects);
-    payload.append('grade_10_11_basket2_subjects', form.grade_10_11_basket2_subjects);
-    payload.append('grade_10_11_basket3_subjects', form.grade_10_11_basket3_subjects);
-    payload.append('receiving_any_grade_5_scholarship', String(form.receiving_any_grade_5_scholarship ? 1 : 0));
-    payload.append('receiving_any_samurdhi_aswesuma', String(form.receiving_any_samurdhi_aswesuma ? 1 : 0));
-    payload.append('receiving_any_scholarship', String(form.receiving_any_scholarship ? 1 : 0));
+   appendFormData(payload,result.data);
 
-    payload.append('personal[birthday]', form.birthday);
-    payload.append('personal[full_name]', form.full_name);
-    payload.append('personal[full_name_with_initial]', form.full_name_with_initial);
+   abortControllerRef.current?.abort();
+   const controller = new AbortController();
+   abortControllerRef.current = controller;
 
-    payload.append('personal[ethnicity]', form.ethnicity);
-
-    payload.append('personal[religion]', form.religion);
-
-    payload.append('personal[gender]', form.gender);
-    payload.append('personal[birth_certificate_number]', form.birth_certificate_number);
-    payload.append('personal[address]', form.address);
-    payload.append('personal[nic_number]', form.nic_number);
-    payload.append('personal[postal_ic_number]', form.postal_ic_number);
-    payload.append('personal[age]', form.age);
-    payload.append('personal[special_needs]', String(form.special_needs ? 1 : 0));
-    payload.append('personal[height]', form.height);
-    payload.append('personal[weight]', form.weight);
-    if (form.photo) {
-      payload.append('personal[photo]', form.photo);
-    }
-    
-    payload.append('family[mother_name]', form.mother_name || '');
-    payload.append('family[mother_occupation]', form.mother_occupation || '');
-    payload.append('family[mother_income]', form.mother_income || '');
-    payload.append('family[mother_working_place]', form.mother_working_place || '');
-    payload.append('family[mother_contact]', form.mother_contact || '');
-    payload.append('family[mother_email]', form.mother_email || '');
-    payload.append('family[mother_whatsapp]', form.mother_whatsapp || '');
-
-    payload.append('family[father_name]', form.father_name || '');
-    payload.append('family[father_occupation]', form.father_occupation || '');
-    payload.append('family[father_income]', form.father_income || '');
-    payload.append('family[father_working_place]', form.father_working_place || '');
-    payload.append('family[father_contact]', form.father_contact || '');
-    payload.append('family[father_email]', form.father_email || '');
-    payload.append('family[father_whatsapp]', form.father_whatsapp || '');
-
-
-    siblings.forEach((sibling, index) => {
-      payload.append(`siblings[${index}][sibling_name]`, sibling.sibling_name);
-      payload.append(`siblings[${index}][relationship]`, sibling.relationship);
-      payload.append(`siblings[${index}][sibling_age]`, sibling.sibling_age.toString());
-
-
-      payload.append(`siblings[${index}][occupation]`, sibling.occupation);
-      payload.append(`siblings[${index}][contact]`, sibling.contact);
-    });
-   
-
+   const response = await
     fetch('/api/student', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
       },
       body: payload,
-    })
+      signal: controller.signal,
+    });
 
-      .then(async (response) => {
+    
         if (!response.ok) {
           const errorData = await response.json().catch(()=>({}));
-          const errorMessage = errorData.message || `Server responded with status: ${response.status}`;
-          throw new Error(errorMessage);
-          
+          setServerErrors(errorData.errors || { general: errorData.message });
+          throw new Error(errorData.message || "Submission failed");
+        
         } 
-        return response.json();
-      })
-        .then((data) =>  {
+      const data = await response.json();
+      
           console.log('Success:', data);
           alert("Student admission submitted successfully!");
           resetFormState(); 
           setShowForm(false);
-        })
-      .catch((error) => {
+        }
+      catch(error: any) {
+        if (error.name !== "AbortError"){
         console.error('Network error:', error);
         alert("Network error occurred while submitting the form.");
-      });
+        }
     }finally{
       setIsSubmitting(false);
     }
-  }
+  },[form, siblings, setShowForm]);
   const [menuOpen, setMenuOpen] = useState(false);
 
 
