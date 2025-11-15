@@ -64,13 +64,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
 
-<<<<<<< HEAD
 });
 
 
 Route::middleware('auth', 'teacher')->group(function () {
    
-=======
     Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
     Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
     Route::post('/study_material', [StudyMaterialController::class, 'store']);
@@ -83,7 +81,6 @@ Route::middleware('auth', 'teacher')->group(function () {
 
 Route::middleware(['auth', 'teacher'])->group(function () {
     // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
    
