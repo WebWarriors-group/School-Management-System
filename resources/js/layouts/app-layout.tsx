@@ -15,6 +15,12 @@ interface AppLayoutProps {
 }
 export default ({ children, breadcrumbs, auth, ...props }: AppLayoutProps) => {
   const { auth:authFromPage } = usePage().props;
+
+   const user = auth?.user || authFromPage?.user || {
+    name: 'Guest',
+    avatar: '/default-avatar.png', // path to a default image
+    email: '',
+  };
 return(
   <>
     {/* <NotificationListener /> */}
@@ -24,4 +30,3 @@ return(
     </AppLayoutTemplate>
   </>
 );}
-
