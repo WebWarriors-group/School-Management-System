@@ -157,20 +157,18 @@ export default function AssignTeachersPage() {
   };
 
   
-  const canTeacherTeachSubject = (teacher: Teacher, subjectName: string): boolean => {
-    if (!teacher.qualifications) return false;
+  const canTeacherTeachSubject = (teacher: Teacher, subjectName?: string): boolean => {
+  if (!teacher.qualifications) return false;
+  if (!subjectName) return false; // 🔹 Prevent undefined
 
-    const subjectAppointed = teacher.qualifications.subject_appointed?.toLowerCase() || '';
-    const subjectsMostTaught = teacher.qualifications.subjects_taught_most_and_second_most?.toLowerCase() || '';
+  const subjectAppointed = teacher.qualifications.subject_appointed?.toLowerCase() || '';
+  const subjectsMostTaught = teacher.qualifications.subjects_taught_most_and_second_most?.toLowerCase() || '';
 
-    const subjectNameLower = subjectName.toLowerCase();
+  const subjectNameLower = subjectName.toLowerCase();
 
-   
-    if (subjectAppointed.includes(subjectNameLower)) return true;
-    if (subjectsMostTaught.includes(subjectNameLower)) return true;
+  return subjectAppointed.includes(subjectNameLower) || subjectsMostTaught.includes(subjectNameLower);
+};
 
-    return false;
-  };
 
   
   const teachersForSelectedSubject = selectedSubjectId
