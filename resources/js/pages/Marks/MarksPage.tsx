@@ -126,6 +126,9 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
       }
     }
 
+ 
+
+
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
       const res = await fetch('/marks/storeBulkMarks', {
@@ -150,6 +153,91 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
       alert('Submission error: ' + err.message);
     }
   };
+
+  // ---------------------------------------
+// UPDATE EXISTING MARK FIELD
+// ---------------------------------------
+const handleExistingMarkChange = (index: number, value: string) => {
+  setExistingMarks(prev => {
+    const updated = [...prev];
+    updated[index].marks_obtained =
+      value === "" ? 0 : Math.min(100, Math.max(0, Number(value)));
+    return updated;
+  });
+};
+
+// ---------------------------------------
+// UPDATE EXISTING GRADE FIELD
+// ---------------------------------------
+const handleExistingGradeChange = (index: number, value: string) => {
+  setExistingMarks(prev => {
+    const updated = [...prev];
+    updated[index].grade = value;
+    return updated;
+  });
+};
+
+// ---------------------------------------
+// SAVE UPDATED EXISTING MARK
+// ---------------------------------------
+const handleUpdateExistingMark = async (mark: ExistingMark) => {
+  try {
+    const csrfToken =
+      document.querySelector(`meta[name="csrf-token"]`)?.getAttribute("content") ?? "";
+
+    const res = await fetch(`/marks/update/${mark.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": csrfToken,
+      },
+      body: JSON.stringify(mark),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Failed to update mark");
+      return;
+    }
+
+    alert("Mark updated successfully!");
+  } catch (err: any) {
+    alert("Update failed: " + err.message);
+  }
+};
+
+// ---------------------------------------
+// DELETE EXISTING MARK
+// ---------------------------------------
+const handleDeleteExistingMark = async (id: number | undefined) => {
+  if (!id) return;
+
+  if (!confirm("Are you sure you want to delete this mark?")) return;
+
+  try {
+    const csrfToken =
+      document.querySelector(`meta[name="csrf-token"]`)?.getAttribute("content") ?? "";
+
+    const res = await fetch(`/marks/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-TOKEN": csrfToken,
+      },
+    });
+
+    if (!res.ok) {
+      alert("Failed to delete mark");
+      return;
+    }
+
+    setExistingMarks(prev => prev.filter(m => m.id !== id));
+    alert("Mark deleted successfully!");
+  } catch (err: any) {
+    alert("Delete error: " + err.message);
+  }
+};
+
 
   return (
     <AppLayout breadcrumbs={[{ title: '📄 Marks Page', href: '#' }]}>
@@ -282,16 +370,63 @@ const MarksPage: React.FC<Props> = ({ classes, selectedClassId, students }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {existingMarks.map((mark) => (
-                      <tr key={mark.reg_no}>
-                        <td className="px-4 py-2 border">{mark.reg_no}</td>
-                        <td className="px-4 py-2 border">
-                          {students.find(s => s.reg_no === mark.reg_no)?.name ?? 'N/A'}
-                        </td>
-                        <td className="px-4 py-2 border text-center">{mark.marks_obtained}</td>
-                        <td className="px-4 py-2 border text-center">{mark.grade}</td>
-                      </tr>
-                    ))}
+                    {existingMarks.map((mark, index) => (
+    <tr key={mark.reg_no}>
+      <td className="px-4 py-2 border">{mark.reg_no}</td>
+
+      <td className="px-4 py-2 border">
+        {students.find(s => s.reg_no === mark.reg_no)?.name ?? "N/A"}
+      </td>
+
+      {/* Editable Marks */}
+      <td className="px-4 py-2 border">
+        <input
+          type="number"
+          min={0}
+          max={100}
+          value={mark.marks_obtained}
+          onChange={e => handleExistingMarkChange(index, e.target.value)}
+          className="w-24 border rounded px-2 py-1 text-center"
+        />
+      </td>
+
+      {/* Editable Grade */}
+      <td className="px-4 py-2 border text-center">
+        <select
+          value={mark.grade}
+          onChange={e => handleExistingGradeChange(index, e.target.value)}
+          className="border rounded px-2 py-1"
+        >
+          <option value="">Select Grade</option>
+          {allowedGrades.map(g => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
+        </select>
+      </td>
+
+      {/* Update Button */}
+      <td className="px-4 py-2 border text-center">
+        <button
+          onClick={() => handleUpdateExistingMark(mark)}
+          className="bg-blue-500 text-white px-3 py-1 rounded"
+        >
+          Update
+        </button>
+      </td>
+
+      {/* Delete Button */}
+      <td className="px-4 py-2 border text-center">
+        <button
+          onClick={() => handleDeleteExistingMark(mark.id)}
+          className="bg-red-500 text-white px-3 py-1 rounded"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
                   </tbody>
                 </table>
               ) : (
