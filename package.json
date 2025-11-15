@@ -63,7 +63,7 @@
         "dayjs": "^1.11.13",
         "echarts": "^5.6.0",
         "echarts-for-react": "^3.0.2",
-        "firebase": "^11.5.0",
+        "firebase": "^11.10.0",
         "font-awesome": "^4.7.0",
         "globals": "^15.14.0",
         "html2pdf.js": "^0.10.3",
