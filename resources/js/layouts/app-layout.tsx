@@ -18,7 +18,10 @@ export default ({ children, breadcrumbs, auth, ...props }: AppLayoutProps) => {
 return(
   <>
     {/* <NotificationListener /> */}
+<<<<<<< HEAD
     <Toaster position="top-right" richColors closeButton />
+=======
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
     <AppLayoutTemplate breadcrumbs={breadcrumbs}  {...props}>
       {children}
     </AppLayoutTemplate>

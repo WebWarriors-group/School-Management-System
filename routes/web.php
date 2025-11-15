@@ -103,9 +103,13 @@ Route::get('/add-teacher', function () {return inertia::render('Teacher/teacherF
 
 Route::get('/student/academic', [StudentController::class, 'academicPage']);
 Route::get('/student/studyMaterial', function () { return Inertia::render('Student/studyMaterial'); });
+<<<<<<< HEAD
 Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
 Route::post('/study_material', [StudyMaterialController::class, 'store']);
 Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
+=======
+
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
 
 
 
@@ -234,7 +238,7 @@ Route::get('/students/all', function () {
 
 
 Route::get('/admin/dashboardoverview/teacher', [TeacherAssignedController::class, 'index'])->name('teacher.index');
-Route::post('/assignments', [TeacherAssignedController::class, 'store'])->name('teacher.store');
+Route::post('/assignments', [TeacherAssignedController::class, 'store']);
 
 
 Route::post('/reset-class-teachers', [ClassController::class, 'reset']);

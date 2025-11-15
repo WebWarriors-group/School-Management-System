@@ -39,6 +39,7 @@ class StudentAcademic extends Model
 
     protected $appends = ['scholarship_status'];
 
+<<<<<<< HEAD
 
     protected static function booted()
 {
@@ -63,6 +64,8 @@ class StudentAcademic extends Model
     });
 }
 
+=======
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
     public function getScholarshipStatusAttribute(){
         $statuses=[];
 

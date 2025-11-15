@@ -41,6 +41,10 @@ class StudyMaterialController extends Controller
                 'materials' => $materials,
             ]);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
     }
 
    
