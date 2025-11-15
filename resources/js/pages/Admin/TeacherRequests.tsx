@@ -155,7 +155,12 @@ const handleReject = (id: number) => {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
     <div className="p-8">
-       
+       <button
+             onClick={() => router.visit('/admin/teacher')}
+             className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-gray-700"
+           >
+             Back
+           </button>
  
       <h1 className="text-2xl font-bold mb-6">Teacher Form Requests</h1>
       

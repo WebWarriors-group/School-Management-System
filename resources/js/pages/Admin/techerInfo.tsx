@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AppLayout from "@/layouts/app-layout";
 import { type BreadcrumbItem } from '@/types';
+import { router} from '@inertiajs/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -212,6 +213,12 @@ const handleUpdate = async (event: React.FormEvent) => {
   return (
     <AppLayout   breadcrumbs={breadcrumbs}>
       <main className="bg-gray-200 ">
+        <button
+              onClick={() => router.visit('/admin/teacher')}
+              className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-gray-700"
+            >
+              Back
+            </button>
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
       <div className="max-w-9xl mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">Search Teacher by NIC</h1>

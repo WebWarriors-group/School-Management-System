@@ -35,12 +35,8 @@ use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\TeacherLeaveRequestController;
 use App\Http\Controllers\AdminLeaveRequestController;
 use App\Http\Controllers\MarkController;
-<<<<<<< HEAD
-use App\Http\Controllers\AttendanceController;
-=======
  use App\Models\GalleryCategory;
  
->>>>>>> b6232c7e3b5fc56f64ead384469f84d278303f6f
 
 
 

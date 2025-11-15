@@ -23,18 +23,12 @@ type StudentAcademic = {
   attendance?: { date: string; status: string }[];
 };
 
-type ClassModel = {
-  class_id: string;
-  class_name: string;
-  grade: number;
-  section:string;
-  studentacademics?: StudentAcademic[];
-};
+
 
 type Teacher = {
   teacher_NIC: string;
   user_id: number;
-  class?: ClassModel[]; 
+  class?: ClassModel; 
   personal: { Full_name: string; Photo: string | null; Gender: string };
   appointed_subject: string;
   current_teaching_subject: string;
@@ -42,7 +36,13 @@ type Teacher = {
   assigned_class: string;
 };
 
-
+type ClassModel = {
+  class_id: string;
+  class_name: string;
+  grade: number;
+  section:string;
+  studentacademics?: StudentAcademic[];
+};
 type Task = { id: number; text: string; completed: boolean };
 type LeaveRequest = { status: string; leave_type: string; leave_start_date: string; leave_end_date: string };
 type Message = { sender_id: string; sender_type: string; receiver_id: string; receiver_type: string; subject?: string; message: string; created_at: string; };
@@ -61,27 +61,31 @@ export default function Dashboard({ teacher }: { teacher: Teacher }) {
   const [subject, setSubject] = useState('');
   const [text, setText] = useState('');
 
-  const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
+  // const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
 
   
-const students = Array.isArray(teacher.class)
-  ? teacher.class.flatMap(cls => cls.studentacademics ?? [])
-  : teacher.class?.studentacademics ?? [];
+// const students = Array.isArray(teacher.class)
+//   ? teacher.class.flatMap(cls => cls.studentacademics ?? [])
+//   : teacher.class?.studentacademics ?? [];
+const students: StudentAcademic[] = Array.isArray(teacher.class)
+  ? (teacher.class as ClassModel[]).flatMap(cls => cls.studentacademics ?? [])
+  : (teacher.class as ClassModel | undefined)?.studentacademics ?? [];
+
 
 const [genderData, setGenderData] = useState<any[]>([]);
 
 
-console.log('teacher:', teacher);
-  console.log('students:', students);
-  console.log('genderData:', genderData);
-  console.log('teacher.class:', teacher.class);
+// console.log('teacher:', teacher);
+//   console.log('students:', students);
+//   console.log('genderData:', genderData);
+//   console.log('teacher.class:', teacher.class);
 
 
 
 
 useEffect(() => {
   const stats = students.reduce((acc: Record<string, number>, s: StudentAcademic) => {
-    const gender = s.personal?.gender ?? 'Unknown'; 
+    const gender = s.personal?.Gender ?? 'Unknown'; 
     acc[gender] = (acc[gender] || 0) + 1;
     return acc;
   }, {});
