@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BreadcrumbItem, PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import { User, Users} from 'lucide-react'; 
+import {  Users} from 'lucide-react'; 
 import {
   ResponsiveContainer,
   BarChart,
@@ -23,16 +23,21 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface StudentsPerClass {
   class_id: number;
-  section: String;
+  section: string;
   total: number;
   class: { name: string };
+  male: number;    // added
+  female: number;  // added
 }
+
 
 interface AvgByClass {
   class_id: number;
-  section: String;
+  section: string;
   avg_marks: number;
   class: { name: string };
+   below40?: number;  // optional
+  above40?: number;
 }
 
 interface AvgBySubject {
@@ -40,6 +45,8 @@ interface AvgBySubject {
   avg_marks: number;
   name: string;
 }
+
+
 
 interface Props extends PageProps {
   totalStudents: number;
@@ -51,7 +58,7 @@ interface Props extends PageProps {
 }
 
 export default function OverallPerformance({
-  auth,
+  //auth,
   totalStudents,
   maleStudents,
   femaleStudents,
@@ -77,6 +84,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     current.avg_marks > top.avg_marks ? current : top,
     avgBySubject[0]
   );
+
+  const avgBySubjectWithPassFail = avgBySubject.map(sub => ({
+  ...sub,
+  below40: sub.below40 ?? 0,
+  above40: sub.above40 ?? 0,
+}));
 
   
   if (showTotalStudentsDetails) {
@@ -143,7 +156,7 @@ const breadcrumbs: BreadcrumbItem[] = [
        <Users className="w-5 h-5 text-black" />
         <p className="text-lg text-gray-900 font-medium">Males</p>
       </div>
-      <p className="text-lg font-bold text-gray-800">{10}</p>
+      <p className="text-lg font-bold text-gray-800">{item.male}</p>
     </div>
 
     <div className="flex items-center justify-between bg-gray-100 py-2 px-4">
@@ -151,7 +164,7 @@ const breadcrumbs: BreadcrumbItem[] = [
        <Users className="w-5 h-5 text-black" /> {}
         <p className="text-lg text-black font-medium">Females</p>
       </div>
-      <p className="text-lg font-bold text-black">10</p>
+      <p className="text-lg font-bold text-black">{item.female}</p>
     </div>
   </div>
 </div>
@@ -231,59 +244,49 @@ const breadcrumbs: BreadcrumbItem[] = [
         {item.class?.name ?? `Class ${item.class_id}`}
       </h3>
       <p className="text-md text-gray-500">Overall Average</p>
-      <div className="text-3xl font-bold text-blue-800">75.25</div>
+      <div className="text-3xl font-bold text-blue-800">{item.avg_marks.toFixed(2)}</div>
     </div>
     <div className="text-right">
       <p className="text-md text-gray-500">Total Students</p>
-      <div className="text-2xl font-semibold text-blue-800">30</div>
+      <div className="text-2xl font-semibold text-blue-800"> {studentsPerClass.find(c => c.class_id === item.class_id)?.total ?? 0}</div>
     </div>
   </div>
 
   {}
-  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-    {[
-      { name: 'Maths', avg: 80 },
-      { name: 'Science', avg: 72 },
-      { name: 'Tamil', avg: 68 },
-      { name: 'English', avg: 81 },
-    ].map((subject, sIdx) => (
-      <div
-        key={sIdx}
-        className="bg-blue-100  px-4 py-3 text-center shadow-sm"
-      >
-        <p className="text-sm text-gray-600 font-medium">{subject.name}</p>
-        <p className="text-xl font-bold text-blue-700">{subject.avg}</p>
-      </div>
-    ))}
-  </div>
+
+ 
 
   {}
-  <div>
-    <h4 className="text-lg font-semibold text-gray-700 mb-3">Subject Pass/Fail Breakdown</h4>
-    <table className="w-full text-sm text-left text-gray-700 mb-6">
-      <thead className="bg-gray-200 text-gray-600 uppercase text-md">
-        <tr>
-          <th className="py-2 px-3 text-md">Subject</th>
-          <th className="py-2 px-3 text-red-600 text-md">Below 40</th>
-          <th className="py-2 px-3 text-green-600">40 & Above</th>
-        </tr>
-      </thead>
-      <tbody>
-        {[
-          { name: 'Maths', below40: 3, above40: 27 },
-          { name: 'Science', below40: 5, above40: 25 },
-          { name: 'Tamil', below40: 6, above40: 24 },
-          { name: 'English', below40: 2, above40: 28 },
-        ].map((subject, sIdx) => (
-          <tr key={sIdx} className="border-t">
-            <td className="py-3 px-3 text-md">{subject.name}</td>
-            <td className="py-3 px-3 text-red-600 text-md">{subject.below40}</td>
-            <td className="py-3 px-3 text-green-700 text-md">{subject.above40}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+ {/* Average Marks Cards */}
+<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+  {avgBySubject.map((subject, sIdx) => (
+    <div key={sIdx} className="bg-blue-100 px-4 py-3 text-center shadow-sm">
+      <p className="text-sm text-gray-600 font-medium">{subject.name}</p>
+      <p className="text-xl font-bold text-blue-700">{subject.avg_marks?.toFixed(2) ?? '0.00'}</p>
+    </div>
+  ))}
+</div>
+
+{/* Pass/Fail Table */}
+<table className="w-full text-sm text-left text-gray-700 mb-6">
+  <thead className="bg-gray-200 text-gray-600 uppercase text-md">
+    <tr>
+      <th className="py-2 px-3 text-md">Subject</th>
+      <th className="py-2 px-3 text-red-600 text-md">Below 40</th>
+      <th className="py-2 px-3 text-green-600">40 & Above</th>
+    </tr>
+  </thead>
+  <tbody>
+    {avgBySubjectWithPassFail.map((subject, sIdx) => (
+    <tr key={sIdx} className="border-t">
+      <td className="py-3 px-3 text-md">{subject.name}</td>
+      <td className="py-3 px-3 text-red-600 text-md">{subject.below40}</td>
+      <td className="py-3 px-3 text-green-700 text-md">{subject.above40}</td>
+    </tr>
+  ))}
+  </tbody>
+</table>
+
 
   {}
   <div>
