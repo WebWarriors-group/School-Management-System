@@ -24,7 +24,6 @@ public function dashboard()
     try {
         $user = Auth::user();
 
-
        if (!$user->teacher()->exists()) {
             return Inertia::render('loginToRegRedirect');
         }

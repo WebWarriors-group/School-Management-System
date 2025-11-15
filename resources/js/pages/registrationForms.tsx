@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
+<<<<<<< HEAD
 import { Facebook, Home,Mail, MapPin, Menu, X, GraduationCap, Users } from "lucide-react";
+=======
+import { Facebook, Mail, MapPin, Menu, X, GraduationCap, Users } from "lucide-react";
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
 
 export default function LoginPage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,7 +14,11 @@ export default function LoginPage() {
       <Head title="Login - Mahadivulwewa National School" />
 
       <div className="min-h-screen flex flex-col bg-white text-gray-900">
+<<<<<<< HEAD
         {}
+=======
+        {/* ===== Top Bar ===== */}
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <div className="sticky top-0 left-0 bg-yellow-500 text-[#650000] py-4 px-4 text-[16px] flex justify-between items-center shadow z-50">
           <span>Welcome to Mahadivulwewa National School</span>
           <div className="space-x-3 hidden md:flex">
@@ -20,7 +28,11 @@ export default function LoginPage() {
           </div>
         </div>
 
+<<<<<<< HEAD
         {}
+=======
+        {/* ===== Navbar ===== */}
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <nav className="sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
@@ -29,12 +41,19 @@ export default function LoginPage() {
                 T / Tn / Mahadivulwewa Maha Vidyalaya (National School)
               </h1>
             </div>
+<<<<<<< HEAD
             <Link href="/"> <Home/></Link>
             
           </div>
         </nav>
 
         {}
+=======
+          </div>
+        </nav>
+
+        {/* ===== Login Tiles Section ===== */}
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <main className="flex-grow flex items-center justify-center bg-gradient-to-br from-[#800000] to-[#FFD700] p-3">
           <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-6 max-w-2xl w-full text-center">
             <div className="mb-10">
@@ -43,7 +62,11 @@ export default function LoginPage() {
 
             <div className="flex flex-col gap-6">
               <Link
+<<<<<<< HEAD
                 href={route('formlayout', {type: 'student'})}
+=======
+                href={route('homepage')}
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
                 className="flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-yellow-500 to-yellow-600 text-gray-900 font-bold py-8 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300"
               >
                 <GraduationCap className="w-12 h-12" />
@@ -51,7 +74,11 @@ export default function LoginPage() {
               </Link>
 
               <Link
+<<<<<<< HEAD
                 href={route('formlayout', {type: 'teacher'})}
+=======
+                href={route('add-teacher')}
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
                 className="flex flex-col items-center justify-center gap-4 text-white font-bold py-8 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300"
                 style={{ background: "linear-gradient(to bottom, #800000, #4B0000)" }}
               >
@@ -62,7 +89,11 @@ export default function LoginPage() {
           </div>
         </main>
 
+<<<<<<< HEAD
         {}
+=======
+        {/* ===== Footer ===== */}
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <footer className="bg-[#650000] text-white py-7">
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0 text-center md:text-left">
@@ -70,7 +101,11 @@ export default function LoginPage() {
               <p className="text-sm text-gray-300">© 2025 All rights reserved.</p>
             </div>
             <div className="flex space-x-4">
+<<<<<<< HEAD
               <a href="/" className="text-gray-300 hover:text-white">Home</a>
+=======
+              <a href="#" className="text-gray-300 hover:text-white">Home</a>
+>>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
               <a href="#" className="text-gray-300 hover:text-white">About</a>
               <a href="#" className="text-gray-300 hover:text-white">Contact</a>
               <a href="#" className="text-gray-300 hover:text-white">Privacy</a>
