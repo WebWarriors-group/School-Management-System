@@ -56,7 +56,7 @@ export default function AdminTeacherDashboard() {
 
       <div className="flex flex-col gap-10 px-8 py-10 bg-gray-200 min-h-screen">
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-10">
           
           {}
           <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition">
@@ -132,7 +132,7 @@ export default function AdminTeacherDashboard() {
           </div>
 
           {}
-          <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
+          {/* <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
             <h3 className="text-xl font-semibold mb-3">📧 Direct Communication</h3>
             <p className="text-gray-600 mb-4">
               Send announcements or personal messages to teachers.
@@ -142,16 +142,10 @@ export default function AdminTeacherDashboard() {
                 Send Message
               </button>
             </Link>
-          </div>
+          </div> */}
 
           {}
-          <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold mb-3">📢 Announcements</h3>
-            <p className="text-gray-600 mb-4">Post updates for all teachers.</p>
-            <button className="w-full bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700">
-              Manage Announcements
-            </button>
-          </div>
+         
         </div>
       </div>
     </AppLayout>

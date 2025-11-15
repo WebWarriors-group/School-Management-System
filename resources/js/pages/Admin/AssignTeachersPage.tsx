@@ -7,14 +7,7 @@ import { Button } from '@headlessui/react';
 import { router } from '@inertiajs/react';
 import { PageProps } from '@inertiajs/inertia';
 
-interface Props extends PageProps {
-  grades: number[];
-  classes: ClassModel[];
-  subjects: Subject[];
-  teachers: Teacher[];
-  assignments: Assignment[];
-  gradeSubjects: GradeSubject[];
-}
+
 
 interface ClassModel {
   class_id: number;
@@ -63,7 +56,18 @@ interface GradeSubject {
   subject_id: number;
 }
 
-interface Props {
+// interface Props {
+//   grades: number[];
+//   classes: ClassModel[];
+//   subjects: Subject[];
+//   teachers: Teacher[];
+//   assignments: Assignment[];
+//   gradeSubjects: GradeSubject[];
+//   errors?: Record<string, string[]>;
+//   flash?: { success?: string };
+// }
+
+interface Props extends PageProps {
   grades: number[];
   classes: ClassModel[];
   subjects: Subject[];
@@ -73,6 +77,7 @@ interface Props {
   errors?: Record<string, string[]>;
   flash?: { success?: string };
 }
+
 
 export default function AssignTeachersPage() {
   const { props } = usePage<Props>();
@@ -382,11 +387,11 @@ return `${cls?.grade}-${cls?.section} (${subj?.subject_name || 'Class Teacher'})
       {teacherSummary.map((teacher) => (
         <div key={teacher.teacher_NIC} className="p-4 border rounded shadow-sm hover:shadow-md transition">
           <div className="flex items-center gap-3">
-            <img
-              src={teacher.personal?.Photo || '/default-profile.png'}
+            {/* <img
+              src="#"
               alt={teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}
               className="w-12 h-12 rounded-full object-cover border"
-            />
+            /> */}
             <div>
               <p className="font-semibold">{teacher.personal?.Full_name_with_initial || teacher.teacher_NIC}</p>
               <p className="text-sm text-gray-500">{teacher.assignments.length} classes</p>
