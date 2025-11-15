@@ -101,7 +101,6 @@ export default function Navbar({ categories }: Props) {
 
 
             <div className="flex items-center space-x-4">
-<<<<<<< HEAD
           <Link
     href={route('loginCheckout')}
     className="hidden md:inline-flex items-center justify-between rounded-full bg-yellow-500 text-black px-4 py-2 font-medium shadow-lg hover:bg-red-700 hover:text-black transition"
@@ -112,10 +111,6 @@ export default function Navbar({ categories }: Props) {
     </span>
   </Link>
               <Link href={route('regForms')}className="hidden md:inline-block rounded-full border border-yellow-600 text-white-600 px-6 py-2 font-medium hover:bg-yellow-500 hover:text-black transition">Registration Forms</Link>
-=======
-              <Link href={route('loginCheckout')} className="hidden md:inline-block bg-white rounded-full text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Login</Link>
-              <Link href={route('regForms')} className="hidden md:inline-block rounded-full bg-white text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Registration Forms</Link>
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
               <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
