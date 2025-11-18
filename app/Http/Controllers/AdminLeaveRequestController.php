@@ -10,21 +10,25 @@ use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+
 class AdminLeaveRequestController extends Controller
 {
     public function index()
-    {
-         $leaveRequests = TeacherLeaveRequest::orderBy('created_at', 'desc')->get();
-        //  dd($leaveRequests);
-Log::info('AdminLeaveRequestController@index called', [
+{
+    // Cache the leave requests for 10 minutes (600 seconds)
+    $leaveRequests = Cache::remember('teacher_leave_requests', 600, function () {
+        return TeacherLeaveRequest::orderBy('created_at', 'desc')->get();
+    });
+
+    Log::info('AdminLeaveRequestController@index called', [
         'leaveRequests_count' => $leaveRequests->count()
     ]);
-         return Inertia::render('Admin/LeaveRequests', [
-             'leaveRequests' => $leaveRequests,
-         ]);
 
-       
-    }
+    return Inertia::render('Admin/LeaveRequests', [
+        'leaveRequests' => $leaveRequests,
+    ]);
+}
 
     public function approve($id)
     {

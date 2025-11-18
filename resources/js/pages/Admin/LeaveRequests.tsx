@@ -42,6 +42,9 @@ type PageProps = {
 export default function AdminLeaveRequests() {
 const { leaveRequests =[]} = usePage<PageProps>().props;
 
+
+
+
   const [searchNIC, setSearchNIC] = useState('');
   const [teacherStats, setTeacherStats] = useState<TeacherStats | null>(null);
 
