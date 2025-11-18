@@ -9,16 +9,21 @@ use App\Models\TeacherAttendance;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Log;
 class AdminLeaveRequestController extends Controller
 {
     public function index()
     {
-        $leaveRequests = TeacherLeaveRequest::orderBy('created_at', 'desc')->get();
+         $leaveRequests = TeacherLeaveRequest::orderBy('created_at', 'desc')->get();
+         dd('index called');
+Log::info('AdminLeaveRequestController@index called', [
+        'leaveRequests_count' => $leaveRequests->count()
+    ]);
+         return Inertia::render('Admin/LeaveRequests', [
+             'leaveRequests' => $leaveRequests,
+         ]);
 
-        return Inertia::render('Admin/LeaveRequests', [
-            'leaveRequests' => $leaveRequests,
-        ]);
+       
     }
 
     public function approve($id)
@@ -88,5 +93,14 @@ public function getTodayLeaveCount()
 
     return response()->json(['count' => $count]);
 }
+public function getRequestCounts()
+{
+    return response()->json([
+        'pending' => TeacherLeaveRequest::where('status', 'Pending')->count(),
+        'approved' => TeacherLeaveRequest::where('status', 'Approved')->count(),
+        'rejected' => TeacherLeaveRequest::where('status', 'Rejected')->count(),
+    ]);
+}
+
 }
 

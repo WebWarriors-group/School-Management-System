@@ -45,6 +45,7 @@ export default function AdminTeacherDashboard() {
       .then(data => setLeaveCount(data.count))
       .catch(() => setLeaveCount(0));
   }, []);
+const isEmpty = attendanceData[0].value === 0 && attendanceData[1].value === 0;
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -53,108 +54,104 @@ export default function AdminTeacherDashboard() {
           Teachers' Attendance, Leave Requests & Management Overview
         </div>
       </header>
+{/* ======= ATTENDANCE SUMMARY (Centered + Smaller) ======= */}
+<div className="w-full flex justify-center mt-10">
+  <div className="bg-white rounded-xl shadow-md border p-6 w-full max-w-md text-center">
 
-      <div className="flex flex-col gap-10 px-8 py-10 bg-gray-200 min-h-screen">
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-  {/* Example Card Template */}
-  <div className="bg-white border border-blue-100 shadow-md p-6 hover:shadow-lg transition flex flex-col h-full">
     <h3 className="text-xl font-semibold mb-2">📋 Attendance Summary</h3>
-    <p className="text-sm text-gray-500 mb-4">Date: <span className="font-semibold">{today}</span></p>
-    <div className="w-full h-60 mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={attendanceData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                  >
-                    <Cell fill="#2563EB" />
-                    <Cell fill="#DC2626" />
-                  </Pie>
-                  <Tooltip formatter={(value) => `${value} Teachers`} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <Link href="/admin/teacher-attendance">
-              <button className="mt-6 w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                Manage Attendance
-              </button>
-            </Link>
-          </div>
+    <p className="text-gray-600 mb-4">
+      Date: <span className="font-semibold">{today}</span>
+    </p>
 
-         
+    {isEmpty ? (
+  <p className="text-gray-500 text-sm mt-6">Attendance data not available yet</p>
+) : (
+  <div className="w-full h-56 mx-auto flex justify-center items-center">
+    <ResponsiveContainer width="85%" height="100%">
+      <PieChart>
+        <Pie data={attendanceData} dataKey="value" cx="50%" cy="50%" outerRadius={70}>
+          <Cell fill="#2563EB" />
+          <Cell fill="#DC2626" />
+        </Pie>
+        <Tooltip formatter={(value) => `${value} Teachers`} />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+)}
 
-{/* Registered Teachers & Requests */}
-<div className="bg-white border border-slate-200 shadow-md p-6 hover:shadow-lg transition flex flex-col gap-8">
-  
-  {/* Registered Teachers */}
-  <div className="flex flex-col items-center text-center">
-    <h3 className="text-xl font-semibold mb-4">👩‍🏫 Registered Teachers</h3>
-    <div className="w-24 h-24 border-4 border-blue-500 text-blue-700 flex items-center justify-center text-4xl font-bold rounded-full">
-      {teacherCount}
+
+    <Link href="/admin/teacher-attendance">
+      <button className="mt-6 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+        Manage Attendance
+      </button>
+    </Link>
+
+  </div>
+</div>
+
+
+      {/* ======= ACTION CARDS SECTION ======= */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+  {/* Registered Teachers Card */}
+  <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col items-center text-center gap-4">
+    <div className="w-16 h-16 bg-blue-100 text-blue-600 flex items-center justify-center rounded-full text-3xl">
+      👩‍🏫
     </div>
-    <Link href="/teacher-info" className="w-full mt-4">
-      <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-        View Details
+    <h3 className="text-xl font-semibold">Registered Teachers</h3>
+    <div className="text-4xl font-bold text-blue-700">{teacherCount}</div>
+    <Link href="/teacher-info" className="w-full">
+      <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+        View Teachers
       </button>
     </Link>
   </div>
 
-  <hr className="border-gray-200" />
+  {/* Teacher Requests Card */}
+  <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col items-center text-center gap-4">
+    <div className="w-16 h-16 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-full text-3xl">
+      📥
+    </div>
+    <h3 className="text-xl font-semibold">Teacher Requests</h3>
 
-  {/* Teacher Requests */}
-  <div>
-    <h3 className="text-xl font-semibold flex justify-between items-center mb-4">
-      📥 Teacher Requests
-      {requestCount > 0 && (
-        <span className="px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded-full">
-          {requestCount}
-        </span>
-      )}
-    </h3>
+    {requestCount > 0 && (
+      <div className="px-4 py-1 bg-red-600 text-white text-sm rounded-full">
+        {requestCount} Pending
+      </div>
+    )}
 
-    <div className="flex gap-4">
-      <Link href="/teacher_requests" className="flex-1">
-        <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-          Add Requests
+    <div className="flex flex-col gap-3 w-full">
+      <Link href="/teacher_requests">
+        <button className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
+          Add Request
         </button>
       </Link>
-      <Link href="teacher-leave-requests" className="flex-1">
-        <button className="w-full bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700">
+      {/* <Link href="/teacher-leave-requests">
+        <button className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700">
           Leave Requests
         </button>
-      </Link>
+      </Link> */}
     </div>
   </div>
 
-</div>
+  {/* Leave Today Card */}
+  <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col items-center text-center gap-4">
+    <div className="w-16 h-16 bg-amber-100 text-amber-600 flex items-center justify-center rounded-full text-3xl">
+      🏝️
+    </div>
+    <h3 className="text-xl font-semibold">Leave Today</h3>
+    <div className="text-4xl font-bold text-amber-600">{leaveCount}</div>
+    <Link href="/teacher-leave-requests" className="w-full">
+      <button className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700">
+        View Leave Records
+      </button>
+    </Link>
+  </div>
+
 </div>
 
-        {/* ===== Management Section ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          
-          
-          {/* Direct Communication */}
-          <div className="bg-white border border-gray-300 shadow-md p-6 hover:shadow-lg transition">
-            <h3 className="text-xl font-semibold mb-3">📧 Direct Communication</h3>
-            <p className="text-gray-600 mb-4">Send announcements or personal messages to teachers.</p>
-            
-            <Link href="/messages" className="flex-1">
-        <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-              Send Message
-            </button>
-      </Link>
-          </div>
 
-          {}
-         
-        </div>
-      </div>
     </AppLayout>
   );
 }

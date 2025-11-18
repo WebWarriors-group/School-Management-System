@@ -60,16 +60,16 @@ Route::get('/', function () {
 })->name('homepage');
 
 
-Route::middleware('auth')->group(function() {
-    // Teacher
-    Route::post('/teacher/messages/send', [MessageController::class, 'sendTeacherMessage']);
-    Route::get('/teacher/messages', [MessageController::class, 'fetchTeacherMessages']);
+// Route::middleware('auth')->group(function() {
+//     // Teacher
+//     Route::post('/teacher/messages/send', [MessageController::class, 'sendTeacherMessage']);
+//     Route::get('/teacher/messages', [MessageController::class, 'fetchTeacherMessages']);
 
-    // Admin
-    Route::post('/admin/messages/send', [MessageController::class, 'sendAdminMessage']);
-    Route::get('/admin/messages', [MessageController::class, 'fetchAdminMessages']);
-    Route::get('/admin/teachers', [MessageController::class, 'fetchTeachers']);
-});
+//     // Admin
+//     Route::post('/admin/messages/send', [MessageController::class, 'sendAdminMessage']);
+//     Route::get('/admin/messages', [MessageController::class, 'fetchAdminMessages']);
+//     Route::get('/admin/teachers', [MessageController::class, 'fetchTeachers']);
+// });
 
 
 
@@ -221,7 +221,7 @@ Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('tea
 
 
 Route::post('/teacher/leave/request', [TeacherLeaveRequestController::class, 'leavereqstore'])->middleware('auth');
-Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
+// Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
 
 
 
@@ -229,8 +229,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/teacher-leave-requests', [AdminLeaveRequestController::class, 'index']);
     Route::post('/admin/teacher-leave-requests/{id}/approve', [AdminLeaveRequestController::class, 'approve']);
     Route::post('/admin/teacher-leave-requests/{id}/reject', [AdminLeaveRequestController::class, 'reject']);
-});
+    Route::get('/api/teacher-stats/{nic}', [AdminLeaveRequestController::class, 'getTeacherStats']);
  Route::get('/api/teacher/today-leave-count', [AdminLeaveRequestController::class, 'getTodayLeaveCount']);
+Route::get('/api/teacher-requests/count', [AdminLeaveRequestController::class, 'getRequestCounts']);
+
+});
+//  Route::get('/api/teacher/today-leave-count', [AdminLeaveRequestController::class, 'getTodayLeaveCount']);
+// Route::get('/api/teacher-requests/count', [AdminLeaveRequestController::class, 'getRequestCounts']);
 
 
 Route::middleware('auth')->group(function () {

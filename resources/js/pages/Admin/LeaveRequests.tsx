@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage,router } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -33,12 +33,14 @@ type TeacherStats = {
 };
 
 type PageProps = {
+  auth: any; // or your Auth type
   leaveRequests: LeaveRequest[];
 };
 
 
+
 export default function AdminLeaveRequests() {
-  const { leaveRequests } = usePage<PageProps>().props;
+const { leaveRequests =[]} = usePage<PageProps>().props;
 
   const [searchNIC, setSearchNIC] = useState('');
   const [teacherStats, setTeacherStats] = useState<TeacherStats | null>(null);
@@ -46,9 +48,16 @@ export default function AdminLeaveRequests() {
   const filtered = leaveRequests.filter((req) =>
     req.teacher_NIC.toLowerCase().includes(searchNIC.toLowerCase())
   );
-  const pendingRequests = filtered.filter((r) => r.status === 'Pending');
-  const approvedRequests = filtered.filter((r) => r.status === 'Approved');
-  const rejectedRequests = filtered.filter((r) => r.status === 'Rejected');
+
+
+  
+  const pendingRequests = filtered.filter((r) => r.status.toLowerCase() === 'pending');
+const approvedRequests = filtered.filter((r) => r.status.toLowerCase() === 'approved');
+const rejectedRequests = filtered.filter((r) => r.status.toLowerCase() === 'rejected');
+
+console.log('Pending requests:', pendingRequests);
+console.log('Approved requests:', approvedRequests);
+console.log('Rejected requests:', rejectedRequests);
 
   const fetchTeacherStats = async (nic: string) => {
     try {
@@ -145,6 +154,13 @@ export default function AdminLeaveRequests() {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <div className="p-6 max-w-7xl mx-auto">
+        <button
+             onClick={() => router.visit('/admin/teacher')}
+             className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-gray-700"
+           >
+             Back
+           </button>
+ 
         <Head title="Leave Requests" />
         <h1 className="text-2xl font-bold mb-6">📋 Leave Requests</h1>
 
