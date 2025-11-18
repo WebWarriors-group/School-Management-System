@@ -2,28 +2,25 @@ import React, { useEffect, useState } from 'react';
 import StudentID from '@/pages/Student/StudentID';
 import StudentPerformanceCard, { StudentPerformance } from '@/pages/Student/StudentPerformanceCard';
 
-export type Student = {
+export type StudentItem = {
   reg_no: string;
-  admission_date: Date;
+  admission_date?: string | Date;
   full_name: string;
-  email: string;
+  email?: string;
   address?: string;
   photo?: string;
-
-
   class_name?: string;
   grade?: string;
   section?: string;
-
 };
 
-const ViewAllStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
+const ViewAllStudents: React.FC = () => {
+  const [students, setStudents] = useState<StudentItem[]>([]);
   const [filterQuery, setFilterQuery] = useState('');
   const [filterClass, setFilterClass] = useState('');
   const [filterGrade, setFilterGrade] = useState('');
   const [filterSection, setFilterSection] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentItem | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showIDCard, setShowIDCard] = useState(false);
   const [showPerformanceCard, setShowPerformanceCard] = useState(false);
@@ -31,81 +28,71 @@ const ViewAllStudents = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 8;
 
-useEffect(() => {
-  fetch("/api/students")
-    .then((res) => res.json())
- .then((response) => {
-  const rawStudents = response.data;
-  
-  console.log("🔍 Raw student sample:", rawStudents[0]); // 👈 Check this in console
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch('/api/students');
+        const json = await res.json();
+        const rawStudents = Array.isArray(json.data) ? json.data : json.data ?? json;
+        if (!Array.isArray(rawStudents)) {
+          setStudents([]);
+          return;
+        }
 
-  const mapped = rawStudents.map((student: any) => ({
-    reg_no: student.reg_no,
-    admission_date: student.admission_date,
-    full_name: student.personal?.full_name ?? 'N/A',
-    email: student.personal?.email ?? '',
-    address: student.personal?.address ?? '',
-    photo: student.personal?.photo ?? '',
-    class_name: student.class?.class_name ?? 'N/A',
-    grade: student.class?.grade ?? 'N/A',
-    section: student.class?.section ?? 'N/A',
-  }));
+        const mapped = rawStudents.map((student: any) => ({
+          reg_no: student.reg_no,
+          admission_date: student.admission_date,
+          full_name: student.personal?.full_name ?? 'N/A',
+          email: student.personal?.email ?? '',
+          address: student.personal?.address ?? '',
+          photo: student.personal?.photo ?? '',
+          class_name: student.class?.class_name ?? 'N/A',
+          grade: student.class?.grade ?? 'N/A',
+          section: student.class?.section ?? 'N/A',
+        }));
 
-  setStudents(mapped);
-})
+        setStudents(mapped);
+      } catch (err) {
+        console.error('Failed to fetch students:', err);
+        setStudents([]);
+      }
+    };
 
-    .catch((err) => console.error("Failed to fetch students:", err));
-}, []);
-
-
-
-  const fetchStudents = async () => {
-    try {
-      const res = await fetch(`${window.location.origin}/api/students`);
-      const data = await res.json();
-      setStudents(data.data.filter((student: { class: any; personal: any; }) => student.class && student.personal));
-      console.log('Sample student:', data.data[0]);
-
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    }
-  };
+    load();
+  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [filterQuery, filterClass, filterGrade, filterSection]);
 
-  const handlePerformanceClick = async (student: Student) => {
+  const handlePerformanceClick = async (student: StudentItem) => {
     try {
       const res = await fetch(`${window.location.origin}/api/students/${student.reg_no}/performance`);
       if (!res.ok) throw new Error('Failed to fetch performance');
       const data = await res.json();
-      console.log('Fetched Students:', data.data);
-      setPerformanceData(data);
+      // normalize payload shape
+      setPerformanceData((data.data ?? data) as StudentPerformance);
       setShowPerformanceCard(true);
-
-
     } catch (error) {
-      console.error("Error fetching performance data:", error);
-      alert("Could not load performance card");
+      console.error('Error fetching performance data:', error);
+      alert('Could not load performance card');
     }
-  }; <pre className="text-xs text-red-600">{JSON.stringify(students, null, 2)}</pre>
+  };
 
+  // simple filtering (uncomment / expand as needed)
+  const filteredStudents = students.filter((s) => {
+    const query = filterQuery.toLowerCase();
+    const matchesQuery =
+      !filterQuery ||
+      s.reg_no.toLowerCase().includes(query) ||
+      s.full_name.toLowerCase().includes(query);
+    const matchesClass = !filterClass || (s.class_name ?? '') === filterClass;
+    const matchesGrade = !filterGrade || (s.grade ?? '').toString().trim() === filterGrade.trim();
+    const matchesSection = !filterSection || (s.section ?? '') === filterSection;
+    return matchesQuery && matchesClass && matchesGrade && matchesSection;
+  });
 
-  // const filteredStudents = students.filter((student) => {
-  //   const query = filterQuery.toLowerCase();
-  //   const matchesQuery =
-  //     !filterQuery ||
-  //     student.reg_no.toLowerCase().includes(query) ||
-  //     student.personal?.full_name.toLowerCase().includes(query);
-  //   const matchesClass = !filterClass || student.class?.class_name === filterClass;
-  //   const matchesGrade = !filterGrade || student.class?.grade.trim() === filterGrade.trim();
-  //   const matchesSection = !filterSection || student.class?.section === filterSection;
-  //   return matchesQuery && matchesClass && matchesGrade && matchesSection;
-  // });
-  const filteredStudents = students;
-
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
@@ -118,16 +105,12 @@ useEffect(() => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  // helper to get unique non-empty values
+  const unique = (arr: (string | undefined)[]) => Array.from(new Set(arr.filter(Boolean))) as string[];
 
   return (
     <div className="mt-10 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold text-sky-900 mb-4">All Registered Students</h2>
-
-
-      {showModal && selectedStudent ? (
-        <div className="max-w-lg mx-auto">
-          <div className="bg-white p-6 rounded-lg shadow-lg relative">
-            
 
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-4 mb-4">
@@ -139,31 +122,44 @@ useEffect(() => {
             </option>
           ))}
         </select>
+
         <select value={filterClass} onChange={(e) => setFilterClass(e.target.value)} className="p-2 border rounded w-full md:w-1/4">
           <option value="">All Classes</option>
-          {[...new Set(students.map((s) => s.class_name))].map((c) => c && <option key={c}>{c}</option>)}
+          {unique(students.map((s) => s.class_name)).map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
         </select>
+
         <select value={filterGrade} onChange={(e) => setFilterGrade(e.target.value)} className="p-2 border rounded w-full md:w-1/4">
           <option value="">All Grades</option>
-          {[...new Set(students.map((s) => s.grade))].map((g) => g && <option key={g}>{g}</option>)}
+          {unique(students.map((s) => s.grade)).map((g) => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
         </select>
+
         <select value={filterSection} onChange={(e) => setFilterSection(e.target.value)} className="p-2 border rounded w-full md:w-1/4">
           <option value="">All Sections</option>
-          {[...new Set(students.map((s) => s.section))].map((sec) => sec && <option key={sec}>{sec}</option>)}
+          {unique(students.map((s) => s.section)).map((sec) => (
+            <option key={sec} value={sec}>
+              {sec}
+            </option>
+          ))}
         </select>
       </div>
 
       {/* Student Table */}
       <div className="overflow-x-auto">
-       
         <table className="min-w-full border text-sm">
           <thead className="bg-sky-800 text-white">
             <tr>
               <th className="px-4 py-2 border">Reg. No</th>
               <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Section</th>
-
               <th className="px-4 py-2 border">Class</th>
+              <th className="px-4 py-2 border">Section</th>
               <th className="px-4 py-2 border">Grade</th>
               <th className="px-4 py-2 border">Admission</th>
             </tr>
@@ -178,14 +174,12 @@ useEffect(() => {
                   setShowModal(true);
                 }}
               >
-               <td className="px-4 py-2 border">{student.reg_no || 'N/A'}</td>
-<td className="px-4 py-2 border">{student.full_name || 'N/A'}</td>
-<td className="px-4 py-2 border">{student.class_name || 'N/A'}</td>
-<td className="px-4 py-2 border">{student.section || 'N/A'}</td>
-<td className="px-4 py-2 border">{student.grade || 'N/A'}</td>
-
-<td className="px-4 py-2 border">{student.admission_date ? new Date(student.admission_date).toLocaleDateString() : 'N/A'}</td>
-
+                <td className="px-4 py-2 border">{student.reg_no || 'N/A'}</td>
+                <td className="px-4 py-2 border">{student.full_name || 'N/A'}</td>
+                <td className="px-4 py-2 border">{student.class_name || 'N/A'}</td>
+                <td className="px-4 py-2 border">{student.section || 'N/A'}</td>
+                <td className="px-4 py-2 border">{student.grade || 'N/A'}</td>
+                <td className="px-4 py-2 border">{student.admission_date ? new Date(student.admission_date).toLocaleDateString() : 'N/A'}</td>
               </tr>
             ))}
           </tbody>
@@ -219,7 +213,7 @@ useEffect(() => {
                   setShowModal(false);
                   handlePerformanceClick(selectedStudent);
                 }}
-                className=" cursor-pointer bg-blue-600 text-white py-2 rounded"
+                className="cursor-pointer bg-blue-600 text-white py-2 rounded"
               >
                 Performance Card
               </button>
@@ -251,9 +245,7 @@ useEffect(() => {
       </div>
 
       {/* Render ID Card */}
-      {showIDCard && selectedStudent && (
-        <StudentID student={selectedStudent} onClose={() => setShowIDCard(false)} />
-      )}
+      {showIDCard && selectedStudent && <StudentID student={selectedStudent} onClose={() => setShowIDCard(false)} />}
 
       {/* Render Performance Card */}
       {showPerformanceCard && performanceData && (
