@@ -54,9 +54,9 @@ const { leaveRequests =[]} = usePage<PageProps>().props;
 
 
   
-  const pendingRequests = filtered.filter((r) => r.status.toLowerCase() === 'pending');
-const approvedRequests = filtered.filter((r) => r.status.toLowerCase() === 'approved');
-const rejectedRequests = filtered.filter((r) => r.status.toLowerCase() === 'rejected');
+ const pendingRequests = filtered.filter((r) => r.status === 'Pending');
+  const approvedRequests = filtered.filter((r) => r.status === 'Approved');
+  const rejectedRequests = filtered.filter((r) => r.status === 'Rejected');
 
 console.log('Pending requests:', pendingRequests);
 console.log('Approved requests:', approvedRequests);
