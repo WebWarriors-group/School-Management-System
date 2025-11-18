@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-import { Head, usePage,router } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -33,17 +33,12 @@ type TeacherStats = {
 };
 
 type PageProps = {
-  auth: any; // or your Auth type
   leaveRequests: LeaveRequest[];
 };
 
 
-
 export default function AdminLeaveRequests() {
-const { leaveRequests =[]} = usePage<PageProps>().props;
-
-
-
+  const { leaveRequests } = usePage<PageProps>().props;
 
   const [searchNIC, setSearchNIC] = useState('');
   const [teacherStats, setTeacherStats] = useState<TeacherStats | null>(null);
@@ -51,16 +46,9 @@ const { leaveRequests =[]} = usePage<PageProps>().props;
   const filtered = leaveRequests.filter((req) =>
     req.teacher_NIC.toLowerCase().includes(searchNIC.toLowerCase())
   );
-
-
-  
- const pendingRequests = filtered.filter((r) => r.status === 'Pending');
+  const pendingRequests = filtered.filter((r) => r.status === 'Pending');
   const approvedRequests = filtered.filter((r) => r.status === 'Approved');
   const rejectedRequests = filtered.filter((r) => r.status === 'Rejected');
-
-console.log('Pending requests:', pendingRequests);
-console.log('Approved requests:', approvedRequests);
-console.log('Rejected requests:', rejectedRequests);
 
   const fetchTeacherStats = async (nic: string) => {
     try {
@@ -157,13 +145,6 @@ console.log('Rejected requests:', rejectedRequests);
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <div className="p-6 max-w-7xl mx-auto">
-        <button
-             onClick={() => router.visit('/admin/teacher')}
-             className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-gray-700"
-           >
-             Back
-           </button>
- 
         <Head title="Leave Requests" />
         <h1 className="text-2xl font-bold mb-6">📋 Leave Requests</h1>
 
@@ -202,7 +183,7 @@ console.log('Rejected requests:', rejectedRequests);
           </div>
         )}
 
-        {}
+        {/* Responsive 3-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {renderRequests(
             pendingRequests,
@@ -224,3 +205,4 @@ console.log('Rejected requests:', rejectedRequests);
     </AppLayout>
   );
 }
+
