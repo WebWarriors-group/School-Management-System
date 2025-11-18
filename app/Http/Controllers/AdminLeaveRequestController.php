@@ -15,7 +15,7 @@ class AdminLeaveRequestController extends Controller
     public function index()
     {
          $leaveRequests = TeacherLeaveRequest::orderBy('created_at', 'desc')->get();
-         dd('index called');
+        //  dd($leaveRequests);
 Log::info('AdminLeaveRequestController@index called', [
         'leaveRequests_count' => $leaveRequests->count()
     ]);
