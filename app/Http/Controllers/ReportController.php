@@ -88,69 +88,75 @@ class ReportController extends Controller
         ]);
     }
 
-   public function overallPerformance()
+    
+
+public function overallPerformance()
 {
     $totalStudents = StudentAcademic::count();
 
-    $maleStudents = StudentAcademic::whereHas('personal', fn($q) => $q->where('gender','Male'))->count();
-    $femaleStudents = StudentAcademic::whereHas('personal', fn($q) => $q->where('gender','Female'))->count();
+    $genderCounts = StudentAcademic::select('students_personal_info.gender', DB::raw('COUNT(*) as count'))
+        ->join('students_personal_info', 'student_academic_info.reg_no', '=', 'students_personal_info.reg_no')
+        ->groupBy('students_personal_info.gender')
+        ->pluck('count', 'gender');
 
-$studentsPerClass = ClassModel::with('studentacademics.personal')->get()->map(function($c) {
-    $maleCount = $c->studentacademics->where('personal.gender', 'Male')->count();
-    $femaleCount = $c->studentacademics->where('personal.gender', 'Female')->count();
-    $total = $c->studentacademics->count();
+    $studentsPerClass = ClassModel::select(
+        'class_id',
+        'class_name',
+        'grade',
+        DB::raw('(SELECT COUNT(*) FROM student_academic_info WHERE student_academic_info.class_id = classes.class_id) as total')
+    )
+    ->orderBy('grade')
+    ->orderBy('class_name')
+    ->get()
+    ->map(function ($row) {
+        return [
+            'class_id' => $row->class_id,
+            'total' => $row->total,
+            'class' => [
+                'name' => $row->grade . '-' . $row->class_name,
+            ],
+        ];
 
-    return [
-        'class_id' => $c->class_id,
-        'section' => $c->section,
-        'class' => ['name' => $c->class_name],
-        'total' => $total,
-        'male' => $maleCount,
-        'female' => $femaleCount,
-    ];
-});
+    })->toArray();
 
+   
+    
 
+    $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
+        ->join('student_academic_info', 'marks.reg_no', '=', 'student_academic_info.reg_no')
+        ->groupBy('student_academic_info.class_id')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'class_id' => $item->class_id,
+                'avg_marks' => (float) $item->avg_marks,
+            ];
+        });
 
-$avgByClass = ClassModel::with('studentacademics.marks')->get()->map(function($c) {
-    $allMarks = $c->studentacademics->flatMap(fn($s) => $s->marks->pluck('marks_obtained'));
-    $avgMarks = $allMarks->count() > 0 ? round($allMarks->avg(), 2) : 0;
-
-    return [
-        'class_id' => $c->class_id,
-        'section' => $c->section,
-        'class' => ['name' => $c->class_name],
-        'avg_marks' => $avgMarks,
-    ];
-});
-
-
-
-    $avgBySubject = Subject::with('marks')->get()->map(fn($s) => [
-        'subject_id' => $s->subject_id,
-        'name' => $s->subject_name ?? $s->name,
-        'avg_marks' => round($s->marks->avg('marks_obtained') ?? 0, 2),
-    ]);
+    $avgBySubject = Marks::select('marks.subject_id', 'subjects.name', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
+        ->join('subjects', 'marks.subject_id', '=', 'subjects.subject_id')
+        ->groupBy('marks.subject_id', 'subjects.name')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'subject_id' => $item->subject_id,
+                'name' => $item->name,
+                'avg_marks' => (float) $item->avg_marks,
+            ];
+        });
 
     return Inertia::render('Admin/OverallPerformance', [
         'totalStudents' => $totalStudents,
-        'maleStudents' => $maleStudents,
-        'femaleStudents' => $femaleStudents,
+        'maleStudents' => $genderCounts['Male'] ?? 0,
+        'femaleStudents' => $genderCounts['Female'] ?? 0,
         'studentsPerClass' => $studentsPerClass,
         'avgByClass' => $avgByClass,
         'avgBySubject' => $avgBySubject,
-        'auth' => [
-        'user' => auth()->user() ?? (object)[
-            'name' => 'Guest',
-            'avatar' => '/default-avatar.png',
-            'email' => '',
-        ],
-    ],
+
     ]);
 }
 
- };
-
+};
 
 
 

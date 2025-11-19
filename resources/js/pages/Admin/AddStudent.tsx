@@ -59,7 +59,7 @@ const AddStudent: React.FC<AddStudentProps> = ({ onClose, onStudentAdded }) => {
 
         try {
             setLoading(true);
-            const response = await fetch(`${window.location.origin}/api/students`, {
+            const response = await fetch("http://127.0.0.1:8000/api/students", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

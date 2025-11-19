@@ -49,7 +49,7 @@ type PaginatedResponse<T> = {
 
 const fetchStudents = async () => {
   try {
-    const response = await fetch(`${window.location.origin}/api/students`);
+    const response = await fetch("http://127.0.0.1:8000/api/students");
     if (!response.ok) throw new Error("Error fetching students");
 
     const data: PaginatedResponse<Student> = await response.json();
@@ -90,7 +90,7 @@ useEffect(() => {
   const confirmDelete = async () => {
     if (!studentToDelete) return;
     try {
-      const response = await fetch(`${window.location.origin}/api/students/${studentToDelete}`, {
+      const response = await fetch(`http://127.0.0.1:8000/api/students/${studentToDelete}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

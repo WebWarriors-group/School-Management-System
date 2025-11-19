@@ -132,11 +132,7 @@ useEffect(() => {
             <div className="space-y-3">
               {selectedEvents.map((event, index) => (
                 <div key={index}  className={`p-3 border rounded-lg ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-<<<<<<< HEAD
                   {}
-=======
-                  {/* Color-coded badge */}
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${darkMode ? eventColorsDark[event.type] : eventColors[event.type]}`}>
                     {event.type}
                   </span>
