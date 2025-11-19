@@ -3,10 +3,10 @@ name: Deploy to AWS
 on:
   push:
     branches:
-      - Merge_test
+      - main
   pull_request:
     branches:
-      - Merge_test
+      - main
 
 jobs:
   deploy:
