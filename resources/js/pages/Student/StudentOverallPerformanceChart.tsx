@@ -114,22 +114,13 @@ const labels = marksData.map(item => item.subject?.subject_name || 'Unknown');
 
       borderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
       borderWidth: 2,
-<<<<<<< HEAD
       pointRadius: 3, 
-=======
-      pointRadius: 3, // No dots on the line
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
       pointBackgroundColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
         pointBorderColor: darkMode ? '#1f2937' : '#fff',
         pointHoverBackgroundColor: darkMode ? '#1f2937' : '#fff',
         pointHoverBorderColor: darkMode ? 'rgba(251, 191, 36, 1)' : 'rgba(75, 192, 192, 1)',
-<<<<<<< HEAD
       fill: true, 
       tension: 0.4, 
-=======
-      fill: true, // No fill under line
-      tension: 0.4, // Smooth curve
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
       backgroundColor: darkMode ? 'rgba(251, 191, 36, 0.1)' : 'rgba(75, 192, 192, 0.1)',
 
     },

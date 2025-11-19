@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
    
     
     Route::get('login/{student?}', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('login/{student?}', [AuthenticatedSessionController::class, 'store'])->name('login.post');
+    Route::post('login/{student?}', [AuthenticatedSessionController::class, 'store'])->name('login');
     Route::post('/google-login', [AuthenticatedSessionController::class, 'googleLoginStore']);
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware('auth', 'admin')->group(function () {
       Route::get('/admin/dashboardoverview', [AdminController::class, 'dashboard'])->name('admin.dashboard');
      Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
      Route::get('/admin/usermanage', [AdminController::class, 'user'])->name('admin.user');
@@ -64,18 +64,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
 
-    Route::get('/study_material', [StudyMaterialController::class, 'menu'])->name('studyMaterial');
-    Route::get('/study_material/{category}', [StudyMaterialController::class, 'index'])->name('studMatCat');
-    Route::post('/study_material', [StudyMaterialController::class, 'store']);
-    // Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
-
-    Route::get('/students/past', [StudentController::class, 'pastPupils'])->name('oldStudents');
-
 });
 
 
-Route::middleware(['auth', 'teacher'])->group(function () {
-    // Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
+Route::middleware('auth', 'teacher')->group(function () {
+   
     Route::get('/Marks/{reg_no}', [ReportController::class, 'show']);
 
    

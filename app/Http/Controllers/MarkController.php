@@ -39,15 +39,14 @@ class MarkController extends Controller
     }
 
     public function getMarks(Request $request)
-{
-    $marks = Marks::where('subject_id', $request->subject_id)
-        ->where('term', $request->term)
-        ->where('year', $request->year)
-        ->where('class_id', $request->class_id) // FIXED
-        ->get();
+    {
+        $marks = Marks::where('subject_id', $request->subject_id)
+            ->where('term', $request->term)
+            ->where('year', $request->year)
+            ->get();
 
-    return response()->json($marks);
-}
+        return response()->json($marks);
+    }
 
     public function storeBulkMarks(Request $request)
     {
@@ -105,69 +104,67 @@ class MarkController extends Controller
     }
 
     public function updateMark(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'reg_no' => 'required|integer',
-        'subject_id' => 'required|string',
-        'term' => 'required|string',
-        'year' => 'required|integer',
-        'marks_obtained' => 'required|integer|min:0|max:100',
-        'grade' => 'required|string|in:A,B,C,S,F',
-        'class_id' => 'required|integer',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'reg_no' => 'required|integer',
+            'subject_id' => 'required|string',
+            'term' => 'required|string',
+            'year' => 'required|integer',
+            'marks_obtained' => 'required|integer|min:0|max:100',
+            'grade' => 'required|string|in:A,B,C,S,F',
+            'class_id' => 'required|integer', 
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        $mark = Marks::where('reg_no', $request->reg_no)
+            ->where('subject_id', $request->subject_id)
+            ->where('term', $request->term)
+            ->where('year', $request->year)
+            ->where('class', $request->class) 
+            ->first();
+
+        if (!$mark) {
+            return response()->json(['message' => 'Mark not found'], 404);
+        }
+
+        $mark->update([
+            'marks_obtained' => $request->marks_obtained,
+            'grade' => strtoupper($request->grade),
+        ]);
+
+        return response()->json(['message' => 'Mark updated successfully', 'mark' => $mark]);
     }
 
-    $mark = Marks::where('reg_no', $request->reg_no)
-        ->where('subject_id', $request->subject_id)
-        ->where('term', $request->term)
-        ->where('year', $request->year)
-        ->where('class_id', $request->class_id) // FIXED
-        ->first();
+    public function delete(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'reg_no' => 'required|integer',
+            'subject_id' => 'required|string',
+            'term' => 'required|string',
+            'year' => 'required|integer',
+            'class' => 'required|integer', 
+        ]);
 
-    if (!$mark) {
-        return response()->json(['message' => 'Mark not found'], 404);
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        $mark = Marks::where('reg_no', $request->reg_no)
+            ->where('subject_id', $request->subject_id)
+            ->where('term', $request->term)
+            ->where('year', $request->year)
+            ->where('class', $request->class)
+            ->first();
+
+        if (!$mark) {
+            return response()->json(['message' => 'Mark not found'], 404);
+        }
+
+        $mark->delete();
+
+        return response()->json(['message' => 'Mark deleted successfully']);
     }
-
-    $mark->update([
-        'marks_obtained' => $request->marks_obtained,
-        'grade' => strtoupper($request->grade),
-    ]);
-
-    return response()->json(['message' => 'Mark updated successfully', 'mark' => $mark]);
-}
-
-
-   public function delete(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'reg_no' => 'required|integer',
-        'subject_id' => 'required|string',
-        'term' => 'required|string',
-        'year' => 'required|integer',
-        'class_id' => 'required|integer',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-    }
-
-    $mark = Marks::where('reg_no', $request->reg_no)
-        ->where('subject_id', $request->subject_id)
-        ->where('term', $request->term)
-        ->where('year', $request->year)
-        ->where('class_id', $request->class_id) // FIXED
-        ->first();
-
-    if (!$mark) {
-        return response()->json(['message' => 'Mark not found'], 404);
-    }
-
-    $mark->delete();
-
-    return response()->json(['message' => 'Mark deleted successfully']);
-}
-
 }

@@ -4,11 +4,7 @@ import { Facebook, Mail, MapPin } from "lucide-react";
 
 export default function LoginPage() {
   const [menuOpen, setMenuOpen] = useState(false);
-<<<<<<< HEAD
   const [countdown, setCountdown] = useState(10); 
-=======
-  const [countdown, setCountdown] = useState(10); // seconds before redirect
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,11 +26,7 @@ export default function LoginPage() {
       <Head title="Login - Mahadivulwewa National School" />
 
       <div className="min-h-screen flex flex-col bg-white text-gray-900">
-<<<<<<< HEAD
         {}
-=======
-        {/* ===== Top Bar ===== */}
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <div className="sticky top-0 left-0 bg-yellow-500 text-[#650000] py-4 px-4 text-[16px] flex justify-between items-center shadow z-50">
           <span>Welcome to Mahadivulwewa National School</span>
           <div className="space-x-3 hidden md:flex">
@@ -44,11 +36,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-<<<<<<< HEAD
         {}
-=======
-        {/* ===== Navbar ===== */}
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <nav className="sticky top-12 bg-[#650000] text-white py-3 px-6 shadow-md relative z-50">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
@@ -60,11 +48,7 @@ export default function LoginPage() {
           </div>
         </nav>
 
-<<<<<<< HEAD
         {}
-=======
-        {/* ===== Warning Message ===== */}
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <div className="flex-1 flex items-center justify-center px-4">
           <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-md text-center">
             <h2 className="text-lg font-semibold">You have not been registered to the system.</h2>
@@ -74,11 +58,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-<<<<<<< HEAD
         {}
-=======
-        {/* ===== Footer ===== */}
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
         <footer className="bg-[#650000] text-white py-7">
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0 text-center md:text-left">
