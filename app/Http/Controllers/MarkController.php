@@ -140,10 +140,6 @@ class MarkController extends Controller
     return response()->json(['message' => 'Mark updated successfully']);
 }
 
-        $mark->update([
-            'marks_obtained' => $request->marks_obtained,
-            'grade' => strtoupper($request->grade),
-        ]);
 
 
   public function delete($id)
@@ -166,4 +162,4 @@ class MarkController extends Controller
         }
 
 
-}
+}}
