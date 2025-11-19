@@ -36,10 +36,14 @@ public function dashboard()
             'qualifications',
             'teacherotherservice',
             'class',
+            'subjects',
             'class.studentacademics',
             'class.studentacademics.personal',
             'class.studentacademics.marks',
             'class.studentacademics.attendance',
+            'class.studentacademics.family',
+            'class.studentacademics.siblings',
+
         ])->first();
 
 
@@ -194,7 +198,7 @@ public function getGenderStats(): JsonResponse
     }
 }
 
-    public function storeRequest(Request $request): JsonResponse
+    public function storeRequest(Request $request)
 {
     $validatedData = $request->validate([
         'teacher_NIC' => 'required|string|max:12|unique:teacher_work_infos,teacher_NIC',
@@ -283,16 +287,31 @@ public function getGenderStats(): JsonResponse
     ],
 ];
 
+    // $teacherRequest = TeacherRequest::create([
+    //     'teacher_NIC' => $validatedData['teacher_NIC'],
+    //     'form_data' => $requestData,
+    //     'status' => 'pending',
+    // ]);
+
+    //  return redirect()->back()->with('success', 'Leave approved.');
+
+     try {
     $teacherRequest = TeacherRequest::create([
         'teacher_NIC' => $validatedData['teacher_NIC'],
         'form_data' => $requestData,
         'status' => 'pending',
     ]);
 
-     return response()->json([
-        'message' => 'Form submitted. Awaiting admin approval.',
-        'request' => $teacherRequest,
-    ]);
+     return redirect()->back()->with('success', 'Leave approved.');
+
+} catch (QueryException $e) {
+    if ($e->errorInfo[1] == 1062) { // MySQL duplicate entry
+        return back()->withErrors([
+            'teacher_NIC' => 'This NIC already has a pending request.'
+        ]);
+    }
+    throw $e; // re-throw other DB errors
+}
  }
 
 public function profile()

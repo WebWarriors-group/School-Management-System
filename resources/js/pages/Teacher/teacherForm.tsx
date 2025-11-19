@@ -169,8 +169,9 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
 
   },
   onError: (errors) => {
-   
-    toast.error('Failed to submit. Please check the form.');
+    // Show all errors in toast
+    const errorMessages = Object.values(errors).flat();
+    errorMessages.forEach(msg => toast.error(msg));
   },
 });
 
@@ -200,6 +201,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
         <div className="max-w-xl mx-auto mt-2 p-7 bg-white shadow-lg rounded-lg  border-t-6 border-t-[#152238]">
           
             <h2 className="text-2xl font-bold mb-4 text-yellow-700">Add Teacher</h2>
+            <ToastContainer position="top-right" autoClose={3000} />
             <form className="flex flex-col gap-6" onSubmit={submit} encType="multipart/form-data">
             {step === 1 && (
   <div>
@@ -1354,7 +1356,7 @@ export default function AddTeacherForm({setShowTeacherForm}:props) {
       />
     </div>
 
-   \
+   
     <div className="mb-4">
       <label htmlFor="Agrahara_insuarence_membership" className="block text-sm font-medium text-gray-700">
         Agrahara Insurance Membership

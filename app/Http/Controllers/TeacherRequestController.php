@@ -39,8 +39,10 @@ public function approveRequest($id)
     $teacherRequest = TeacherRequest::findOrFail($id);
 
     if ($teacherRequest->status !== 'pending') {
-        return response()->json(['message' => 'Request already processed.'], 400);
+            return redirect()->back()->with('error', 'Request has already been processed.');
     }
+    
+
 
     $formData = is_string($teacherRequest->form_data)
         ? json_decode($teacherRequest->form_data, true)
@@ -74,7 +76,7 @@ public function approveRequest($id)
 
         return redirect()->back()->with('success', 'Teacher request approved and data stored successfully.');
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Approval failed: ' . $e->getMessage()], 500);
+        return redirect()->back()->with('error', 'Approval failed: '.$e->getMessage());
     }
 }
 
@@ -89,7 +91,7 @@ public function rejectRequest($id)
 
    
     if ($teacherRequest->status !== 'pending') {
-        return response()->json(['message' => 'Request has already been processed.'], 400);
+            return redirect()->back()->with('error', 'Request has already been processed.');
     }
 
     
@@ -97,7 +99,7 @@ public function rejectRequest($id)
     $teacherRequest->save();
 
    
-    return response()->json(['message' => 'Request rejected successfully.'], 200);
+    return redirect()->back()->with('success', 'Request rejected successfully.');
 }
 
 

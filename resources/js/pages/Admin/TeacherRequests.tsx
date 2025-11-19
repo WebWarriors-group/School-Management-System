@@ -338,12 +338,12 @@ const handleReject = (id: number) => {
               <h2 className="text-lg font-semibold">NIC: {req.form_data.teacher_NIC}</h2>
               <p><strong>Submitted on:</strong> {new Date(req.created_at).toLocaleString()}</p>
               <div className="mt-2 space-x-2">
-                <button
+                {/* <button
                   onClick={() => handleApprove(req.id)}
                   className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
                   Approve
-                </button>
+                </button> */}
                 {}
               </div>
             </div>

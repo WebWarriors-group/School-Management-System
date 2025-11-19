@@ -26,15 +26,55 @@ const breadcrumbs: BreadcrumbItem[] = [
 type StudentAcademic = {
   reg_no: string;
   class_name: string;
-  personal?: { Full_name: string; Gender: string; Photo?: string };
+  personal?: {
+    full_name: string;
+    full_name_with_initial?: string;
+    gender: string;
+    photo?: string;
+    birthday?: string;
+    nic_number?: string;
+    address?: string;
+    age?: number;
+  };
+  academic?: {
+    class_id?: number;
+    grade_6_9_asthectic_subjects?: string;
+    grade_10_11_basket1_subjects?: string;
+    grade_10_11_basket2_subjects?: string;
+    grade_10_11_basket3_subjects?: string;
+    receiving_any_grade_5_scholarship?: boolean;
+    receiving_any_samurdhi_aswesuma?: boolean;
+    receiving_any_scholarship?: boolean;
+    admission_date?: string;
+    leaving_date?: string | null;
+  };
+  family?: {
+    mother_name?: string;
+    mother_occupation?: string;
+    mother_income?: number;
+    mother_contact?: string;
+    father_name?: string;
+    father_occupation?: string;
+    father_income?: number;
+    father_contact?: string;
+  };
+  siblings?: {
+    sibling_name?: string;
+    relationship?: string;
+    sibling_age?: number;
+    occupation?: string;
+    contact?: string;
+  }[];
   marks?: { subject: string; marks_obtained: number }[];
   attendance?: { date: string; status: string }[];
 };
 
+
 type Teacher = {
   teacher_NIC: string;
   user_id: number;
-  class?: ClassModel; 
+  class?: ClassModel;
+  subjects?:Subject; 
   personal: { Full_name: string; Photo: string | null; Gender: string };
   appointed_subject: string;
   current_teaching_subject: string;
@@ -42,7 +82,10 @@ type Teacher = {
   assigned_class: string;
 };
 
-
+type Subject={
+  subject_id:string,
+  name:string,
+};
 
 type ClassModel = {
   class_id: string;
@@ -212,6 +255,7 @@ useEffect(() => {
     .catch(err => console.error(err));
 }, []);
 
+  const [activeTab, setActiveTab] = useState<'personal' | 'academic' | 'family' | 'siblings'>('personal');
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -481,7 +525,7 @@ useEffect(() => {
               }, {
                 label: 'Current Subject', value: teacher.current_teaching_subject ?? 'Not Assigned', icon: '📗', color: 'green'
               }, {
-                label: 'Other Subjects', value: teacher.other_subjects_taught ?? 'None', icon: '📙', color: 'yellow'
+                label: 'Other Subjects', value: teacher.subjects?.subject_id ?? 'None', icon: '📙', color: 'yellow'
               }, {
                 label: 'Class Assigned', value:  [teacher.class?.grade ?? 'Not Assigned',teacher.class?.section ?? 'Not Assigned'], icon: '🏫', color: 'purple'
               }].map(({ label, value, icon, color }) => (
@@ -578,75 +622,237 @@ useEffect(() => {
 
 
 
-  {/* Student Details Table Below */}
-   <div className="mt-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">👥 Student Details</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full border text-sm text-left text-gray-600">
-                  <thead className="bg-gray-100 text-gray-700">
-                    <tr>
-                      <th className="px-4 py-2 border">Name</th>
-                      <th className="px-4 py-2 border">Gender</th>
-                      {}
-                      <th className="px-4 py-2 border">Average Marks</th>
-                      <th className="px-4 py-2 border">Attendance</th>
-                    </tr>
-                  </thead>
-<tbody>
-  {currentStudents.map((student: any) => (
-    <tr key={student.reg_no}>
-      <td>{student.personal?.full_name ?? 'Not Assigned'}</td>
-      <td>{student.personal?.gender ?? '—'}</td>
+  
+<div className="mt-8">
+      <h3 className="text-xl font-semibold text-gray-800 mb-4">👥 Student Details</h3>
 
-      <td>
-        {student.marks?.length
-          ? (
-              student.marks.reduce(
-                (sum: number, m: any) => sum + (m.marks_obtained ?? 0),
-                0
-              ) / student.marks.length
-            ).toFixed(2)
-          : '—'}
-      </td>
+      {/* Buttons to toggle views */}
+      <div className="flex gap-3 mb-6">
+        <button
+          onClick={() => setActiveTab('personal')}
+          className={`px-4 py-2 rounded ${activeTab === 'personal' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          Personal Info
+        </button>
+        <button
+          onClick={() => setActiveTab('academic')}
+          className={`px-4 py-2 rounded ${activeTab === 'academic' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          Academic Info
+        </button>
+        <button
+          onClick={() => setActiveTab('family')}
+          className={`px-4 py-2 rounded ${activeTab === 'family' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          Family Info
+        </button>
+        <button
+          onClick={() => setActiveTab('siblings')}
+          className={`px-4 py-2 rounded ${activeTab === 'siblings' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          Siblings Info
+        </button>
+      </div>
 
-      <td>
-        {student.attendance?.length > 0
-          ? `${student.attendance.length} days`
-          : 'No records'}
-      </td>
-    </tr>
-  ))}
-</tbody>
+      {/* Tables */}
+      <div className="overflow-x-auto">
+  {activeTab === 'personal' && (
+    <>
+      <table className="min-w-full border text-sm text-left text-gray-600">
+        <thead className="bg-gray-100 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 border">Name</th>
+            <th className="px-4 py-2 border">Gender</th>
+            <th className="px-4 py-2 border">Birth Date</th>
+            <th className="px-4 py-2 border">Student ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentStudents.map((s: any) => (
+            <tr key={s.reg_no}>
+              <td>{s.personal?.full_name}</td>
+              <td>{s.personal?.gender}</td>
+              <td>{s.personal?.birthday}</td>
+              <td>{s.reg_no}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-2 space-x-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="px-3 py-1">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </>
+  )}
 
-                </table>
-                <div className="flex justify-center items-center gap-4 mt-4">
-  <button
-    className="px-3 py-1 border rounded disabled:opacity-50"
-    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-    disabled={currentPage === 1}
-  >
-    Previous
-  </button>
+  {activeTab === 'academic' && (
+    <>
+      <table className="min-w-full border text-sm text-left text-gray-600">
+        <thead className="bg-gray-100 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 border">Student ID</th>
+            <th className="px-4 py-2 border">Class ID</th>
+            <th className="px-4 py-2 border">Grade 6-9 Subject</th>
+            <th className="px-4 py-2 border">Grade 10-11 Basket1</th>
+            <th className="px-4 py-2 border">Grade 10-11 Basket2</th>
+            <th className="px-4 py-2 border">Grade 10-11 Basket3</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentStudents.map((s: any) => (
+            <tr key={s.reg_no}>
+              <td>{s.reg_no}</td>
+              <td>{s.class_id}</td>
+              <td>{s.grade_6_9_asthectic_subjects}</td>
+              <td>{s.grade_10_11_basket1_subjects}</td>
+              <td>{s.grade_10_11_basket2_subjects}</td>
+              <td>{s.grade_10_11_basket3_subjects}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-  <span>
-    Page {currentPage} of {totalPages}
-  </span>
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-2 space-x-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="px-3 py-1">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </>
+  )}
 
-  <button
-    className="px-3 py-1 border rounded disabled:opacity-50"
-    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-    disabled={currentPage === totalPages}
-  >
-    Next
-  </button>
+  {activeTab === 'family' && (
+    <>
+      <table className="min-w-full border text-sm text-left text-gray-600">
+        <thead className="bg-gray-100 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 border">Student ID</th>
+            <th className="px-4 py-2 border">Mother Name</th>
+            <th className="px-4 py-2 border">Father Name</th>
+            <th className="px-4 py-2 border">Mother Contact</th>
+            <th className="px-4 py-2 border">Father Contact</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentStudents.map((s: any) => (
+            <tr key={s.reg_no}>
+              <td>{s.reg_no}</td>
+              <td>{s.family?.mother_name}</td>
+              <td>{s.family?.father_name}</td>
+              <td>{s.family?.mother_contact}</td>
+              <td>{s.family?.father_contact}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-2 space-x-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="px-3 py-1">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </>
+  )}
+
+  {activeTab === 'siblings' && (
+    <>
+      <table className="min-w-full border text-sm text-left text-gray-600">
+        <thead className="bg-gray-100 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 border">Student ID</th>
+            <th className="px-4 py-2 border">Sibling Name</th>
+            <th className="px-4 py-2 border">Relationship</th>
+            <th className="px-4 py-2 border">Age</th>
+            <th className="px-4 py-2 border">Occupation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentStudents.flatMap((s: any) =>
+            s.siblings?.map((sib: any, idx: number) => (
+              <tr key={`${s.reg_no}-${idx}`}>
+                <td>{s.reg_no}</td>
+                <td>{sib.sibling_name}</td>
+                <td>{sib.relationship}</td>
+                <td>{sib.sibling_age}</td>
+                <td>{sib.occupation}</td>
+              </tr>
+            )) || []
+          )}
+        </tbody>
+      </table>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-2 space-x-2">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="px-3 py-1">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </>
+  )}
 </div>
 
-              </div>
-            </div>
-
-</div>
-
+    </div>
+    </div>
         </main>
       </div>
     </AppLayout>
