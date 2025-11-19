@@ -204,7 +204,7 @@ const ViewAllStudents: React.FC = () => {
                   setShowModal(false);
                   setShowIDCard(true);
                 }}
-                className="cursor-pointer bg-green-600 text-white py-2 rounded"
+                className="bg-green-600 text-white py-2 rounded"
               >
                 Generate ID
               </button>
@@ -222,7 +222,7 @@ const ViewAllStudents: React.FC = () => {
                   setShowModal(false);
                   setSelectedStudent(null);
                 }}
-                className="cursor-pointer bg-gray-200 text-gray-800 py-2 rounded"
+                className="bg-gray-200 text-gray-800 py-2 rounded"
               >
                 Back to List
               </button>
