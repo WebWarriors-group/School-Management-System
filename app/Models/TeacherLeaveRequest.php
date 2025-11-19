@@ -1,6 +1,6 @@
 <?php
 
-
+// app/Models/TeacherLeaveRequest.php
 
 namespace App\Models;
 
@@ -23,3 +23,4 @@ class TeacherLeaveRequest extends Model
         return $this->belongsTo(Teacher::class);
     }
 }
+
