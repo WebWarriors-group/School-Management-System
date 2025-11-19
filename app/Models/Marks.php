@@ -21,6 +21,10 @@ class Marks extends Model
         'class_id',          
     ];
 
+    protected $casts = [
+    'subject_id' => 'string',
+];
+
     
     public function student()
     {
@@ -52,6 +56,12 @@ public function getClassYearAttribute()
     {
         return $this->studentAcademic?->class?->grade;
     }
+
+    public function class()
+{
+    return $this->belongsTo(ClassModel::class, 'class_id', 'class_id');
+}
+
 }
 
 
