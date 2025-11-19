@@ -24,17 +24,9 @@ return new class extends Migration {
             $table->boolean('receiving_any_grade_5_scholarship')->default(false);
             $table->boolean('receiving_any_samurdhi_aswesuma')->default(false);
             $table->boolean('receiving_any_scholarship')->default(false);
-<<<<<<< HEAD
             $table->date('admission_date')->default(now());
 
             $table->date('leaving_date')->nullable()->default(null);
-=======
-            $table->date('admission_date');
-            $table->date('leaving_date')->nullable()->default(null);
-
-            $table->unsignedBigInteger('user_id')->nullable()->unique();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
->>>>>>> da966e3c28a260bde879823d91e77d7cba4e1f12
 
             $table->unsignedBigInteger('user_id')->nullable()->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

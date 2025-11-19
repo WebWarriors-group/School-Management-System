@@ -184,7 +184,7 @@ export default function StatsOverviewPage({ grades, subjects, classes: classesGr
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${window.location.origin}/api/students`);
+      const response = await fetch("http://127.0.0.1:8000/api/students");
       if (!response.ok) throw new Error("Error fetching students");
       const data = await response.json();
       setFetchedStudents(data);

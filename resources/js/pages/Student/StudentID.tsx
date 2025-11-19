@@ -8,7 +8,7 @@ interface StudentIDProps {
    
         full_name: string;
         address?: string;
-        photo?: string; // Make sure this is populated from DB
+        photo?: string; 
     
         class_name?: string;
         grade?: string;

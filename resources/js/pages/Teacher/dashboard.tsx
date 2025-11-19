@@ -14,15 +14,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/dashboard',
   },
 ];
-type Message = {
-  sender_id: string;
-  sender_type: string;
-  receiver_id: string;
-  receiver_type: string;
-  subject?: string;
-  message: string;
-  created_at: string;
-};
 
 type StudentAcademic = {
   reg_no: string;
