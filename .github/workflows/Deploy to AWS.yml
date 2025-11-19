@@ -3,10 +3,10 @@ name: Deploy to AWS
 on:
   push:
     branches:
-      - piy
+      - main
   pull_request:
     branches:
-      - piy
+      - main
 
 jobs:
   deploy:
