@@ -266,28 +266,35 @@ useEffect(() => {
         {}
         <aside className="lg:col-span-1 space-y-6">
           {}
-          <div className="bg-white rounded-xl shadow-md p-6 text-center space-y-4">
-            <h2 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
-              👤 <span>My Profile</span>
-            </h2>
-             <div className="w-24 h-24 mx-auto rounded-full border-4 border-blue-500 overflow-hidden">
-              {teacher.personal?.Photo ? (
-                <img
-                  src={`/images/${teacher.personal.Photo}`}
-                  alt="Teacher"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-400 italic">No Photo</span>
-              )}
-            </div>
-            <Link
-              href={route('teacher.profile')}
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2 rounded-full transition duration-300"
-            >
-              View My Profile
-            </Link>
-          </div>
+          <div className="bg-white rounded-xl shadow-md p-6 text-center space-y-6">
+
+  {/* Title */}
+  <h2 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2">
+    👤 <span>My Profile</span>
+  </h2>
+
+  {/* Centered Photo with Square Border */}
+  <div className="flex items-center justify-center">
+    {teacher.personal?.Photo ? (
+      <img
+        src={`/storage/${teacher.personal.Photo}`}
+        alt="Teacher"
+        className="w-32 h-32 object-cover border-4 border-gray-300 shadow-md"
+      />
+    ) : (
+      <span className="text-gray-400 italic">No Photo</span>
+    )}
+  </div>
+
+  {/* Button */}
+  <Link
+    href={route('teacher.profile')}
+    className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2 rounded-full transition duration-300"
+  >
+    View My Profile
+  </Link>
+
+</div>
 
 
           
