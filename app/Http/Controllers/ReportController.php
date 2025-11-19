@@ -94,30 +94,74 @@ public function overallPerformance()
 {
     $totalStudents = StudentAcademic::count();
 
-    $genderCounts = StudentAcademic::select('students_personal_info.gender', DB::raw('COUNT(*) as count'))
-        ->join('students_personal_info', 'student_academic_info.reg_no', '=', 'students_personal_info.reg_no')
-        ->groupBy('students_personal_info.gender')
-        ->pluck('count', 'gender');
+    $maleStudents = StudentAcademic::whereHas('personal', fn($q) => $q->where('gender','Male'))->count();
+    $femaleStudents = StudentAcademic::whereHas('personal', fn($q) => $q->where('gender','Female'))->count();
 
-    $studentsPerClass = ClassModel::select(
+$studentsPerClass = ClassModel::with('studentacademics.personal')->get()->map(function($c) {
+    $maleCount = $c->studentacademics->filter(function($student) {
+        return $student->personal && $student->personal->gender === 'Male';
+    })->count();
+    $femaleCount = $c->studentacademics->filter(function($student) {
+        return $student->personal && $student->personal->gender === 'Female';
+    })->count();
+    $total = $c->studentacademics->count();
+
+    return [
+        'class_id' => $c->class_id,
+        'section' => $c->section,
+        'grade'    => $c->grade,   
+        'class' => ['name' => $c->class_name],
+        'total' => $total,
+        'male' => $maleCount,
+        'female' => $femaleCount,
+    ];
+});
+
+
+
+// Average marks by class (corrected)
+$avgByClass = Marks::select(
         'class_id',
-        'class_name',
-        'grade',
-        DB::raw('(SELECT COUNT(*) FROM student_academic_info WHERE student_academic_info.class_id = classes.class_id) as total')
+        DB::raw('AVG(marks_obtained) as avg_marks'),
+        DB::raw('SUM(CASE WHEN marks_obtained < 40 THEN 1 ELSE 0 END) as below40'),
+        DB::raw('SUM(CASE WHEN marks_obtained >= 40 THEN 1 ELSE 0 END) as above40')
     )
-    ->orderBy('grade')
-    ->orderBy('class_name')
+    ->groupBy('class_id')
     ->get()
-    ->map(function ($row) {
-        return [
-            'class_id' => $row->class_id,
-            'total' => $row->total,
-            'class' => [
-                'name' => $row->grade . '-' . $row->class_name,
-            ],
-        ];
+    ->map(function ($item) {
 
-    })->toArray();
+        $class = ClassModel::where('class_id', $item->class_id)->first();
+
+        return [
+            'class_id'   => $item->class_id,
+            'grade'      => $class->grade ?? null,
+            'section'    => $class->section ?? null,
+            'class'      => ['name' => $class->class_name ?? ''],
+            'avg_marks'  => (float)$item->avg_marks,
+            'below40'    => (int)$item->below40,
+            'above40'    => (int)$item->above40,
+        ];
+    });
+
+
+
+
+
+
+
+
+
+$allSubjects = Subject::all();
+
+$avgBySubject = $allSubjects->map(function ($subject) {
+    $avg_marks = Marks::where('subject_id', $subject->subject_id)->avg('marks_obtained');
+
+    return [
+        'subject_id' => $subject->subject_id,
+        'name'       => $subject->subject_name ?? $subject->name ?? 'N/A',
+        'avg_marks'  => round($avg_marks ?? 0, 2),
+    ];
+});
 
    
     
@@ -133,17 +177,33 @@ public function overallPerformance()
             ];
         });
 
-    $avgBySubject = Marks::select('marks.subject_id', 'subjects.name', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
-        ->join('subjects', 'marks.subject_id', '=', 'subjects.subject_id')
-        ->groupBy('marks.subject_id', 'subjects.name')
-        ->get()
-        ->map(function ($item) {
-            return [
-                'subject_id' => $item->subject_id,
-                'name' => $item->name,
-                'avg_marks' => (float) $item->avg_marks,
-            ];
-        });
+
+
+
+    return Inertia::render('Admin/OverallPerformance', [
+        'totalStudents' => $totalStudents,
+        'maleStudents' => $maleStudents,
+        'femaleStudents' => $femaleStudents,
+        'studentsPerClass' => $studentsPerClass,
+        'avgByClass' => $avgByClass,
+        'avgBySubject' => $avgBySubject,
+        'auth' => [
+            'user' => auth()->user() ?? (object)[
+                'name' => 'Guest',
+                'avatar' => '/default-avatar.png',
+                'email' => '',
+            ],
+        ],
+    ]);
+
+
+
+
+
+
+
+
+
 
     return Inertia::render('Admin/OverallPerformance', [
         'totalStudents' => $totalStudents,

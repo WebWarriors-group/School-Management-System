@@ -319,12 +319,20 @@ Route::post('/category', [GalleryImageController::class, 'storeCategory']);
 
 
 
-Route::get('/mark/MarksPage', [MarkController::class, 'index'])->name('mark.index');
-Route::get('/marks', [MarkController::class, 'getMarks']);
-Route::post('/marks/update', [MarkController::class, 'updateMark']);
-Route::post('/marks/delete', [MarkController::class, 'delete']);
+// Marks list
+Route::get('/marks/getMarks', [MarkController::class, 'getMarks']);
 
-Route::post('/marks/storeBulkMarks', [MarkController::class, 'storeBulkMarks'])->name('marks.storeBulkMarks');
+// Update mark
+Route::put('/marks/update/{id}', [MarkController::class, 'updateMark']);
+
+// Delete mark
+Route::delete('/marks/delete/{id}', [MarkController::class, 'delete']);
+
+
+// Store bulk marks
+Route::post('/marks/storeBulkMarks', [MarkController::class, 'storeBulkMarks'])
+    ->name('marks.storeBulkMarks');
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
