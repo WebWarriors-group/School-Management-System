@@ -50,8 +50,8 @@ class MarkController extends Controller
         ->with(['studentAcademic.personal', 'subject'])
         ->get();
 
-    return response()->json($marks);
-}
+        return response()->json($marks);
+    }
 
 
 
@@ -126,32 +126,44 @@ class MarkController extends Controller
 
     $mark = Marks::find($id);
 
-    if (!$mark) {
-        return response()->json(['message' => 'Mark not found'], 404);
-    }
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
 
-    $mark->update([
-        'marks_obtained' => $request->marks_obtained,
-        'grade' => strtoupper($request->grade),
-    ]);
+        $mark = Marks::where('reg_no', $request->reg_no)
+            ->where('subject_id', $request->subject_id)
+            ->where('term', $request->term)
+            ->where('year', $request->year)
+            ->where('class', $request->class) 
+            ->first();
 
     return response()->json(['message' => 'Mark updated successfully']);
 }
 
+        $mark->update([
+            'marks_obtained' => $request->marks_obtained,
+            'grade' => strtoupper($request->grade),
+        ]);
 
 
   public function delete($id)
 {
     $mark = Marks::find($id);
 
-    if (!$mark) {
-        return response()->json(['message' => 'Mark not found'], 404);
-    }
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
 
-    $mark->delete();
+        $mark = Marks::where('reg_no', $request->reg_no)
+            ->where('subject_id', $request->subject_id)
+            ->where('term', $request->term)
+            ->where('year', $request->year)
+            ->where('class', $request->class)
+            ->first();
 
-    return response()->json(['message' => 'Mark deleted successfully']);
-}
+        if (!$mark) {
+            return response()->json(['message' => 'Mark not found'], 404);
+        }
 
 
 }

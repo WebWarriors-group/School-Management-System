@@ -88,7 +88,9 @@ class ReportController extends Controller
         ]);
     }
 
-   public function overallPerformance()
+    
+
+public function overallPerformance()
 {
     $totalStudents = StudentAcademic::count();
 
@@ -161,7 +163,19 @@ $avgBySubject = $allSubjects->map(function ($subject) {
     ];
 });
 
+   
+    
 
+    $avgByClass = Marks::select('student_academic_info.class_id', DB::raw('AVG(marks.marks_obtained) as avg_marks'))
+        ->join('student_academic_info', 'marks.reg_no', '=', 'student_academic_info.reg_no')
+        ->groupBy('student_academic_info.class_id')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'class_id' => $item->class_id,
+                'avg_marks' => (float) $item->avg_marks,
+            ];
+        });
 
 
 
@@ -193,23 +207,16 @@ $avgBySubject = $allSubjects->map(function ($subject) {
 
     return Inertia::render('Admin/OverallPerformance', [
         'totalStudents' => $totalStudents,
-        'maleStudents' => $maleStudents,
-        'femaleStudents' => $femaleStudents,
+        'maleStudents' => $genderCounts['Male'] ?? 0,
+        'femaleStudents' => $genderCounts['Female'] ?? 0,
         'studentsPerClass' => $studentsPerClass,
         'avgByClass' => $avgByClass,
         'avgBySubject' => $avgBySubject,
-        'auth' => [
-        'user' => auth()->user() ?? (object)[
-            'name' => 'Guest',
-            'avatar' => '/default-avatar.png',
-            'email' => '',
-        ],
-    ],
+
     ]);
 }
 
- };
-
+};
 
 
 

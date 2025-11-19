@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import StudentID from '@/pages/Student/StudentID';
 import StudentPerformanceCard, { StudentPerformance } from '@/pages/Student/StudentPerformanceCard';
 
-export type Student = {
+export type StudentItem = {
   reg_no: string;
-  admission_date: Date;
+  admission_date?: string | Date;
   full_name: string;
-  email: string;
+  email?: string;
   address?: string;
   photo?: string;
   class_name?: string;
@@ -14,13 +14,13 @@ export type Student = {
   section?: string;             
 };
 
-const ViewAllStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
+const ViewAllStudents: React.FC = () => {
+  const [students, setStudents] = useState<StudentItem[]>([]);
   const [filterQuery, setFilterQuery] = useState('');
   const [filterClass, setFilterClass] = useState('');
   const [filterGrade, setFilterGrade] = useState('');
   const [filterSection, setFilterSection] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentItem | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showIDCard, setShowIDCard] = useState(false);
   const [showPerformanceCard, setShowPerformanceCard] = useState(false);
@@ -55,16 +55,16 @@ const ViewAllStudents = () => {
     setCurrentPage(1);
   }, [filterQuery, filterClass, filterGrade, filterSection]);
 
-  const handlePerformanceClick = async (student: Student) => {
+  const handlePerformanceClick = async (student: StudentItem) => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/student/${student.reg_no}/performance`);
+      const res = await fetch(`${window.location.origin}/api/student/${student.reg_no}/performance`);
       if (!res.ok) throw new Error('Failed to fetch performance');
       const data = await res.json();
       setPerformanceData(data);
       setShowPerformanceCard(true);
     } catch (error) {
-      console.error("Error fetching performance data:", error);
-      alert("Could not load performance card");
+      console.error('Error fetching performance data:', error);
+      alert('Could not load performance card');
     }
   };
 
@@ -114,15 +114,7 @@ const ViewAllStudents = () => {
       {showModal && selectedStudent ? (
         <div className="max-w-lg mx-auto">
           <div className="bg-white p-6 rounded-lg shadow-lg relative">
-            <button
-              onClick={() => {
-                setShowModal(false);
-                setSelectedStudent(null);
-              }}
-              className="absolute top-2 right-2 text-gray-700 text-2xl font-bold"
-            >
-              &times;
-            </button>
+            
             <h2 className="text-xl text-sky-800 font-bold mb-4 text-center">Student Actions</h2>
             <p className="text-center mb-4">
               What do you want to do for <strong>{selectedStudent.full_name}</strong>?
@@ -142,7 +134,7 @@ const ViewAllStudents = () => {
                   setShowModal(false);
                   handlePerformanceClick(selectedStudent);
                 }}
-                className="bg-blue-600 text-white py-2 rounded"
+                className="cursor-pointer bg-blue-600 text-white py-2 rounded"
               >
                 Performance Card
               </button>

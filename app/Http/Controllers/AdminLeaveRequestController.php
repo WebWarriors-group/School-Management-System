@@ -36,34 +36,34 @@ class AdminLeaveRequestController extends Controller
 
         return redirect()->back()->with('success', 'Leave rejected.');
     }
-    
+    // In TeacherAttendanceController.php
 
 public function getTeacherStats($nic)
 {
-    
+    // Count present days
     $present = TeacherAttendance::where('teacher_NIC', $nic)
         ->where('status', 'Present')
         ->count();
 
-    
+    // Count absent days
     $absent = TeacherAttendance::where('teacher_NIC', $nic)
         ->where('status', 'Absent')
         ->count();
 
-    
+    // Get all approved leave requests for this teacher
     $leaves =TeacherLeaveRequest::where('teacher_NIC', $nic)
         ->where('status', 'Approved')
         ->get();
 
-    
+    // Number of leave requests taken
     $leaveRequestsCount = $leaves->count();
 
-    
+    // Calculate total leave days across all leave requests
     $totalLeaveDays = $leaves->reduce(function ($carry, $leave) {
         $start = \Carbon\Carbon::parse($leave->leave_start_date);
         $end = \Carbon\Carbon::parse($leave->leave_end_date);
 
-        
+        // inclusive days count
         $days = $start->diffInDays($end) + 1;
 
         return $carry + $days;
@@ -89,4 +89,5 @@ public function getTodayLeaveCount()
     return response()->json(['count' => $count]);
 }
 }
+
 

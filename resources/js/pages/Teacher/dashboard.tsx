@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, usePage, router } from '@inertiajs/react';
-import { useState, useEffect } from 'react';
+import { Head, Link ,usePage,router} from '@inertiajs/react';
+import { useState,useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { type BreadcrumbItem } from '@/types';
@@ -14,7 +14,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/dashboard',
   },
 ];
-
+// type Message = {
+//   sender_id: string;
+//   sender_type: string;
+//   receiver_id: string;
+//   receiver_type: string;
+//   subject?: string;
+//   message: string;
+//   created_at: string;
+// };
 type StudentAcademic = {
   reg_no: string;
   class_name: string;
@@ -23,18 +31,10 @@ type StudentAcademic = {
   attendance?: { date: string; status: string }[];
 };
 
-type ClassModel = {
-  class_id: string;
-  class_name: string;
-  grade: number;
-  section:string;
-  studentacademics?: StudentAcademic[];
-};
-
 type Teacher = {
   teacher_NIC: string;
   user_id: number;
-  class?: ClassModel[]; 
+  class?: ClassModel; 
   personal: { Full_name: string; Photo: string | null; Gender: string };
   appointed_subject: string;
   current_teaching_subject: string;
@@ -43,45 +43,59 @@ type Teacher = {
 };
 
 
-type Task = { id: number; text: string; completed: boolean };
-type LeaveRequest = { status: string; leave_type: string; leave_start_date: string; leave_end_date: string };
-type Message = { sender_id: string; sender_type: string; receiver_id: string; receiver_type: string; subject?: string; message: string; created_at: string; };
 
-export default function Dashboard({ teacher }: { teacher: Teacher }) {
+type ClassModel = {
+  class_id: string;
+  class_name: string;
+  grade: number;
+  section:string;
+  studentacademics?: StudentAcademic[];
+};
+type Task = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
+type LeaveRequest = {
+  status: string;
+  leave_type: string;
+  leave_start_date: string;
+  leave_end_date: string;
+};
+const COLORS = ['#34d399', '#fbbf24', '#f87171'];
+export default function dashboard({ teacher }: { teacher: Teacher }) {
   const [date, setDate] = useState(new Date());
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const saved = localStorage.getItem('teacher_todo_tasks');
-    return saved ? JSON.parse(saved) as Task[] : [];
-  });
+const [tasks, setTasks] = useState<Task[]>(() => {
+  const saved = localStorage.getItem('teacher_todo_tasks');
+  
+  return saved ? JSON.parse(saved) as Task[] : [];
+});
+
+  // const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
+
   const [newTask, setNewTask] = useState('');
-  const [isMessagingOpen, setIsMessagingOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [leaveStats, setLeaveStats] = useState({ approved: 0, pending: 0, rejected: 0 });
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [subject, setSubject] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  // const [isMessagingOpen, setIsMessagingOpen] = useState(false);
+   const [menuOpen, setMenuOpen] = useState(false);
+   const [leaveStats, setLeaveStats] = useState({ approved: 0, pending: 0, rejected: 0 });
+   const [subject, setSubject] = useState('');
   const [text, setText] = useState('');
 
-  const { latestLeaveRequest } = usePage<{ latestLeaveRequest: LeaveRequest | null }>().props;
-
-  
-const students = Array.isArray(teacher.class)
-  ? teacher.class.flatMap(cls => cls.studentacademics ?? [])
-  : teacher.class?.studentacademics ?? [];
+const students: StudentAcademic[] = Array.isArray(teacher.class)
+  ? (teacher.class as ClassModel[]).flatMap(cls => cls.studentacademics ?? [])
+  : (teacher.class as ClassModel | undefined)?.studentacademics ?? [];
 
 const [genderData, setGenderData] = useState<any[]>([]);
-
-
-console.log('teacher:', teacher);
-  console.log('students:', students);
-  console.log('genderData:', genderData);
-  console.log('teacher.class:', teacher.class);
-
-
-
-
 useEffect(() => {
   const stats = students.reduce((acc: Record<string, number>, s: StudentAcademic) => {
-    const gender = s.personal?.gender ?? 'Unknown'; 
+    let gender = s.personal?.Gender || s.personal?.gender || 'Unknown'; // normalize key
+
+    // Normalize values
+    gender = gender.trim().toLowerCase();
+    if (['m', 'male'].includes(gender)) gender = 'Male';
+    else if (['f', 'female'].includes(gender)) gender = 'Female';
+    else gender = 'Unknown';
+
     acc[gender] = (acc[gender] || 0) + 1;
     return acc;
   }, {});
@@ -89,17 +103,27 @@ useEffect(() => {
   const formatted = Object.entries(stats).map(([name, value]) => ({ name, value }));
   setGenderData(formatted);
 }, [students]);
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 10; // you can change this
+
+// Calculate indexes
+const indexOfLast = currentPage * itemsPerPage;
+const indexOfFirst = indexOfLast - itemsPerPage;
+const currentStudents = students.slice(indexOfFirst, indexOfLast);
+
+// Total pages
+const totalPages = Math.ceil(students.length / itemsPerPage);
 
 
+//    useEffect(() => {
+//   console.log('Logged-in teacher NIC:', teacher.teacher_NIC);
+//   console.log('Logged-in user_id:', teacher.user_id);
+//   console.log('Logged-in teacher NIC:', teacher.teacher_NIC);
+// }, []);
 
-  const COLORS = ['#CC7722', '#FFBF00', '#34d399'];
-
-  
-  
 const assignedClassStudents = students.filter(
   (s: StudentAcademic) => s.class_name === teacher.assigned_class
 );
-
 
 const assignedClassAvg =
   assignedClassStudents.length > 0
@@ -114,24 +138,36 @@ const assignedClassAvg =
     : 0;
 
 
- 
-  useEffect(() => {
-    fetch('/api/teacher/leave-stats')
-      .then(res => res.json())
-      .then(data => setLeaveStats(data));
-  }, []);
+useEffect(() => {
+  localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
+}, [tasks]);
+const data = [
+  { name: 'Boys', value: 55 },
+  { name: 'Girls', value: 45 },
+];
+// const [messages, setMessages] = useState<Message[]>([]);
+//   const [subject, setSubject] = useState('');
+//   const [text, setText] = useState('');
 
-  
-  useEffect(() => {
-    fetch('/teacher/messages')
-      .then(res => res.json())
-      .then(data => setMessages(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch('/teacher/messages')
+  //     .then(res => res.json())
+  //     .then(data => setMessages(data));
+  // }, []);
 
-  
-  useEffect(() => {
-    localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
-  }, [tasks]);
+  // const sendMessage = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   router.post('/teacher/messages/send', { subject, message: text }, {
+  //     onSuccess: () => {
+  //       setText('');
+  //       setSubject('');
+  //       // Refresh messages
+  //       fetch('/teacher/messages').then(res => res.json()).then(data => setMessages(data));
+  //     }
+  //   });
+  // };
+const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
+
 
   const addTask = () => {
     if (!newTask.trim()) return;
@@ -146,23 +182,41 @@ const assignedClassAvg =
   const deleteTask = (id: number) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
+  useEffect(() => {
+  localStorage.setItem('teacher_todo_tasks', JSON.stringify(tasks));
+}, [tasks]);
+//  useEffect(() => {
+//     fetch('/api/teacher/leave-stats')
+//       .then(res => res.json())
+//       .then(data => setLeaveStats(data));
+//   }, []);
 
-  const sendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.post('/teacher/messages/send', { subject, message: text }, {
-      onSuccess: () => {
-        setText('');
-        setSubject('');
-        fetch('/teacher/messages').then(res => res.json()).then(data => setMessages(data));
-      }
-    });
-  };
+//   const leaveData = [
+//     { name: 'Approved', value: leaveStats.approved },
+//     { name: 'Pending', value: leaveStats.pending },
+//     { name: 'Rejected', value: leaveStats.rejected },
+//   ];
+// const [leaveStats, setLeaveStats] = useState({ approved: 0, pending: 0, rejected: 0 });
+
+// Fetch teacher leave stats
+const [teacherLeaveStats, setTeacherLeaveStats] = useState({
+  approvedDays: 0,
+  rejectedRequests: 0
+});
+
+
+useEffect(() => {
+  fetch('/api/teacher/leave-stats')
+    .then(res => res.json())
+    .then(data => setTeacherLeaveStats(data))
+    .catch(err => console.error(err));
+}, []);
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Teacher Dashboard" />
-
-      {}
+{}
       <div className="bg-yellow-500 text-brown-900 text-md py-4 px-6 flex justify-between items-center ">
         <div>Welcome to Mahadivulwewa National School</div>
         <div className="space-x-4 hidden md:flex">
@@ -208,8 +262,7 @@ const assignedClassAvg =
         )}
       </nav>
 
-      {}
-      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-4 gap-6 px-6 py-8 bg-gray-300">
+      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-4 gap-6 px-6 py-8 bg-gray-100">
         {}
         <aside className="lg:col-span-1 space-y-6">
           {}
@@ -236,42 +289,96 @@ const assignedClassAvg =
             </Link>
           </div>
 
-          {}
+
+          
+
+ 
+{/* </div> */}
+{/* Calendar */}
           <div className="w-full max-w-[280px] mx-auto rounded-lg shadow-lg overflow-hidden">
-            <Calendar value={date} className="text-sm border border-gray-300 rounded-lg" />
+  <Calendar
+    value={date}
+    
+    className="text-sm border border-gray-300 rounded-lg"
+  />
+
+<div className="p-6">
+      {/* {latestLeaveRequest?.status === 'Approved' && (
+        <div className="bg-green-100 text-green-800 p-4 rounded mb-4">
+          ✅ Your leave from <strong>{latestLeaveRequest.leave_start_date}</strong> to <strong>{latestLeaveRequest.leave_end_date}</strong> has been <strong>Approved</strong>.
+        </div>
+      )}
+
+      {latestLeaveRequest?.status === 'Rejected' && (
+        <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
+          ❌ Your leave request from <strong>{latestLeaveRequest.leave_start_date}</strong> to <strong>{latestLeaveRequest.leave_end_date}</strong> was <strong>Rejected</strong>.
+        </div>
+      )} */}
+
+      {/* Rest of the dashboard content */}
+    </div>
           </div>
 
-          {}
-          <div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto">
-            <h2 className="text-lg font-semibold text-purple-700 mb-6">🏖️ Leave Summary</h2>
-            <div className="flex justify-around mb-6">
-              <div className="text-center">
-                <div className="w-14 h-14 mx-auto rounded-full border-4 border-green-500 flex items-center justify-center">
-                  <span className="text-green-600 font-bold text-xl">{leaveStats.approved}</span>
-                </div>
-                <p className="text-sm mt-2 font-medium">Approved</p>
-              </div>
-              <div className="text-center">
-                <div className="w-14 h-14 mx-auto rounded-full border-4 border-yellow-500 flex items-center justify-center">
-                  <span className="text-yellow-600 font-bold text-xl">{leaveStats.pending}</span>
-                </div>
-                <p className="text-sm mt-2 font-medium">Pending</p>
-              </div>
-              <div className="text-center">
-                <div className="w-14 h-14 mx-auto rounded-full border-4 border-red-500 flex items-center justify-center">
-                  <span className="text-red-600 font-bold text-xl">{leaveStats.rejected}</span>
-                </div>
-                <p className="text-sm mt-2 font-medium">Rejected</p>
-              </div>
-            </div>
-            <Link href="/leave">
-              <button className="w-full bg-purple-700 text-white py-3 rounded hover:bg-purple-800 transition-colors text-sm font-semibold">
-                Leave Request
-              </button>
-            </Link>
-          </div>
+         
 
-          {}
+
+         {/* Leave Summary */}
+<div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto">
+  <h2 className="text-lg font-semibold text-purple-700 mb-6">🏖️ Leave Summary</h2>
+
+ <div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto mt-6">
+  {/* <h2 className="text-lg font-semibold text-purple-700 mb-4">🏖️ My Leave Stats</h2> */}
+
+  <div className="flex justify-around">
+    <div className="text-center">
+      <div className="w-14 h-14 mx-auto rounded-full border-4 border-green-500 flex items-center justify-center">
+        <span className="text-green-600 font-bold text-xl">{teacherLeaveStats.approvedDays}</span>
+      </div>
+      <p className="text-sm mt-2 font-medium">Leave Days Taken</p>
+    </div>
+
+    <div className="text-center">
+      <div className="w-14 h-14 mx-auto rounded-full border-4 border-red-500 flex items-center justify-center">
+        <span className="text-red-600 font-bold text-xl">{teacherLeaveStats.rejectedRequests}</span>
+      </div>
+      <p className="text-sm mt-2 font-medium">Rejected Requests</p>
+    </div>
+  </div>
+</div>
+
+  <Link href="/leave">
+    <button className="w-full bg-purple-700 text-white py-3 rounded hover:bg-purple-800 transition-colors text-sm font-semibold">
+      Leave Request
+    </button>
+  </Link>
+</div>
+
+
+          {/* Leave Pie Chart */}
+          {/* <div className="bg-white rounded-lg shadow p-4">
+            <h2 className="text-lg font-semibold text-pink-700 mb-4">📊 Leave Statistics</h2>
+            <PieChart width={250} height={250}>
+              <Pie
+                data={leaveData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              >
+                {leaveData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </div> */}
+
+
+          {/* To-Do List */}
           <div className="bg-white rounded-lg shadow p-4">
             <h2 className="text-lg font-semibold text-gray-700 mb-4">📌 To-Do</h2>
             <div className="flex mb-3">
@@ -307,8 +414,7 @@ const assignedClassAvg =
               ))}
             </ul>
           </div>
-
-          {}
+          {/* Messaging Dropdown
           <div className="bg-white rounded-lg shadow">
             <button
               type="button"
@@ -321,39 +427,38 @@ const assignedClassAvg =
 
             {isMessagingOpen && (
               <div className="bg-white p-4 shadow-md rounded">
-                <div className="h-64 overflow-y-auto border p-2 mb-4">
-                  {messages.map((msg, idx) => (
-                    <div key={idx} className={`mb-2 ${msg.sender_type === 'teacher' ? 'text-right' : 'text-left'}`}>
-                      <span className={`inline-block px-3 py-2 rounded ${msg.sender_type === 'teacher' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
-                        {msg.message}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <form onSubmit={sendMessage} className="space-y-2">
-                  <input
-                    placeholder="Subject"
-                    value={subject}
-                    onChange={e => setSubject(e.target.value)}
-                    className="w-full border rounded p-2"
-                  />
-                  <textarea
-                    placeholder="Message"
-                    value={text}
-                    onChange={e => setText(e.target.value)}
-                    className="w-full border rounded p-2"
-                    required
-                  />
-                  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Send</button>
-                </form>
-              </div>
-            )}
+      <div className="h-64 overflow-y-auto border p-2 mb-4">
+        {messages.map((msg, idx) => (
+          <div key={idx} className={`mb-2 ${msg.sender_type === 'teacher' ? 'text-right' : 'text-left'}`}>
+            <span className={`inline-block px-3 py-2 rounded ${msg.sender_type === 'teacher' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
+              {msg.message}
+            </span>
           </div>
+        ))}
+      </div> */}
+
+      {/* <form onSubmit={sendMessage} className="space-y-2">
+        <input
+          placeholder="Subject"
+          value={subject}
+          onChange={e => setSubject(e.target.value)}
+          className="w-full border rounded p-2"
+        />
+        <textarea
+          placeholder="Message"
+          value={text}
+          onChange={e => setText(e.target.value)}
+          className="w-full border rounded p-2"
+          required
+        />
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+      </form>
+    </div>
+            )}
+          </div> */}
         </aside>
 
-        {}
-        <main className="lg:col-span-3 space-y-6">
+               <main className="lg:col-span-3 space-y-6">
           {}
           <div className="bg-gradient-to-r from-purple-800 to-indigo-800 text-white p-6 rounded-xl shadow">
             <h1 className="text-3xl font-bold">Welcome, {teacher.personal?.Full_name ?? "Teacher"}!</h1>
@@ -387,23 +492,33 @@ const assignedClassAvg =
           {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-bold text-red-700 mb-4">📚 Student Information</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
 
               <div className="bg-gray-50 rounded-lg shadow p-4 flex justify-center items-center">
   {genderData.length > 0 ? (
   <PieChart width={250} height={250}>
-    <Pie
-      data={genderData}
-      cx="50%"
-      cy="50%"
-      outerRadius={90}
-      dataKey="value"
-      label={({ name, value }) => `${name}: ${value}`}
-    >
-      {genderData.map((_entry, index) => (
-        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-      ))}
-    </Pie>
+<Pie
+  data={genderData}
+  cx="50%"
+  cy="50%"
+  outerRadius={90}
+  dataKey="value"
+  label={({ name, value }) => `${name}: ${value}`}
+>
+  {genderData.map((entry, index) => (
+    <Cell
+      key={`cell-${index}`}
+      fill={
+        entry.name === 'Male'
+          ? '#CC7722'
+          : entry.name === 'Female'
+          ? '#FFBF00'
+          : '#6B7280'
+      }
+    />
+  ))}
+</Pie>
+
     <Tooltip formatter={(value) => `${value} Students`} />
     <Legend />
   </PieChart>
@@ -414,38 +529,50 @@ const assignedClassAvg =
 </div>
 
 
-              {}
-              <div className="bg-gray-50 rounded-lg shadow p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">📝 Marks</h3>
-                <Link href="/mark/MarksPage">
-                  <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
-                    Marks Details
-                  </button>
-                </Link>
-              </div>
 
-              {}
-              <div className="bg-gray-50 rounded-lg shadow p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">📈 Performance</h3>
-                <p className="text-sm text-gray-700">
-                  Class Average for {teacher.class?.grade ?? 'Not Assigned'}: <strong>{assignedClassAvg.toFixed(2)}</strong>
-                </p>
-              </div>
+    <div className="space-y-6">
+  {/* Marks Section */}
+  <div className="bg-gray-50 rounded-lg shadow p-4">
+    <h3 className="text-lg font-semibold text-gray-800 mb-2">📝 Marks</h3>
+    <Link href="/mark/MarksPage">
+      <button className="mt-4 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
+        Marks Details
+      </button>
+    </Link>
+  </div>
 
-              {}
+  {/* Performance Section */}
+  <div className="bg-gray-50 rounded-lg shadow p-4">
+    <h3 className="text-lg font-semibold text-gray-800 mb-2">📈 Performance</h3>
+    <p className="text-sm text-gray-700">
+      Class Average for grade {teacher.class?.grade ?? 'Not Assigned'} : 
+      <strong>{assignedClassAvg.toFixed(2)}</strong>
+    </p>
+  </div>
+</div>
+
+
+
+
+   
+    
+
+              {/* {}
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📅 Attendance</h3>
-                <Link href="/leave_details">
+                <Link href="/student-attendance">
                   <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
                     Attendance Details
                   </button>
                 </Link>
-              </div>
+              </div> */}
 
             </div>
 
-            {}
-            <div className="mt-8">
+
+
+  {/* Student Details Table Below */}
+   <div className="mt-8">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">👥 Student Details</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full border text-sm text-left text-gray-600">
@@ -459,16 +586,22 @@ const assignedClassAvg =
                     </tr>
                   </thead>
 <tbody>
-  {students.map((student: any) => (
+  {currentStudents.map((student: any) => (
     <tr key={student.reg_no}>
       <td>{student.personal?.full_name ?? 'Not Assigned'}</td>
       <td>{student.personal?.gender ?? '—'}</td>
-      {}
+
       <td>
         {student.marks?.length
-          ? (student.marks.reduce((sum: number, m: any) => sum + (m.marks_obtained ?? 0), 0) / student.marks.length).toFixed(2)
+          ? (
+              student.marks.reduce(
+                (sum: number, m: any) => sum + (m.marks_obtained ?? 0),
+                0
+              ) / student.marks.length
+            ).toFixed(2)
           : '—'}
       </td>
+
       <td>
         {student.attendance?.length > 0
           ? `${student.attendance.length} days`
@@ -478,11 +611,35 @@ const assignedClassAvg =
   ))}
 </tbody>
 
+
                 </table>
+                <div className="flex justify-center items-center gap-4 mt-4">
+  <button
+    className="px-3 py-1 border rounded disabled:opacity-50"
+    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+    disabled={currentPage === 1}
+  >
+    Previous
+  </button>
+
+  <span>
+    Page {currentPage} of {totalPages}
+  </span>
+
+  <button
+    className="px-3 py-1 border rounded disabled:opacity-50"
+    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+    disabled={currentPage === totalPages}
+  >
+    Next
+  </button>
+</div>
+
               </div>
             </div>
 
-          </div>
+</div>
+
         </main>
       </div>
     </AppLayout>

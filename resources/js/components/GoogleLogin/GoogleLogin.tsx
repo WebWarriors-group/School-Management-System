@@ -23,6 +23,7 @@ const GoogleLogin = () => {
       } catch (error) {
         setLoading(false);
         console.error("Google Login Failed:", error);
+        router.get('/');
       }
 
     };
