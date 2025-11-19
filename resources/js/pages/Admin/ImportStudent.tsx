@@ -114,7 +114,7 @@ const missingColumns = REQUIRED_COLUMNS.filter(col => !headers.includes(col.toLo
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/students/import", {
+            const response = await fetch(`${window.location.origin}/api/students/import`, {
                 method: "POST",
                 body: formData,
             });

@@ -57,7 +57,7 @@ const ViewAllStudents: React.FC = () => {
 
   const handlePerformanceClick = async (student: StudentItem) => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/student/${student.reg_no}/performance`);
+      const res = await fetch(`${window.location.origin}/api/student/${student.reg_no}/performance`);
       if (!res.ok) throw new Error('Failed to fetch performance');
       const data = await res.json();
       setPerformanceData(data);

@@ -14,7 +14,7 @@ export default function AuthSimpleLayout({ children, title, description }: Props
   {}
   <div className="flex flex-col items-center w-full md:max-w-[300px] bg-yellow-600 text-[#5D4037] shadow-2xl p-8">
     <img
-      src="/images/school.jpg"
+      src="/images/School.jpg"
       className="w-60 max-h-[300px] rounded-full mt-4"
       alt="School Logo"
     />
