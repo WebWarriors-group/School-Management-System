@@ -85,5 +85,38 @@ public function dashboard()
     ]);
 }
 
+public function leaveStats()
+{
+    $user = auth()->user();
+    $teacher = Teacher::where('user_id', $user->id)->first();
+
+    if (!$teacher) {
+        return response()->json([
+            'approvedDays' => 0,
+            'rejectedRequests' => 0,
+        ]);
+    }
+
+    // Total approved leave days
+    $approvedLeaves = TeacherLeaveRequest::where('teacher_NIC', $teacher->teacher_NIC)
+        ->where('status', 'Approved')
+        ->get();
+
+    $approvedDays = $approvedLeaves->reduce(function ($carry, $item) {
+        $start = \Carbon\Carbon::parse($item->leave_start_date);
+        $end = \Carbon\Carbon::parse($item->leave_end_date);
+        return $carry + $start->diffInDays($end) + 1; // include both start & end dates
+    }, 0);
+
+    // Count of rejected requests
+    $rejectedRequests = TeacherLeaveRequest::where('teacher_NIC', $teacher->teacher_NIC)
+        ->where('status', 'Rejected')
+        ->count();
+
+    return response()->json([
+        'approvedDays' => $approvedDays,
+        'rejectedRequests' => $rejectedRequests,
+    ]);
+}
 
 }

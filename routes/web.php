@@ -234,6 +234,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/teacher-leave-requests/{id}/reject', [AdminLeaveRequestController::class, 'reject']);
 });
  Route::get('/api/teacher/today-leave-count', [AdminLeaveRequestController::class, 'getTodayLeaveCount']);
+// routes/web.php
+Route::get('/api/teacher/leave-stats', [TeacherLeaveRequestController::class, 'leaveStats'])
+    ->middleware(['auth']);
 
 
 

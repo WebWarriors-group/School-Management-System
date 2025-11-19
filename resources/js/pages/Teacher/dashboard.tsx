@@ -196,6 +196,21 @@ const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
 //     { name: 'Pending', value: leaveStats.pending },
 //     { name: 'Rejected', value: leaveStats.rejected },
 //   ];
+// const [leaveStats, setLeaveStats] = useState({ approved: 0, pending: 0, rejected: 0 });
+
+// Fetch teacher leave stats
+const [teacherLeaveStats, setTeacherLeaveStats] = useState({
+  approvedDays: 0,
+  rejectedRequests: 0
+});
+
+
+useEffect(() => {
+  fetch('/api/teacher/leave-stats')
+    .then(res => res.json())
+    .then(data => setTeacherLeaveStats(data))
+    .catch(err => console.error(err));
+}, []);
 
 
   return (
@@ -311,28 +326,25 @@ const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
 <div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto">
   <h2 className="text-lg font-semibold text-purple-700 mb-6">🏖️ Leave Summary</h2>
 
-  <div className="flex justify-around mb-6">
+ <div className="bg-white rounded-lg shadow p-6 max-w-md mx-auto mt-6">
+  {/* <h2 className="text-lg font-semibold text-purple-700 mb-4">🏖️ My Leave Stats</h2> */}
+
+  <div className="flex justify-around">
     <div className="text-center">
       <div className="w-14 h-14 mx-auto rounded-full border-4 border-green-500 flex items-center justify-center">
-        <span className="text-green-600 font-bold text-xl">{leaveStats.approved}</span>
+        <span className="text-green-600 font-bold text-xl">{teacherLeaveStats.approvedDays}</span>
       </div>
-      <p className="text-sm mt-2 font-medium">Approved</p>
-    </div>
-
-    <div className="text-center">
-      <div className="w-14 h-14 mx-auto rounded-full border-4 border-yellow-500 flex items-center justify-center">
-        <span className="text-yellow-600 font-bold text-xl">{leaveStats.pending}</span>
-      </div>
-      <p className="text-sm mt-2 font-medium">Pending</p>
+      <p className="text-sm mt-2 font-medium">Leave Days Taken</p>
     </div>
 
     <div className="text-center">
       <div className="w-14 h-14 mx-auto rounded-full border-4 border-red-500 flex items-center justify-center">
-        <span className="text-red-600 font-bold text-xl">{leaveStats.rejected}</span>
+        <span className="text-red-600 font-bold text-xl">{teacherLeaveStats.rejectedRequests}</span>
       </div>
-      <p className="text-sm mt-2 font-medium">Rejected</p>
+      <p className="text-sm mt-2 font-medium">Rejected Requests</p>
     </div>
   </div>
+</div>
 
   <Link href="/leave">
     <button className="w-full bg-purple-700 text-white py-3 rounded hover:bg-purple-800 transition-colors text-sm font-semibold">
@@ -340,6 +352,7 @@ const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
     </button>
   </Link>
 </div>
+
 
           {/* Leave Pie Chart */}
           {/* <div className="bg-white rounded-lg shadow p-4">
@@ -479,7 +492,7 @@ const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
           {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-bold text-red-700 mb-4">📚 Student Information</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
 
               <div className="bg-gray-50 rounded-lg shadow p-4 flex justify-center items-center">
   {genderData.length > 0 ? (
@@ -517,27 +530,34 @@ const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
 
 
 
-    {/* Marks Box */}
-   <div className="bg-gray-50 rounded-lg shadow p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">📝 Marks</h3>
-                <Link href="/mark/MarksPage">
-                  <button className="mt-6 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
-                    Marks Details
-                  </button>
-                </Link>
-              </div>
+    <div className="space-y-6">
+  {/* Marks Section */}
+  <div className="bg-gray-50 rounded-lg shadow p-4">
+    <h3 className="text-lg font-semibold text-gray-800 mb-2">📝 Marks</h3>
+    <Link href="/mark/MarksPage">
+      <button className="mt-4 w-full bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all">
+        Marks Details
+      </button>
+    </Link>
+  </div>
+
+  {/* Performance Section */}
+  <div className="bg-gray-50 rounded-lg shadow p-4">
+    <h3 className="text-lg font-semibold text-gray-800 mb-2">📈 Performance</h3>
+    <p className="text-sm text-gray-700">
+      Class Average for grade {teacher.class?.grade ?? 'Not Assigned'} : 
+      <strong>{assignedClassAvg.toFixed(2)}</strong>
+    </p>
+  </div>
+</div>
 
 
 
-    {/* Performance Box */}
-    <div className="bg-gray-50 rounded-lg shadow p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">📈 Performance</h3>
-                <p className="text-sm text-gray-700">
-                  Class Average for {teacher.class?.grade ?? 'Not Assigned'}: <strong>{assignedClassAvg.toFixed(2)}</strong>
-                </p>
-              </div>
 
-              {}
+   
+    
+
+              {/* {}
               <div className="bg-gray-50 rounded-lg shadow p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">📅 Attendance</h3>
                 <Link href="/student-attendance">
@@ -545,7 +565,7 @@ const COLORS = ['#2563EB', '#EC4899', '#6B7280']; // Male, Female, Unknown
                     Attendance Details
                   </button>
                 </Link>
-              </div>
+              </div> */}
 
             </div>
 
