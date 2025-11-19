@@ -42,19 +42,6 @@ Version Control: Git + GitHub
 
 ---
 
-##  My Role
-
-I contributed primarily to:
-
-- Developing frontend components using React and Inertia.js  
-- Integrating the timetable generation Python API  
-- Creating the admin panel for easy management
-- implementing email sending to users via SMTP
-- Collaborating closely with backend and scheduling team members
-- Simplifying the assignment of class teachers and subject teachers
-
----
-
 ##  Setup Instructions
 
 ### Backend (Laravel)
