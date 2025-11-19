@@ -40,18 +40,21 @@ class MarkController extends Controller
 
   public function getMarks(Request $request)
 {
-    $subjectId = $request->subject_id;   // keep as integer
-    $term = preg_replace('/[^0-9]/', '', $request->term); // Extract only number
+    $subjectId = $request->subject_id;
+    $term = $request->term;  // Keep as is, do NOT strip numbers
+    $year = $request->year;
+    $classId = $request->class_id;
 
     $marks = Marks::where('subject_id', $subjectId)
         ->where('term', $term)
-        ->where('year', $request->year)
-        ->where('class_id', $request->class_id)
+        ->where('year', $year)
+        ->where('class_id', $classId)
         ->with(['studentAcademic.personal', 'subject'])
         ->get();
 
-        return response()->json($marks);
-    }
+    return response()->json($marks);
+}
+
 
 
 
@@ -113,7 +116,7 @@ class MarkController extends Controller
         ]);
     }
 
-  public function updateMark(Request $request, $id)
+ public function updateMark(Request $request, $id)
 {
     $validator = Validator::make($request->all(), [
         'marks_obtained' => 'required|integer|min:0|max:100',
@@ -126,40 +129,31 @@ class MarkController extends Controller
 
     $mark = Marks::find($id);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-        }
+    if (!$mark) {
+        return response()->json(['message' => 'Mark not found'], 404);
+    }
 
-        $mark = Marks::where('reg_no', $request->reg_no)
-            ->where('subject_id', $request->subject_id)
-            ->where('term', $request->term)
-            ->where('year', $request->year)
-            ->where('class', $request->class) 
-            ->first();
+    $mark->update([
+        'marks_obtained' => $request->marks_obtained,
+        'grade' => strtoupper($request->grade),
+    ]);
 
-    return response()->json(['message' => 'Mark updated successfully']);
+    return response()->json(['message' => 'Mark updated successfully', 'mark' => $mark]);
 }
 
 
 
-  public function delete($id)
+public function delete($id)
 {
     $mark = Marks::find($id);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-        }
+    if (!$mark) {
+        return response()->json(['message' => 'Mark not found'], 404);
+    }
 
-        $mark = Marks::where('reg_no', $request->reg_no)
-            ->where('subject_id', $request->subject_id)
-            ->where('term', $request->term)
-            ->where('year', $request->year)
-            ->where('class', $request->class)
-            ->first();
+    $mark->delete();
 
-        if (!$mark) {
-            return response()->json(['message' => 'Mark not found'], 404);
-        }
+    return response()->json(['message' => 'Mark deleted successfully']);
+}
 
-
-}}
+}
