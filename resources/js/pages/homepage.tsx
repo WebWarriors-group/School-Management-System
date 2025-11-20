@@ -115,8 +115,8 @@ export default function Navbar({ categories }: Props) {
               <Link href={route('regForms')}className="hidden md:inline-block rounded-full border border-yellow-600 text-white-600 px-6 py-2 font-medium hover:bg-yellow-500 hover:text-black transition">Registration Forms</Link>
 
 
-              <Link href={route('loginCheckout')} className="hidden md:inline-block bg-white rounded-full text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Login</Link>
-              <Link href={route('regForms')} className="hidden md:inline-block rounded-full bg-white text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Registration Forms</Link>
+              {/* <Link href={route('loginCheckout')} className="hidden md:inline-block bg-white rounded-full text-red-900 px-4 py-2  hover:bg-yellow-500 transition">Login</Link> */}
+             
 
               <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden ml-4 text-yellow-300">
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
